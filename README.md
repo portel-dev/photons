@@ -1,0 +1,437 @@
+# Photons - Official Photon MCP Registry
+
+Production-ready MCPs for the [Photon](https://github.com/portel-dev/photon) framework. Single-file, zero-config, auto-dependency MCPs that work out of the box.
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+```bash
+npm install -g @portel/photon
+```
+
+### Usage
+
+**Option 1: Install to ~/.photon/ (Recommended)**
+
+```bash
+# Download MCP to ~/.photon/
+curl -o ~/.photon/github-issues.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/github-issues.photon.ts
+
+# Run it (by name)
+export GITHUB_TOKEN="your_token_here"
+photon github-issues
+```
+
+**Option 2: Run from local path**
+
+```bash
+# Clone this repo
+git clone https://github.com/portel-dev/photons.git
+cd photons
+
+# Run directly
+export GITHUB_TOKEN="your_token_here"
+photon /path/to/photons/github-issues.photon.ts
+```
+
+**Option 3: Use with Claude Desktop**
+
+```bash
+# Generate config
+photon github-issues --config
+
+# Add to ~/Library/Application Support/Claude/claude_desktop_config.json
+```
+
+## 📦 Available MCPs
+
+### 1. GitHub Issues
+
+Manage GitHub repository issues with full CRUD operations.
+
+**File:** `github-issues.photon.ts`
+
+**Configuration:**
+```bash
+export GITHUB_TOKEN="ghp_your_token_here"
+photon github-issues
+```
+
+**Tools:** 7 tools
+- `listIssues` - List issues from a repository
+- `getIssue` - Get a single issue by number
+- `createIssue` - Create a new issue
+- `updateIssue` - Update an existing issue
+- `addComment` - Add a comment to an issue
+- `listComments` - List comments on an issue
+- `searchIssues` - Search issues across repositories
+
+**Example:**
+```bash
+# Generate Claude Desktop config
+photon github-issues --config
+
+# Config output:
+{
+  "github-issues": {
+    "command": "npx",
+    "args": ["@portel/photon", "github-issues"],
+    "env": {
+      "GITHUB_ISSUES_TOKEN": "ghp_your_token"
+    }
+  }
+}
+```
+
+---
+
+### 2. Slack
+
+Send messages and manage Slack workspace.
+
+**File:** `slack.photon.ts`
+
+**Configuration:**
+```bash
+export SLACK_TOKEN="xoxb-your-token-here"
+photon slack
+```
+
+**Tools:** 7 tools
+- `postMessage` - Post a message to a channel
+- `listChannels` - List all channels
+- `getChannelInfo` - Get channel information
+- `getHistory` - Get conversation history
+- `addReaction` - Add emoji reaction
+- `uploadFile` - Upload file to channel
+- `searchMessages` - Search messages in workspace
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/slack.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/slack.photon.ts
+
+# Run
+export SLACK_TOKEN="xoxb-..."
+photon slack
+```
+
+---
+
+### 3. PostgreSQL
+
+Database operations for PostgreSQL with connection pooling.
+
+**File:** `postgres.photon.ts`
+
+**Configuration:**
+```bash
+export POSTGRE_S_Q_L_DATABASE="mydb"
+export POSTGRE_S_Q_L_USER="postgres"
+export POSTGRE_S_Q_L_PASSWORD="secret"
+export POSTGRE_S_Q_L_HOST="localhost"
+export POSTGRE_S_Q_L_PORT="5432"
+
+photon postgres
+```
+
+**Tools:** 9 tools
+- `query` - Execute SELECT query
+- `transaction` - Execute multiple statements in transaction
+- `listTables` - List all tables
+- `describeTable` - Get table schema
+- `listIndexes` - List indexes on table
+- `insert` - Insert data into table
+- `getDatabaseStats` - Get database statistics
+
+**Dependencies:** Auto-installs `pg@^8.11.0`
+
+**Example:**
+```bash
+# Generate config
+photon postgres --config
+
+# Shows environment variables needed:
+# POSTGRE_S_Q_L_DATABASE, POSTGRE_S_Q_L_USER, etc.
+```
+
+---
+
+### 4. SQLite
+
+Local SQLite database operations.
+
+**File:** `sqlite.photon.ts`
+
+**Configuration:**
+```bash
+export S_Q_LITE_PATH="/path/to/database.db"
+photon sqlite
+```
+
+**Tools:** 9 tools
+- `open` - Open a database
+- `query` - Execute SELECT query
+- `queryOne` - Get single row
+- `execute` - Execute INSERT/UPDATE/DELETE
+- `transaction` - Execute in transaction
+- `listTables` - List all tables
+- `schema` - Get table schema
+- `close` - Close database
+- `backup` - Backup database
+
+**Dependencies:** Auto-installs `better-sqlite3@^11.0.0`
+
+**Example:**
+```bash
+# Run with in-memory database
+photon sqlite --dev
+
+# Or with file
+export S_Q_LITE_PATH="./my-app.db"
+photon sqlite
+```
+
+---
+
+### 5. Web Fetch
+
+Web content fetching and markdown conversion (official Fetch MCP replica).
+
+**File:** `web-fetch.photon.ts`
+
+**Configuration:**
+```bash
+export WEB_FETCH_USER_AGENT="MyBot/1.0"  # Optional
+photon web-fetch
+```
+
+**Tools:** 2 tools
+- `fetch` - Fetch URL and convert to markdown
+- `fetchBatch` - Fetch multiple URLs in parallel
+
+**Dependencies:** Auto-installs `turndown@^7.2.0`
+
+**Features:**
+- HTML to Markdown conversion
+- Pagination support (`max_length`, `start_index`)
+- Raw HTML mode
+- Custom User-Agent
+
+**Example:**
+```bash
+# Install
+curl -o ~/.photon/web-fetch.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/web-fetch.photon.ts
+
+# Run
+photon web-fetch --dev
+```
+
+---
+
+### 6. Memory
+
+Knowledge graph-based persistent memory (official Memory MCP replica).
+
+**File:** `memory.photon.ts`
+
+**Configuration:**
+```bash
+export MEMORY_STORAGE_PATH="~/.photon/memory.json"  # Optional
+photon memory
+```
+
+**Tools:** 10 tools
+- `createEntities` - Create new entities with observations
+- `createRelations` - Create relations between entities
+- `addObservations` - Add observations to entity
+- `deleteEntities` - Delete entities (cascading)
+- `deleteObservations` - Delete specific observations
+- `deleteRelations` - Delete relations
+- `readGraph` - Read entire knowledge graph
+- `searchNodes` - Search for entities
+- `openNodes` - Get specific entities with relations
+- `clearGraph` - Clear entire graph
+
+**Features:**
+- Structured knowledge storage
+- Entity-relation modeling
+- JSON-based persistence
+- Cross-conversation memory
+
+**Example:**
+```bash
+# Run with default storage
+photon memory
+
+# Or specify custom storage
+export MEMORY_STORAGE_PATH="/path/to/memory.json"
+photon memory
+```
+
+---
+
+## 🎯 Usage Patterns
+
+### 1. Local Development (Hot Reload)
+
+```bash
+# Clone repo
+git clone https://github.com/portel-dev/photons.git
+cd photons
+
+# Run with hot reload
+photon github-issues.photon.ts --dev
+```
+
+**Hot reload watches for file changes and automatically reloads.**
+
+### 2. Production (Installed to ~/.photon/)
+
+```bash
+# Install once
+curl -o ~/.photon/slack.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/slack.photon.ts
+
+# Run by name (no path needed)
+export SLACK_TOKEN="xoxb-..."
+photon slack
+```
+
+### 3. Claude Desktop Integration
+
+```bash
+# Step 1: Install MCP to ~/.photon/
+curl -o ~/.photon/github-issues.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/github-issues.photon.ts
+
+# Step 2: Generate config
+photon github-issues --config
+
+# Step 3: Add to claude_desktop_config.json
+# Copy the JSON output to:
+# ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)
+# %APPDATA%\Claude\claude_desktop_config.json (Windows)
+
+# Step 4: Restart Claude Desktop
+```
+
+**Example config:**
+```json
+{
+  "mcpServers": {
+    "github-issues": {
+      "command": "npx",
+      "args": ["@portel/photon", "github-issues"],
+      "env": {
+        "GITHUB_ISSUES_TOKEN": "ghp_your_token_here"
+      }
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["@portel/photon", "slack"],
+      "env": {
+        "SLACK_TOKEN": "xoxb-your-token-here"
+      }
+    }
+  }
+}
+```
+
+## 🔧 Environment Variable Naming
+
+Photon auto-detects configuration from constructor parameters using convention:
+
+**Pattern:** `{MCP_NAME}_{PARAM_NAME}`
+
+**Examples:**
+- Constructor: `new GitHubIssues(token: string)`
+  - Env var: `GITHUB_ISSUES_TOKEN`
+- Constructor: `new PostgreSQL(database: string, user: string, password: string)`
+  - Env vars: `POSTGRE_S_Q_L_DATABASE`, `POSTGRE_S_Q_L_USER`, `POSTGRE_S_Q_L_PASSWORD`
+
+**Note:** Class names are converted to kebab-case, then to SCREAMING_SNAKE_CASE:
+- `GitHubIssues` → `github-issues` → `GITHUB_ISSUES_*`
+- `PostgreSQL` → `postgre-s-q-l` → `POSTGRE_S_Q_L_*`
+
+Use `--config` to see exact variable names for each MCP.
+
+## 📝 Creating Your Own MCPs
+
+1. **Use the skill:**
+```bash
+# Install the photon-mcp skill in Claude Code
+/plugin add https://github.com/portel-dev/photon-skill
+```
+
+2. **Or reference examples:**
+```bash
+# Clone this repo
+git clone https://github.com/portel-dev/photons.git
+
+# Use as templates
+cp github-issues.photon.ts my-mcp.photon.ts
+# Edit and customize
+```
+
+3. **Submit to registry:**
+```bash
+# Fork this repo
+# Add your MCP
+# Submit PR
+```
+
+## 🧪 Testing
+
+All MCPs include JSDoc documentation for auto-schema extraction. Test using:
+
+```bash
+# Run in dev mode (shows verbose logs)
+photon your-mcp --dev
+
+# Use MCP Inspector
+npx @modelcontextprotocol/inspector npx @portel/photon your-mcp
+```
+
+## 📊 Comparison with Official MCPs
+
+These MCPs replicate official [@modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) implementations:
+
+| MCP | Lines of Code | Official LOC | Reduction |
+|-----|--------------|--------------|-----------|
+| Web Fetch | 154 | ~300 | 48% |
+| Memory | 355 | ~400 | 11% |
+
+**Key advantages:**
+- ✅ Single file vs multiple files
+- ✅ Zero boilerplate
+- ✅ Auto-dependency installation
+- ✅ Auto-schema extraction
+- ✅ Convention-based configuration
+
+See [COMPARISON.md](https://github.com/portel-dev/photon/blob/main/COMPARISON.md) in the main Photon repo.
+
+## 📚 Resources
+
+- **Framework:** [portel-dev/photon](https://github.com/portel-dev/photon)
+- **Skill:** [portel-dev/photon-skill](https://github.com/portel-dev/photon-skill)
+- **Comparison:** [COMPARISON.md](https://github.com/portel-dev/photon/blob/main/COMPARISON.md)
+- **MCP Docs:** [modelcontextprotocol.io](https://modelcontextprotocol.io)
+
+## 📄 License
+
+MIT - See LICENSE file for details
+
+## 🤝 Contributing
+
+1. Fork this repository
+2. Add your `.photon.ts` file
+3. Update this README with usage instructions
+4. Submit a Pull Request
+
+**Requirements for new MCPs:**
+- Single `.photon.ts` file
+- Complete JSDoc documentation
+- `@dependencies` tags for npm packages
+- Constructor parameters for configuration
+- Error handling with `success`/`error` responses
+- Tested and working
