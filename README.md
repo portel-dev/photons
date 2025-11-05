@@ -355,6 +355,56 @@ Photon auto-detects configuration from constructor parameters using convention:
 
 Use `--config` to see exact variable names for each MCP.
 
+## 🔄 Keeping MCPs Updated
+
+All MCPs in this registry include version information in their doc comments:
+
+```typescript
+/**
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
+ */
+```
+
+### Check for Updates
+
+```bash
+# Check if updates are available
+photon upgrade --check
+
+# Example output:
+# [Photon] Checking all MCPs in ~/.photon...
+#
+#   🔄 github-issues: 1.0.0 → 1.1.0 (update available)
+#   ✅ slack: 1.0.0 (up to date)
+#   ✅ postgres: 1.0.0 (up to date)
+```
+
+### Upgrade MCPs
+
+```bash
+# Upgrade all MCPs
+photon upgrade
+
+# Upgrade specific MCP
+photon upgrade github-issues
+
+# Example output:
+# [Photon] Checking github-issues for updates...
+# [Photon] 🔄 Upgrading github-issues: 1.0.0 → 1.1.0
+# [Photon] ✅ Successfully upgraded github-issues to 1.1.0
+```
+
+### How It Works
+
+1. **Version extraction**: Photon reads the `@version` tag from the local MCP file
+2. **Registry check**: Fetches the latest version from this GitHub repository
+3. **Semver comparison**: Compares versions (major.minor.patch)
+4. **Auto-download**: Downloads and replaces the file if update available
+
+**No manual version management needed!** Just run `photon upgrade`.
+
 ## 📝 Creating Your Own MCPs
 
 1. **Use the skill:**
