@@ -7,7 +7,7 @@
     "url": "https://github.com/portel-dev",
     "email": "support@portel.dev"
   },
-  "mcps": [
+  "photons": [
     {
       "name": "github-issues",
       "version": "1.0.0",
