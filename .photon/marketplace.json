@@ -1,0 +1,78 @@
+{
+  "name": "photons",
+  "version": "1.0.0",
+  "description": "Official Photon MCPs - Single-file TypeScript MCP servers",
+  "owner": {
+    "name": "Portel",
+    "url": "https://github.com/portel-dev",
+    "email": "support@portel.dev"
+  },
+  "mcps": [
+    {
+      "name": "github-issues",
+      "version": "1.0.0",
+      "description": "Manage GitHub repository issues - list, create, update, and comment",
+      "author": "Portel",
+      "license": "MIT",
+      "tags": ["github", "issues", "api", "tracking"],
+      "category": "development",
+      "source": "./github-issues.photon.ts",
+      "tools": ["listIssues", "createIssue", "updateIssue", "closeIssue", "addComment", "listComments"]
+    },
+    {
+      "name": "memory",
+      "version": "1.0.0",
+      "description": "Knowledge graph-based persistent memory for storing structured information across conversations",
+      "author": "Portel",
+      "license": "MIT",
+      "tags": ["memory", "knowledge-graph", "storage", "entities"],
+      "category": "utilities",
+      "source": "./memory.photon.ts",
+      "tools": ["createEntities", "createRelations", "addObservations", "deleteEntities", "deleteObservations", "deleteRelations", "readGraph", "searchNodes", "openNodes"]
+    },
+    {
+      "name": "postgres",
+      "version": "1.0.0",
+      "description": "Database operations for PostgreSQL - query, insert, update, and manage databases",
+      "author": "Portel",
+      "license": "MIT",
+      "tags": ["database", "postgres", "postgresql", "sql"],
+      "category": "database",
+      "source": "./postgres.photon.ts",
+      "tools": ["query", "insert", "update", "delete", "listTables", "describeTable", "createTable"]
+    },
+    {
+      "name": "slack",
+      "version": "1.0.0",
+      "description": "Send messages and interact with Slack workspaces",
+      "author": "Portel",
+      "license": "MIT",
+      "tags": ["slack", "messaging", "communication", "api"],
+      "category": "communication",
+      "source": "./slack.photon.ts",
+      "tools": ["sendMessage", "listChannels", "getChannelHistory", "uploadFile", "searchMessages"]
+    },
+    {
+      "name": "sqlite",
+      "version": "1.0.0",
+      "description": "Database operations for SQLite - lightweight SQL database management",
+      "author": "Portel",
+      "license": "MIT",
+      "tags": ["database", "sqlite", "sql", "local"],
+      "category": "database",
+      "source": "./sqlite.photon.ts",
+      "tools": ["query", "execute", "listTables", "describeTable", "vacuum"]
+    },
+    {
+      "name": "web-fetch",
+      "version": "1.0.0",
+      "description": "Fetch web content with support for HTML parsing, screenshots, and PDF generation",
+      "author": "Portel",
+      "license": "MIT",
+      "tags": ["web", "fetch", "scraping", "html", "screenshots"],
+      "category": "utilities",
+      "source": "./web-fetch.photon.ts",
+      "tools": ["fetchUrl", "fetchHtml", "takeScreenshot", "generatePdf", "extractLinks"]
+    }
+  ]
+}
