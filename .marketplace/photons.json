@@ -71,7 +71,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../fetch.photon.ts",
-      "hash": "sha256:b2ebf3faecb7bba5ab9432ae4090504487e981af0758d9b311ce9c49913c6a77",
+      "hash": "sha256:38461538fafd748b18884f87848cf2acf041ed35ebd36d162620d40303179c95",
       "tools": [
         "fetch",
         "batch"
@@ -310,6 +310,20 @@
         "schema",
         "close",
         "backup"
+      ]
+    },
+    {
+      "name": "time",
+      "version": "1.0.0",
+      "description": "Time - Timezone and time conversion operations",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../time.photon.ts",
+      "hash": "sha256:81ca6031bd06fbfe3e36826d1435d79ecff1047ffc1979d8cbe6c9c960f4825e",
+      "tools": [
+        "getCurrentTime",
+        "convertTime",
+        "listTimezones"
       ]
     }
   ]

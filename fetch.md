@@ -49,6 +49,8 @@ Fetch a URL and convert to markdown
 
 - **`raw`** (any, optional) - Return raw HTML instead of markdown
 
+- **`readability`** (any, optional) - Extract main content using Readability
+
 
 
 
@@ -67,6 +69,8 @@ Fetch multiple URLs in parallel
 - **`urls`** (any) - Array of URLs to fetch
 
 - **`max_length`** (any, optional) - Maximum length per URL
+
+- **`readability`** (any, optional) - Extract main content using Readability
 
 
 
@@ -120,7 +124,7 @@ photon mcp fetch --config
 This photon automatically installs the following dependencies:
 
 ```
-turndown@^7.2.0
+turndown@^7.2.0, @mozilla/readability@^0.5.0, jsdom@^25.0.0
 ```
 
 

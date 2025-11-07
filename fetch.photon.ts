@@ -1,7 +1,8 @@
 /**
  * Fetch - Web content fetching and markdown conversion
  *
- * Replicates the official MCP Fetch server for retrieving web pages and converting to markdown.
+ * Enhanced web content fetching with readability extraction and markdown conversion.
+ * Extracts main content (like Safari Reader Mode) before converting to markdown.
  * Supports pagination for large pages and raw content retrieval.
  *
  * Common use cases:
@@ -9,14 +10,14 @@
  * - Content analysis: "Get the content from this blog post"
  * - Web scraping: "Fetch and summarize this article"
  *
- * Example: fetch({ url: "https://example.com", max_length: 5000 })
+ * Example: fetch({ url: "https://example.com", max_length: 5000, readability: true })
  *
  * Configuration:
  * - user_agent: Custom User-Agent header (optional, default: "Photon-MCP-Fetch/1.0")
  *
  * Dependencies are auto-installed on first run.
  *
- * @dependencies turndown@^7.2.0
+ * @dependencies turndown@^7.2.0, @mozilla/readability@^0.5.0, jsdom@^25.0.0
  *
  * @version 1.0.0
  * @author Portel
@@ -24,6 +25,8 @@
  */
 
 import TurndownService from 'turndown';
+import { Readability } from '@mozilla/readability';
+import { JSDOM } from 'jsdom';
 
 export default class Fetch {
   private turndown: TurndownService;
@@ -38,8 +41,8 @@ export default class Fetch {
   }
 
   async onInitialize() {
-    console.error('[web-fetch] ✅ Initialized');
-    console.error(`[web-fetch] User-Agent: ${this.userAgent}`);
+    console.error('[fetch] ✅ Initialized');
+    console.error(`[fetch] User-Agent: ${this.userAgent}`);
   }
 
   /**
@@ -48,12 +51,14 @@ export default class Fetch {
    * @param max_length Maximum length of returned content (default: 5000)
    * @param start_index Start index for pagination (default: 0)
    * @param raw Return raw HTML instead of markdown (default: false)
+   * @param readability Extract main content using Readability (default: true)
    */
   async fetch(params: {
     url: string;
     max_length?: number;
     start_index?: number;
     raw?: boolean;
+    readability?: boolean;
   }) {
     try {
       // Validate URL
@@ -79,9 +84,32 @@ export default class Fetch {
 
       // Get content
       let content = await response.text();
+      let articleTitle: string | undefined;
+      let articleExcerpt: string | undefined;
 
-      // Convert HTML to markdown unless raw is requested
+      // Process HTML content
       if (!params.raw && contentType.includes('text/html')) {
+        // Apply readability extraction if enabled (default: true)
+        const useReadability = params.readability !== false;
+
+        if (useReadability) {
+          try {
+            const dom = new JSDOM(content, { url: url.href });
+            const reader = new Readability(dom.window.document);
+            const article = reader.parse();
+
+            if (article) {
+              articleTitle = article.title;
+              articleExcerpt = article.excerpt;
+              content = article.content; // Use cleaned HTML
+            }
+          } catch (error) {
+            // Fall back to raw HTML if readability fails
+            console.error('[fetch] Readability extraction failed, using raw HTML');
+          }
+        }
+
+        // Convert HTML to markdown
         content = this.turndown.turndown(content);
       }
 
@@ -97,6 +125,8 @@ export default class Fetch {
         success: true,
         url: url.href,
         content: paginatedContent,
+        ...(articleTitle && { title: articleTitle }),
+        ...(articleExcerpt && { excerpt: articleExcerpt }),
         metadata: {
           status: response.status,
           contentType,
@@ -132,12 +162,17 @@ export default class Fetch {
    * Fetch multiple URLs in parallel
    * @param urls Array of URLs to fetch
    * @param max_length Maximum length per URL (default: 5000)
+   * @param readability Extract main content using Readability (default: true)
    */
-  async batch(params: { urls: string[]; max_length?: number }) {
+  async batch(params: { urls: string[]; max_length?: number; readability?: boolean }) {
     try {
       const results = await Promise.all(
         params.urls.map((url) =>
-          this.fetch({ url, max_length: params.max_length })
+          this.fetch({
+            url,
+            max_length: params.max_length,
+            readability: params.readability
+          })
         )
       );
 

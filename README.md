@@ -43,10 +43,11 @@ photon mcp aws-s3
 | **Redis** | In-memory data store and cache | 18 | [View Details](redis.md) |
 | **Slack** | Send messages and manage Slack workspace | 7 | [View Details](slack.md) |
 | **SQLite Photon MCP** | SQLite database operations | 9 | [View Details](sqlite.md) |
+| **Time** | Timezone and time conversion operations | 3 | [View Details](time.md) |
 
 
 ---
 
-**Total:** 15 photons • Click on "View Details" for configuration and usage instructions.
+**Total:** 16 photons • Click on "View Details" for configuration and usage instructions.
 
 <!-- PHOTON_MARKETPLACE_END -->
