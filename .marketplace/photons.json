@@ -3,76 +3,127 @@
   "version": "1.0.0",
   "description": "Official Photon MCPs - Single-file TypeScript MCP servers",
   "owner": {
-    "name": "Portel",
-    "url": "https://github.com/portel-dev",
-    "email": "support@portel.dev"
+    "name": "Portel"
   },
   "photons": [
     {
       "name": "github-issues",
       "version": "1.0.0",
-      "description": "Manage GitHub repository issues - list, create, update, and comment",
+      "description": "GitHub Issues - Manage GitHub repository issues",
       "author": "Portel",
       "license": "MIT",
-      "tags": ["github", "issues", "api", "tracking"],
-      "category": "development",
-      "source": "./github-issues.photon.ts",
-      "tools": ["listIssues", "createIssue", "updateIssue", "closeIssue", "addComment", "listComments"]
+      "source": "../github-issues.photon.ts",
+      "hash": "sha256:fef9f8fca956fd545d9a64c325900e954f15294a794960b6c62fb9f25703f080",
+      "tools": [
+        "onInitialize",
+        "listIssues",
+        "getIssue",
+        "createIssue",
+        "updateIssue",
+        "addComment",
+        "listComments",
+        "searchIssues"
+      ]
     },
     {
       "name": "memory",
       "version": "1.0.0",
-      "description": "Knowledge graph-based persistent memory for storing structured information across conversations",
+      "description": "Memory - Knowledge graph-based persistent memory",
       "author": "Portel",
       "license": "MIT",
-      "tags": ["memory", "knowledge-graph", "storage", "entities"],
-      "category": "utilities",
-      "source": "./memory.photon.ts",
-      "tools": ["createEntities", "createRelations", "addObservations", "deleteEntities", "deleteObservations", "deleteRelations", "readGraph", "searchNodes", "openNodes"]
+      "source": "../memory.photon.ts",
+      "hash": "sha256:cbac4dc79295525ffd0fc7ff8854f97118890d28e16d26d2103f323e405beaff",
+      "tools": [
+        "onInitialize",
+        "createEntities",
+        "createRelations",
+        "addObservations",
+        "deleteEntities",
+        "deleteObservations",
+        "deleteRelations",
+        "readGraph",
+        "searchNodes",
+        "openNodes",
+        "clearGraph",
+        "onShutdown",
+        "saveGraph"
+      ]
     },
     {
       "name": "postgres",
       "version": "1.0.0",
-      "description": "Database operations for PostgreSQL - query, insert, update, and manage databases",
+      "description": "PostgreSQL - Database operations for PostgreSQL",
       "author": "Portel",
       "license": "MIT",
-      "tags": ["database", "postgres", "postgresql", "sql"],
-      "category": "database",
-      "source": "./postgres.photon.ts",
-      "tools": ["query", "insert", "update", "delete", "listTables", "describeTable", "createTable"]
+      "source": "../postgres.photon.ts",
+      "hash": "sha256:fb00ae566b13b279204f461ccd412e6e2709e8a8efcbe6e182d6c6d0fdb84b6f",
+      "tools": [
+        "onInitialize",
+        "onShutdown",
+        "query",
+        "transaction",
+        "listTables",
+        "describeTable",
+        "listIndexes",
+        "insert",
+        "getDatabaseStats"
+      ]
     },
     {
       "name": "slack",
       "version": "1.0.0",
-      "description": "Send messages and interact with Slack workspaces",
+      "description": "Slack - Send messages and manage Slack workspace",
       "author": "Portel",
       "license": "MIT",
-      "tags": ["slack", "messaging", "communication", "api"],
-      "category": "communication",
-      "source": "./slack.photon.ts",
-      "tools": ["sendMessage", "listChannels", "getChannelHistory", "uploadFile", "searchMessages"]
+      "source": "../slack.photon.ts",
+      "hash": "sha256:b8fd58e2c4d678e193a2aa55cead8b33e481ecfe5d832144651bfc28a25b77cc",
+      "tools": [
+        "onInitialize",
+        "postMessage",
+        "listChannels",
+        "getChannelInfo",
+        "getHistory",
+        "addReaction",
+        "uploadFile",
+        "searchMessages",
+        "_resolveChannelName"
+      ]
     },
     {
       "name": "sqlite",
       "version": "1.0.0",
-      "description": "Database operations for SQLite - lightweight SQL database management",
+      "description": "SQLite Photon MCP - SQLite database operations",
       "author": "Portel",
       "license": "MIT",
-      "tags": ["database", "sqlite", "sql", "local"],
-      "category": "database",
-      "source": "./sqlite.photon.ts",
-      "tools": ["query", "execute", "listTables", "describeTable", "vacuum"]
+      "source": "../sqlite.photon.ts",
+      "hash": "sha256:03fea43d9a00194ab5a87113047b3063a0b7456442367207e0e1ad995f1074ad",
+      "tools": [
+        "onInitialize",
+        "open",
+        "query",
+        "queryOne",
+        "execute",
+        "transaction",
+        "listTables",
+        "schema",
+        "close",
+        "backup",
+        "onShutdown"
+      ]
     },
     {
       "name": "web-fetch",
       "version": "1.0.0",
-      "description": "Fetch web content with support for HTML parsing, screenshots, and PDF generation",
+      "description": "Web Fetch - Web content fetching and markdown conversion",
       "author": "Portel",
       "license": "MIT",
-      "tags": ["web", "fetch", "scraping", "html", "screenshots"],
-      "category": "utilities",
-      "source": "./web-fetch.photon.ts",
-      "tools": ["fetchUrl", "fetchHtml", "takeScreenshot", "generatePdf", "extractLinks"]
+      "source": "../web-fetch.photon.ts",
+      "hash": "sha256:ef98979f9283bc29192b727601ecee4978d352d251a081dab8181b43c52ace0c",
+      "tools": [
+        "onInitialize",
+        "fetch",
+        "fetchBatch"
+      ]
     }
   ]
 }
