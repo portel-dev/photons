@@ -46,7 +46,58 @@ photon github-issues --config
 
 ## 📦 Available MCPs
 
-### 1. GitHub Issues
+### 1. Filesystem
+
+File and directory operations using native Node.js APIs.
+
+**File:** `filesystem.photon.ts`
+
+**Configuration:**
+```bash
+export FILESYSTEM_WORKDIR="/path/to/working/directory"  # Optional, default: ~/Documents
+export FILESYSTEM_MAX_FILE_SIZE="10485760"  # Optional, default: 10MB
+export FILESYSTEM_ALLOW_HIDDEN="false"  # Optional, default: false
+
+photon filesystem
+```
+
+**Tools:** 13 tools
+- `readFile` - Read file contents with encoding support
+- `writeFile` - Write content to file
+- `appendFile` - Append to existing file
+- `deleteFile` - Remove file safely
+- `copyFile` - Copy file to destination
+- `moveFile` - Move/rename file
+- `listFiles` - List directory contents (recursive option)
+- `createDirectory` - Create directories (recursive option)
+- `deleteDirectory` - Remove directories (recursive option)
+- `getFileInfo` - Get file/directory metadata
+- `exists` - Check if path exists
+- `searchFiles` - Search by glob pattern (*.txt, **/*.js)
+- `getWorkdir` - Get configured working directory
+
+**Security Features:**
+- Path validation prevents traversal attacks
+- Configurable max file size limit
+- Optional hidden file access control
+- All operations restricted to working directory
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/filesystem.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/filesystem.photon.ts
+
+# Run with default config (workdir: ~/Documents)
+photon filesystem
+
+# Or with custom workdir
+export FILESYSTEM_WORKDIR="$HOME/Projects"
+photon filesystem
+```
+
+---
+
+### 2. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -86,7 +137,7 @@ photon github-issues --config
 
 ---
 
-### 2. Slack
+### 3. Slack
 
 Send messages and manage Slack workspace.
 
@@ -119,7 +170,7 @@ photon slack
 
 ---
 
-### 3. PostgreSQL
+### 4. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -158,7 +209,7 @@ photon postgres --config
 
 ---
 
-### 4. SQLite
+### 5. SQLite
 
 Local SQLite database operations.
 
@@ -195,7 +246,7 @@ photon sqlite
 
 ---
 
-### 5. Web Fetch
+### 6. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -230,7 +281,7 @@ photon web-fetch --dev
 
 ---
 
-### 6. Memory
+### 7. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
