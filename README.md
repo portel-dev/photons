@@ -28,21 +28,21 @@ photon mcp aws-s3
 
 | Photon | Description | Tools | Documentation |
 |--------|-------------|-------|---------------|
-| **aws-s3** | AWS S3 - Cloud object storage operations | 11 | [View Details](aws-s3.md) |
-| **calendar** | Calendar - Google Calendar integration | 9 | [View Details](calendar.md) |
-| **docker** | Docker - Container management operations | 10 | [View Details](docker.md) |
-| **email** | Email - Send and receive emails via SMTP and IMAP | 8 | [View Details](email.md) |
-| **filesystem** | Filesystem - File and directory operations | 13 | [View Details](filesystem.md) |
-| **git** | Git - Local git repository operations | 11 | [View Details](git.md) |
-| **github-issues** | GitHub Issues - Manage GitHub repository issues | 7 | [View Details](github-issues.md) |
-| **jira** | Jira - Project management and issue tracking | 10 | [View Details](jira.md) |
-| **memory** | Memory - Knowledge graph-based persistent memory | 10 | [View Details](memory.md) |
-| **mongodb** | MongoDB - NoSQL database operations | 13 | [View Details](mongodb.md) |
-| **postgres** | PostgreSQL - Database operations for PostgreSQL | 7 | [View Details](postgres.md) |
-| **redis** | Redis - In-memory data store and cache | 18 | [View Details](redis.md) |
-| **slack** | Slack - Send messages and manage Slack workspace | 7 | [View Details](slack.md) |
-| **sqlite** | SQLite Photon MCP - SQLite database operations | 9 | [View Details](sqlite.md) |
-| **web-fetch** | Web Fetch - Web content fetching and markdown conversion | 2 | [View Details](web-fetch.md) |
+| **AWS S3** | Cloud object storage operations | 11 | [View Details](aws-s3.md) |
+| **Calendar** | Google Calendar integration | 9 | [View Details](calendar.md) |
+| **Docker** | Container management operations | 10 | [View Details](docker.md) |
+| **Email** | Send and receive emails via SMTP and IMAP | 8 | [View Details](email.md) |
+| **Filesystem** | File and directory operations | 13 | [View Details](filesystem.md) |
+| **Git** | Local git repository operations | 11 | [View Details](git.md) |
+| **GitHub Issues** | Manage GitHub repository issues | 7 | [View Details](github-issues.md) |
+| **Jira** | Project management and issue tracking | 10 | [View Details](jira.md) |
+| **Memory** | Knowledge graph-based persistent memory | 10 | [View Details](memory.md) |
+| **MongoDB** | NoSQL database operations | 13 | [View Details](mongodb.md) |
+| **PostgreSQL** | Database operations for PostgreSQL | 7 | [View Details](postgres.md) |
+| **Redis** | In-memory data store and cache | 18 | [View Details](redis.md) |
+| **Slack** | Send messages and manage Slack workspace | 7 | [View Details](slack.md) |
+| **SQLite Photon MCP** | SQLite database operations | 9 | [View Details](sqlite.md) |
+| **Web Fetch** | Web content fetching and markdown conversion | 2 | [View Details](web-fetch.md) |
 
 
 ---
