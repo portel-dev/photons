@@ -432,7 +432,58 @@ photon redis
 
 ---
 
-### 8. GitHub Issues
+### 8. AWS S3
+
+Cloud object storage with the AWS SDK.
+
+**File:** `aws-s3.photon.ts`
+
+**Configuration:**
+```bash
+export AWS_S3_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE"
+export AWS_S3_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+export AWS_S3_REGION="us-east-1"  # Optional, default: us-east-1
+photon aws-s3
+```
+
+**Tools:** 11 tools
+- `uploadObject` - Upload file to bucket (with base64 support)
+- `downloadObject` - Download file from bucket
+- `listObjects` - List objects in bucket (with prefix filter)
+- `deleteObject` - Delete single object
+- `deleteObjects` - Delete multiple objects
+- `getObjectMetadata` - Get object metadata (size, type, etc.)
+- `copyObject` - Copy object within S3
+- `getPresignedUrl` - Generate presigned URL for temporary access
+- `listBuckets` - List all buckets
+- `createBucket` - Create new bucket
+- `deleteBucket` - Delete bucket (must be empty)
+
+**Dependencies:** Auto-installs `@aws-sdk/client-s3@^3.511.0, @aws-sdk/s3-request-presigner@^3.511.0`
+
+**Features:**
+- Binary file support (base64 encoding)
+- Presigned URLs for secure sharing
+- Batch delete operations
+- Object metadata management
+- Cross-bucket copying
+- Regional bucket support
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/aws-s3.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/aws-s3.photon.ts
+
+# Run with AWS credentials
+export AWS_S3_ACCESS_KEY_ID="your_access_key"
+export AWS_S3_SECRET_ACCESS_KEY="your_secret_key"
+export AWS_S3_REGION="us-west-2"
+photon aws-s3
+```
+
+---
+
+### 9. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -472,7 +523,7 @@ photon github-issues --config
 
 ---
 
-### 9. Slack
+### 10. Slack
 
 Send messages and manage Slack workspace.
 
@@ -505,7 +556,7 @@ photon slack
 
 ---
 
-### 10. PostgreSQL
+### 11. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -544,7 +595,7 @@ photon postgres --config
 
 ---
 
-### 11. SQLite
+### 12. SQLite
 
 Local SQLite database operations.
 
@@ -581,7 +632,7 @@ photon sqlite
 
 ---
 
-### 12. Web Fetch
+### 13. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -616,7 +667,7 @@ photon web-fetch --dev
 
 ---
 
-### 13. Memory
+### 14. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
