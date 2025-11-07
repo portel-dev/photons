@@ -373,7 +373,66 @@ photon mongodb
 
 ---
 
-### 7. GitHub Issues
+### 7. Redis
+
+In-memory data store for caching and real-time operations.
+
+**File:** `redis.photon.ts`
+
+**Configuration:**
+```bash
+export REDIS_URL="redis://localhost:6379"  # Optional, default: redis://localhost:6379
+export REDIS_PASSWORD="your_password"  # Optional
+export REDIS_DATABASE="0"  # Optional, default: 0
+photon redis
+```
+
+**Tools:** 19 tools
+- `get` - Get value by key
+- `set` - Set key-value with optional TTL
+- `del` - Delete one or more keys
+- `exists` - Check if key exists
+- `keys` - Get all keys matching pattern
+- `incr` - Increment numeric value
+- `decr` - Decrement numeric value
+- `expire` - Set expiration time on key
+- `ttl` - Get time to live for key
+- `lpush` - Push to list (left)
+- `rpush` - Push to list (right)
+- `lpop` - Pop from list (left)
+- `rpop` - Pop from list (right)
+- `llen` - Get list length
+- `hget` - Get hash field value
+- `hset` - Set hash field value
+- `hgetall` - Get all hash fields
+- `flushdb` - Clear current database
+
+**Dependencies:** Auto-installs `redis@^4.6.0`
+
+**Features:**
+- Key-value caching with TTL
+- List operations for queues
+- Hash operations for objects
+- Atomic increment/decrement
+- Pattern matching for keys
+- Connection pooling built-in
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/redis.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/redis.photon.ts
+
+# Run with local Redis
+photon redis
+
+# Or with Redis Cloud
+export REDIS_URL="redis://user:pass@redis-cloud.com:6379"
+photon redis
+```
+
+---
+
+### 8. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -413,7 +472,7 @@ photon github-issues --config
 
 ---
 
-### 8. Slack
+### 9. Slack
 
 Send messages and manage Slack workspace.
 
@@ -446,7 +505,7 @@ photon slack
 
 ---
 
-### 9. PostgreSQL
+### 10. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -485,7 +544,7 @@ photon postgres --config
 
 ---
 
-### 10. SQLite
+### 11. SQLite
 
 Local SQLite database operations.
 
@@ -522,7 +581,7 @@ photon sqlite
 
 ---
 
-### 11. Web Fetch
+### 12. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -557,7 +616,7 @@ photon web-fetch --dev
 
 ---
 
-### 12. Memory
+### 13. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
