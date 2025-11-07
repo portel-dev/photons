@@ -212,7 +212,63 @@ photon git
 
 ---
 
-### 4. GitHub Issues
+### 4. Calendar
+
+Google Calendar integration for event management and scheduling.
+
+**File:** `calendar.photon.ts`
+
+**Configuration:**
+```bash
+export CALENDAR_CLIENT_ID="your-client-id.apps.googleusercontent.com"
+export CALENDAR_CLIENT_SECRET="your-client-secret"
+export CALENDAR_REFRESH_TOKEN="your-refresh-token"
+photon calendar
+```
+
+**Tools:** 9 tools
+- `listEvents` - List upcoming events with filtering
+- `getEvent` - Get specific event details
+- `createEvent` - Create new event with attendees
+- `updateEvent` - Update existing event
+- `deleteEvent` - Delete event (sends cancellation emails)
+- `listCalendars` - List all accessible calendars
+- `getFreeBusy` - Check availability for multiple people
+- `searchEvents` - Search events by query
+- `getUpcomingEvents` - Get events within specified hours
+
+**Dependencies:** Auto-installs `googleapis@^128.0.0`
+
+**Features:**
+- Full event CRUD operations
+- Multi-calendar support
+- Attendee management with email notifications
+- Free/busy availability checking
+- Event search and filtering
+- Timezone-aware scheduling
+
+**OAuth2 Setup:**
+1. Create project in [Google Cloud Console](https://console.cloud.google.com)
+2. Enable Google Calendar API
+3. Create OAuth2 credentials (Web application)
+4. Use OAuth2 Playground or your app to get refresh token
+5. Set environment variables with credentials
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/calendar.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/calendar.photon.ts
+
+# Run with OAuth credentials
+export CALENDAR_CLIENT_ID="123456789.apps.googleusercontent.com"
+export CALENDAR_CLIENT_SECRET="your_secret"
+export CALENDAR_REFRESH_TOKEN="your_refresh_token"
+photon calendar
+```
+
+---
+
+### 5. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -252,7 +308,7 @@ photon github-issues --config
 
 ---
 
-### 5. Slack
+### 6. Slack
 
 Send messages and manage Slack workspace.
 
@@ -285,7 +341,7 @@ photon slack
 
 ---
 
-### 6. PostgreSQL
+### 7. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -324,7 +380,7 @@ photon postgres --config
 
 ---
 
-### 7. SQLite
+### 8. SQLite
 
 Local SQLite database operations.
 
@@ -361,7 +417,7 @@ photon sqlite
 
 ---
 
-### 8. Web Fetch
+### 9. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -396,7 +452,7 @@ photon web-fetch --dev
 
 ---
 
-### 9. Memory
+### 10. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
