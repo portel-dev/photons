@@ -277,7 +277,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./email.photon.ts
+photon mcp ./email.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -287,14 +287,14 @@ photon ./email.photon.ts
 cp email.photon.ts ~/.photon/
 
 # Run by name
-photon email
+photon mcp email
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon email --config
+photon mcp email --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

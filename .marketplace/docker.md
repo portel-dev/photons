@@ -227,7 +227,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./docker.photon.ts
+photon mcp ./docker.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -237,14 +237,14 @@ photon ./docker.photon.ts
 cp docker.photon.ts ~/.photon/
 
 # Run by name
-photon docker
+photon mcp docker
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon docker --config
+photon mcp docker --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

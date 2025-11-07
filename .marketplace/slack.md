@@ -199,7 +199,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./slack.photon.ts
+photon mcp ./slack.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -209,14 +209,14 @@ photon ./slack.photon.ts
 cp slack.photon.ts ~/.photon/
 
 # Run by name
-photon slack
+photon mcp slack
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon slack --config
+photon mcp slack --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

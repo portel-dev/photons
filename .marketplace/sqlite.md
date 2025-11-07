@@ -194,7 +194,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./sqlite.photon.ts
+photon mcp ./sqlite.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -204,14 +204,14 @@ photon ./sqlite.photon.ts
 cp sqlite.photon.ts ~/.photon/
 
 # Run by name
-photon sqlite
+photon mcp sqlite
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon sqlite --config
+photon mcp sqlite --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

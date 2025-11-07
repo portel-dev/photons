@@ -308,7 +308,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./mongodb.photon.ts
+photon mcp ./mongodb.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -318,14 +318,14 @@ photon ./mongodb.photon.ts
 cp mongodb.photon.ts ~/.photon/
 
 # Run by name
-photon mongodb
+photon mcp mongodb
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon mongodb --config
+photon mcp mongodb --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

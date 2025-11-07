@@ -211,7 +211,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./memory.photon.ts
+photon mcp ./memory.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -221,14 +221,14 @@ photon ./memory.photon.ts
 cp memory.photon.ts ~/.photon/
 
 # Run by name
-photon memory
+photon mcp memory
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon memory --config
+photon mcp memory --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

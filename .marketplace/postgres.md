@@ -203,7 +203,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./postgres.photon.ts
+photon mcp ./postgres.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -213,14 +213,14 @@ photon ./postgres.photon.ts
 cp postgres.photon.ts ~/.photon/
 
 # Run by name
-photon postgres
+photon mcp postgres
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon postgres --config
+photon mcp postgres --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

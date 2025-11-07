@@ -253,7 +253,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./jira.photon.ts
+photon mcp ./jira.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -263,14 +263,14 @@ photon ./jira.photon.ts
 cp jira.photon.ts ~/.photon/
 
 # Run by name
-photon jira
+photon mcp jira
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon jira --config
+photon mcp jira --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

@@ -276,7 +276,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./aws-s3.photon.ts
+photon mcp ./aws-s3.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -286,14 +286,14 @@ photon ./aws-s3.photon.ts
 cp aws-s3.photon.ts ~/.photon/
 
 # Run by name
-photon aws-s3
+photon mcp aws-s3
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon aws-s3 --config
+photon mcp aws-s3 --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

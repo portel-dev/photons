@@ -92,7 +92,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./web-fetch.photon.ts
+photon mcp ./web-fetch.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -102,14 +102,14 @@ photon ./web-fetch.photon.ts
 cp web-fetch.photon.ts ~/.photon/
 
 # Run by name
-photon web-fetch
+photon mcp web-fetch
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon web-fetch --config
+photon mcp web-fetch --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

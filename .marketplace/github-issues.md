@@ -227,7 +227,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./github-issues.photon.ts
+photon mcp ./github-issues.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -237,14 +237,14 @@ photon ./github-issues.photon.ts
 cp github-issues.photon.ts ~/.photon/
 
 # Run by name
-photon github-issues
+photon mcp github-issues
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon github-issues --config
+photon mcp github-issues --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

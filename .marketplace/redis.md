@@ -381,7 +381,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./redis.photon.ts
+photon mcp ./redis.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -391,14 +391,14 @@ photon ./redis.photon.ts
 cp redis.photon.ts ~/.photon/
 
 # Run by name
-photon redis
+photon mcp redis
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon redis --config
+photon mcp redis --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

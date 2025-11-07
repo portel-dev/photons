@@ -244,7 +244,7 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon ./calendar.photon.ts
+photon mcp ./calendar.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
@@ -254,14 +254,14 @@ photon ./calendar.photon.ts
 cp calendar.photon.ts ~/.photon/
 
 # Run by name
-photon calendar
+photon mcp calendar
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon calendar --config
+photon mcp calendar --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```
