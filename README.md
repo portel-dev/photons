@@ -5,6 +5,25 @@
 
 Production-ready photons for instant use. Zero configuration, auto-dependencies, single command installation.
 
+## 🏛️ Official Marketplace
+
+This is the **official Photon marketplace** maintained by Portel. It comes pre-configured with the Photon CLI - no manual setup needed.
+
+**Already available to you:**
+- ✅ Pre-installed with Photon CLI
+- ✅ Automatically updated
+- ✅ Production-ready photons
+- ✅ Community-maintained
+
+**Want to contribute?**
+We welcome contributions! Submit pull requests for:
+- 🐛 Bug fixes to existing photons
+- ✨ Enhancements and new features
+- 📦 New photons to add to the marketplace
+- 📝 Documentation improvements
+
+**Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
+
 ## ⚛️ What Are Photons?
 
 **Photons** are laser-focused modules - each does ONE thing exceptionally well:
