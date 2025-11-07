@@ -268,7 +268,56 @@ photon calendar
 
 ---
 
-### 5. GitHub Issues
+### 5. Docker
+
+Container and image management using Docker API.
+
+**File:** `docker.photon.ts`
+
+**Configuration:**
+```bash
+export DOCKER_SOCKET_PATH="/var/run/docker.sock"  # Optional, default: /var/run/docker.sock
+photon docker
+```
+
+**Tools:** 10 tools
+- `listContainers` - List containers (running or all)
+- `startContainer` - Start stopped container
+- `stopContainer` - Stop running container (with timeout)
+- `restartContainer` - Restart container (with timeout)
+- `removeContainer` - Remove container (with force option)
+- `getLogs` - Get container logs (with tail limit)
+- `listImages` - List all Docker images
+- `pullImage` - Pull image from registry
+- `removeImage` - Remove image (with force option)
+- `getStats` - Get real-time container stats (CPU, memory, network)
+
+**Dependencies:** Auto-installs `dockerode@^4.0.0`
+
+**Features:**
+- Full container lifecycle management
+- Image management (pull, list, remove)
+- Real-time logs with configurable tail
+- Container stats (CPU, memory, network usage)
+- Force operations for cleanup
+- Automatic Docker connection validation
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/docker.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/docker.photon.ts
+
+# Run with default socket
+photon docker
+
+# Or specify custom socket (e.g., Colima on macOS)
+export DOCKER_SOCKET_PATH="$HOME/.colima/docker.sock"
+photon docker
+```
+
+---
+
+### 6. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -308,7 +357,7 @@ photon github-issues --config
 
 ---
 
-### 6. Slack
+### 7. Slack
 
 Send messages and manage Slack workspace.
 
@@ -341,7 +390,7 @@ photon slack
 
 ---
 
-### 7. PostgreSQL
+### 8. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -380,7 +429,7 @@ photon postgres --config
 
 ---
 
-### 8. SQLite
+### 9. SQLite
 
 Local SQLite database operations.
 
@@ -417,7 +466,7 @@ photon sqlite
 
 ---
 
-### 9. Web Fetch
+### 10. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -452,7 +501,7 @@ photon web-fetch --dev
 
 ---
 
-### 10. Memory
+### 11. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
