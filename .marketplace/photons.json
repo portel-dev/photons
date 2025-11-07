@@ -1,7 +1,6 @@
 {
   "name": "photons",
   "version": "1.0.0",
-  "description": "photons Photon marketplace",
   "photons": [
     {
       "name": "aws-s3",
