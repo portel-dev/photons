@@ -483,7 +483,62 @@ photon aws-s3
 
 ---
 
-### 9. GitHub Issues
+### 9. Jira
+
+Project management and issue tracking for Atlassian Jira.
+
+**File:** `jira.photon.ts`
+
+**Configuration:**
+```bash
+export JIRA_HOST="your-domain.atlassian.net"
+export JIRA_EMAIL="your@email.com"
+export JIRA_API_TOKEN="your_api_token"
+photon jira
+```
+
+**Tools:** 10 tools
+- `searchIssues` - Search issues with JQL queries
+- `getIssue` - Get detailed issue information
+- `createIssue` - Create new issue with fields
+- `updateIssue` - Update existing issue
+- `transitionIssue` - Change issue status/workflow
+- `getTransitions` - Get available transitions for issue
+- `addComment` - Add comment to issue
+- `getComments` - Get all comments on issue
+- `listProjects` - List all accessible projects
+- `getProject` - Get project details
+
+**Dependencies:** Auto-installs `axios@^1.6.0`
+
+**Features:**
+- JQL query support
+- Issue workflow management
+- Comment threads
+- Project browsing
+- Priority and assignee management
+- Rich text description support
+
+**API Token Setup:**
+1. Go to [Atlassian Account Settings](https://id.atlassian.com/manage-profile/security/api-tokens)
+2. Click "Create API token"
+3. Copy the token and set as JIRA_API_TOKEN
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/jira.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/jira.photon.ts
+
+# Run with Jira Cloud credentials
+export JIRA_HOST="mycompany.atlassian.net"
+export JIRA_EMAIL="developer@mycompany.com"
+export JIRA_API_TOKEN="your_api_token_here"
+photon jira
+```
+
+---
+
+### 10. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -523,7 +578,7 @@ photon github-issues --config
 
 ---
 
-### 10. Slack
+### 11. Slack
 
 Send messages and manage Slack workspace.
 
@@ -556,7 +611,7 @@ photon slack
 
 ---
 
-### 11. PostgreSQL
+### 12. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -595,7 +650,7 @@ photon postgres --config
 
 ---
 
-### 12. SQLite
+### 13. SQLite
 
 Local SQLite database operations.
 
@@ -632,7 +687,7 @@ photon sqlite
 
 ---
 
-### 13. Web Fetch
+### 14. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -667,7 +722,7 @@ photon web-fetch --dev
 
 ---
 
-### 14. Memory
+### 15. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
