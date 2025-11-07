@@ -1,6 +1,6 @@
-# github-issues
+# GitHub Issues
 
-GitHub Issues - Manage GitHub repository issues
+Manage GitHub repository issues
 
 ## 📋 Overview
 

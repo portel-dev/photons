@@ -1,6 +1,6 @@
-# memory
+# Memory
 
-Memory - Knowledge graph-based persistent memory
+Knowledge graph-based persistent memory
 
 ## 📋 Overview
 

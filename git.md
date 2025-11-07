@@ -1,6 +1,6 @@
-# git
+# Git
 
-Git - Local git repository operations
+Local git repository operations
 
 ## 📋 Overview
 

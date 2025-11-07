@@ -1,6 +1,6 @@
-# redis
+# Redis
 
-Redis - In-memory data store and cache
+In-memory data store and cache
 
 ## 📋 Overview
 

@@ -1,6 +1,6 @@
-# jira
+# Jira
 
-Jira - Project management and issue tracking
+Project management and issue tracking
 
 ## 📋 Overview
 

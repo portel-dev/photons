@@ -1,6 +1,6 @@
-# docker
+# Docker
 
-Docker - Container management operations
+Container management operations
 
 ## 📋 Overview
 

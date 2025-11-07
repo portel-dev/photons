@@ -1,6 +1,6 @@
-# aws-s3
+# AWS S3
 
-AWS S3 - Cloud object storage operations
+Cloud object storage operations
 
 ## 📋 Overview
 

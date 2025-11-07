@@ -1,6 +1,6 @@
-# postgres
+# PostgreSQL
 
-PostgreSQL - Database operations for PostgreSQL
+Database operations for PostgreSQL
 
 ## 📋 Overview
 

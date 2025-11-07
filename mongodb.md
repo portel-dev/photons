@@ -1,6 +1,6 @@
-# mongodb
+# MongoDB
 
-MongoDB - NoSQL database operations
+NoSQL database operations
 
 ## 📋 Overview
 

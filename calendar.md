@@ -1,6 +1,6 @@
-# calendar
+# Calendar
 
-Calendar - Google Calendar integration
+Google Calendar integration
 
 ## 📋 Overview
 

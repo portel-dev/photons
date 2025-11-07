@@ -1,6 +1,6 @@
-# web-fetch
+# Web Fetch
 
-Web Fetch - Web content fetching and markdown conversion
+Web content fetching and markdown conversion
 
 ## 📋 Overview
 

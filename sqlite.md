@@ -1,6 +1,6 @@
-# sqlite
+# SQLite Photon MCP
 
-SQLite Photon MCP - SQLite database operations
+SQLite database operations
 
 ## 📋 Overview
 

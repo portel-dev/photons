@@ -1,6 +1,6 @@
-# slack
+# Slack
 
-Slack - Send messages and manage Slack workspace
+Send messages and manage Slack workspace
 
 ## 📋 Overview
 

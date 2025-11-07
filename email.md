@@ -1,6 +1,6 @@
-# email
+# Email
 
-Email - Send and receive emails via SMTP and IMAP
+Send and receive emails via SMTP and IMAP
 
 ## 📋 Overview
 

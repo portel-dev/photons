@@ -1,6 +1,6 @@
-# filesystem
+# Filesystem
 
-Filesystem - File and directory operations
+File and directory operations
 
 ## 📋 Overview
 
