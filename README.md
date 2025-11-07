@@ -981,163 +981,51 @@ MIT - See LICENSE file for details
 <!-- PHOTON_MARKETPLACE_START -->
 # photons
 
-## 📦 Available Photons
-
-
-### [aws-s3](./.marketplace/aws-s3.md)
-
-AWS S3 - Cloud object storage operations
-
-**Tools:** 11 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [calendar](./.marketplace/calendar.md)
-
-Calendar - Google Calendar integration
-
-**Tools:** 9 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [docker](./.marketplace/docker.md)
-
-Docker - Container management operations
-
-**Tools:** 10 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [email](./.marketplace/email.md)
-
-Email - Send and receive emails via SMTP and IMAP
-
-**Tools:** 8 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [filesystem](./.marketplace/filesystem.md)
-
-Filesystem - File and directory operations
-
-**Tools:** 13 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [git](./.marketplace/git.md)
-
-Git - Local git repository operations
-
-**Tools:** 11 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [github-issues](./.marketplace/github-issues.md)
-
-GitHub Issues - Manage GitHub repository issues
-
-**Tools:** 7 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [jira](./.marketplace/jira.md)
-
-Jira - Project management and issue tracking
-
-**Tools:** 10 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [memory](./.marketplace/memory.md)
-
-Memory - Knowledge graph-based persistent memory
-
-**Tools:** 10 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [mongodb](./.marketplace/mongodb.md)
-
-MongoDB - NoSQL database operations
-
-**Tools:** 13 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [postgres](./.marketplace/postgres.md)
-
-PostgreSQL - Database operations for PostgreSQL
-
-**Tools:** 7 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [redis](./.marketplace/redis.md)
-
-Redis - In-memory data store and cache
-
-**Tools:** 18 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [slack](./.marketplace/slack.md)
-
-Slack - Send messages and manage Slack workspace
-
-**Tools:** 7 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [sqlite](./.marketplace/sqlite.md)
-
-SQLite Photon MCP - SQLite database operations
-
-**Tools:** 9 • **Version:** 1.0.0 • **License:** MIT
-
-
-### [web-fetch](./.marketplace/web-fetch.md)
-
-Web Fetch - Web content fetching and markdown conversion
-
-**Tools:** 2 • **Version:** 1.0.0 • **License:** MIT
-
-
-
----
 
 ## 🚀 Quick Start
 
-Install Photon globally:
+### Install Photon CLI
 
 ```bash
 npm install -g @portel/photon
 ```
 
-### Run a Photon
+### Add a Photon from this Marketplace
 
 ```bash
-# Clone this repository
-git clone <repository-url>
-cd photons
+# Add any photon to your library
+photon add <photon-name>
 
-# Run a photon directly
-photon ./aws-s3.photon.ts
+# For example:
+photon add aws-s3
 
-# Or install to ~/.photon/ for easier access
-cp aws-s3.photon.ts ~/.photon/
-photon aws-s3
+# Run it
+photon mcp aws-s3
 ```
 
-## 📖 Documentation
+## 📦 Available Photons
 
-Detailed documentation for each photon:
+| Photon | Description | Tools | Documentation |
+|--------|-------------|-------|---------------|
+| **aws-s3** | AWS S3 - Cloud object storage operations | 11 | [View Details](aws-s3.md) |
+| **calendar** | Calendar - Google Calendar integration | 9 | [View Details](calendar.md) |
+| **docker** | Docker - Container management operations | 10 | [View Details](docker.md) |
+| **email** | Email - Send and receive emails via SMTP and IMAP | 8 | [View Details](email.md) |
+| **filesystem** | Filesystem - File and directory operations | 13 | [View Details](filesystem.md) |
+| **git** | Git - Local git repository operations | 11 | [View Details](git.md) |
+| **github-issues** | GitHub Issues - Manage GitHub repository issues | 7 | [View Details](github-issues.md) |
+| **jira** | Jira - Project management and issue tracking | 10 | [View Details](jira.md) |
+| **memory** | Memory - Knowledge graph-based persistent memory | 10 | [View Details](memory.md) |
+| **mongodb** | MongoDB - NoSQL database operations | 13 | [View Details](mongodb.md) |
+| **postgres** | PostgreSQL - Database operations for PostgreSQL | 7 | [View Details](postgres.md) |
+| **redis** | Redis - In-memory data store and cache | 18 | [View Details](redis.md) |
+| **slack** | Slack - Send messages and manage Slack workspace | 7 | [View Details](slack.md) |
+| **sqlite** | SQLite Photon MCP - SQLite database operations | 9 | [View Details](sqlite.md) |
+| **web-fetch** | Web Fetch - Web content fetching and markdown conversion | 2 | [View Details](web-fetch.md) |
 
-- [aws-s3](./.marketplace/aws-s3.md) - AWS S3 - Cloud object storage operations
-- [calendar](./.marketplace/calendar.md) - Calendar - Google Calendar integration
-- [docker](./.marketplace/docker.md) - Docker - Container management operations
-- [email](./.marketplace/email.md) - Email - Send and receive emails via SMTP and IMAP
-- [filesystem](./.marketplace/filesystem.md) - Filesystem - File and directory operations
-- [git](./.marketplace/git.md) - Git - Local git repository operations
-- [github-issues](./.marketplace/github-issues.md) - GitHub Issues - Manage GitHub repository issues
-- [jira](./.marketplace/jira.md) - Jira - Project management and issue tracking
-- [memory](./.marketplace/memory.md) - Memory - Knowledge graph-based persistent memory
-- [mongodb](./.marketplace/mongodb.md) - MongoDB - NoSQL database operations
-- [postgres](./.marketplace/postgres.md) - PostgreSQL - Database operations for PostgreSQL
-- [redis](./.marketplace/redis.md) - Redis - In-memory data store and cache
-- [slack](./.marketplace/slack.md) - Slack - Send messages and manage Slack workspace
-- [sqlite](./.marketplace/sqlite.md) - SQLite Photon MCP - SQLite database operations
-- [web-fetch](./.marketplace/web-fetch.md) - Web Fetch - Web content fetching and markdown conversion
 
+---
 
-## 🔧 Configuration
-
-Each photon may require specific environment variables. See individual photon documentation for configuration details.
+**Total:** 15 photons • Click on "View Details" for configuration and usage instructions.
 
 <!-- PHOTON_MARKETPLACE_END -->
