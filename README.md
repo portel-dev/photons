@@ -97,7 +97,71 @@ photon filesystem
 
 ---
 
-### 2. GitHub Issues
+### 2. Email
+
+Send and receive emails via SMTP and IMAP protocols.
+
+**File:** `email.photon.ts`
+
+**Configuration:**
+```bash
+export EMAIL_SMTP_HOST="smtp.gmail.com"
+export EMAIL_SMTP_PORT="587"  # Optional, default: 587
+export EMAIL_SMTP_USER="your@gmail.com"
+export EMAIL_SMTP_PASSWORD="your_app_password"
+export EMAIL_SMTP_SECURE="false"  # Optional, default: false (use TLS)
+
+# Optional: IMAP for receiving emails
+export EMAIL_IMAP_HOST="imap.gmail.com"  # Optional
+export EMAIL_IMAP_PORT="993"  # Optional, default: 993
+export EMAIL_IMAP_USER="your@gmail.com"  # Optional, defaults to SMTP user
+export EMAIL_IMAP_PASSWORD="your_app_password"  # Optional, defaults to SMTP password
+
+photon email
+```
+
+**Tools:** 8 tools
+- `sendEmail` - Send email with plain text or HTML body
+- `sendWithAttachment` - Send email with file attachments
+- `listInbox` - List inbox messages (with filters)
+- `getEmail` - Get specific email by UID
+- `searchEmails` - Search emails by from/subject/body
+- `markAsRead` - Mark email as read
+- `deleteEmail` - Delete email permanently
+- `moveEmail` - Move email to another mailbox (archive)
+
+**Dependencies:** Auto-installs `nodemailer@^6.9.0, imap@^0.8.19, mailparser@^3.6.0`
+
+**Features:**
+- SMTP sending with TLS/SSL support
+- IMAP receiving with search capabilities
+- Attachment support (send and receive)
+- HTML and plain text emails
+- Mailbox management (read, delete, move)
+- Works in send-only mode if IMAP not configured
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/email.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/email.photon.ts
+
+# Run with Gmail (use App Password, not regular password)
+export EMAIL_SMTP_HOST="smtp.gmail.com"
+export EMAIL_SMTP_USER="your@gmail.com"
+export EMAIL_SMTP_PASSWORD="your_app_password"
+export EMAIL_IMAP_HOST="imap.gmail.com"
+photon email
+
+# Send-only mode (no IMAP)
+export EMAIL_SMTP_HOST="smtp.sendgrid.net"
+export EMAIL_SMTP_USER="apikey"
+export EMAIL_SMTP_PASSWORD="your_sendgrid_api_key"
+photon email
+```
+
+---
+
+### 3. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -137,7 +201,7 @@ photon github-issues --config
 
 ---
 
-### 3. Slack
+### 4. Slack
 
 Send messages and manage Slack workspace.
 
@@ -170,7 +234,7 @@ photon slack
 
 ---
 
-### 4. PostgreSQL
+### 5. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -209,7 +273,7 @@ photon postgres --config
 
 ---
 
-### 5. SQLite
+### 6. SQLite
 
 Local SQLite database operations.
 
@@ -246,7 +310,7 @@ photon sqlite
 
 ---
 
-### 6. Web Fetch
+### 7. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -281,7 +345,7 @@ photon web-fetch --dev
 
 ---
 
-### 7. Memory
+### 8. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
