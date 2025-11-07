@@ -44,7 +44,7 @@ Project management and issue tracking
 This photon provides **10** tools:
 
 
-### `searchIssues`
+### `search`
 
 List issues with JQL query
 
@@ -65,7 +65,7 @@ List issues with JQL query
 ---
 
 
-### `getIssue`
+### `get`
 
 Get issue details
 
@@ -82,7 +82,7 @@ Get issue details
 ---
 
 
-### `createIssue`
+### `create`
 
 Create a new issue
 
@@ -109,7 +109,7 @@ Create a new issue
 ---
 
 
-### `updateIssue`
+### `update`
 
 Update an issue
 
@@ -134,7 +134,7 @@ Update an issue
 ---
 
 
-### `transitionIssue`
+### `transition`
 
 Transition issue to new status
 
@@ -153,7 +153,7 @@ Transition issue to new status
 ---
 
 
-### `getTransitions`
+### `transitions`
 
 Get available transitions for issue
 
@@ -170,7 +170,7 @@ Get available transitions for issue
 ---
 
 
-### `addComment`
+### `comment`
 
 Add comment to issue
 
@@ -189,7 +189,7 @@ Add comment to issue
 ---
 
 
-### `getComments`
+### `comments`
 
 Get comments for issue
 
@@ -208,7 +208,7 @@ Get comments for issue
 ---
 
 
-### `listProjects`
+### `projects`
 
 List all projects
 
@@ -219,7 +219,7 @@ List all projects
 ---
 
 
-### `getProject`
+### `project`
 
 Get project details
 

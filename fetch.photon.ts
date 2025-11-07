@@ -1,5 +1,5 @@
 /**
- * Web Fetch - Web content fetching and markdown conversion
+ * Fetch - Web content fetching and markdown conversion
  *
  * Replicates the official MCP Fetch server for retrieving web pages and converting to markdown.
  * Supports pagination for large pages and raw content retrieval.
@@ -25,7 +25,7 @@
 
 import TurndownService from 'turndown';
 
-export default class WebFetch {
+export default class Fetch {
   private turndown: TurndownService;
   private userAgent: string;
 
@@ -133,7 +133,7 @@ export default class WebFetch {
    * @param urls Array of URLs to fetch
    * @param max_length Maximum length per URL (default: 5000)
    */
-  async fetchBatch(params: { urls: string[]; max_length?: number }) {
+  async batch(params: { urls: string[]; max_length?: number }) {
     try {
       const results = await Promise.all(
         params.urls.map((url) =>

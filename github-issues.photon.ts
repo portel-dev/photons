@@ -57,7 +57,7 @@ export default class GitHubIssues {
    * @param sort Sort by created, updated, or comments (default: created)
    * @param per_page Number of results per page (default: 30, max: 100)
    */
-  async listIssues(params: {
+  async list(params: {
     owner: string;
     repo: string;
     state?: 'open' | 'closed' | 'all';
@@ -107,7 +107,7 @@ export default class GitHubIssues {
    * @param repo Repository name
    * @param issue_number Issue number
    */
-  async getIssue(params: { owner: string; repo: string; issue_number: number }) {
+  async get(params: { owner: string; repo: string; issue_number: number }) {
     try {
       const response = await this.octokit.issues.get({
         owner: params.owner,
@@ -150,7 +150,7 @@ export default class GitHubIssues {
    * @param labels Array of label names
    * @param assignees Array of usernames to assign
    */
-  async createIssue(params: {
+  async create(params: {
     owner: string;
     repo: string;
     title: string;
@@ -194,7 +194,7 @@ export default class GitHubIssues {
    * @param state New state: open or closed (optional)
    * @param labels New labels (optional)
    */
-  async updateIssue(params: {
+  async update(params: {
     owner: string;
     repo: string;
     issue_number: number;
@@ -238,7 +238,7 @@ export default class GitHubIssues {
    * @param issue_number Issue number
    * @param body Comment text
    */
-  async addComment(params: {
+  async comment(params: {
     owner: string;
     repo: string;
     issue_number: number;
@@ -276,7 +276,7 @@ export default class GitHubIssues {
    * @param repo Repository name
    * @param issue_number Issue number
    */
-  async listComments(params: { owner: string; repo: string; issue_number: number }) {
+  async comments(params: { owner: string; repo: string; issue_number: number }) {
     try {
       const response = await this.octokit.issues.listComments({
         owner: params.owner,
@@ -313,7 +313,7 @@ export default class GitHubIssues {
    * @param order Sort order: asc or desc (default: desc)
    * @param per_page Number of results per page (default: 30)
    */
-  async searchIssues(params: {
+  async search(params: {
     query: string;
     sort?: 'created' | 'updated' | 'comments';
     order?: 'asc' | 'desc';

@@ -10,7 +10,7 @@
  * - Directory operations: "List all files in my Downloads folder"
  * - File management: "Copy config.json to config.backup.json"
  *
- * Example: readFile({ path: "README.md" })
+ * Example: read({ path: "README.md" })
  *
  * Configuration:
  * - workdir: Working directory base path (default: ~/Documents)
@@ -60,7 +60,7 @@ export default class Filesystem {
    * @param path File path (relative to workdir or absolute)
    * @param encoding File encoding (default: utf-8)
    */
-  async readFile(params: { path: string; encoding?: string }) {
+  async read(params: { path: string; encoding?: string }) {
     try {
       const filePath = this.resolvePath(params.path);
       this.validatePath(filePath);
@@ -97,7 +97,7 @@ export default class Filesystem {
    * @param content File content
    * @param encoding File encoding (default: utf-8)
    */
-  async writeFile(params: { path: string; content: string; encoding?: string }) {
+  async write(params: { path: string; content: string; encoding?: string }) {
     try {
       const filePath = this.resolvePath(params.path);
       this.validatePath(filePath);
@@ -135,7 +135,7 @@ export default class Filesystem {
    * @param content Content to append
    * @param encoding File encoding (default: utf-8)
    */
-  async appendFile(params: { path: string; content: string; encoding?: string }) {
+  async append(params: { path: string; content: string; encoding?: string }) {
     try {
       const filePath = this.resolvePath(params.path);
       this.validatePath(filePath);
@@ -159,10 +159,10 @@ export default class Filesystem {
   }
 
   /**
-   * Delete a file
+   * Remove a file
    * @param path File path (relative to workdir or absolute)
    */
-  async deleteFile(params: { path: string }) {
+  async remove(params: { path: string }) {
     try {
       const filePath = this.resolvePath(params.path);
       this.validatePath(filePath);
@@ -172,7 +172,7 @@ export default class Filesystem {
       if (stats.isDirectory()) {
         return {
           success: false,
-          error: 'Path is a directory. Use deleteDirectory instead.',
+          error: 'Path is a directory. Use rmdir instead.',
         };
       }
 
@@ -196,7 +196,7 @@ export default class Filesystem {
    * @param source Source file path
    * @param destination Destination file path
    */
-  async copyFile(params: { source: string; destination: string }) {
+  async copy(params: { source: string; destination: string }) {
     try {
       const sourcePath = this.resolvePath(params.source);
       const destPath = this.resolvePath(params.destination);
@@ -227,7 +227,7 @@ export default class Filesystem {
    * @param source Source file path
    * @param destination Destination file path
    */
-  async moveFile(params: { source: string; destination: string }) {
+  async move(params: { source: string; destination: string }) {
     try {
       const sourcePath = this.resolvePath(params.source);
       const destPath = this.resolvePath(params.destination);
@@ -256,7 +256,7 @@ export default class Filesystem {
    * @param path Directory path (relative to workdir or absolute, default: current workdir)
    * @param recursive List files recursively (default: false)
    */
-  async listFiles(params?: { path?: string; recursive?: boolean }) {
+  async list(params?: { path?: string; recursive?: boolean }) {
     try {
       const dirPath = this.resolvePath(params?.path || '.');
       this.validatePath(dirPath);
@@ -282,7 +282,7 @@ export default class Filesystem {
    * @param path Directory path (relative to workdir or absolute)
    * @param recursive Create parent directories if needed (default: true)
    */
-  async createDirectory(params: { path: string; recursive?: boolean }) {
+  async mkdir(params: { path: string; recursive?: boolean }) {
     try {
       const dirPath = this.resolvePath(params.path);
       this.validatePath(dirPath);
@@ -303,11 +303,11 @@ export default class Filesystem {
   }
 
   /**
-   * Delete a directory
+   * Remove a directory
    * @param path Directory path (relative to workdir or absolute)
-   * @param recursive Delete directory and all contents (default: false)
+   * @param recursive Remove directory and all contents (default: false)
    */
-  async deleteDirectory(params: { path: string; recursive?: boolean }) {
+  async rmdir(params: { path: string; recursive?: boolean }) {
     try {
       const dirPath = this.resolvePath(params.path);
       this.validatePath(dirPath);
@@ -317,7 +317,7 @@ export default class Filesystem {
       if (!stats.isDirectory()) {
         return {
           success: false,
-          error: 'Path is not a directory. Use deleteFile instead.',
+          error: 'Path is not a directory. Use remove instead.',
         };
       }
 
@@ -340,7 +340,7 @@ export default class Filesystem {
    * Get file or directory information
    * @param path File or directory path
    */
-  async getFileInfo(params: { path: string }) {
+  async info(params: { path: string}) {
     try {
       const filePath = this.resolvePath(params.path);
       this.validatePath(filePath);
@@ -395,7 +395,7 @@ export default class Filesystem {
    * @param pattern File name pattern (glob-style: *.txt, **\/*.js)
    * @param path Directory to search (default: workdir)
    */
-  async searchFiles(params: { pattern: string; path?: string }) {
+  async search(params: { pattern: string; path?: string }) {
     try {
       const searchPath = this.resolvePath(params.path || '.');
       this.validatePath(searchPath);
@@ -420,7 +420,7 @@ export default class Filesystem {
   /**
    * Get current working directory
    */
-  async getWorkdir(params: {}) {
+  async workdir() {
     return {
       success: true,
       workdir: this.workdir,

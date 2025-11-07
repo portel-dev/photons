@@ -353,7 +353,7 @@ Get all fields and values in hash
 ---
 
 
-### `flushdb`
+### `flush`
 
 Flush all data from current database
 

@@ -32,7 +32,7 @@ Knowledge graph-based persistent memory
 This photon provides **10** tools:
 
 
-### `createEntities`
+### `entities`
 
 Create new entities with observations
 
@@ -49,7 +49,7 @@ Create new entities with observations
 ---
 
 
-### `createRelations`
+### `relations`
 
 Create relations between entities
 
@@ -66,7 +66,7 @@ Create relations between entities
 ---
 
 
-### `addObservations`
+### `observe`
 
 Add observations to an entity
 
@@ -85,7 +85,7 @@ Add observations to an entity
 ---
 
 
-### `deleteEntities`
+### `removeEntities`
 
 Delete entities and their relations
 
@@ -102,7 +102,7 @@ Delete entities and their relations
 ---
 
 
-### `deleteObservations`
+### `removeObservations`
 
 Delete specific observations from an entity
 
@@ -121,7 +121,7 @@ Delete specific observations from an entity
 ---
 
 
-### `deleteRelations`
+### `removeRelations`
 
 Delete relations
 
@@ -138,7 +138,7 @@ Delete relations
 ---
 
 
-### `readGraph`
+### `graph`
 
 Read the entire knowledge graph
 
@@ -149,7 +149,7 @@ Read the entire knowledge graph
 ---
 
 
-### `searchNodes`
+### `search`
 
 Search for entities matching a query
 
@@ -166,7 +166,7 @@ Search for entities matching a query
 ---
 
 
-### `openNodes`
+### `nodes`
 
 Open specific entities by name with their relations
 
@@ -183,7 +183,7 @@ Open specific entities by name with their relations
 ---
 
 
-### `clearGraph`
+### `clear`
 
 Clear the entire knowledge graph
 

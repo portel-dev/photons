@@ -33,7 +33,7 @@ Dependencies are auto-installed on first run.
 This photon provides **7** tools:
 
 
-### `postMessage`
+### `post`
 
 Post a message to a channel or user
 
@@ -56,7 +56,7 @@ Post a message to a channel or user
 ---
 
 
-### `listChannels`
+### `channels`
 
 List all channels in the workspace
 
@@ -75,7 +75,7 @@ List all channels in the workspace
 ---
 
 
-### `getChannelInfo`
+### `channel`
 
 Get channel information
 
@@ -92,7 +92,7 @@ Get channel information
 ---
 
 
-### `getHistory`
+### `history`
 
 Get conversation history from a channel
 
@@ -115,7 +115,7 @@ Get conversation history from a channel
 ---
 
 
-### `addReaction`
+### `react`
 
 Add a reaction to a message
 
@@ -136,7 +136,7 @@ Add a reaction to a message
 ---
 
 
-### `uploadFile`
+### `upload`
 
 Upload a file to a channel
 
@@ -161,7 +161,7 @@ Upload a file to a channel
 ---
 
 
-### `searchMessages`
+### `search`
 
 Search for messages in the workspace
 

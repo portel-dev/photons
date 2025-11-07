@@ -91,7 +91,7 @@ Show differences in repository
 ---
 
 
-### `listBranches`
+### `branches`
 
 List all branches in repository
 
@@ -108,7 +108,7 @@ List all branches in repository
 ---
 
 
-### `createBranch`
+### `branch`
 
 Create a new branch
 
@@ -129,7 +129,7 @@ Create a new branch
 ---
 
 
-### `checkoutBranch`
+### `checkout`
 
 Checkout (switch to) a branch
 
@@ -148,7 +148,7 @@ Checkout (switch to) a branch
 ---
 
 
-### `deleteBranch`
+### `removeBranch`
 
 Delete a branch
 

@@ -156,7 +156,7 @@ export default class Git {
    * List all branches in repository
    * @param path Repository path (default: configured repoPath)
    */
-  async listBranches(params?: { path?: string }) {
+  async branches(params?: { path?: string }) {
     try {
       const repoPath = this._resolvePath(params?.path);
       this._validateRepo(repoPath);
@@ -190,7 +190,7 @@ export default class Git {
    * @param path Repository path (default: configured repoPath)
    * @param checkout Checkout the new branch after creation (default: false)
    */
-  async createBranch(params: { name: string; path?: string; checkout?: boolean }) {
+  async branch(params: { name: string; path?: string; checkout?: boolean }) {
     try {
       const repoPath = this._resolvePath(params.path);
       this._validateRepo(repoPath);
@@ -223,7 +223,7 @@ export default class Git {
    * @param name Branch name to checkout
    * @param path Repository path (default: configured repoPath)
    */
-  async checkoutBranch(params: { name: string; path?: string }) {
+  async checkout(params: { name: string; path?: string }) {
     try {
       const repoPath = this._resolvePath(params.path);
       this._validateRepo(repoPath);
@@ -251,7 +251,7 @@ export default class Git {
    * @param path Repository path (default: configured repoPath)
    * @param force Force delete even if not fully merged (default: false)
    */
-  async deleteBranch(params: { name: string; path?: string; force?: boolean }) {
+  async removeBranch(params: { name: string; path?: string; force?: boolean }) {
     try {
       const repoPath = this._resolvePath(params.path);
       this._validateRepo(repoPath);

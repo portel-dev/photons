@@ -1,4 +1,4 @@
-# Web Fetch
+# Fetch
 
 Web content fetching and markdown conversion
 
@@ -13,7 +13,7 @@ Web content fetching and markdown conversion
 ### Environment Variables
 
 
-- **`WEB_FETCH_USER_AGENT`** [OPTIONAL]
+- **`FETCH_USER_AGENT`** [OPTIONAL]
   - Type: string
   - Description: Custom User-Agent header (optional, default: "Photon-MCP-Fetch/1.0")
   
@@ -56,7 +56,7 @@ Fetch a URL and convert to markdown
 ---
 
 
-### `fetchBatch`
+### `batch`
 
 Fetch multiple URLs in parallel
 
@@ -92,24 +92,24 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon mcp ./web-fetch.photon.ts
+photon mcp ./fetch.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
 
 ```bash
 # Copy to photon directory
-cp web-fetch.photon.ts ~/.photon/
+cp fetch.photon.ts ~/.photon/
 
 # Run by name
-photon mcp web-fetch
+photon mcp fetch
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon mcp web-fetch --config
+photon mcp fetch --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

@@ -99,7 +99,7 @@ Execute multiple SQL statements in a transaction
 ---
 
 
-### `listTables`
+### `tables`
 
 List all tables in the database
 
@@ -116,7 +116,7 @@ List all tables in the database
 ---
 
 
-### `describeTable`
+### `describe`
 
 Get table schema information
 
@@ -135,7 +135,7 @@ Get table schema information
 ---
 
 
-### `listIndexes`
+### `indexes`
 
 List all indexes on a table
 
@@ -175,7 +175,7 @@ Execute a SQL INSERT statement
 ---
 
 
-### `getDatabaseStats`
+### `stats`
 
 Get database statistics
 

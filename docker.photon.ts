@@ -57,7 +57,7 @@ export default class DockerMCP {
    * List containers
    * @param all Show all containers (default: false, shows only running)
    */
-  async listContainers(params?: { all?: boolean }) {
+  async containers(params?: { all?: boolean }) {
     try {
       const containers = await this.docker.listContainers({
         all: params?.all || false,
@@ -92,7 +92,7 @@ export default class DockerMCP {
    * Start a container
    * @param id Container ID or name
    */
-  async startContainer(params: { id: string }) {
+  async start(params: { id: string }) {
     try {
       const container = this.docker.getContainer(params.id);
       await container.start();
@@ -115,7 +115,7 @@ export default class DockerMCP {
    * @param id Container ID or name
    * @param timeout Seconds to wait before killing (default: 10)
    */
-  async stopContainer(params: { id: string; timeout?: number }) {
+  async stop(params: { id: string; timeout?: number }) {
     try {
       const container = this.docker.getContainer(params.id);
       await container.stop({ t: params.timeout || 10 });
@@ -138,7 +138,7 @@ export default class DockerMCP {
    * @param id Container ID or name
    * @param timeout Seconds to wait before killing (default: 10)
    */
-  async restartContainer(params: { id: string; timeout?: number }) {
+  async restart(params: { id: string; timeout?: number }) {
     try {
       const container = this.docker.getContainer(params.id);
       await container.restart({ t: params.timeout || 10 });
@@ -161,7 +161,7 @@ export default class DockerMCP {
    * @param id Container ID or name
    * @param force Force remove even if running (default: false)
    */
-  async removeContainer(params: { id: string; force?: boolean }) {
+  async remove(params: { id: string; force?: boolean }) {
     try {
       const container = this.docker.getContainer(params.id);
       await container.remove({ force: params.force || false });
@@ -186,7 +186,7 @@ export default class DockerMCP {
    * @param tail Number of lines from the end of logs (default: 100)
    * @param timestamps Show timestamps (default: true)
    */
-  async getLogs(params: { id: string; tail?: number; timestamps?: boolean }) {
+  async logs(params: { id: string; tail?: number; timestamps?: boolean }) {
     try {
       const container = this.docker.getContainer(params.id);
 
@@ -220,7 +220,7 @@ export default class DockerMCP {
   /**
    * List images
    */
-  async listImages(params: {}) {
+  async images() {
     try {
       const images = await this.docker.listImages();
 
@@ -247,7 +247,7 @@ export default class DockerMCP {
    * @param name Image name (e.g., "nginx", "redis:alpine")
    * @param tag Image tag (default: 'latest')
    */
-  async pullImage(params: { name: string; tag?: string }) {
+  async pull(params: { name: string; tag?: string }) {
     try {
       const tag = params.tag || 'latest';
       const imageName = `${params.name}:${tag}`;
@@ -302,7 +302,7 @@ export default class DockerMCP {
    * Get container stats
    * @param id Container ID or name
    */
-  async getStats(params: { id: string }) {
+  async stats(params: { id: string }) {
     try {
       const container = this.docker.getContainer(params.id);
 

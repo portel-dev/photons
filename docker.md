@@ -32,7 +32,7 @@ Container management operations
 This photon provides **10** tools:
 
 
-### `listContainers`
+### `containers`
 
 List containers
 
@@ -49,7 +49,7 @@ List containers
 ---
 
 
-### `startContainer`
+### `start`
 
 Start a container
 
@@ -66,7 +66,7 @@ Start a container
 ---
 
 
-### `stopContainer`
+### `stop`
 
 Stop a container
 
@@ -85,7 +85,7 @@ Stop a container
 ---
 
 
-### `restartContainer`
+### `restart`
 
 Restart a container
 
@@ -104,7 +104,7 @@ Restart a container
 ---
 
 
-### `removeContainer`
+### `remove`
 
 Remove a container
 
@@ -123,7 +123,7 @@ Remove a container
 ---
 
 
-### `getLogs`
+### `logs`
 
 Get container logs
 
@@ -144,7 +144,7 @@ Get container logs
 ---
 
 
-### `listImages`
+### `images`
 
 List images
 
@@ -155,7 +155,7 @@ List images
 ---
 
 
-### `pullImage`
+### `pull`
 
 Pull an image
 
@@ -193,7 +193,7 @@ Remove an image
 ---
 
 
-### `getStats`
+### `stats`
 
 Get container stats
 

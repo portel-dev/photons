@@ -82,7 +82,7 @@ export default class AwsS3 {
    * @param contentType MIME type (optional, e.g., "text/plain", "image/png")
    * @param encoding Content encoding (optional, e.g., "base64" for binary files)
    */
-  async uploadObject(params: {
+  async upload(params: {
     bucket: string;
     key: string;
     content: string;
@@ -124,7 +124,7 @@ export default class AwsS3 {
    * @param key Object key (file path)
    * @param encoding Return encoding (optional, "base64" for binary files)
    */
-  async downloadObject(params: { bucket: string; key: string; encoding?: string }) {
+  async download(params: { bucket: string; key: string; encoding?: string }) {
     try {
       const command = new GetObjectCommand({
         Bucket: params.bucket,
@@ -174,7 +174,7 @@ export default class AwsS3 {
    * @param prefix Filter by key prefix (optional)
    * @param maxKeys Maximum number of objects to return (default: 1000)
    */
-  async listObjects(params: { bucket: string; prefix?: string; maxKeys?: number }) {
+  async list(params: { bucket: string; prefix?: string; maxKeys?: number }) {
     try {
       const command = new ListObjectsV2Command({
         Bucket: params.bucket,
@@ -210,7 +210,7 @@ export default class AwsS3 {
    * @param bucket Bucket name
    * @param key Object key (file path)
    */
-  async deleteObject(params: { bucket: string; key: string }) {
+  async remove(params: { bucket: string; key: string }) {
     try {
       const command = new DeleteObjectCommand({
         Bucket: params.bucket,
@@ -238,7 +238,7 @@ export default class AwsS3 {
    * @param bucket Bucket name
    * @param keys Array of object keys to delete
    */
-  async deleteObjects(params: { bucket: string; keys: string[] }) {
+  async removeMany(params: { bucket: string; keys: string[] }) {
     try {
       const command = new DeleteObjectsCommand({
         Bucket: params.bucket,
@@ -269,7 +269,7 @@ export default class AwsS3 {
    * @param bucket Bucket name
    * @param key Object key (file path)
    */
-  async getObjectMetadata(params: { bucket: string; key: string }) {
+  async metadata(params: { bucket: string; key: string }) {
     try {
       const command = new HeadObjectCommand({
         Bucket: params.bucket,
@@ -303,7 +303,7 @@ export default class AwsS3 {
    * @param destinationBucket Destination bucket name
    * @param destinationKey Destination object key
    */
-  async copyObject(params: {
+  async copy(params: {
     sourceBucket: string;
     sourceKey: string;
     destinationBucket: string;
@@ -339,7 +339,7 @@ export default class AwsS3 {
    * @param expiresIn Expiration time in seconds (default: 3600)
    * @param operation Operation type (default: "get", can be "get" or "put")
    */
-  async getPresignedUrl(params: {
+  async presign(params: {
     bucket: string;
     key: string;
     expiresIn?: number;
@@ -376,7 +376,7 @@ export default class AwsS3 {
   /**
    * List all buckets
    */
-  async listBuckets(params: {}) {
+  async buckets() {
     try {
       const command = new ListBucketsCommand({});
       const response = await this.s3.send(command);
@@ -403,7 +403,7 @@ export default class AwsS3 {
    * Create a new bucket
    * @param bucket Bucket name (must be globally unique)
    */
-  async createBucket(params: { bucket: string }) {
+  async bucket(params: { bucket: string }) {
     try {
       const command = new CreateBucketCommand({
         Bucket: params.bucket,
@@ -435,7 +435,7 @@ export default class AwsS3 {
    * Delete a bucket (must be empty)
    * @param bucket Bucket name
    */
-  async deleteBucket(params: { bucket: string }) {
+  async removeBucket(params: { bucket: string }) {
     try {
       const command = new DeleteBucketCommand({
         Bucket: params.bucket,

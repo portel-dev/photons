@@ -175,7 +175,7 @@ export default class SQLite {
   /**
    * List all tables in the database
    */
-  async listTables(params: {}) {
+  async tables() {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
@@ -219,7 +219,7 @@ export default class SQLite {
   /**
    * Close the database connection
    */
-  async close(params: {}) {
+  async close() {
     if (!this.db) {
       return { success: false, error: 'No database is open' };
     }

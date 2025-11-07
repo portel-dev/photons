@@ -1,6 +1,6 @@
-# Calendar
+# Google Calendar
 
-Google Calendar integration
+Calendar integration
 
 ## 📋 Overview
 
@@ -13,17 +13,17 @@ Google Calendar integration
 ### Environment Variables
 
 
-- **`CALENDAR_CLIENTID`** [REQUIRED]
+- **`GOOGLE_CALENDAR_CLIENTID`** [REQUIRED]
   - Type: string
   - Description: OAuth2 client ID from Google Cloud Console
   
 
-- **`CALENDAR_CLIENTSECRET`** [REQUIRED]
+- **`GOOGLE_CALENDAR_CLIENTSECRET`** [REQUIRED]
   - Type: string
   - Description: OAuth2 client secret
   
 
-- **`CALENDAR_REFRESHTOKEN`** [REQUIRED]
+- **`GOOGLE_CALENDAR_REFRESHTOKEN`** [REQUIRED]
   - Type: string
   - Description: OAuth2 refresh token (obtain via OAuth flow)
   
@@ -44,7 +44,7 @@ Google Calendar integration
 This photon provides **9** tools:
 
 
-### `listEvents`
+### `list`
 
 List upcoming events
 
@@ -67,7 +67,7 @@ List upcoming events
 ---
 
 
-### `getEvent`
+### `get`
 
 Get a specific event
 
@@ -86,7 +86,7 @@ Get a specific event
 ---
 
 
-### `createEvent`
+### `create`
 
 Create a new event
 
@@ -115,7 +115,7 @@ Create a new event
 ---
 
 
-### `updateEvent`
+### `update`
 
 Update an existing event
 
@@ -136,7 +136,7 @@ Update an existing event
 ---
 
 
-### `deleteEvent`
+### `remove`
 
 Delete an event
 
@@ -155,7 +155,7 @@ Delete an event
 ---
 
 
-### `listCalendars`
+### `calendars`
 
 List all calendars
 
@@ -166,7 +166,7 @@ List all calendars
 ---
 
 
-### `getFreeBusy`
+### `freeBusy`
 
 Check free/busy status
 
@@ -187,7 +187,7 @@ Check free/busy status
 ---
 
 
-### `searchEvents`
+### `search`
 
 Search for events
 
@@ -208,7 +208,7 @@ Search for events
 ---
 
 
-### `getUpcomingEvents`
+### `upcoming`
 
 Get upcoming events within specified hours
 
@@ -244,24 +244,24 @@ npm install -g @portel/photon
 
 ```bash
 # Clone/download the photon file
-photon mcp ./calendar.photon.ts
+photon mcp ./google-calendar.photon.ts
 ```
 
 **Option 2: Install to ~/.photon/ (recommended)**
 
 ```bash
 # Copy to photon directory
-cp calendar.photon.ts ~/.photon/
+cp google-calendar.photon.ts ~/.photon/
 
 # Run by name
-photon mcp calendar
+photon mcp google-calendar
 ```
 
 **Option 3: Use with Claude Desktop**
 
 ```bash
 # Generate MCP configuration
-photon mcp calendar --config
+photon mcp google-calendar --config
 
 # Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
 ```

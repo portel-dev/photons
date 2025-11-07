@@ -121,7 +121,7 @@ export default class Email {
    * @param bcc BCC recipients (optional, comma-separated)
    * @param from Sender email (optional, defaults to smtpUser)
    */
-  async sendEmail(params: {
+  async send(params: {
     to: string;
     subject: string;
     body: string;
@@ -169,7 +169,7 @@ export default class Email {
    * @param attachments Array of attachments with filename and content
    * @param html Set to true if body contains HTML (default: false)
    */
-  async sendWithAttachment(params: {
+  async sendAttachment(params: {
     to: string;
     subject: string;
     body: string;
@@ -215,7 +215,7 @@ export default class Email {
    * @param unreadOnly Only return unread emails (default: false)
    * @param mailbox Mailbox to check (default: INBOX)
    */
-  async listInbox(params?: { limit?: number; unreadOnly?: boolean; mailbox?: string }) {
+  async inbox(params?: { limit?: number; unreadOnly?: boolean; mailbox?: string }) {
     if (!this.imapConfig) {
       return {
         success: false,
@@ -315,7 +315,7 @@ export default class Email {
    * @param uid Email sequence number (from listInbox)
    * @param mailbox Mailbox to check (default: INBOX)
    */
-  async getEmail(params: { uid: number; mailbox?: string }) {
+  async get(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
       return {
         success: false,
@@ -386,7 +386,7 @@ export default class Email {
    * @param limit Maximum results (default: 10)
    * @param mailbox Mailbox to search (default: INBOX)
    */
-  async searchEmails(params: {
+  async search(params: {
     query: string;
     searchIn?: 'from' | 'subject' | 'body';
     limit?: number;
@@ -494,7 +494,7 @@ export default class Email {
    * @param uid Email sequence number
    * @param mailbox Mailbox name (default: INBOX)
    */
-  async markAsRead(params: { uid: number; mailbox?: string }) {
+  async markRead(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
       return {
         success: false,
@@ -541,7 +541,7 @@ export default class Email {
    * @param uid Email sequence number
    * @param mailbox Mailbox name (default: INBOX)
    */
-  async deleteEmail(params: { uid: number; mailbox?: string }) {
+  async remove(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
       return {
         success: false,
@@ -596,7 +596,7 @@ export default class Email {
    * @param targetMailbox Target mailbox name (e.g., Archive, Trash)
    * @param sourceMailbox Source mailbox (default: INBOX)
    */
-  async moveEmail(params: { uid: number; targetMailbox: string; sourceMailbox?: string }) {
+  async move(params: { uid: number; targetMailbox: string; sourceMailbox?: string }) {
     if (!this.imapConfig) {
       return {
         success: false,

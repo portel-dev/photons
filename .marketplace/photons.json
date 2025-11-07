@@ -9,39 +9,19 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../aws-s3.photon.ts",
-      "hash": "sha256:4140c915cc8fe07732564aaef8b2d20cf5862dc6ed708f2de1f4c80bb3646233",
+      "hash": "sha256:194c4329827a1721e66a83740068a82b53d1946d0c0e1ab16378aff379bcafe6",
       "tools": [
-        "uploadObject",
-        "downloadObject",
-        "listObjects",
-        "deleteObject",
-        "deleteObjects",
-        "getObjectMetadata",
-        "copyObject",
-        "getPresignedUrl",
-        "listBuckets",
-        "createBucket",
-        "deleteBucket"
-      ]
-    },
-    {
-      "name": "calendar",
-      "version": "1.0.0",
-      "description": "Calendar - Google Calendar integration",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../calendar.photon.ts",
-      "hash": "sha256:0c601141416ee84e6049eb5a6994c5afcc95a53dfd219be3843cd097cadfc645",
-      "tools": [
-        "listEvents",
-        "getEvent",
-        "createEvent",
-        "updateEvent",
-        "deleteEvent",
-        "listCalendars",
-        "getFreeBusy",
-        "searchEvents",
-        "getUpcomingEvents"
+        "upload",
+        "download",
+        "list",
+        "remove",
+        "removeMany",
+        "metadata",
+        "copy",
+        "presign",
+        "buckets",
+        "bucket",
+        "removeBucket"
       ]
     },
     {
@@ -51,18 +31,18 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../docker.photon.ts",
-      "hash": "sha256:dbf2e3dd1f93922d2852f5b856f1c79286dbc3e7c91b2ec1fa92d387646e0bf6",
+      "hash": "sha256:0f2e417c416fa03238579ce3214e2ef53bd6d80fae28b19ad646889cf0681f20",
       "tools": [
-        "listContainers",
-        "startContainer",
-        "stopContainer",
-        "restartContainer",
-        "removeContainer",
-        "getLogs",
-        "listImages",
-        "pullImage",
+        "containers",
+        "start",
+        "stop",
+        "restart",
+        "remove",
+        "logs",
+        "images",
+        "pull",
         "removeImage",
-        "getStats"
+        "stats"
       ]
     },
     {
@@ -72,16 +52,29 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../email.photon.ts",
-      "hash": "sha256:d30b2938172e6120ea6b5f1a6bfa28475b08673c4140c84f7ceb5b0e07a14209",
+      "hash": "sha256:a22e753245f3d375908e9556745a08ebef46495a89a2a40e5c38ad378b557b1a",
       "tools": [
-        "sendEmail",
-        "sendWithAttachment",
-        "listInbox",
-        "getEmail",
-        "searchEmails",
-        "markAsRead",
-        "deleteEmail",
-        "moveEmail"
+        "send",
+        "sendAttachment",
+        "inbox",
+        "get",
+        "search",
+        "markRead",
+        "remove",
+        "move"
+      ]
+    },
+    {
+      "name": "fetch",
+      "version": "1.0.0",
+      "description": "Fetch - Web content fetching and markdown conversion",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../fetch.photon.ts",
+      "hash": "sha256:b2ebf3faecb7bba5ab9432ae4090504487e981af0758d9b311ce9c49913c6a77",
+      "tools": [
+        "fetch",
+        "batch"
       ]
     },
     {
@@ -91,21 +84,21 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:b73d67d225aac6dc70cccd469398686c34f4c19441fa431c3ec8d856c891fec0",
+      "hash": "sha256:f2166bd0863e3b2e1a4a3301deb2aeecd28efa7215d0b170b5d20f842050d559",
       "tools": [
-        "readFile",
-        "writeFile",
-        "appendFile",
-        "deleteFile",
-        "copyFile",
-        "moveFile",
-        "listFiles",
-        "createDirectory",
-        "deleteDirectory",
-        "getFileInfo",
+        "read",
+        "write",
+        "append",
+        "remove",
+        "copy",
+        "move",
+        "list",
+        "mkdir",
+        "rmdir",
+        "info",
         "exists",
-        "searchFiles",
-        "getWorkdir"
+        "search",
+        "workdir"
       ]
     },
     {
@@ -115,15 +108,15 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git.photon.ts",
-      "hash": "sha256:72562f74ea7ca4f9790f5d5db13d44b9eca2614af2ac788a51d6db72a5334e73",
+      "hash": "sha256:cb68d799d4fd23e97f08f43ee6436ffc3f67d3696068268319feb8a677d8843b",
       "tools": [
         "status",
         "log",
         "diff",
-        "listBranches",
-        "createBranch",
-        "checkoutBranch",
-        "deleteBranch",
+        "branches",
+        "branch",
+        "checkout",
+        "removeBranch",
         "add",
         "commit",
         "push",
@@ -137,15 +130,35 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../github-issues.photon.ts",
-      "hash": "sha256:fef9f8fca956fd545d9a64c325900e954f15294a794960b6c62fb9f25703f080",
+      "hash": "sha256:0e40bc3137dcccde8f89b36e4ce2efc4b588e05b619f9a93d23d731f1c6a96c3",
       "tools": [
-        "listIssues",
-        "getIssue",
-        "createIssue",
-        "updateIssue",
-        "addComment",
-        "listComments",
-        "searchIssues"
+        "list",
+        "get",
+        "create",
+        "update",
+        "comment",
+        "comments",
+        "search"
+      ]
+    },
+    {
+      "name": "google-calendar",
+      "version": "1.0.0",
+      "description": "Google Calendar - Calendar integration",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../google-calendar.photon.ts",
+      "hash": "sha256:9db30c20f1e0fa35b49f30422433b1934bf5b34ef22b8a0ac12829d6470d8050",
+      "tools": [
+        "list",
+        "get",
+        "create",
+        "update",
+        "remove",
+        "calendars",
+        "freeBusy",
+        "search",
+        "upcoming"
       ]
     },
     {
@@ -155,18 +168,18 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../jira.photon.ts",
-      "hash": "sha256:3a528df6d732b8d5b24675f990a38fcf61ad6d2bf435628ddea277a88fd6bea3",
+      "hash": "sha256:261282b34e41e57bba1ac21cf73e1c526ab26664ddb6c6eb8b382c55cd66a76e",
       "tools": [
-        "searchIssues",
-        "getIssue",
-        "createIssue",
-        "updateIssue",
-        "transitionIssue",
-        "getTransitions",
-        "addComment",
-        "getComments",
-        "listProjects",
-        "getProject"
+        "search",
+        "get",
+        "create",
+        "update",
+        "transition",
+        "transitions",
+        "comment",
+        "comments",
+        "projects",
+        "project"
       ]
     },
     {
@@ -176,18 +189,18 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../memory.photon.ts",
-      "hash": "sha256:cbac4dc79295525ffd0fc7ff8854f97118890d28e16d26d2103f323e405beaff",
+      "hash": "sha256:b16ee4433dba3af5877ed38bf026f04ba9e397ec1ebbe16db961fc710b4454e9",
       "tools": [
-        "createEntities",
-        "createRelations",
-        "addObservations",
-        "deleteEntities",
-        "deleteObservations",
-        "deleteRelations",
-        "readGraph",
-        "searchNodes",
-        "openNodes",
-        "clearGraph"
+        "entities",
+        "relations",
+        "observe",
+        "removeEntities",
+        "removeObservations",
+        "removeRelations",
+        "graph",
+        "search",
+        "nodes",
+        "clear"
       ]
     },
     {
@@ -197,7 +210,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../mongodb.photon.ts",
-      "hash": "sha256:761dab424fc46bad38c9f4d62382c5a1cb2268e3a5a41ec3fd5602e8f9f2a461",
+      "hash": "sha256:d97f4d2fe9b1ddd0b8e1a66005c50950ca04c17c5c74c11fbef4a5830f98cc86",
       "tools": [
         "find",
         "findOne",
@@ -205,12 +218,12 @@
         "insertMany",
         "updateOne",
         "updateMany",
-        "deleteOne",
-        "deleteMany",
+        "removeOne",
+        "removeMany",
         "aggregate",
-        "countDocuments",
-        "listCollections",
-        "createIndex",
+        "count",
+        "collections",
+        "index",
         "distinct"
       ]
     },
@@ -221,15 +234,15 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:fb00ae566b13b279204f461ccd412e6e2709e8a8efcbe6e182d6c6d0fdb84b6f",
+      "hash": "sha256:01141301150fcf09555f32a3e8bc2bab058fb7cc92445785b279e39eb60ce321",
       "tools": [
         "query",
         "transaction",
-        "listTables",
-        "describeTable",
-        "listIndexes",
+        "tables",
+        "describe",
+        "indexes",
         "insert",
-        "getDatabaseStats"
+        "stats"
       ]
     },
     {
@@ -239,7 +252,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../redis.photon.ts",
-      "hash": "sha256:7dc5c237ed0b74b13743df0ffeffdf8c873db8257e7879370f0ec876e7c9ebd4",
+      "hash": "sha256:d193378bac924b35e20ed44367c4ae93eb3ef4e0637b4898f7c2b45272e91f28",
       "tools": [
         "get",
         "set",
@@ -258,7 +271,7 @@
         "hget",
         "hset",
         "hgetall",
-        "flushdb"
+        "flush"
       ]
     },
     {
@@ -268,15 +281,15 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../slack.photon.ts",
-      "hash": "sha256:b8fd58e2c4d678e193a2aa55cead8b33e481ecfe5d832144651bfc28a25b77cc",
+      "hash": "sha256:636cd44deec3cb151320c948b5c99d61f6dc6352b3957f8a78c575f04f79e0ba",
       "tools": [
-        "postMessage",
-        "listChannels",
-        "getChannelInfo",
-        "getHistory",
-        "addReaction",
-        "uploadFile",
-        "searchMessages"
+        "post",
+        "channels",
+        "channel",
+        "history",
+        "react",
+        "upload",
+        "search"
       ]
     },
     {
@@ -286,30 +299,17 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:03fea43d9a00194ab5a87113047b3063a0b7456442367207e0e1ad995f1074ad",
+      "hash": "sha256:864ae24971f1ffcf025e1c10ce1482b10b3516f8a5a2cd533fd6b90a8f487d5f",
       "tools": [
         "open",
         "query",
         "queryOne",
         "execute",
         "transaction",
-        "listTables",
+        "tables",
         "schema",
         "close",
         "backup"
-      ]
-    },
-    {
-      "name": "web-fetch",
-      "version": "1.0.0",
-      "description": "Web Fetch - Web content fetching and markdown conversion",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../web-fetch.photon.ts",
-      "hash": "sha256:ef98979f9283bc29192b727601ecee4978d352d251a081dab8181b43c52ace0c",
-      "tools": [
-        "fetch",
-        "fetchBatch"
       ]
     }
   ]

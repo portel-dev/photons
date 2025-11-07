@@ -156,7 +156,7 @@ export default class PostgreSQL {
    * List all tables in the database
    * @param schema Schema name (default: public)
    */
-  async listTables(params?: { schema?: string }) {
+  async tables(params?: { schema?: string }) {
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
@@ -193,7 +193,7 @@ export default class PostgreSQL {
    * @param table Table name
    * @param schema Schema name (default: public)
    */
-  async describeTable(params: { table: string; schema?: string }) {
+  async describe(params: { table: string; schema?: string }) {
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
@@ -246,7 +246,7 @@ export default class PostgreSQL {
    * @param table Table name
    * @param schema Schema name (default: public)
    */
-  async listIndexes(params: { table: string; schema?: string }) {
+  async indexes(params: { table: string; schema?: string }) {
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
@@ -340,7 +340,7 @@ export default class PostgreSQL {
   /**
    * Get database statistics
    */
-  async getDatabaseStats(params: {}) {
+  async stats() {
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }

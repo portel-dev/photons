@@ -244,7 +244,7 @@ export default class MongoDB {
    * @param collection Collection name
    * @param filter Query filter to match document
    */
-  async deleteOne(params: { collection: string; filter: object }) {
+  async removeOne(params: { collection: string; filter: object }) {
     try {
       const col = this.db.collection(params.collection);
       const result = await col.deleteOne(params.filter);
@@ -269,7 +269,7 @@ export default class MongoDB {
    * @param collection Collection name
    * @param filter Query filter to match documents
    */
-  async deleteMany(params: { collection: string; filter: object }) {
+  async removeMany(params: { collection: string; filter: object }) {
     try {
       const col = this.db.collection(params.collection);
       const result = await col.deleteMany(params.filter);
@@ -317,7 +317,7 @@ export default class MongoDB {
    * @param collection Collection name
    * @param filter Query filter (optional, counts all if omitted)
    */
-  async countDocuments(params: { collection: string; filter?: object }) {
+  async count(params: { collection: string; filter?: object }) {
     try {
       const col = this.db.collection(params.collection);
       const count = await col.countDocuments(params.filter || {});
@@ -338,7 +338,7 @@ export default class MongoDB {
   /**
    * List all collections in database
    */
-  async listCollections(params: {}) {
+  async collections() {
     try {
       const collections = await this.db.listCollections().toArray();
 
@@ -365,7 +365,7 @@ export default class MongoDB {
    * @param keys Index specification (e.g., { email: 1 } for ascending)
    * @param unique Create unique index (default: false)
    */
-  async createIndex(params: { collection: string; keys: object; unique?: boolean }) {
+  async index(params: { collection: string; keys: object; unique?: boolean }) {
     try {
       const col = this.db.collection(params.collection);
       const indexName = await col.createIndex(params.keys, {

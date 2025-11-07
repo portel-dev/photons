@@ -121,7 +121,7 @@ Execute multiple SQL statements in a transaction
 ---
 
 
-### `listTables`
+### `tables`
 
 List all tables in the database
 

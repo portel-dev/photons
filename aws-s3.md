@@ -44,7 +44,7 @@ Cloud object storage operations
 This photon provides **11** tools:
 
 
-### `uploadObject`
+### `upload`
 
 Upload object to bucket
 
@@ -69,7 +69,7 @@ Upload object to bucket
 ---
 
 
-### `downloadObject`
+### `download`
 
 Download object from bucket
 
@@ -90,7 +90,7 @@ Download object from bucket
 ---
 
 
-### `listObjects`
+### `list`
 
 List objects in bucket
 
@@ -111,7 +111,7 @@ List objects in bucket
 ---
 
 
-### `deleteObject`
+### `remove`
 
 Delete object from bucket
 
@@ -130,7 +130,7 @@ Delete object from bucket
 ---
 
 
-### `deleteObjects`
+### `removeMany`
 
 Delete multiple objects from bucket
 
@@ -149,7 +149,7 @@ Delete multiple objects from bucket
 ---
 
 
-### `getObjectMetadata`
+### `metadata`
 
 Get object metadata
 
@@ -168,7 +168,7 @@ Get object metadata
 ---
 
 
-### `copyObject`
+### `copy`
 
 Copy object within S3
 
@@ -191,7 +191,7 @@ Copy object within S3
 ---
 
 
-### `getPresignedUrl`
+### `presign`
 
 Generate presigned URL for object access
 
@@ -214,7 +214,7 @@ Generate presigned URL for object access
 ---
 
 
-### `listBuckets`
+### `buckets`
 
 List all buckets
 
@@ -225,7 +225,7 @@ List all buckets
 ---
 
 
-### `createBucket`
+### `bucket`
 
 Create a new bucket
 
@@ -242,7 +242,7 @@ Create a new bucket
 ---
 
 
-### `deleteBucket`
+### `removeBucket`
 
 Delete a bucket (must be empty)
 

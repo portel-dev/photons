@@ -73,7 +73,7 @@ export default class Memory {
    * Create new entities with observations
    * @param entities Array of entities with name, type, and observations
    */
-  async createEntities(params: {
+  async entities(params: {
     entities: Array<{ name: string; entityType: string; observations: string[] }>;
   }) {
     try {
@@ -115,7 +115,7 @@ export default class Memory {
    * Create relations between entities
    * @param relations Array of relations with from, to, and type
    */
-  async createRelations(params: {
+  async relations(params: {
     relations: Array<{ from: string; to: string; relationType: string }>;
   }) {
     try {
@@ -166,7 +166,7 @@ export default class Memory {
    * @param entityName Entity name
    * @param observations Array of observation strings
    */
-  async addObservations(params: { entityName: string; observations: string[] }) {
+  async observe(params: { entityName: string; observations: string[] }) {
     try {
       const entity = this.graph.entities.find((e) => e.name === params.entityName);
 
@@ -195,7 +195,7 @@ export default class Memory {
    * Delete entities and their relations
    * @param entityNames Array of entity names to delete
    */
-  async deleteEntities(params: { entityNames: string[] }) {
+  async removeEntities(params: { entityNames: string[] }) {
     try {
       const deleted: string[] = [];
 
@@ -233,7 +233,7 @@ export default class Memory {
    * @param entityName Entity name
    * @param observations Array of observations to delete (exact match)
    */
-  async deleteObservations(params: { entityName: string; observations: string[] }) {
+  async removeObservations(params: { entityName: string; observations: string[] }) {
     try {
       const entity = this.graph.entities.find((e) => e.name === params.entityName);
 
@@ -267,7 +267,7 @@ export default class Memory {
    * Delete relations
    * @param relations Array of relations to delete
    */
-  async deleteRelations(params: {
+  async removeRelations(params: {
     relations: Array<{ from: string; to: string; relationType: string }>;
   }) {
     try {
@@ -301,7 +301,7 @@ export default class Memory {
   /**
    * Read the entire knowledge graph
    */
-  async readGraph(params: {}) {
+  async graph() {
     return {
       success: true,
       entities: this.graph.entities,
@@ -321,7 +321,7 @@ export default class Memory {
    * Search for entities matching a query
    * @param query Search query (searches names, types, and observations)
    */
-  async searchNodes(params: { query: string }) {
+  async search(params: { query: string }) {
     try {
       const query = params.query.toLowerCase();
       const matches = this.graph.entities.filter((entity) => {
@@ -347,7 +347,7 @@ export default class Memory {
    * Open specific entities by name with their relations
    * @param names Array of entity names to retrieve
    */
-  async openNodes(params: { names: string[] }) {
+  async nodes(params: { names: string[] }) {
     try {
       const results = params.names.map((name) => {
         const entity = this.graph.entities.find((e) => e.name === name);
@@ -385,7 +385,7 @@ export default class Memory {
   /**
    * Clear the entire knowledge graph
    */
-  async clearGraph(params: {}) {
+  async clear() {
     try {
       const stats = {
         entitiesCleared: this.graph.entities.length,

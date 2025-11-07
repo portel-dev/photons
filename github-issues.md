@@ -39,7 +39,7 @@ Dependencies are auto-installed on first run.
 This photon provides **7** tools:
 
 
-### `listIssues`
+### `list`
 
 List issues in a repository
 
@@ -66,7 +66,7 @@ List issues in a repository
 ---
 
 
-### `getIssue`
+### `get`
 
 Get a single issue by number
 
@@ -87,7 +87,7 @@ Get a single issue by number
 ---
 
 
-### `createIssue`
+### `create`
 
 Create a new issue
 
@@ -114,7 +114,7 @@ Create a new issue
 ---
 
 
-### `updateIssue`
+### `update`
 
 Update an existing issue
 
@@ -143,7 +143,7 @@ Update an existing issue
 ---
 
 
-### `addComment`
+### `comment`
 
 Add a comment to an issue
 
@@ -166,7 +166,7 @@ Add a comment to an issue
 ---
 
 
-### `listComments`
+### `comments`
 
 List comments on an issue
 
@@ -187,7 +187,7 @@ List comments on an issue
 ---
 
 
-### `searchIssues`
+### `search`
 
 Search issues across repositories
 

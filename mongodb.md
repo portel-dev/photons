@@ -162,7 +162,7 @@ Update multiple documents
 ---
 
 
-### `deleteOne`
+### `removeOne`
 
 Delete a document
 
@@ -181,7 +181,7 @@ Delete a document
 ---
 
 
-### `deleteMany`
+### `removeMany`
 
 Delete multiple documents
 
@@ -219,7 +219,7 @@ Run aggregation pipeline
 ---
 
 
-### `countDocuments`
+### `count`
 
 Count documents matching filter
 
@@ -238,7 +238,7 @@ Count documents matching filter
 ---
 
 
-### `listCollections`
+### `collections`
 
 List all collections in database
 
@@ -249,7 +249,7 @@ List all collections in database
 ---
 
 
-### `createIndex`
+### `index`
 
 Create an index on a collection
 

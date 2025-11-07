@@ -58,7 +58,7 @@ export default class Slack {
    * @param thread_ts Thread timestamp to reply to (optional)
    * @param blocks Rich message blocks (optional, JSON string)
    */
-  async postMessage(params: {
+  async post(params: {
     channel: string;
     text: string;
     thread_ts?: string;
@@ -99,7 +99,7 @@ export default class Slack {
    * @param types Channel types: public_channel, private_channel, mpim, im (default: public_channel)
    * @param limit Maximum number of channels to return (default: 100)
    */
-  async listChannels(params?: {
+  async channels(params?: {
     types?: string;
     limit?: number;
   }) {
@@ -136,7 +136,7 @@ export default class Slack {
    * Get channel information
    * @param channel Channel name (e.g., "#general") or channel ID
    */
-  async getChannelInfo(params: { channel: string }) {
+  async channel(params: { channel: string }) {
     try {
       const channel = params.channel.startsWith('#')
         ? await this._resolveChannelName(params.channel.slice(1))
@@ -176,7 +176,7 @@ export default class Slack {
    * @param oldest Start of time range (Unix timestamp)
    * @param latest End of time range (Unix timestamp)
    */
-  async getHistory(params: {
+  async history(params: {
     channel: string;
     limit?: number;
     oldest?: string;
@@ -221,7 +221,7 @@ export default class Slack {
    * @param timestamp Message timestamp
    * @param name Reaction emoji name (without colons, e.g., "thumbsup")
    */
-  async addReaction(params: { channel: string; timestamp: string; name: string }) {
+  async react(params: { channel: string; timestamp: string; name: string }) {
     try {
       const channel = params.channel.startsWith('#')
         ? await this._resolveChannelName(params.channel.slice(1))
@@ -253,7 +253,7 @@ export default class Slack {
    * @param title File title (optional)
    * @param initial_comment Comment to add with the file (optional)
    */
-  async uploadFile(params: {
+  async upload(params: {
     channel: string;
     content: string;
     filename: string;
@@ -295,7 +295,7 @@ export default class Slack {
    * @param count Number of results to return (default: 20)
    * @param sort Sort order: score or timestamp (default: score)
    */
-  async searchMessages(params: { query: string; count?: number; sort?: string }) {
+  async search(params: { query: string; count?: number; sort?: string }) {
     try {
       const response = await this.client.search.messages({
         query: params.query,

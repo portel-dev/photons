@@ -1,5 +1,5 @@
 /**
- * Calendar - Google Calendar integration
+ * Google Calendar - Calendar integration
  *
  * Provides calendar operations using Google Calendar API (OAuth2).
  * Supports event management, calendar listing, and free/busy queries.
@@ -9,7 +9,7 @@
  * - Availability: "Check when John is free this week"
  * - Search: "Find all meetings with Sarah"
  *
- * Example: listEvents({ maxResults: 10 })
+ * Example: list({ maxResults: 10 })
  *
  * Configuration:
  * - clientId: OAuth2 client ID from Google Cloud Console
@@ -25,7 +25,7 @@
 import { google, calendar_v3 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
-export default class Calendar {
+export default class GoogleCalendar {
   private oauth2Client: OAuth2Client;
   private calendar: calendar_v3.Calendar;
 
@@ -62,7 +62,7 @@ export default class Calendar {
    * @param timeMin Start time (ISO 8601, default: now)
    * @param timeMax End time (ISO 8601, optional)
    */
-  async listEvents(params?: {
+  async list(params?: {
     calendarId?: string;
     maxResults?: number;
     timeMin?: string;
@@ -110,7 +110,7 @@ export default class Calendar {
    * @param eventId Event ID
    * @param calendarId Calendar ID (default: 'primary')
    */
-  async getEvent(params: { eventId: string; calendarId?: string }) {
+  async get(params: { eventId: string; calendarId?: string }) {
     try {
       const response = await this.calendar.events.get({
         calendarId: params.calendarId || 'primary',
@@ -157,7 +157,7 @@ export default class Calendar {
    * @param attendees Array of attendee email addresses (optional)
    * @param calendarId Calendar ID (default: 'primary')
    */
-  async createEvent(params: {
+  async create(params: {
     summary: string;
     start: string;
     end: string;
@@ -216,7 +216,7 @@ export default class Calendar {
    * @param updates Object containing fields to update
    * @param calendarId Calendar ID (default: 'primary')
    */
-  async updateEvent(params: {
+  async update(params: {
     eventId: string;
     updates: {
       summary?: string;
@@ -293,7 +293,7 @@ export default class Calendar {
    * @param eventId Event ID
    * @param calendarId Calendar ID (default: 'primary')
    */
-  async deleteEvent(params: { eventId: string; calendarId?: string }) {
+  async remove(params: { eventId: string; calendarId?: string }) {
     try {
       await this.calendar.events.delete({
         calendarId: params.calendarId || 'primary',
@@ -316,7 +316,7 @@ export default class Calendar {
   /**
    * List all calendars
    */
-  async listCalendars(params: {}) {
+  async calendars() {
     try {
       const response = await this.calendar.calendarList.list();
 
@@ -348,7 +348,7 @@ export default class Calendar {
    * @param timeMin Start time (ISO 8601)
    * @param timeMax End time (ISO 8601)
    */
-  async getFreeBusy(params: { emails: string[]; timeMin: string; timeMax: string }) {
+  async freeBusy(params: { emails: string[]; timeMin: string; timeMax: string }) {
     try {
       const response = await this.calendar.freebusy.query({
         requestBody: {
@@ -382,7 +382,7 @@ export default class Calendar {
    * @param calendarId Calendar ID (default: 'primary')
    * @param maxResults Maximum number of results (default: 10)
    */
-  async searchEvents(params: { query: string; calendarId?: string; maxResults?: number }) {
+  async search(params: { query: string; calendarId?: string; maxResults?: number }) {
     try {
       const response = await this.calendar.events.list({
         calendarId: params.calendarId || 'primary',
@@ -421,7 +421,7 @@ export default class Calendar {
    * @param hours Number of hours from now (default: 24)
    * @param calendarId Calendar ID (default: 'primary')
    */
-  async getUpcomingEvents(params?: { hours?: number; calendarId?: string }) {
+  async upcoming(params?: { hours?: number; calendarId?: string }) {
     try {
       const hours = params?.hours || 24;
       const now = new Date();

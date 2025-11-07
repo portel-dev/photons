@@ -514,7 +514,7 @@ export default class Redis {
   /**
    * Flush all data from current database
    */
-  async flushdb(params: {}) {
+  async flush() {
     try {
       await this.client.flushDb();
 

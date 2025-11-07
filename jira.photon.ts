@@ -68,7 +68,7 @@ export default class Jira {
    * @param maxResults Maximum number of results (default: 50)
    * @param fields Fields to return (optional, comma-separated)
    */
-  async searchIssues(params: { jql: string; maxResults?: number; fields?: string }) {
+  async search(params: { jql: string; maxResults?: number; fields?: string }) {
     try {
       const response = await this.api.post('/search', {
         jql: params.jql,
@@ -105,7 +105,7 @@ export default class Jira {
    * Get issue details
    * @param issueKey Issue key (e.g., "PROJ-123")
    */
-  async getIssue(params: { issueKey: string }) {
+  async get(params: { issueKey: string }) {
     try {
       const response = await this.api.get(`/issue/${params.issueKey}`);
 
@@ -145,7 +145,7 @@ export default class Jira {
    * @param priority Priority name (optional, e.g., "High", "Medium", "Low")
    * @param assignee Assignee account ID (optional)
    */
-  async createIssue(params: {
+  async create(params: {
     project: string;
     summary: string;
     issueType: string;
@@ -206,7 +206,7 @@ export default class Jira {
    * @param priority New priority (optional)
    * @param assignee New assignee account ID (optional)
    */
-  async updateIssue(params: {
+  async update(params: {
     issueKey: string;
     summary?: string;
     description?: string;
@@ -261,7 +261,7 @@ export default class Jira {
    * @param issueKey Issue key (e.g., "PROJ-123")
    * @param transitionId Transition ID or name
    */
-  async transitionIssue(params: { issueKey: string; transitionId: string }) {
+  async transition(params: { issueKey: string; transitionId: string }) {
     try {
       await this.api.post(`/issue/${params.issueKey}/transitions`, {
         transition: { id: params.transitionId },
@@ -284,7 +284,7 @@ export default class Jira {
    * Get available transitions for issue
    * @param issueKey Issue key (e.g., "PROJ-123")
    */
-  async getTransitions(params: { issueKey: string }) {
+  async transitions(params: { issueKey: string }) {
     try {
       const response = await this.api.get(`/issue/${params.issueKey}/transitions`);
 
@@ -313,7 +313,7 @@ export default class Jira {
    * @param issueKey Issue key (e.g., "PROJ-123")
    * @param comment Comment text
    */
-  async addComment(params: { issueKey: string; comment: string }) {
+  async comment(params: { issueKey: string; comment: string }) {
     try {
       const response = await this.api.post(`/issue/${params.issueKey}/comment`, {
         body: {
@@ -347,7 +347,7 @@ export default class Jira {
    * @param issueKey Issue key (e.g., "PROJ-123")
    * @param maxResults Maximum number of comments (default: 50)
    */
-  async getComments(params: { issueKey: string; maxResults?: number }) {
+  async comments(params: { issueKey: string; maxResults?: number }) {
     try {
       const response = await this.api.get(`/issue/${params.issueKey}/comment`, {
         params: { maxResults: params.maxResults || 50 },
@@ -378,7 +378,7 @@ export default class Jira {
   /**
    * List all projects
    */
-  async listProjects(params: {}) {
+  async projects() {
     try {
       const response = await this.api.get('/project');
 
@@ -407,7 +407,7 @@ export default class Jira {
    * Get project details
    * @param projectKey Project key (e.g., "PROJ")
    */
-  async getProject(params: { projectKey: string }) {
+  async project(params: { projectKey: string }) {
     try {
       const response = await this.api.get(`/project/${params.projectKey}`);
 

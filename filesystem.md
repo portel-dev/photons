@@ -44,7 +44,7 @@ File and directory operations
 This photon provides **13** tools:
 
 
-### `readFile`
+### `read`
 
 Read file contents
 
@@ -63,7 +63,7 @@ Read file contents
 ---
 
 
-### `writeFile`
+### `write`
 
 Write content to file
 
@@ -84,7 +84,7 @@ Write content to file
 ---
 
 
-### `appendFile`
+### `append`
 
 Append content to file
 
@@ -105,9 +105,9 @@ Append content to file
 ---
 
 
-### `deleteFile`
+### `remove`
 
-Delete a file
+Remove a file
 
 
 **Parameters:**
@@ -122,7 +122,7 @@ Delete a file
 ---
 
 
-### `copyFile`
+### `copy`
 
 Copy a file
 
@@ -141,7 +141,7 @@ Copy a file
 ---
 
 
-### `moveFile`
+### `move`
 
 Move/rename a file
 
@@ -160,7 +160,7 @@ Move/rename a file
 ---
 
 
-### `listFiles`
+### `list`
 
 List files in a directory
 
@@ -179,7 +179,7 @@ List files in a directory
 ---
 
 
-### `createDirectory`
+### `mkdir`
 
 Create a directory
 
@@ -198,9 +198,9 @@ Create a directory
 ---
 
 
-### `deleteDirectory`
+### `rmdir`
 
-Delete a directory
+Remove a directory
 
 
 **Parameters:**
@@ -208,7 +208,7 @@ Delete a directory
 
 - **`path`** (any) - Directory path (relative to workdir or absolute)
 
-- **`recursive`** (any, optional) - Delete directory and all contents
+- **`recursive`** (any, optional) - Remove directory and all contents
 
 
 
@@ -217,7 +217,7 @@ Delete a directory
 ---
 
 
-### `getFileInfo`
+### `info`
 
 Get file or directory information
 
@@ -251,7 +251,7 @@ Check if file or directory exists
 ---
 
 
-### `searchFiles`
+### `search`
 
 Search for files matching a pattern
 
@@ -270,7 +270,7 @@ Search for files matching a pattern
 ---
 
 
-### `getWorkdir`
+### `workdir`
 
 Get current working directory
 

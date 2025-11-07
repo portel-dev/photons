@@ -84,7 +84,7 @@ Gmail Setup:
 This photon provides **8** tools:
 
 
-### `sendEmail`
+### `send`
 
 Send an email
 
@@ -113,7 +113,7 @@ Send an email
 ---
 
 
-### `sendWithAttachment`
+### `sendAttachment`
 
 Send an email with attachments
 
@@ -138,7 +138,7 @@ Send an email with attachments
 ---
 
 
-### `listInbox`
+### `inbox`
 
 List emails from inbox
 
@@ -159,7 +159,7 @@ List emails from inbox
 ---
 
 
-### `getEmail`
+### `get`
 
 Get a specific email by sequence number
 
@@ -178,7 +178,7 @@ Get a specific email by sequence number
 ---
 
 
-### `searchEmails`
+### `search`
 
 Search emails by criteria
 
@@ -201,7 +201,7 @@ Search emails by criteria
 ---
 
 
-### `markAsRead`
+### `markRead`
 
 Mark an email as read
 
@@ -220,7 +220,7 @@ Mark an email as read
 ---
 
 
-### `deleteEmail`
+### `remove`
 
 Delete an email
 
@@ -239,7 +239,7 @@ Delete an email
 ---
 
 
-### `moveEmail`
+### `move`
 
 Move email to another mailbox (archive)
 
