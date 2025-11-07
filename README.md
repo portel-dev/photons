@@ -161,7 +161,58 @@ photon email
 
 ---
 
-### 3. GitHub Issues
+### 3. Git
+
+Local git repository version control operations.
+
+**File:** `git.photon.ts`
+
+**Configuration:**
+```bash
+export GIT_REPO_PATH="/path/to/your/repo"  # Optional, default: current directory
+photon git
+```
+
+**Tools:** 11 tools
+- `status` - Get repository status (staged, modified, branch info)
+- `log` - View commit history with author details
+- `diff` - Show differences (staged or unstaged)
+- `listBranches` - List all branches with current indicator
+- `createBranch` - Create new branch (with optional checkout)
+- `checkoutBranch` - Switch to different branch
+- `deleteBranch` - Delete branch (with force option)
+- `add` - Stage files for commit
+- `commit` - Create commit with message
+- `push` - Push commits to remote
+- `pull` - Pull changes from remote
+
+**Dependencies:** Auto-installs `simple-git@^3.21.0`
+
+**Features:**
+- Full branch management
+- Commit history with filtering
+- Staged and unstaged diff viewing
+- Remote operations (push/pull)
+- Author override support
+- Force operations when needed
+- Automatic .git directory validation
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/git.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/git.photon.ts
+
+# Run with default config (current directory)
+photon git
+
+# Or specify repository path
+export GIT_REPO_PATH="$HOME/Projects/my-app"
+photon git
+```
+
+---
+
+### 4. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -201,7 +252,7 @@ photon github-issues --config
 
 ---
 
-### 4. Slack
+### 5. Slack
 
 Send messages and manage Slack workspace.
 
@@ -234,7 +285,7 @@ photon slack
 
 ---
 
-### 5. PostgreSQL
+### 6. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -273,7 +324,7 @@ photon postgres --config
 
 ---
 
-### 6. SQLite
+### 7. SQLite
 
 Local SQLite database operations.
 
@@ -310,7 +361,7 @@ photon sqlite
 
 ---
 
-### 7. Web Fetch
+### 8. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -345,7 +396,7 @@ photon web-fetch --dev
 
 ---
 
-### 8. Memory
+### 9. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
