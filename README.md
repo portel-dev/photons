@@ -977,3 +977,167 @@ MIT - See LICENSE file for details
 - Constructor parameters for configuration
 - Error handling with `success`/`error` responses
 - Tested and working
+
+<!-- PHOTON_MARKETPLACE_START -->
+# photons
+
+## 📦 Available Photons
+
+
+### [aws-s3](./.marketplace/aws-s3.md)
+
+AWS S3 - Cloud object storage operations
+
+**Tools:** 11 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [calendar](./.marketplace/calendar.md)
+
+Calendar - Google Calendar integration
+
+**Tools:** 9 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [docker](./.marketplace/docker.md)
+
+Docker - Container management operations
+
+**Tools:** 10 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [email](./.marketplace/email.md)
+
+Email - Send and receive emails via SMTP and IMAP
+
+**Tools:** 8 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [filesystem](./.marketplace/filesystem.md)
+
+Filesystem - File and directory operations
+
+**Tools:** 13 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [git](./.marketplace/git.md)
+
+Git - Local git repository operations
+
+**Tools:** 11 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [github-issues](./.marketplace/github-issues.md)
+
+GitHub Issues - Manage GitHub repository issues
+
+**Tools:** 7 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [jira](./.marketplace/jira.md)
+
+Jira - Project management and issue tracking
+
+**Tools:** 10 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [memory](./.marketplace/memory.md)
+
+Memory - Knowledge graph-based persistent memory
+
+**Tools:** 10 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [mongodb](./.marketplace/mongodb.md)
+
+MongoDB - NoSQL database operations
+
+**Tools:** 13 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [postgres](./.marketplace/postgres.md)
+
+PostgreSQL - Database operations for PostgreSQL
+
+**Tools:** 7 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [redis](./.marketplace/redis.md)
+
+Redis - In-memory data store and cache
+
+**Tools:** 18 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [slack](./.marketplace/slack.md)
+
+Slack - Send messages and manage Slack workspace
+
+**Tools:** 7 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [sqlite](./.marketplace/sqlite.md)
+
+SQLite Photon MCP - SQLite database operations
+
+**Tools:** 9 • **Version:** 1.0.0 • **License:** MIT
+
+
+### [web-fetch](./.marketplace/web-fetch.md)
+
+Web Fetch - Web content fetching and markdown conversion
+
+**Tools:** 2 • **Version:** 1.0.0 • **License:** MIT
+
+
+
+---
+
+## 🚀 Quick Start
+
+Install Photon globally:
+
+```bash
+npm install -g @portel/photon
+```
+
+### Run a Photon
+
+```bash
+# Clone this repository
+git clone <repository-url>
+cd photons
+
+# Run a photon directly
+photon ./aws-s3.photon.ts
+
+# Or install to ~/.photon/ for easier access
+cp aws-s3.photon.ts ~/.photon/
+photon aws-s3
+```
+
+## 📖 Documentation
+
+Detailed documentation for each photon:
+
+- [aws-s3](./.marketplace/aws-s3.md) - AWS S3 - Cloud object storage operations
+- [calendar](./.marketplace/calendar.md) - Calendar - Google Calendar integration
+- [docker](./.marketplace/docker.md) - Docker - Container management operations
+- [email](./.marketplace/email.md) - Email - Send and receive emails via SMTP and IMAP
+- [filesystem](./.marketplace/filesystem.md) - Filesystem - File and directory operations
+- [git](./.marketplace/git.md) - Git - Local git repository operations
+- [github-issues](./.marketplace/github-issues.md) - GitHub Issues - Manage GitHub repository issues
+- [jira](./.marketplace/jira.md) - Jira - Project management and issue tracking
+- [memory](./.marketplace/memory.md) - Memory - Knowledge graph-based persistent memory
+- [mongodb](./.marketplace/mongodb.md) - MongoDB - NoSQL database operations
+- [postgres](./.marketplace/postgres.md) - PostgreSQL - Database operations for PostgreSQL
+- [redis](./.marketplace/redis.md) - Redis - In-memory data store and cache
+- [slack](./.marketplace/slack.md) - Slack - Send messages and manage Slack workspace
+- [sqlite](./.marketplace/sqlite.md) - SQLite Photon MCP - SQLite database operations
+- [web-fetch](./.marketplace/web-fetch.md) - Web Fetch - Web content fetching and markdown conversion
+
+
+## 🔧 Configuration
+
+Each photon may require specific environment variables. See individual photon documentation for configuration details.
+
+<!-- PHOTON_MARKETPLACE_END -->

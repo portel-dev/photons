@@ -1,11 +1,136 @@
 {
   "name": "photons",
   "version": "1.0.0",
-  "description": "Official Photon MCPs - Single-file TypeScript MCP servers",
-  "owner": {
-    "name": "Portel"
-  },
+  "description": "photons Photon marketplace",
   "photons": [
+    {
+      "name": "aws-s3",
+      "version": "1.0.0",
+      "description": "AWS S3 - Cloud object storage operations",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../aws-s3.photon.ts",
+      "hash": "sha256:4140c915cc8fe07732564aaef8b2d20cf5862dc6ed708f2de1f4c80bb3646233",
+      "tools": [
+        "uploadObject",
+        "downloadObject",
+        "listObjects",
+        "deleteObject",
+        "deleteObjects",
+        "getObjectMetadata",
+        "copyObject",
+        "getPresignedUrl",
+        "listBuckets",
+        "createBucket",
+        "deleteBucket"
+      ]
+    },
+    {
+      "name": "calendar",
+      "version": "1.0.0",
+      "description": "Calendar - Google Calendar integration",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../calendar.photon.ts",
+      "hash": "sha256:0c601141416ee84e6049eb5a6994c5afcc95a53dfd219be3843cd097cadfc645",
+      "tools": [
+        "listEvents",
+        "getEvent",
+        "createEvent",
+        "updateEvent",
+        "deleteEvent",
+        "listCalendars",
+        "getFreeBusy",
+        "searchEvents",
+        "getUpcomingEvents"
+      ]
+    },
+    {
+      "name": "docker",
+      "version": "1.0.0",
+      "description": "Docker - Container management operations",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../docker.photon.ts",
+      "hash": "sha256:dbf2e3dd1f93922d2852f5b856f1c79286dbc3e7c91b2ec1fa92d387646e0bf6",
+      "tools": [
+        "listContainers",
+        "startContainer",
+        "stopContainer",
+        "restartContainer",
+        "removeContainer",
+        "getLogs",
+        "listImages",
+        "pullImage",
+        "removeImage",
+        "getStats"
+      ]
+    },
+    {
+      "name": "email",
+      "version": "1.0.0",
+      "description": "Email - Send and receive emails via SMTP and IMAP",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../email.photon.ts",
+      "hash": "sha256:d30b2938172e6120ea6b5f1a6bfa28475b08673c4140c84f7ceb5b0e07a14209",
+      "tools": [
+        "sendEmail",
+        "sendWithAttachment",
+        "listInbox",
+        "getEmail",
+        "searchEmails",
+        "markAsRead",
+        "deleteEmail",
+        "moveEmail"
+      ]
+    },
+    {
+      "name": "filesystem",
+      "version": "1.0.0",
+      "description": "Filesystem - File and directory operations",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../filesystem.photon.ts",
+      "hash": "sha256:b73d67d225aac6dc70cccd469398686c34f4c19441fa431c3ec8d856c891fec0",
+      "tools": [
+        "readFile",
+        "writeFile",
+        "appendFile",
+        "deleteFile",
+        "copyFile",
+        "moveFile",
+        "listFiles",
+        "createDirectory",
+        "deleteDirectory",
+        "getFileInfo",
+        "exists",
+        "searchFiles",
+        "getWorkdir"
+      ]
+    },
+    {
+      "name": "git",
+      "version": "1.0.0",
+      "description": "Git - Local git repository operations",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../git.photon.ts",
+      "hash": "sha256:72562f74ea7ca4f9790f5d5db13d44b9eca2614af2ac788a51d6db72a5334e73",
+      "tools": [
+        "status",
+        "log",
+        "diff",
+        "listBranches",
+        "createBranch",
+        "checkoutBranch",
+        "deleteBranch",
+        "add",
+        "commit",
+        "push",
+        "pull"
+      ]
+    },
     {
       "name": "github-issues",
       "version": "1.0.0",
@@ -15,7 +140,6 @@
       "source": "../github-issues.photon.ts",
       "hash": "sha256:fef9f8fca956fd545d9a64c325900e954f15294a794960b6c62fb9f25703f080",
       "tools": [
-        "onInitialize",
         "listIssues",
         "getIssue",
         "createIssue",
@@ -23,6 +147,27 @@
         "addComment",
         "listComments",
         "searchIssues"
+      ]
+    },
+    {
+      "name": "jira",
+      "version": "1.0.0",
+      "description": "Jira - Project management and issue tracking",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../jira.photon.ts",
+      "hash": "sha256:3a528df6d732b8d5b24675f990a38fcf61ad6d2bf435628ddea277a88fd6bea3",
+      "tools": [
+        "searchIssues",
+        "getIssue",
+        "createIssue",
+        "updateIssue",
+        "transitionIssue",
+        "getTransitions",
+        "addComment",
+        "getComments",
+        "listProjects",
+        "getProject"
       ]
     },
     {
@@ -34,7 +179,6 @@
       "source": "../memory.photon.ts",
       "hash": "sha256:cbac4dc79295525ffd0fc7ff8854f97118890d28e16d26d2103f323e405beaff",
       "tools": [
-        "onInitialize",
         "createEntities",
         "createRelations",
         "addObservations",
@@ -44,9 +188,31 @@
         "readGraph",
         "searchNodes",
         "openNodes",
-        "clearGraph",
-        "onShutdown",
-        "saveGraph"
+        "clearGraph"
+      ]
+    },
+    {
+      "name": "mongodb",
+      "version": "1.0.0",
+      "description": "MongoDB - NoSQL database operations",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../mongodb.photon.ts",
+      "hash": "sha256:761dab424fc46bad38c9f4d62382c5a1cb2268e3a5a41ec3fd5602e8f9f2a461",
+      "tools": [
+        "find",
+        "findOne",
+        "insertOne",
+        "insertMany",
+        "updateOne",
+        "updateMany",
+        "deleteOne",
+        "deleteMany",
+        "aggregate",
+        "countDocuments",
+        "listCollections",
+        "createIndex",
+        "distinct"
       ]
     },
     {
@@ -58,8 +224,6 @@
       "source": "../postgres.photon.ts",
       "hash": "sha256:fb00ae566b13b279204f461ccd412e6e2709e8a8efcbe6e182d6c6d0fdb84b6f",
       "tools": [
-        "onInitialize",
-        "onShutdown",
         "query",
         "transaction",
         "listTables",
@@ -67,6 +231,35 @@
         "listIndexes",
         "insert",
         "getDatabaseStats"
+      ]
+    },
+    {
+      "name": "redis",
+      "version": "1.0.0",
+      "description": "Redis - In-memory data store and cache",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../redis.photon.ts",
+      "hash": "sha256:7dc5c237ed0b74b13743df0ffeffdf8c873db8257e7879370f0ec876e7c9ebd4",
+      "tools": [
+        "get",
+        "set",
+        "del",
+        "exists",
+        "keys",
+        "incr",
+        "decr",
+        "expire",
+        "ttl",
+        "lpush",
+        "rpush",
+        "lpop",
+        "rpop",
+        "llen",
+        "hget",
+        "hset",
+        "hgetall",
+        "flushdb"
       ]
     },
     {
@@ -78,15 +271,13 @@
       "source": "../slack.photon.ts",
       "hash": "sha256:b8fd58e2c4d678e193a2aa55cead8b33e481ecfe5d832144651bfc28a25b77cc",
       "tools": [
-        "onInitialize",
         "postMessage",
         "listChannels",
         "getChannelInfo",
         "getHistory",
         "addReaction",
         "uploadFile",
-        "searchMessages",
-        "_resolveChannelName"
+        "searchMessages"
       ]
     },
     {
@@ -98,7 +289,6 @@
       "source": "../sqlite.photon.ts",
       "hash": "sha256:03fea43d9a00194ab5a87113047b3063a0b7456442367207e0e1ad995f1074ad",
       "tools": [
-        "onInitialize",
         "open",
         "query",
         "queryOne",
@@ -107,8 +297,7 @@
         "listTables",
         "schema",
         "close",
-        "backup",
-        "onShutdown"
+        "backup"
       ]
     },
     {
@@ -120,7 +309,6 @@
       "source": "../web-fetch.photon.ts",
       "hash": "sha256:ef98979f9283bc29192b727601ecee4978d352d251a081dab8181b43c52ace0c",
       "tools": [
-        "onInitialize",
         "fetch",
         "fetchBatch"
       ]
