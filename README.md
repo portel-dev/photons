@@ -317,7 +317,63 @@ photon docker
 
 ---
 
-### 6. GitHub Issues
+### 6. MongoDB
+
+NoSQL database operations with the official MongoDB driver.
+
+**File:** `mongodb.photon.ts`
+
+**Configuration:**
+```bash
+export MONGO_D_B_URI="mongodb://localhost:27017"  # Or MongoDB Atlas URI
+export MONGO_D_B_DATABASE="myapp"
+photon mongodb
+```
+
+**Tools:** 14 tools
+- `find` - Find documents with filtering, sorting, and limits
+- `findOne` - Find single document by filter
+- `insertOne` - Insert single document
+- `insertMany` - Insert multiple documents
+- `updateOne` - Update single document (with upsert option)
+- `updateMany` - Update multiple documents
+- `deleteOne` - Delete single document
+- `deleteMany` - Delete multiple documents
+- `aggregate` - Run aggregation pipelines
+- `countDocuments` - Count documents matching filter
+- `listCollections` - List all collections in database
+- `createIndex` - Create indexes (with unique option)
+- `distinct` - Get distinct values for a field
+
+**Dependencies:** Auto-installs `mongodb@^6.3.0`
+
+**Features:**
+- Full CRUD operations
+- Aggregation pipeline support
+- Index management
+- Upsert operations
+- Automatic ObjectId serialization
+- Connection pooling built-in
+
+**Example:**
+```bash
+# Install to ~/.photon/
+curl -o ~/.photon/mongodb.photon.ts https://raw.githubusercontent.com/portel-dev/photons/main/mongodb.photon.ts
+
+# Run with local MongoDB
+export MONGO_D_B_URI="mongodb://localhost:27017"
+export MONGO_D_B_DATABASE="myapp"
+photon mongodb
+
+# Or with MongoDB Atlas
+export MONGO_D_B_URI="mongodb+srv://user:pass@cluster.mongodb.net"
+export MONGO_D_B_DATABASE="production"
+photon mongodb
+```
+
+---
+
+### 7. GitHub Issues
 
 Manage GitHub repository issues with full CRUD operations.
 
@@ -357,7 +413,7 @@ photon github-issues --config
 
 ---
 
-### 7. Slack
+### 8. Slack
 
 Send messages and manage Slack workspace.
 
@@ -390,7 +446,7 @@ photon slack
 
 ---
 
-### 8. PostgreSQL
+### 9. PostgreSQL
 
 Database operations for PostgreSQL with connection pooling.
 
@@ -429,7 +485,7 @@ photon postgres --config
 
 ---
 
-### 9. SQLite
+### 10. SQLite
 
 Local SQLite database operations.
 
@@ -466,7 +522,7 @@ photon sqlite
 
 ---
 
-### 10. Web Fetch
+### 11. Web Fetch
 
 Web content fetching and markdown conversion (official Fetch MCP replica).
 
@@ -501,7 +557,7 @@ photon web-fetch --dev
 
 ---
 
-### 11. Memory
+### 12. Memory
 
 Knowledge graph-based persistent memory (official Memory MCP replica).
 
