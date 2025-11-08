@@ -7,10 +7,10 @@ Production-ready photons for instant use. Zero configuration, auto-dependencies,
 
 ## 🏛️ Official Marketplace
 
-This is the **official Photon marketplace** maintained by Portel. It comes pre-configured with the Photon CLI - no manual setup needed.
+This is the **official Photon marketplace** maintained by Portel. It comes pre-configured with Photon - no manual setup needed.
 
 **Already available to you:**
-- ✅ Pre-installed with Photon CLI
+- ✅ Pre-installed with Photon
 - ✅ Automatically updated
 - ✅ Production-ready photons
 - ✅ Community-maintained
