@@ -22,6 +22,24 @@ We welcome contributions! Submit pull requests for:
 - 📦 New photons to add to the marketplace
 - 📝 Documentation improvements
 
+**Setup for contributors:**
+```bash
+# 1. Clone and setup hooks (one-time)
+git clone https://github.com/portel-dev/photons.git
+cd photons
+bash .githooks/setup.sh
+
+# 2. Add your photon
+cp your-tool.photon.ts .
+
+# 3. Commit (auto-syncs manifest)
+git add your-tool.photon.ts
+git commit -m "feat: add your-tool photon"
+git push
+```
+
+The pre-commit hook automatically runs `photon sync marketplace` to keep the manifest up-to-date.
+
 **Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
 
 ## 📦 Available Photons
