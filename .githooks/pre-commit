@@ -1,0 +1,20 @@
+#!/bin/bash
+# Pre-commit hook: Auto-sync marketplace manifest before commit
+# This ensures .marketplace/photons.json is always up-to-date
+
+# Check if any .photon.ts files or marketplace files are being committed
+if git diff --cached --name-only | grep -qE '\.photon\.ts$|\.marketplace/'; then
+  echo "🔄 Syncing marketplace manifest..."
+
+  # Run photon sync marketplace
+  if photon sync marketplace; then
+    # Stage the generated files
+    git add .marketplace/photons.json README.md *.md 2>/dev/null
+    echo "✅ Marketplace synced and staged"
+  else
+    echo "❌ Failed to sync marketplace"
+    exit 1
+  fi
+fi
+
+exit 0
