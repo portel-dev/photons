@@ -49,11 +49,6 @@ photon add filesystem  # That's it. No setup, no config files.
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 
-**Universal Runtime**
-- 🤖 **MCP servers** for AI assistants (available now)
-- 💻 **CLI tools** for terminal workflows (coming soon)
-- 🔌 More interfaces coming...
-
 ## 🚀 Quick Start
 
 ### 1. Install Photon CLI
@@ -135,19 +130,19 @@ photon mcp filesystem  # Works immediately
 
 ## 💡 Use Cases
 
-**For Claude Users:**
+**For AI Assistant Users:**
 ```bash
 photon add filesystem git github-issues
 photon get --mcp  # Get config for all three
 ```
-Add to Claude Desktop → Now Claude can read files, manage repos, create issues
+Add to your MCP client → Now your AI assistant can read files, manage repos, create issues
 
 **For Teams:**
 ```bash
 photon add postgres mongodb redis
 photon get --mcp
 ```
-Give Claude access to your data infrastructure
+Give your AI assistant access to your data infrastructure
 
 **For Developers:**
 ```bash
@@ -190,6 +185,10 @@ git push origin main
 photon marketplace add company/photons
 photon add your-internal-tool
 ```
+
+## 🔮 Future
+
+Photon is designed to support additional deployment targets beyond MCP servers, such as CLI tools and more. These are planned for future versions.
 
 ---
 
