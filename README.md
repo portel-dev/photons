@@ -37,6 +37,7 @@ We welcome contributions! Submit pull requests for:
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
+| **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
 | **Memory** | Knowledge graph-based persistent memory | 10 | [View →](memory.md) |
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
@@ -46,7 +47,7 @@ We welcome contributions! Submit pull requests for:
 | **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
 
 
-**Total:** 16 photons ready to use
+**Total:** 17 photons ready to use
 
 ---
 
@@ -90,7 +91,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 16 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 17 focused tools at its fingertips.
 
 ## ⚛️ What Are Photons?
 
@@ -106,7 +107,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 16 production-ready photons available
+- 📦 17 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

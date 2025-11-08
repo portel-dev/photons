@@ -183,6 +183,18 @@
       ]
     },
     {
+      "name": "math",
+      "version": "1.0.0",
+      "description": "Math Photon MCP - Advanced math expression evaluator",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../math.photon.ts",
+      "hash": "sha256:8ba55daf6f715dd0f329631a948af1ac9d95fe097742229fca39099c2553f92e",
+      "tools": [
+        "calculate"
+      ]
+    },
+    {
       "name": "memory",
       "version": "1.0.0",
       "description": "Memory - Knowledge graph-based persistent memory",
