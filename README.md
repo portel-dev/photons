@@ -3,7 +3,7 @@
 
 > **Singular focus. Precise target.**
 
-Production-ready photons for instant use. Zero configuration, auto-dependencies, single command installation.
+Photons are single-file TypeScript classes that run as [MCP servers](https://modelcontextprotocol.io/introduction). Add them to your favorite AI assistant using the [Photon runtime](https://github.com/portel-dev/photon).
 
 ## 🏛️ Official Marketplace
 
@@ -23,61 +23,6 @@ We welcome contributions! Submit pull requests for:
 - 📝 Documentation improvements
 
 **Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
-
-## ⚛️ What Are Photons?
-
-**Photons** are laser-focused modules - each does ONE thing exceptionally well:
-- 📁 **Filesystem** - File operations
-- 🐙 **Git** - Repository management
-- ☁️ **AWS S3** - Cloud storage
-- 📅 **Google Calendar** - Calendar integration
-- 🕐 **Time** - Timezone operations
-- ... and more
-
-Each photon delivers **singular focus** to a **precise target**.
-
-## ✨ Why This Matters
-
-**Zero Configuration**
-```bash
-photon add filesystem  # That's it. No setup, no config files.
-```
-
-**Instant Value**
-- 🎯 Each photon does one thing perfectly
-- 📦 16 production-ready photons available
-- ⚡ Auto-installs dependencies
-- 🔧 Works out of the box
-
-## 🚀 Quick Start
-
-### 1. Install Photon CLI
-
-```bash
-npm install -g @portel/photon
-```
-
-### 2. Add Any Photon
-
-```bash
-photon add filesystem
-photon add git
-photon add aws-s3
-```
-
-### 3. Use It
-
-```bash
-# Run as MCP server
-photon mcp filesystem
-
-# Get config for your MCP client
-photon get filesystem --mcp
-```
-
-Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
-
-**That's it!** Your AI assistant now has 16 focused tools at its fingertips.
 
 ## 📦 Available Photons
 
@@ -102,6 +47,69 @@ Add the output to your MCP client's configuration. **Consult your client's docum
 
 
 **Total:** 16 photons ready to use
+
+---
+
+## 🚀 Quick Start
+
+### 1. Install Photon
+
+```bash
+npm install -g @portel/photon
+```
+
+### 2. Add Any Photon
+
+```bash
+photon add filesystem
+photon add git
+photon add aws-s3
+```
+
+### 3. Use It
+
+```bash
+# Run as MCP server
+photon mcp filesystem
+
+# Get config for your MCP client
+photon get filesystem --mcp
+```
+
+Output (paste directly into your MCP client config):
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "photon",
+      "args": ["mcp", "filesystem"]
+    }
+  }
+}
+```
+
+Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
+
+**That's it!** Your AI assistant now has 16 focused tools at its fingertips.
+
+## ⚛️ What Are Photons?
+
+**Photons** are laser-focused modules - each does ONE thing exceptionally well:
+- 📁 **Filesystem** - File operations
+- 🐙 **Git** - Repository management
+- ☁️ **AWS S3** - Cloud storage
+- 📅 **Google Calendar** - Calendar integration
+- 🕐 **Time** - Timezone operations
+- ... and more
+
+Each photon delivers **singular focus** to a **precise target**.
+
+**Key Features:**
+- 🎯 Each photon does one thing perfectly
+- 📦 16 production-ready photons available
+- ⚡ Auto-installs dependencies
+- 🔧 Works out of the box
+- 📄 Single-file design (easy to fork and customize)
 
 ## 🎯 The Value Proposition
 
