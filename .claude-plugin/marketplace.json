@@ -1,0 +1,154 @@
+{
+  "name": "photons-marketplace",
+  "owner": {
+    "name": "Portel",
+    "email": "contact@portel.dev"
+  },
+  "metadata": {
+    "description": "Official Photon MCP servers - singular focus, precise target. Each photon is a focused MCP server for specific tasks.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "photons",
+      "description": "Complete collection of all Photon MCP servers for file operations, databases, cloud services, integrations, and utilities",
+      "source": "./",
+      "strict": false,
+      "mcpServers": {
+        "photon-filesystem": {
+          "command": "photon",
+          "args": ["mcp", "filesystem"],
+          "env": {
+            "FILESYSTEM_WORKDIR": "${FILESYSTEM_WORKDIR}",
+            "FILESYSTEM_MAXFILESIZE": "${FILESYSTEM_MAXFILESIZE}",
+            "FILESYSTEM_ALLOWHIDDEN": "${FILESYSTEM_ALLOWHIDDEN}"
+          }
+        },
+        "photon-git": {
+          "command": "photon",
+          "args": ["mcp", "git"],
+          "env": {
+            "GIT_WORKDIR": "${GIT_WORKDIR}"
+          }
+        },
+        "photon-github-issues": {
+          "command": "photon",
+          "args": ["mcp", "github-issues"],
+          "env": {
+            "GITHUB_ISSUES_TOKEN": "${GITHUB_ISSUES_TOKEN}",
+            "GITHUB_ISSUES_OWNER": "${GITHUB_ISSUES_OWNER}",
+            "GITHUB_ISSUES_REPO": "${GITHUB_ISSUES_REPO}"
+          }
+        },
+        "photon-jira": {
+          "command": "photon",
+          "args": ["mcp", "jira"],
+          "env": {
+            "JIRA_HOST": "${JIRA_HOST}",
+            "JIRA_EMAIL": "${JIRA_EMAIL}",
+            "JIRA_TOKEN": "${JIRA_TOKEN}"
+          }
+        },
+        "photon-slack": {
+          "command": "photon",
+          "args": ["mcp", "slack"],
+          "env": {
+            "SLACK_TOKEN": "${SLACK_TOKEN}"
+          }
+        },
+        "photon-email": {
+          "command": "photon",
+          "args": ["mcp", "email"],
+          "env": {
+            "EMAIL_SMTP_HOST": "${EMAIL_SMTP_HOST}",
+            "EMAIL_SMTP_PORT": "${EMAIL_SMTP_PORT}",
+            "EMAIL_SMTP_USER": "${EMAIL_SMTP_USER}",
+            "EMAIL_SMTP_PASSWORD": "${EMAIL_SMTP_PASSWORD}",
+            "EMAIL_IMAP_HOST": "${EMAIL_IMAP_HOST}",
+            "EMAIL_IMAP_PORT": "${EMAIL_IMAP_PORT}",
+            "EMAIL_IMAP_USER": "${EMAIL_IMAP_USER}",
+            "EMAIL_IMAP_PASSWORD": "${EMAIL_IMAP_PASSWORD}",
+            "EMAIL_FROM": "${EMAIL_FROM}"
+          }
+        },
+        "photon-google-calendar": {
+          "command": "photon",
+          "args": ["mcp", "google-calendar"],
+          "env": {
+            "GOOGLE_CALENDAR_CREDENTIALS": "${GOOGLE_CALENDAR_CREDENTIALS}",
+            "GOOGLE_CALENDAR_TOKEN": "${GOOGLE_CALENDAR_TOKEN}"
+          }
+        },
+        "photon-postgres": {
+          "command": "photon",
+          "args": ["mcp", "postgres"],
+          "env": {
+            "POSTGRE_S_Q_L_DATABASE": "${POSTGRE_S_Q_L_DATABASE}",
+            "POSTGRE_S_Q_L_USER": "${POSTGRE_S_Q_L_USER}",
+            "POSTGRE_S_Q_L_PASSWORD": "${POSTGRE_S_Q_L_PASSWORD}",
+            "POSTGRE_S_Q_L_HOST": "${POSTGRE_S_Q_L_HOST:-localhost}",
+            "POSTGRE_S_Q_L_PORT": "${POSTGRE_S_Q_L_PORT:-5432}",
+            "POSTGRE_S_Q_L_SSL": "${POSTGRE_S_Q_L_SSL:-false}"
+          }
+        },
+        "photon-mongodb": {
+          "command": "photon",
+          "args": ["mcp", "mongodb"],
+          "env": {
+            "MONGO_D_B_URI": "${MONGO_D_B_URI}",
+            "MONGO_D_B_DATABASE": "${MONGO_D_B_DATABASE}"
+          }
+        },
+        "photon-redis": {
+          "command": "photon",
+          "args": ["mcp", "redis"],
+          "env": {
+            "REDIS_HOST": "${REDIS_HOST:-localhost}",
+            "REDIS_PORT": "${REDIS_PORT:-6379}",
+            "REDIS_PASSWORD": "${REDIS_PASSWORD}",
+            "REDIS_DATABASE": "${REDIS_DATABASE:-0}"
+          }
+        },
+        "photon-sqlite": {
+          "command": "photon",
+          "args": ["mcp", "sqlite"]
+        },
+        "photon-docker": {
+          "command": "photon",
+          "args": ["mcp", "docker"],
+          "env": {
+            "DOCKER_SOCKET_PATH": "${DOCKER_SOCKET_PATH}"
+          }
+        },
+        "photon-aws-s3": {
+          "command": "photon",
+          "args": ["mcp", "aws-s3"],
+          "env": {
+            "AWS_S3_ACCESS_KEY_ID": "${AWS_S3_ACCESS_KEY_ID}",
+            "AWS_S3_SECRET_ACCESS_KEY": "${AWS_S3_SECRET_ACCESS_KEY}",
+            "AWS_S3_REGION": "${AWS_S3_REGION:-us-east-1}"
+          }
+        },
+        "photon-fetch": {
+          "command": "photon",
+          "args": ["mcp", "fetch"]
+        },
+        "photon-time": {
+          "command": "photon",
+          "args": ["mcp", "time"]
+        },
+        "photon-memory": {
+          "command": "photon",
+          "args": ["mcp", "memory"],
+          "env": {
+            "MEMORY_STORAGE_PATH": "${MEMORY_STORAGE_PATH}"
+          }
+        },
+        "photon-math": {
+          "command": "photon",
+          "args": ["mcp", "math"]
+        }
+      }
+    }
+  ]
+}

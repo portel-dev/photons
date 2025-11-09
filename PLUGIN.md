@@ -1,0 +1,226 @@
+# Photons Claude Code Plugin
+
+Official Claude Code marketplace plugin for Photon MCP servers - singular focus, precise target.
+
+## What is This?
+
+This plugin makes all 17 Photon MCP servers instantly available in Claude Code. Each photon is a focused, single-purpose MCP server for specific tasks like file operations, databases, cloud services, and integrations.
+
+## Prerequisites
+
+**Required:** Install the Photon CLI globally before using this plugin:
+
+```bash
+npm install -g @portel/photon
+```
+
+## Installation
+
+Add the photons marketplace to Claude Code:
+
+```bash
+/plugin marketplace add portel-dev/photons
+```
+
+Install the photons plugin:
+
+```bash
+/plugin install photons@photons-marketplace
+```
+
+That's it! All 17 photons are now available as MCP servers in Claude Code.
+
+## Available Photons
+
+### Core Utilities
+- **photon-filesystem** - File and directory operations
+- **photon-git** - Local git repository operations
+- **photon-fetch** - Web content fetching and markdown conversion
+- **photon-time** - Timezone and time conversion operations
+- **photon-memory** - Knowledge graph-based persistent memory
+- **photon-math** - Advanced math expression evaluator
+
+### Databases
+- **photon-postgres** - PostgreSQL database operations
+- **photon-mongodb** - NoSQL database operations
+- **photon-redis** - In-memory data store and cache
+- **photon-sqlite** - SQLite database operations
+
+### Cloud & Infrastructure
+- **photon-aws-s3** - AWS S3 cloud object storage operations
+- **photon-docker** - Container management operations
+
+### Integrations
+- **photon-github-issues** - Manage GitHub repository issues
+- **photon-jira** - Project management and issue tracking
+- **photon-slack** - Send messages and manage Slack workspace
+- **photon-email** - Send and receive emails via SMTP and IMAP
+- **photon-google-calendar** - Calendar integration
+
+## Configuration
+
+Most photons require environment variables for configuration. Set these before using the respective photons:
+
+### Filesystem (`photon-filesystem`)
+
+```bash
+export FILESYSTEM_WORKDIR="$HOME/Documents"  # Optional, default: ~/Documents
+export FILESYSTEM_MAXFILESIZE="10485760"     # Optional, default: 10MB
+export FILESYSTEM_ALLOWHIDDEN="false"        # Optional, default: false
+```
+
+### Git (`photon-git`)
+
+```bash
+export GIT_WORKDIR="/path/to/repo"  # Optional, current directory by default
+```
+
+### GitHub Issues (`photon-github-issues`)
+
+```bash
+export GITHUB_ISSUES_TOKEN="ghp_..."      # Required: GitHub personal access token
+export GITHUB_ISSUES_OWNER="username"     # Required: Repository owner
+export GITHUB_ISSUES_REPO="repository"    # Required: Repository name
+```
+
+### Jira (`photon-jira`)
+
+```bash
+export JIRA_HOST="https://yourcompany.atlassian.net"  # Required
+export JIRA_EMAIL="your@email.com"                     # Required
+export JIRA_TOKEN="your-api-token"                     # Required
+```
+
+### Slack (`photon-slack`)
+
+```bash
+export SLACK_TOKEN="xoxb-..."  # Required: Slack bot token
+```
+
+### Email (`photon-email`)
+
+```bash
+export EMAIL_SMTP_HOST="smtp.gmail.com"      # Required
+export EMAIL_SMTP_PORT="587"                  # Required
+export EMAIL_SMTP_USER="your@email.com"      # Required
+export EMAIL_SMTP_PASSWORD="your-password"   # Required
+export EMAIL_IMAP_HOST="imap.gmail.com"      # Required
+export EMAIL_IMAP_PORT="993"                  # Required
+export EMAIL_IMAP_USER="your@email.com"      # Required
+export EMAIL_IMAP_PASSWORD="your-password"   # Required
+export EMAIL_FROM="your@email.com"           # Required
+```
+
+### Google Calendar (`photon-google-calendar`)
+
+```bash
+export GOOGLE_CALENDAR_CREDENTIALS="/path/to/credentials.json"  # Required
+export GOOGLE_CALENDAR_TOKEN="/path/to/token.json"              # Required
+```
+
+### PostgreSQL (`photon-postgres`)
+
+```bash
+export POSTGRE_S_Q_L_DATABASE="mydb"       # Required
+export POSTGRE_S_Q_L_USER="username"       # Required
+export POSTGRE_S_Q_L_PASSWORD="password"   # Required
+export POSTGRE_S_Q_L_HOST="localhost"      # Optional, default: localhost
+export POSTGRE_S_Q_L_PORT="5432"           # Optional, default: 5432
+export POSTGRE_S_Q_L_SSL="false"           # Optional, default: false
+```
+
+### MongoDB (`photon-mongodb`)
+
+```bash
+export MONGO_D_B_URI="mongodb://localhost:27017"  # Required
+export MONGO_D_B_DATABASE="mydb"                  # Required
+```
+
+### Redis (`photon-redis`)
+
+```bash
+export REDIS_HOST="localhost"     # Optional, default: localhost
+export REDIS_PORT="6379"          # Optional, default: 6379
+export REDIS_PASSWORD="password"  # Optional
+export REDIS_DATABASE="0"         # Optional, default: 0
+```
+
+### SQLite (`photon-sqlite`)
+
+No environment variables required. Database path is specified in tool calls.
+
+### Docker (`photon-docker`)
+
+```bash
+export DOCKER_SOCKET_PATH="/var/run/docker.sock"  # Optional
+```
+
+### AWS S3 (`photon-aws-s3`)
+
+```bash
+export AWS_S3_ACCESS_KEY_ID="AKIA..."           # Required
+export AWS_S3_SECRET_ACCESS_KEY="..."           # Required
+export AWS_S3_REGION="us-east-1"                # Optional, default: us-east-1
+```
+
+### Fetch (`photon-fetch`)
+
+No environment variables required.
+
+### Time (`photon-time`)
+
+No environment variables required.
+
+### Memory (`photon-memory`)
+
+```bash
+export MEMORY_STORAGE_PATH="/path/to/storage"  # Optional
+```
+
+### Math (`photon-math`)
+
+No environment variables required.
+
+## Usage Examples
+
+Once installed, Claude Code will automatically use the appropriate photons when needed. For example:
+
+- "List all files in my Documents folder" → Uses `photon-filesystem`
+- "Query the users table from the database" → Uses `photon-postgres` or `photon-mongodb`
+- "Create a new GitHub issue" → Uses `photon-github-issues`
+- "Upload file to S3 bucket" → Uses `photon-aws-s3`
+- "What time is it in Tokyo?" → Uses `photon-time`
+
+## Troubleshooting
+
+### Photon CLI Not Found
+
+If you get an error about the `photon` command not being found:
+
+```bash
+npm install -g @portel/photon
+```
+
+### Environment Variables Not Set
+
+If a photon fails with "required parameter" errors, check that you've set the necessary environment variables for that specific photon (see Configuration section above).
+
+### Checking Available MCP Servers
+
+To verify the photons are installed:
+
+```bash
+/mcp
+```
+
+You should see all `photon-*` servers listed.
+
+## Learn More
+
+- **Photon Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
+- **Photon CLI:** [@portel/photon on npm](https://www.npmjs.com/package/@portel/photon)
+- **Documentation:** Each photon has detailed documentation in the repository
+
+## License
+
+MIT
