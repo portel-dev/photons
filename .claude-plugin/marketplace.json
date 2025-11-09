@@ -10,8 +10,8 @@
   },
   "plugins": [
     {
-      "name": "photons",
-      "description": "Complete collection of 17 Photon MCP servers",
+      "name": "photon-aws-s3",
+      "description": "AWS S3 - Cloud object storage operations",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -24,112 +24,288 @@
             "mcp",
             "aws-s3"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-docker",
+      "description": "Docker - Container management operations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-docker": {
           "command": "photon",
           "args": [
             "mcp",
             "docker"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-email",
+      "description": "Email - Send and receive emails via SMTP and IMAP",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-email": {
           "command": "photon",
           "args": [
             "mcp",
             "email"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-fetch",
+      "description": "Fetch - Web content fetching and markdown conversion",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-fetch": {
           "command": "photon",
           "args": [
             "mcp",
             "fetch"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-filesystem",
+      "description": "Filesystem - File and directory operations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-filesystem": {
           "command": "photon",
           "args": [
             "mcp",
             "filesystem"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-git",
+      "description": "Git - Local git repository operations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-git": {
           "command": "photon",
           "args": [
             "mcp",
             "git"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-github-issues",
+      "description": "GitHub Issues - Manage GitHub repository issues",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-github-issues": {
           "command": "photon",
           "args": [
             "mcp",
             "github-issues"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-google-calendar",
+      "description": "Google Calendar - Calendar integration",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-google-calendar": {
           "command": "photon",
           "args": [
             "mcp",
             "google-calendar"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-jira",
+      "description": "Jira - Project management and issue tracking",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-jira": {
           "command": "photon",
           "args": [
             "mcp",
             "jira"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-math",
+      "description": "Math Photon MCP - Advanced math expression evaluator",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-math": {
           "command": "photon",
           "args": [
             "mcp",
             "math"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-memory",
+      "description": "Memory - Knowledge graph-based persistent memory",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-memory": {
           "command": "photon",
           "args": [
             "mcp",
             "memory"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-mongodb",
+      "description": "MongoDB - NoSQL database operations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-mongodb": {
           "command": "photon",
           "args": [
             "mcp",
             "mongodb"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-postgres",
+      "description": "PostgreSQL - Database operations for PostgreSQL",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-postgres": {
           "command": "photon",
           "args": [
             "mcp",
             "postgres"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-redis",
+      "description": "Redis - In-memory data store and cache",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-redis": {
           "command": "photon",
           "args": [
             "mcp",
             "redis"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-slack",
+      "description": "Slack - Send messages and manage Slack workspace",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-slack": {
           "command": "photon",
           "args": [
             "mcp",
             "slack"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-sqlite",
+      "description": "SQLite Photon MCP - SQLite database operations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-sqlite": {
           "command": "photon",
           "args": [
             "mcp",
             "sqlite"
           ]
-        },
+        }
+      }
+    },
+    {
+      "name": "photon-time",
+      "description": "Time - Timezone and time conversion operations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
         "photon-time": {
           "command": "photon",
           "args": [
