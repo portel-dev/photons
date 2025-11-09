@@ -116,7 +116,7 @@ echo ""
 CONFIG_JSON=$(photon get "$SELECTED_PHOTON" --mcp 2>/dev/null | tail -n +3)
 
 # Extract env vars with placeholders
-ENV_VARS=$(echo "$CONFIG_JSON" | jq -r ".$SELECTED_PHOTON.env | to_entries[] | \"\(.key)=\(.value)\"" 2>/dev/null)
+ENV_VARS=$(echo "$CONFIG_JSON" | jq -r ".$SELECTED_PHOTON.env | to_entries[] | \"(.key)=(.value)\"" 2>/dev/null)
 
 if [ -z "$ENV_VARS" ]; then
   echo -e "${GREEN}✅ This photon doesn't require configuration${NC}"
