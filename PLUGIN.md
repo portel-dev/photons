@@ -6,14 +6,6 @@ Official Claude Code marketplace plugin for Photon MCP servers - singular focus,
 
 This plugin makes all 17 Photon MCP servers instantly available in Claude Code. Each photon is a focused, single-purpose MCP server for specific tasks like file operations, databases, cloud services, and integrations.
 
-## Prerequisites
-
-**Required:** Install the Photon CLI globally before using this plugin:
-
-```bash
-npm install -g @portel/photon
-```
-
 ## Installation
 
 Add the photons marketplace to Claude Code:
@@ -28,7 +20,12 @@ Install the photons plugin:
 /plugin install photons@photons-marketplace
 ```
 
-That's it! All 17 photons are now available as MCP servers in Claude Code.
+**That's it!** The plugin will automatically:
+- ✅ Check if Photon CLI is installed
+- ✅ Install it automatically if missing
+- ✅ Make all 17 photons available as MCP servers
+
+No manual setup required for the Photon CLI!
 
 ## Available Photons
 
@@ -59,7 +56,25 @@ That's it! All 17 photons are now available as MCP servers in Claude Code.
 
 ## Configuration
 
-Most photons require environment variables for configuration. Set these before using the respective photons:
+Many photons require credentials or configuration (like database passwords, API tokens, etc.).
+
+### Interactive Setup (Recommended)
+
+Run the interactive setup script to configure any photon:
+
+```bash
+bash .claude-plugin/scripts/setup-photon.sh
+```
+
+This script will:
+1. Show you which photons need configuration
+2. Guide you through entering credentials interactively
+3. Securely save them to your Claude Code MCP config
+4. **Never share your credentials with the AI**
+
+### Manual Configuration
+
+If you prefer to configure manually, set environment variables or edit the MCP config directly:
 
 ### Filesystem (`photon-filesystem`)
 
@@ -181,9 +196,26 @@ export MEMORY_STORAGE_PATH="/path/to/storage"  # Optional
 
 No environment variables required.
 
+## Quick Start
+
+1. **Install the plugin:**
+   ```bash
+   /plugin marketplace add portel-dev/photons
+   /plugin install photons@photons-marketplace
+   ```
+
+2. **Configure photons that need credentials:**
+   ```bash
+   bash .claude-plugin/scripts/setup-photon.sh
+   ```
+
+3. **Restart Claude Code** to load the configured photons
+
+4. **Start using photons!** Claude will automatically use them when needed.
+
 ## Usage Examples
 
-Once installed, Claude Code will automatically use the appropriate photons when needed. For example:
+Once installed and configured, Claude Code will automatically use the appropriate photons when needed. For example:
 
 - "List all files in my Documents folder" → Uses `photon-filesystem`
 - "Query the users table from the database" → Uses `photon-postgres` or `photon-mongodb`
@@ -195,7 +227,7 @@ Once installed, Claude Code will automatically use the appropriate photons when 
 
 ### Photon CLI Not Found
 
-If you get an error about the `photon` command not being found:
+The plugin should automatically install the Photon CLI on first use. If you encounter issues:
 
 ```bash
 npm install -g @portel/photon
