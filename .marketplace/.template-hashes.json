@@ -1,8 +1,8 @@
 {
   "readme.md": {
-    "version": "1.0.0",
-    "hash": "30173c8bda991a97417c417f58576c3e5c6fbc17aabb53c7c9492af0a776985a",
-    "customized": true
+    "version": "1.1.0",
+    "hash": "3ea3da958affc3b1153902df7e45901a55fe33c10c13918b0338225591c7ede1",
+    "customized": false
   },
   "photon.md": {
     "version": "1.0.0",
