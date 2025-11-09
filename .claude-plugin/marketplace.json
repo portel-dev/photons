@@ -1,5 +1,9 @@
 {
   "name": "photons-marketplace",
+  "owner": {
+    "name": "Portel",
+    "email": "contact@portel.dev"
+  },
   "metadata": {
     "description": "Official photons MCP servers",
     "version": "1.0.0"
