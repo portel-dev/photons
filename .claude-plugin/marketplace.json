@@ -18,7 +18,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-aws-s3": {
+        "aws-s3": {
           "command": "photon",
           "args": [
             "mcp",
@@ -36,7 +36,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-docker": {
+        "docker": {
           "command": "photon",
           "args": [
             "mcp",
@@ -54,7 +54,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-email": {
+        "email": {
           "command": "photon",
           "args": [
             "mcp",
@@ -72,7 +72,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-fetch": {
+        "fetch": {
           "command": "photon",
           "args": [
             "mcp",
@@ -90,7 +90,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-filesystem": {
+        "filesystem": {
           "command": "photon",
           "args": [
             "mcp",
@@ -108,7 +108,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-git": {
+        "git": {
           "command": "photon",
           "args": [
             "mcp",
@@ -126,7 +126,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-github-issues": {
+        "github-issues": {
           "command": "photon",
           "args": [
             "mcp",
@@ -144,7 +144,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-google-calendar": {
+        "google-calendar": {
           "command": "photon",
           "args": [
             "mcp",
@@ -162,7 +162,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-jira": {
+        "jira": {
           "command": "photon",
           "args": [
             "mcp",
@@ -180,7 +180,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-math": {
+        "math": {
           "command": "photon",
           "args": [
             "mcp",
@@ -198,7 +198,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-memory": {
+        "memory": {
           "command": "photon",
           "args": [
             "mcp",
@@ -216,7 +216,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-mongodb": {
+        "mongodb": {
           "command": "photon",
           "args": [
             "mcp",
@@ -234,7 +234,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-postgres": {
+        "postgres": {
           "command": "photon",
           "args": [
             "mcp",
@@ -252,7 +252,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-redis": {
+        "redis": {
           "command": "photon",
           "args": [
             "mcp",
@@ -270,7 +270,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-slack": {
+        "slack": {
           "command": "photon",
           "args": [
             "mcp",
@@ -288,7 +288,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-sqlite": {
+        "sqlite": {
           "command": "photon",
           "args": [
             "mcp",
@@ -306,7 +306,7 @@
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "photon-time": {
+        "time": {
           "command": "photon",
           "args": [
             "mcp",
