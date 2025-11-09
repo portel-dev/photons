@@ -37,8 +37,8 @@ We welcome contributions! Submit pull requests for:
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
+| **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
-| **Memory** | Knowledge graph-based persistent memory | 10 | [View →](memory.md) |
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
 | **Redis** | In-memory data store and cache | 18 | [View →](redis.md) |

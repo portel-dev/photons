@@ -1,18 +1,19 @@
 /**
- * Memory - Knowledge graph-based persistent memory
+ * Knowledge Graph - Persistent knowledge graph with entities and relations
  *
- * Replicates the official MCP Memory server for storing structured information across conversations.
- * Maintains entities, relations, and observations in a local knowledge graph.
+ * Store structured information as a knowledge graph with entities, relations, and observations.
+ * Perfect for building contextual memory, tracking relationships, and organizing information.
  *
  * Common use cases:
- * - Personal information: "Remember that I prefer TypeScript over JavaScript"
+ * - Personal context: "Remember that I prefer TypeScript over JavaScript"
  * - Project tracking: "Add a note that the API migration is 80% complete"
  * - Relationship mapping: "Connect the frontend team to the API project"
+ * - Export diagrams: "Export as mermaid diagram for visualization"
  *
- * Example: createEntities({ entities: [{ name: "user", entityType: "person", observations: ["prefers TypeScript"] }] })
+ * Example: entities({ entities: [{ name: "user", entityType: "person", observations: ["prefers TypeScript"] }] })
  *
  * Configuration:
- * - storage_path: Path to store knowledge graph JSON (default: ~/.photon/memory.json)
+ * - storage_path: Path to store knowledge graph JSON (default: ~/.photon/knowledge-graph.json)
  *
  * @version 1.0.0
  * @author Portel
@@ -41,13 +42,13 @@ interface KnowledgeGraph {
   relations: Relation[];
 }
 
-export default class Memory {
+export default class KnowledgeGraph {
   private storagePath: string;
   private graph: KnowledgeGraph = { entities: [], relations: [] };
 
   constructor(storage_path?: string) {
     this.storagePath =
-      storage_path || path.join(os.homedir(), '.photon', 'memory.json');
+      storage_path || path.join(os.homedir(), '.photon', 'knowledge-graph.json');
   }
 
   async onInitialize() {
@@ -59,14 +60,14 @@ export default class Memory {
       const data = await fs.readFile(this.storagePath, 'utf-8');
       this.graph = JSON.parse(data);
       console.error(
-        `[memory] ✅ Loaded ${this.graph.entities.length} entities, ${this.graph.relations.length} relations`
+        `[knowledge-graph] ✅ Loaded ${this.graph.entities.length} entities, ${this.graph.relations.length} relations`
       );
     } else {
       await this.saveGraph();
-      console.error('[memory] ✅ Initialized with empty knowledge graph');
+      console.error('[knowledge-graph] ✅ Initialized with empty knowledge graph');
     }
 
-    console.error(`[memory] Storage: ${this.storagePath}`);
+    console.error(`[knowledge-graph] Storage: ${this.storagePath}`);
   }
 
   /**
@@ -404,9 +405,99 @@ export default class Memory {
     }
   }
 
+  /**
+   * Export knowledge graph in various formats
+   * @param format Export format (json or mermaid)
+   * @param path Optional file path to save the export
+   */
+  async export(params: { format: 'json' | 'mermaid'; path?: string }) {
+    try {
+      let data: string;
+
+      if (params.format === 'json') {
+        data = JSON.stringify(this.graph, null, 2);
+      } else if (params.format === 'mermaid') {
+        data = this.generateMermaid();
+      } else {
+        return {
+          success: false,
+          error: `Unsupported format: ${params.format}. Use 'json' or 'mermaid'.`,
+        };
+      }
+
+      // If path provided, save to file
+      if (params.path) {
+        const resolvedPath = params.path.startsWith('~')
+          ? path.join(os.homedir(), params.path.slice(1))
+          : path.resolve(params.path);
+
+        await fs.writeFile(resolvedPath, data, 'utf-8');
+
+        return {
+          success: true,
+          format: params.format,
+          path: resolvedPath,
+          saved: true,
+        };
+      }
+
+      // Otherwise return data to AI
+      return {
+        success: true,
+        format: params.format,
+        data,
+      };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Private helper to generate Mermaid diagram
+  private generateMermaid(): string {
+    let mermaid = 'graph TD\n';
+
+    if (this.graph.entities.length === 0) {
+      return mermaid + '    empty["No entities in graph"]\n';
+    }
+
+    // Create a mapping of entity names to IDs
+    const entityIds = new Map<string, string>();
+    this.graph.entities.forEach((entity, i) => {
+      entityIds.set(entity.name, `E${i}`);
+    });
+
+    // Add entities as nodes
+    this.graph.entities.forEach((entity) => {
+      const id = entityIds.get(entity.name)!;
+      const name = entity.name.replace(/"/g, '\\"');
+      const type = entity.entityType;
+
+      // Include first 2 observations if any
+      const obsPreview = entity.observations.slice(0, 2).join('<br/>');
+      const label = obsPreview
+        ? `${name}<br/><i>${type}</i><br/>${obsPreview}`
+        : `${name}<br/><i>${type}</i>`;
+
+      mermaid += `    ${id}["${label}"]\n`;
+    });
+
+    // Add relations as edges
+    this.graph.relations.forEach((relation) => {
+      const fromId = entityIds.get(relation.from);
+      const toId = entityIds.get(relation.to);
+
+      if (fromId && toId) {
+        const relType = relation.relationType.replace(/_/g, ' ');
+        mermaid += `    ${fromId} -->|${relType}| ${toId}\n`;
+      }
+    });
+
+    return mermaid;
+  }
+
   async onShutdown() {
     await this.saveGraph();
-    console.error('[memory] ✅ Knowledge graph saved');
+    console.error('[knowledge-graph] ✅ Knowledge graph saved');
   }
 
   // Private helper

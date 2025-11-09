@@ -183,25 +183,13 @@
       ]
     },
     {
-      "name": "math",
+      "name": "knowledge-graph",
       "version": "1.0.0",
-      "description": "Math Photon MCP - Advanced math expression evaluator",
+      "description": "Knowledge Graph - Persistent knowledge graph with entities and relations",
       "author": "Portel",
       "license": "MIT",
-      "source": "../math.photon.ts",
-      "hash": "sha256:8ba55daf6f715dd0f329631a948af1ac9d95fe097742229fca39099c2553f92e",
-      "tools": [
-        "calculate"
-      ]
-    },
-    {
-      "name": "memory",
-      "version": "1.0.0",
-      "description": "Memory - Knowledge graph-based persistent memory",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../memory.photon.ts",
-      "hash": "sha256:b16ee4433dba3af5877ed38bf026f04ba9e397ec1ebbe16db961fc710b4454e9",
+      "source": "../knowledge-graph.photon.ts",
+      "hash": "sha256:5a8cdf126fed197113c03486ef59e7b001f476917b68ef70c83478f23903a7ad",
       "tools": [
         "entities",
         "relations",
@@ -212,7 +200,20 @@
         "graph",
         "search",
         "nodes",
-        "clear"
+        "clear",
+        "export"
+      ]
+    },
+    {
+      "name": "math",
+      "version": "1.0.0",
+      "description": "Math Photon MCP - Advanced math expression evaluator",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../math.photon.ts",
+      "hash": "sha256:8ba55daf6f715dd0f329631a948af1ac9d95fe097742229fca39099c2553f92e",
+      "tools": [
+        "calculate"
       ]
     },
     {

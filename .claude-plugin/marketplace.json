@@ -172,6 +172,24 @@
       }
     },
     {
+      "name": "knowledge-graph",
+      "description": "Knowledge Graph - Persistent knowledge graph with entities and relations",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "knowledge-graph": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "knowledge-graph"
+          ]
+        }
+      }
+    },
+    {
       "name": "math",
       "description": "Math Photon MCP - Advanced math expression evaluator",
       "source": "./",
@@ -185,24 +203,6 @@
           "args": [
             "mcp",
             "math"
-          ]
-        }
-      }
-    },
-    {
-      "name": "memory",
-      "description": "Memory - Knowledge graph-based persistent memory",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "memory": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "memory"
           ]
         }
       }
