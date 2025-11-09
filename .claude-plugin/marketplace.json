@@ -10,7 +10,7 @@
   },
   "plugins": [
     {
-      "name": "photon-aws-s3",
+      "name": "aws-s3",
       "description": "AWS S3 - Cloud object storage operations",
       "source": "./",
       "strict": false,
@@ -28,7 +28,7 @@
       }
     },
     {
-      "name": "photon-docker",
+      "name": "docker",
       "description": "Docker - Container management operations",
       "source": "./",
       "strict": false,
@@ -46,7 +46,7 @@
       }
     },
     {
-      "name": "photon-email",
+      "name": "email",
       "description": "Email - Send and receive emails via SMTP and IMAP",
       "source": "./",
       "strict": false,
@@ -64,7 +64,7 @@
       }
     },
     {
-      "name": "photon-fetch",
+      "name": "fetch",
       "description": "Fetch - Web content fetching and markdown conversion",
       "source": "./",
       "strict": false,
@@ -82,7 +82,7 @@
       }
     },
     {
-      "name": "photon-filesystem",
+      "name": "filesystem",
       "description": "Filesystem - File and directory operations",
       "source": "./",
       "strict": false,
@@ -100,7 +100,7 @@
       }
     },
     {
-      "name": "photon-git",
+      "name": "git",
       "description": "Git - Local git repository operations",
       "source": "./",
       "strict": false,
@@ -118,7 +118,7 @@
       }
     },
     {
-      "name": "photon-github-issues",
+      "name": "github-issues",
       "description": "GitHub Issues - Manage GitHub repository issues",
       "source": "./",
       "strict": false,
@@ -136,7 +136,7 @@
       }
     },
     {
-      "name": "photon-google-calendar",
+      "name": "google-calendar",
       "description": "Google Calendar - Calendar integration",
       "source": "./",
       "strict": false,
@@ -154,7 +154,7 @@
       }
     },
     {
-      "name": "photon-jira",
+      "name": "jira",
       "description": "Jira - Project management and issue tracking",
       "source": "./",
       "strict": false,
@@ -172,7 +172,7 @@
       }
     },
     {
-      "name": "photon-math",
+      "name": "math",
       "description": "Math Photon MCP - Advanced math expression evaluator",
       "source": "./",
       "strict": false,
@@ -190,7 +190,7 @@
       }
     },
     {
-      "name": "photon-memory",
+      "name": "memory",
       "description": "Memory - Knowledge graph-based persistent memory",
       "source": "./",
       "strict": false,
@@ -208,7 +208,7 @@
       }
     },
     {
-      "name": "photon-mongodb",
+      "name": "mongodb",
       "description": "MongoDB - NoSQL database operations",
       "source": "./",
       "strict": false,
@@ -226,7 +226,7 @@
       }
     },
     {
-      "name": "photon-postgres",
+      "name": "postgres",
       "description": "PostgreSQL - Database operations for PostgreSQL",
       "source": "./",
       "strict": false,
@@ -244,7 +244,7 @@
       }
     },
     {
-      "name": "photon-redis",
+      "name": "redis",
       "description": "Redis - In-memory data store and cache",
       "source": "./",
       "strict": false,
@@ -262,7 +262,7 @@
       }
     },
     {
-      "name": "photon-slack",
+      "name": "slack",
       "description": "Slack - Send messages and manage Slack workspace",
       "source": "./",
       "strict": false,
@@ -280,7 +280,7 @@
       }
     },
     {
-      "name": "photon-sqlite",
+      "name": "sqlite",
       "description": "SQLite Photon MCP - SQLite database operations",
       "source": "./",
       "strict": false,
@@ -298,7 +298,7 @@
       }
     },
     {
-      "name": "photon-time",
+      "name": "time",
       "description": "Time - Timezone and time conversion operations",
       "source": "./",
       "strict": false,
