@@ -45,6 +45,12 @@ interface TVMessage {
   payload?: any;
 }
 
+interface DiscoveredTV {
+  ip: string;
+  name?: string;
+  location?: string;
+}
+
 const REGISTRATION_MANIFEST = {
   manifestVersion: 1,
   appVersion: '1.1',
@@ -121,6 +127,9 @@ export default class LGRemote {
   private currentClientKey?: string;
   private pendingRequests: Map<string, { resolve: Function; reject: Function; timeout: NodeJS.Timeout }> = new Map();
   private subscriptions: Map<string, Function> = new Map();
+  private discoveredTVs: DiscoveredTV[] = [];
+  private defaultTV?: DiscoveredTV;
+  private discoveryInProgress = false;
 
   constructor(credentials_file?: string) {
     this.credentialsFile = credentials_file || 'lg-tv-credentials.json';
@@ -129,6 +138,9 @@ export default class LGRemote {
   async onInitialize() {
     console.error('[lg-remote] ✅ Initialized');
     console.error(`[lg-remote] Credentials file: ${this.credentialsFile}`);
+
+    // Start background discovery (non-blocking)
+    this._autoDiscoverAndConnect();
   }
 
   /**
@@ -196,10 +208,18 @@ export default class LGRemote {
 
       setTimeout(() => {
         socket.close();
+        const devices = Array.from(discovered.values());
+
+        // Update internal state
+        this.discoveredTVs = devices;
+        if (devices.length > 0 && !this.defaultTV) {
+          this.defaultTV = devices[0];
+        }
+
         resolve({
           success: true,
           count: discovered.size,
-          devices: Array.from(discovered.values()),
+          devices,
         });
       }, timeout);
     });
@@ -207,26 +227,51 @@ export default class LGRemote {
 
   /**
    * Connect to an LG TV
-   * @param ip TV IP address
+   * @param ip TV IP address (optional, uses auto-discovered default TV if not specified)
    * @param secure Use secure WebSocket (wss://) (default: false)
    */
-  async connect(params: { ip: string; secure?: boolean }) {
+  async connect(params?: { ip?: string; secure?: boolean }) {
     try {
+      // Determine which TV to connect to
+      let targetIP: string | undefined = params?.ip;
+
+      if (!targetIP) {
+        // Try to use most recently used saved TV first
+        const credentials = await this._loadCredentials();
+        if (credentials.length > 0) {
+          // Sort by lastUsed and pick the most recent
+          const sorted = credentials.sort((a: TVCredentials, b: TVCredentials) =>
+            (b.lastUsed || 0) - (a.lastUsed || 0)
+          );
+          targetIP = sorted[0].ip;
+          console.error(`[lg-remote] Using most recent TV: ${targetIP}`);
+        } else if (this.defaultTV) {
+          // Use auto-discovered default TV
+          targetIP = this.defaultTV.ip;
+          console.error(`[lg-remote] Using auto-discovered TV: ${targetIP}`);
+        } else {
+          return {
+            success: false,
+            error: 'No TV specified and no default TV available. Run discover() first or specify an IP.',
+          };
+        }
+      }
+
       // Try to load existing credentials
       const credentials = await this._loadCredentials();
-      const existingCred = credentials.find((c: TVCredentials) => c.ip === params.ip);
+      const existingCred = credentials.find((c: TVCredentials) => c.ip === targetIP);
 
-      const secure = params.secure !== undefined ? params.secure : existingCred?.secure || false;
+      const secure = params?.secure !== undefined ? params.secure : existingCred?.secure || false;
       const port = secure ? 3001 : 3000;
       const protocol = secure ? 'wss' : 'ws';
-      const url = `${protocol}://${params.ip}:${port}`;
+      const url = `${protocol}://${targetIP}:${port}`;
 
       // Close existing connection if any
       if (this.ws) {
         this.ws.close();
       }
 
-      this.currentTVIP = params.ip;
+      this.currentTVIP = targetIP;
 
       return new Promise<any>((resolve, reject) => {
         const ws = new WebSocket(url, {
@@ -242,12 +287,18 @@ export default class LGRemote {
             this.currentClientKey = existingCred.clientKey;
             this._sendRegister(existingCred.clientKey);
 
+            // Update lastUsed timestamp
+            this._saveCredentials({
+              ...existingCred,
+              lastUsed: Date.now(),
+            });
+
             // Wait for registration response
             setTimeout(() => {
               resolve({
                 success: true,
                 message: 'Connected using saved credentials',
-                ip: params.ip,
+                ip: targetIP,
                 paired: true,
               });
             }, 1000);
@@ -259,7 +310,7 @@ export default class LGRemote {
               resolve({
                 success: true,
                 message: 'Connected. Please check TV for pairing prompt and call pair() with the credentials',
-                ip: params.ip,
+                ip: targetIP,
                 paired: false,
                 needsPairing: true,
               });
@@ -732,11 +783,55 @@ export default class LGRemote {
     const index = credentials.findIndex((c: TVCredentials) => c.ip === newCred.ip);
 
     if (index >= 0) {
-      credentials[index] = newCred;
+      credentials[index] = { ...newCred, lastUsed: Date.now() };
     } else {
-      credentials.push(newCred);
+      credentials.push({ ...newCred, lastUsed: Date.now() });
     }
 
     await fs.writeFile(this.credentialsFile, JSON.stringify(credentials, null, 2));
+  }
+
+  private async _autoDiscoverAndConnect() {
+    if (this.discoveryInProgress) {
+      return;
+    }
+
+    this.discoveryInProgress = true;
+
+    try {
+      console.error('[lg-remote] 🔍 Starting auto-discovery...');
+
+      // Run discovery with short timeout (3 seconds)
+      const result = await this.discover({ timeout: 3 });
+
+      if (result.success && result.devices && result.devices.length > 0) {
+        this.discoveredTVs = result.devices;
+        this.defaultTV = result.devices[0];
+
+        console.error(`[lg-remote] ✅ Found ${result.count} TV(s)`);
+        console.error(`[lg-remote] 📺 Default TV: ${this.defaultTV.name || this.defaultTV.ip}`);
+
+        // Try to auto-connect to the default TV if it has saved credentials
+        const credentials = await this._loadCredentials();
+        const savedCred = credentials.find((c: TVCredentials) => c.ip === this.defaultTV!.ip);
+
+        if (savedCred) {
+          console.error('[lg-remote] 🔗 Auto-connecting to default TV...');
+          const connectResult = await this.connect({ ip: this.defaultTV.ip });
+
+          if (connectResult.success) {
+            console.error('[lg-remote] ✅ Auto-connected successfully');
+          }
+        } else {
+          console.error('[lg-remote] ℹ️  Default TV not paired. Call connect() to pair.');
+        }
+      } else {
+        console.error('[lg-remote] ⚠️  No TVs found on network');
+      }
+    } catch (error: any) {
+      console.error(`[lg-remote] ⚠️  Auto-discovery error: ${error.message}`);
+    } finally {
+      this.discoveryInProgress = false;
+    }
   }
 }

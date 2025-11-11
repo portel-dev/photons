@@ -58,7 +58,7 @@ Connect to an LG TV
 **Parameters:**
 
 
-- **`ip`** (any) - TV IP address
+- **`ip`** (any) - TV IP address (optional, uses auto-discovered default TV if not specified)
 
 - **`secure`** (any, optional) - Use secure WebSocket (wss://)
 
