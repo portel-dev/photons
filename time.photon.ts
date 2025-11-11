@@ -34,7 +34,7 @@ export default class Time {
 
   /**
    * Get current time in a specific timezone
-   * @param timezone IANA timezone name (e.g., "America/New_York", "Europe/London", "Asia/Tokyo")
+   * @param timezone IANA timezone name {@example America/New_York}
    */
   async getCurrentTime(params?: { timezone?: string }) {
     try {
@@ -103,10 +103,10 @@ export default class Time {
 
   /**
    * Convert time from one timezone to another
-   * @param source_timezone Source IANA timezone
-   * @param time Time in 24-hour format (HH:MM)
-   * @param target_timezone Target IANA timezone
-   * @param date Date in YYYY-MM-DD format (optional, default: today)
+   * @param source_timezone {@min 1} Source IANA timezone {@example America/New_York}
+   * @param time {@min 1} {@pattern ^\d{1,2}:\d{2}$} Time in 24-hour format (HH:MM) {@example 14:30}
+   * @param target_timezone {@min 1} Target IANA timezone {@example Europe/London}
+   * @param date {@pattern ^\d{4}-\d{2}-\d{2}$} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
    */
   async convertTime(params: {
     source_timezone: string;
@@ -230,9 +230,9 @@ export default class Time {
 
   /**
    * List common IANA timezones by region
-   * @param region Filter by region (optional: "America", "Europe", "Asia", "Africa", "Pacific", "Atlantic", "Indian")
+   * @param region Filter by region {@example America}
    */
-  async listTimezones(params?: { region?: string }) {
+  async listTimezones(params?: { region?: 'America' | 'Europe' | 'Asia' | 'Africa' | 'Pacific' | 'Atlantic' | 'Indian' }) {
     try {
       // Common IANA timezones
       const timezones: Record<string, string[]> = {

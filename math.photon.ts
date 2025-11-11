@@ -23,7 +23,7 @@ export default class Math {
   /**
    * Calculate a math expression string.
    * Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E.
-   * @param expression The math expression to calculate
+   * @param expression {@min 1} The math expression to calculate {@example mean([1,2,3,4]) + max(5, 10)}
    * @example calculate("2 + 2")
    * @example calculate("mean([1,2,3,4]) + max(5, 10)")
    */

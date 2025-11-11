@@ -40,7 +40,7 @@ Get current time in a specific timezone
 **Parameters:**
 
 
-- **`timezone`** (any) - IANA timezone name (e.g., "America/New_York", "Europe/London", "Asia/Tokyo")
+- **`timezone`** (any) - IANA timezone name {@example America/New_York}
 
 
 
@@ -57,16 +57,22 @@ Convert time from one timezone to another
 **Parameters:**
 
 
-- **`source_timezone`** (any) - Source IANA timezone
+- **`source_timezone`** (any) - {@min 1} Source IANA timezone {@example America/New_York}
 
-- **`time`** (any) - Time in 24-hour format (HH:MM)
+- **`time`** (any) - {@min 1} {@pattern ^\d{1,2}:\d{2}$} Time in 24-hour format (HH:MM) {@example 14:30}
 
-- **`target_timezone`** (any) - Target IANA timezone
+- **`target_timezone`** (any) - {@min 1} Target IANA timezone {@example Europe/London}
 
-- **`date`** (any) - Date in YYYY-MM-DD format (optional, default: today)
+- **`date`** (any) - {@pattern ^\d{4}-\d{2}-\d{2}$} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
 
 
 
+
+**Example:**
+
+```typescript
+America/New_York}
+```
 
 
 ---
@@ -80,7 +86,7 @@ List common IANA timezones by region
 **Parameters:**
 
 
-- **`region`** (any) - Filter by region (optional: "America", "Europe", "Asia", "Africa", "Pacific", "Atlantic", "Indian")
+- **`region`** (any) - Filter by region {@example America}
 
 
 

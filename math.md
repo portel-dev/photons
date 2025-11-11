@@ -33,7 +33,7 @@ Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, l
 **Parameters:**
 
 
-- **`expression`** (any) - The math expression to calculate
+- **`expression`** (any) - {@min 1} The math expression to calculate {@example mean([1,2,3,4]) + max(5, 10)}
 
 
 
@@ -41,7 +41,7 @@ Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, l
 **Example:**
 
 ```typescript
-calculate("2 + 2")
+mean([1,2,3,4]) + max(5, 10)}
 ```
 
 

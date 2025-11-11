@@ -244,7 +244,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../math.photon.ts",
-      "hash": "sha256:111ca4a39814ea862d42ee0b0f629cc51dbc641966c4db78f4367da8a032a0e5",
+      "hash": "sha256:78d5ae24ccd375b7f7b38670b1d04602ba6b4af90d4642d3a17ccbe889ed4795",
       "tools": [
         "calculate"
       ]
@@ -365,7 +365,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../time.photon.ts",
-      "hash": "sha256:81ca6031bd06fbfe3e36826d1435d79ecff1047ffc1979d8cbe6c9c960f4825e",
+      "hash": "sha256:004463773633b8dfe18e8af3c0ee069fda7075ce5beba3362d926d72127f30b0",
       "tools": [
         "getCurrentTime",
         "convertTime",
