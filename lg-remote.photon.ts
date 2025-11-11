@@ -524,9 +524,12 @@ export default class LGRemote {
    * Get/set volume level
    * @param level Volume level (0-100, optional - omit to get current volume)
    */
-  async vol(params?: { level?: number }) {
-    if (params?.level !== undefined) {
-      return this._request('ssap://audio/setVolume', { volume: params.level });
+  async volume(params?: { level?: number } | number) {
+    // Support both volume(50) and volume({ level: 50 })
+    const level = typeof params === 'number' ? params : params?.level;
+
+    if (level !== undefined) {
+      return this._request('ssap://audio/setVolume', { volume: level });
     }
     return this._request('ssap://audio/getVolume');
   }
@@ -547,10 +550,17 @@ export default class LGRemote {
 
   /**
    * Toggle mute
-   * @param mute True to mute, false to unmute
+   * @param mute True to mute, false to unmute (optional - omit to toggle)
    */
-  async mute(params: { mute: boolean }) {
-    return this._request('ssap://audio/setMute', { mute: params.mute });
+  async mute(params?: { mute?: boolean } | boolean) {
+    // Support both mute(true) and mute({ mute: true })
+    const muteValue = typeof params === 'boolean' ? params : params?.mute;
+
+    if (muteValue !== undefined) {
+      return this._request('ssap://audio/setMute', { mute: muteValue });
+    }
+    // If no param, we can't toggle without knowing current state, so default to mute
+    return this._request('ssap://audio/setMute', { mute: true });
   }
 
   /**
@@ -564,37 +574,45 @@ export default class LGRemote {
    * Show a notification toast on TV
    * @param message Notification message
    */
-  async notify(params: { message: string }) {
-    return this._request('ssap://system.notifications/createToast', {
-      message: params.message,
-    });
+  async notify(params: { message: string } | string) {
+    // Support both notify("Hello") and notify({ message: "Hello" })
+    const message = typeof params === 'string' ? params : params.message;
+
+    return this._request('ssap://system.notifications/createToast', { message });
   }
 
   /**
    * List all installed apps, or launch/get current app
-   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all or get current
-   * @param current Set true to get currently running app
+   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all, or use "current" to get running app
    */
-  async apps(params?: { id?: string; current?: boolean }) {
-    if (params?.id) {
-      return this._request('ssap://system.launcher/launch', { id: params.id });
-    }
-    if (params?.current) {
+  async apps(params?: { id?: string; current?: boolean } | string) {
+    // Support both apps("netflix") and apps({ id: "netflix" })
+    const id = typeof params === 'string' ? params : params?.id;
+    const current = typeof params === 'object' ? params?.current : false;
+
+    if (id === 'current' || current) {
       return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
+    }
+    if (id) {
+      return this._request('ssap://system.launcher/launch', { id });
     }
     return this._request('ssap://com.webos.applicationManager/listApps');
   }
 
   /**
    * Get current channel, set channel, or list all channels
-   * @param number Channel number to switch to (optional)
-   * @param list Set true to list all channels
+   * @param number Channel number to switch to (optional), or "list" to list all
    */
-  async channel(params?: { number?: string; list?: boolean }) {
-    if (params?.number) {
-      return this._request('ssap://tv/openChannel', { channelNumber: params.number });
+  async channel(params?: { number?: string; list?: boolean } | string) {
+    // Support both channel("5") and channel({ number: "5" })
+    const number = typeof params === 'string' && params !== 'list' ? params :
+                   typeof params === 'object' ? params?.number : undefined;
+    const list = params === 'list' || (typeof params === 'object' && params?.list);
+
+    if (number) {
+      return this._request('ssap://tv/openChannel', { channelNumber: number });
     }
-    if (params?.list) {
+    if (list) {
       return this._request('ssap://tv/getChannelList');
     }
     return this._request('ssap://tv/getCurrentChannel');
@@ -618,9 +636,12 @@ export default class LGRemote {
    * List inputs or switch to an input
    * @param id Input ID to switch to (optional, omit to list all)
    */
-  async input(params?: { id?: string }) {
-    if (params?.id) {
-      return this._request('ssap://tv/switchInput', { inputId: params.id });
+  async input(params?: { id?: string } | string) {
+    // Support both input("HDMI_1") and input({ id: "HDMI_1" })
+    const id = typeof params === 'string' ? params : params?.id;
+
+    if (id) {
+      return this._request('ssap://tv/switchInput', { inputId: id });
     }
     return this._request('ssap://tv/getExternalInputList');
   }
@@ -664,7 +685,10 @@ export default class LGRemote {
    * Send remote button press
    * @param button Button name (HOME, BACK, UP, DOWN, LEFT, RIGHT, ENTER, etc.)
    */
-  async btn(params: { button: string }) {
+  async btn(params: { button: string } | string) {
+    // Support both btn("HOME") and btn({ button: "HOME" })
+    const button = typeof params === 'string' ? params : params.button;
+
     if (!this.pointerWs || this.pointerWs.readyState !== WebSocket.OPEN) {
       // Connect pointer socket
       const secure = this.currentClientKey ? true : false;
@@ -679,10 +703,10 @@ export default class LGRemote {
 
         ws.on('open', () => {
           this.pointerWs = ws;
-          this._sendButton(params.button);
+          this._sendButton(button);
           resolve({
             success: true,
-            message: `Button ${params.button} pressed`,
+            message: `Button ${button} pressed`,
           });
         });
 
@@ -694,10 +718,10 @@ export default class LGRemote {
         });
       });
     } else {
-      this._sendButton(params.button);
+      this._sendButton(button);
       return {
         success: true,
-        message: `Button ${params.button} pressed`,
+        message: `Button ${button} pressed`,
       };
     }
   }

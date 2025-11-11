@@ -142,7 +142,7 @@ Get current connection status
 ---
 
 
-### `vol`
+### `volume`
 
 Get/set volume level
 
@@ -189,7 +189,7 @@ Toggle mute
 **Parameters:**
 
 
-- **`mute`** (any) - True to mute, false to unmute
+- **`mute`** (any) - True to mute, false to unmute (optional - omit to toggle)
 
 
 
@@ -234,9 +234,7 @@ List all installed apps, or launch/get current app
 **Parameters:**
 
 
-- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all or get current
-
-- **`current`** (any) - Set true to get currently running app
+- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all, or use "current" to get running app
 
 
 
@@ -253,9 +251,7 @@ Get current channel, set channel, or list all channels
 **Parameters:**
 
 
-- **`number`** (any, optional) - Channel number to switch to
-
-- **`list`** (any) - Set true to list all channels
+- **`number`** (any, optional) - Channel number to switch to , or "list" to list all
 
 
 
