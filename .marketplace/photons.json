@@ -298,7 +298,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../redis.photon.ts",
-      "hash": "sha256:7b33bce44f34798e10bf07df99aea1203209bddde261373436dc3b082da9f4d3",
+      "hash": "sha256:95303b67e243b8966aea186a729cd274e448a108647f0f361c2f75edd9df5ab3",
       "tools": [
         "get",
         "set",
