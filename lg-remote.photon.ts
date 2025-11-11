@@ -575,33 +575,33 @@ export default class LGRemote {
   }
 
   /**
-   * List all installed apps, or launch/get current app
-   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all, or use "current" to get running app
+   * Get current app, launch app, or list all apps
+   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), "all" to list all, or omit to get current
    */
-  async apps(params?: { id?: string; current?: boolean } | string) {
+  async apps(params?: { id?: string } | string) {
     // Support both apps("netflix") and apps({ id: "netflix" })
     const id = typeof params === 'string' ? params : params?.id;
-    const current = typeof params === 'object' ? params?.current : false;
 
-    if (id === 'current' || current) {
-      return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
+    if (id === 'all') {
+      return this._request('ssap://com.webos.applicationManager/listApps');
     }
     if (id) {
       return this._request('ssap://system.launcher/launch', { id });
     }
-    return this._request('ssap://com.webos.applicationManager/listApps');
+    return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
   }
 
   /**
    * Get current channel, set channel, or list all channels
-   * @param number Channel number to switch to, "+1" for next, "-1" for previous, "list" to list all, or omit to get current
+   * @param number Channel number to switch to, "+1" for next, "-1" for previous, "all" to list all, or omit to get current
    */
-  async channel(params?: { number?: string; list?: boolean } | string) {
-    // Support multiple formats: channel("5"), channel("+1"), channel("list")
-    const number = typeof params === 'string' && params !== 'list' ? params :
-                   typeof params === 'object' ? params?.number : undefined;
-    const list = params === 'list' || (typeof params === 'object' && params?.list);
+  async channel(params?: { number?: string } | string) {
+    // Support multiple formats: channel("5"), channel("+1"), channel("all")
+    const number = typeof params === 'string' ? params : params?.number;
 
+    if (number === 'all') {
+      return this._request('ssap://tv/getChannelList');
+    }
     if (number === '+1' || number === '1') {
       return this._request('ssap://tv/channelUp');
     }
@@ -611,24 +611,21 @@ export default class LGRemote {
     if (number) {
       return this._request('ssap://tv/openChannel', { channelNumber: number });
     }
-    if (list) {
-      return this._request('ssap://tv/getChannelList');
-    }
     return this._request('ssap://tv/getCurrentChannel');
   }
 
   /**
    * List inputs or switch to an input
-   * @param id Input ID to switch to (optional, omit to list all)
+   * @param id Input ID to switch to, or "all" to list all inputs (default: list all)
    */
   async input(params?: { id?: string } | string) {
     // Support both input("HDMI_1") and input({ id: "HDMI_1" })
     const id = typeof params === 'string' ? params : params?.id;
 
-    if (id) {
-      return this._request('ssap://tv/switchInput', { inputId: id });
+    if (id === 'all' || !id) {
+      return this._request('ssap://tv/getExternalInputList');
     }
-    return this._request('ssap://tv/getExternalInputList');
+    return this._request('ssap://tv/switchInput', { inputId: id });
   }
 
   /**

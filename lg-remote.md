@@ -206,13 +206,13 @@ Show a notification toast on TV
 
 ### `apps`
 
-List all installed apps, or launch/get current app
+Get current app, launch app, or list all apps
 
 
 **Parameters:**
 
 
-- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all, or use "current" to get running app
+- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), "all" to list all, or omit to get current
 
 
 
@@ -229,7 +229,7 @@ Get current channel, set channel, or list all channels
 **Parameters:**
 
 
-- **`number`** (any) - Channel number to switch to, "+1" for next, "-1" for previous, "list" to list all, or omit to get current
+- **`number`** (any) - Channel number to switch to, "+1" for next, "-1" for previous, "all" to list all, or omit to get current
 
 
 
@@ -246,7 +246,7 @@ List inputs or switch to an input
 **Parameters:**
 
 
-- **`id`** (any) - Input ID to switch to (optional, omit to list all)
+- **`id`** (any, optional) - Input ID to switch to, or "all" to list all inputs
 
 
 
