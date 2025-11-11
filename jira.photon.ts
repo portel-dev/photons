@@ -64,9 +64,9 @@ export default class Jira {
 
   /**
    * List issues with JQL query
-   * @param jql JQL query string (e.g., "project = PROJ AND status = Open")
-   * @param maxResults Maximum number of results (default: 50)
-   * @param fields Fields to return (optional, comma-separated)
+   * @param jql {@min 1} {@max 1000} JQL query string {@example project = PROJ AND status = Open}
+   * @param maxResults {@min 1} {@max 100} Maximum number of results (default: 50)
+   * @param fields {@max 500} Fields to return (optional, comma-separated) {@example summary,status,assignee}
    */
   async search(params: { jql: string; maxResults?: number; fields?: string }) {
     try {
@@ -103,7 +103,7 @@ export default class Jira {
 
   /**
    * Get issue details
-   * @param issueKey Issue key (e.g., "PROJ-123")
+   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
    */
   async get(params: { issueKey: string }) {
     try {
@@ -138,12 +138,12 @@ export default class Jira {
 
   /**
    * Create a new issue
-   * @param project Project key (e.g., "PROJ")
-   * @param summary Issue title
-   * @param issueType Issue type (e.g., "Bug", "Task", "Story")
-   * @param description Issue description (optional)
-   * @param priority Priority name (optional, e.g., "High", "Medium", "Low")
-   * @param assignee Assignee account ID (optional)
+   * @param project {@min 1} {@max 50} Project key {@example PROJ}
+   * @param summary {@min 1} {@max 200} Issue title {@example Login authentication fails for users}
+   * @param issueType {@min 1} {@max 50} Issue type {@example Bug}
+   * @param description {@max 5000} Issue description (optional) {@example Steps to reproduce: 1. Navigate to login 2. Enter credentials}
+   * @param priority {@max 50} Priority name (optional) {@example High}
+   * @param assignee {@max 100} Assignee account ID (optional) {@example 5b10a2844c20165700ede21g}
    */
   async create(params: {
     project: string;
@@ -200,11 +200,11 @@ export default class Jira {
 
   /**
    * Update an issue
-   * @param issueKey Issue key (e.g., "PROJ-123")
-   * @param summary New summary (optional)
-   * @param description New description (optional)
-   * @param priority New priority (optional)
-   * @param assignee New assignee account ID (optional)
+   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
+   * @param summary {@min 1} {@max 200} New summary (optional) {@example Updated: Login authentication fixed}
+   * @param description {@max 5000} New description (optional) {@example Fixed by updating OAuth configuration}
+   * @param priority {@max 50} New priority (optional) {@example Medium}
+   * @param assignee {@max 100} New assignee account ID (optional) {@example 5b10a2844c20165700ede21g}
    */
   async update(params: {
     issueKey: string;
@@ -258,8 +258,8 @@ export default class Jira {
 
   /**
    * Transition issue to new status
-   * @param issueKey Issue key (e.g., "PROJ-123")
-   * @param transitionId Transition ID or name
+   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
+   * @param transitionId {@min 1} {@max 50} Transition ID or name {@example 21}
    */
   async transition(params: { issueKey: string; transitionId: string }) {
     try {
@@ -282,7 +282,7 @@ export default class Jira {
 
   /**
    * Get available transitions for issue
-   * @param issueKey Issue key (e.g., "PROJ-123")
+   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
    */
   async transitions(params: { issueKey: string }) {
     try {
@@ -310,8 +310,8 @@ export default class Jira {
 
   /**
    * Add comment to issue
-   * @param issueKey Issue key (e.g., "PROJ-123")
-   * @param comment Comment text
+   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
+   * @param comment {@min 1} {@max 5000} Comment text {@example This issue has been resolved in the latest deployment}
    */
   async comment(params: { issueKey: string; comment: string }) {
     try {
@@ -344,8 +344,8 @@ export default class Jira {
 
   /**
    * Get comments for issue
-   * @param issueKey Issue key (e.g., "PROJ-123")
-   * @param maxResults Maximum number of comments (default: 50)
+   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
+   * @param maxResults {@min 1} {@max 100} Maximum number of comments (default: 50)
    */
   async comments(params: { issueKey: string; maxResults?: number }) {
     try {
@@ -405,7 +405,7 @@ export default class Jira {
 
   /**
    * Get project details
-   * @param projectKey Project key (e.g., "PROJ")
+   * @param projectKey {@min 1} {@max 50} Project key {@example PROJ}
    */
   async project(params: { projectKey: string }) {
     try {

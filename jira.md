@@ -52,14 +52,20 @@ List issues with JQL query
 **Parameters:**
 
 
-- **`jql`** (any) - JQL query string (e.g., "project = PROJ AND status = Open")
+- **`jql`** (any) - {@min 1} {@max 1000} JQL query string {@example project = PROJ AND status = Open}
 
-- **`maxResults`** (any, optional) - Maximum number of results
+- **`maxResults`** (any, optional) - {@min 1} {@max 100} Maximum number of results
 
-- **`fields`** (any) - Fields to return (optional, comma-separated)
+- **`fields`** (any) - {@max 500} Fields to return (optional, comma-separated) {@example summary,status,assignee}
 
 
 
+
+**Example:**
+
+```typescript
+project = PROJ AND status = Open}
+```
 
 
 ---
@@ -73,7 +79,7 @@ Get issue details
 **Parameters:**
 
 
-- **`issueKey`** (any) - Issue key (e.g., "PROJ-123")
+- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
 
 
 
@@ -90,20 +96,26 @@ Create a new issue
 **Parameters:**
 
 
-- **`project`** (any) - Project key (e.g., "PROJ")
+- **`project`** (any) - {@min 1} {@max 50} Project key {@example PROJ}
 
-- **`summary`** (any) - Issue title
+- **`summary`** (any) - {@min 1} {@max 200} Issue title {@example Login authentication fails for users}
 
-- **`issueType`** (any) - Issue type (e.g., "Bug", "Task", "Story")
+- **`issueType`** (any) - {@min 1} {@max 50} Issue type {@example Bug}
 
-- **`description`** (any, optional) - Issue description
+- **`description`** (any, optional) - {@max 5000} Issue description  {@example Steps to reproduce: 1. Navigate to login 2. Enter credentials}
 
-- **`priority`** (any) - Priority name (optional, e.g., "High", "Medium", "Low")
+- **`priority`** (any, optional) - {@max 50} Priority name  {@example High}
 
-- **`assignee`** (any, optional) - Assignee account ID
+- **`assignee`** (any, optional) - {@max 100} Assignee account ID  {@example 5b10a2844c20165700ede21g}
 
 
 
+
+**Example:**
+
+```typescript
+PROJ}
+```
 
 
 ---
@@ -117,18 +129,24 @@ Update an issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - Issue key (e.g., "PROJ-123")
+- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
 
-- **`summary`** (any, optional) - New summary
+- **`summary`** (any, optional) - {@min 1} {@max 200} New summary  {@example Updated: Login authentication fixed}
 
-- **`description`** (any, optional) - New description
+- **`description`** (any, optional) - {@max 5000} New description  {@example Fixed by updating OAuth configuration}
 
-- **`priority`** (any, optional) - New priority
+- **`priority`** (any, optional) - {@max 50} New priority  {@example Medium}
 
-- **`assignee`** (any, optional) - New assignee account ID
+- **`assignee`** (any, optional) - {@max 100} New assignee account ID  {@example 5b10a2844c20165700ede21g}
 
 
 
+
+**Example:**
+
+```typescript
+PROJ-123}
+```
 
 
 ---
@@ -142,12 +160,18 @@ Transition issue to new status
 **Parameters:**
 
 
-- **`issueKey`** (any) - Issue key (e.g., "PROJ-123")
+- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
 
-- **`transitionId`** (any) - Transition ID or name
+- **`transitionId`** (any) - {@min 1} {@max 50} Transition ID or name {@example 21}
 
 
 
+
+**Example:**
+
+```typescript
+PROJ-123}
+```
 
 
 ---
@@ -161,7 +185,7 @@ Get available transitions for issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - Issue key (e.g., "PROJ-123")
+- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
 
 
 
@@ -178,12 +202,18 @@ Add comment to issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - Issue key (e.g., "PROJ-123")
+- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
 
-- **`comment`** (any) - Comment text
+- **`comment`** (any) - {@min 1} {@max 5000} Comment text {@example This issue has been resolved in the latest deployment}
 
 
 
+
+**Example:**
+
+```typescript
+PROJ-123}
+```
 
 
 ---
@@ -197,12 +227,18 @@ Get comments for issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - Issue key (e.g., "PROJ-123")
+- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
 
-- **`maxResults`** (any, optional) - Maximum number of comments
+- **`maxResults`** (any, optional) - {@min 1} {@max 100} Maximum number of comments
 
 
 
+
+**Example:**
+
+```typescript
+PROJ-123}
+```
 
 
 ---
@@ -227,7 +263,7 @@ Get project details
 **Parameters:**
 
 
-- **`projectKey`** (any) - Project key (e.g., "PROJ")
+- **`projectKey`** (any) - {@min 1} {@max 50} Project key {@example PROJ}
 
 
 

@@ -168,7 +168,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../jira.photon.ts",
-      "hash": "sha256:261282b34e41e57bba1ac21cf73e1c526ab26664ddb6c6eb8b382c55cd66a76e",
+      "hash": "sha256:80240d486ac9fc8397e302692ed1b9f6dcbb9030f595948e82a8bbca007d2109",
       "tools": [
         "search",
         "get",
