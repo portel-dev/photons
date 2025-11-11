@@ -57,13 +57,13 @@ Convert time from one timezone to another
 **Parameters:**
 
 
-- **`source_timezone`** (any) - {@min 1} Source IANA timezone {@example America/New_York}
+- **`source_timezone`** (any) - {@min 1} {@max 100} Source IANA timezone {@example America/New_York}
 
-- **`time`** (any) - {@min 1} {@pattern ^\d{1,2}:\d{2}$} Time in 24-hour format (HH:MM) {@example 14:30}
+- **`time`** (any) - {@min 1} {@max 10} {@format time} Time in 24-hour format (HH:MM) {@example 14:30}
 
-- **`target_timezone`** (any) - {@min 1} Target IANA timezone {@example Europe/London}
+- **`target_timezone`** (any) - {@min 1} {@max 100} Target IANA timezone {@example Europe/London}
 
-- **`date`** (any) - {@pattern ^\d{4}-\d{2}-\d{2}$} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
+- **`date`** (any) - {@max 20} {@format date} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
 
 
 

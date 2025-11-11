@@ -41,7 +41,7 @@ Fetch a URL and convert to markdown
 **Parameters:**
 
 
-- **`url`** (any) - {@min 1} {@pattern ^https?://} The URL to fetch {@example https://example.com}
+- **`url`** (any) - {@min 1} {@max 2000} {@format uri} The URL to fetch {@example https://example.com}
 
 - **`max_length`** (any, optional) - {@min 1} {@max 50000} Maximum length of returned content
 

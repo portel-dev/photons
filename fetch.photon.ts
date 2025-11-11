@@ -47,7 +47,7 @@ export default class Fetch {
 
   /**
    * Fetch a URL and convert to markdown
-   * @param url {@min 1} {@pattern ^https?://} The URL to fetch {@example https://example.com}
+   * @param url {@min 1} {@max 2000} {@format uri} The URL to fetch {@example https://example.com}
    * @param max_length {@min 1} {@max 50000} Maximum length of returned content (default: 5000)
    * @param start_index {@min 0} Start index for pagination (default: 0)
    * @param raw Return raw HTML instead of markdown (default: false)

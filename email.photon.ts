@@ -113,9 +113,9 @@ export default class Email {
 
   /**
    * Send an email
-   * @param to {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address or comma-separated addresses {@example user@example.com}
-   * @param subject {@min 1} Email subject {@example Daily Report}
-   * @param body {@min 1} Email body (plain text or HTML)
+   * @param to {@min 1} {@max 500} {@format email} Recipient email address or comma-separated addresses {@example user@example.com}
+   * @param subject {@min 1} {@max 200} Email subject {@example Daily Report}
+   * @param body {@min 1} {@max 50000} Email body (plain text or HTML)
    * @param html Set to true if body contains HTML (default: false)
    * @param cc CC recipients (optional, comma-separated)
    * @param bcc BCC recipients (optional, comma-separated)
@@ -163,9 +163,9 @@ export default class Email {
 
   /**
    * Send an email with attachments
-   * @param to {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address {@example user@example.com}
-   * @param subject {@min 1} Email subject
-   * @param body {@min 1} Email body
+   * @param to {@min 1} {@max 500} {@format email} Recipient email address {@example user@example.com}
+   * @param subject {@min 1} {@max 200} Email subject
+   * @param body {@min 1} {@max 50000} Email body
    * @param attachments {@min 1} Array of attachments with filename and content {@example [{"filename":"report.pdf","content":"..."}]}
    * @param html Set to true if body contains HTML (default: false)
    */

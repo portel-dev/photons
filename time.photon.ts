@@ -103,10 +103,10 @@ export default class Time {
 
   /**
    * Convert time from one timezone to another
-   * @param source_timezone {@min 1} Source IANA timezone {@example America/New_York}
-   * @param time {@min 1} {@pattern ^\d{1,2}:\d{2}$} Time in 24-hour format (HH:MM) {@example 14:30}
-   * @param target_timezone {@min 1} Target IANA timezone {@example Europe/London}
-   * @param date {@pattern ^\d{4}-\d{2}-\d{2}$} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
+   * @param source_timezone {@min 1} {@max 100} Source IANA timezone {@example America/New_York}
+   * @param time {@min 1} {@max 10} {@format time} Time in 24-hour format (HH:MM) {@example 14:30}
+   * @param target_timezone {@min 1} {@max 100} Target IANA timezone {@example Europe/London}
+   * @param date {@max 20} {@format date} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
    */
   async convertTime(params: {
     source_timezone: string;

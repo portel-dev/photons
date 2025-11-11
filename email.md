@@ -92,11 +92,11 @@ Send an email
 **Parameters:**
 
 
-- **`to`** (any) - {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address or comma-separated addresses {@example user@example.com}
+- **`to`** (any) - {@min 1} {@max 500} {@format email} Recipient email address or comma-separated addresses {@example user@example.com}
 
-- **`subject`** (any) - {@min 1} Email subject {@example Daily Report}
+- **`subject`** (any) - {@min 1} {@max 200} Email subject {@example Daily Report}
 
-- **`body`** (any) - {@min 1} Email body (plain text or HTML)
+- **`body`** (any) - {@min 1} {@max 50000} Email body (plain text or HTML)
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
@@ -127,11 +127,11 @@ Send an email with attachments
 **Parameters:**
 
 
-- **`to`** (any) - {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address {@example user@example.com}
+- **`to`** (any) - {@min 1} {@max 500} {@format email} Recipient email address {@example user@example.com}
 
-- **`subject`** (any) - {@min 1} Email subject
+- **`subject`** (any) - {@min 1} {@max 200} Email subject
 
-- **`body`** (any) - {@min 1} Email body
+- **`body`** (any) - {@min 1} {@max 50000} Email body
 
 - **`attachments`** (any) - {@min 1} Array of attachments with filename and content {@example [{"filename":"report.pdf","content":"..."}]}
 

@@ -52,7 +52,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../email.photon.ts",
-      "hash": "sha256:959ecf64d31c99c29fa35baf5926e2c124619bce1243cc46481b7a4437443e28",
+      "hash": "sha256:6d61e68402ff7e6dcc247f0fe80a6195f91e830db3a6bc314104da391779dd47",
       "tools": [
         "send",
         "sendAttachment",
@@ -71,7 +71,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../fetch.photon.ts",
-      "hash": "sha256:70e09ec4d31030c5fc4c7fd5844a00937b25ef0dbb09a1cd80ac8ab85e035eb9",
+      "hash": "sha256:02d4e6be72c9c94f4305e80da4dd81724c7352c6e943fdf4649ef5b8438f421b",
       "tools": [
         "fetch",
         "batch"
@@ -365,7 +365,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../time.photon.ts",
-      "hash": "sha256:004463773633b8dfe18e8af3c0ee069fda7075ce5beba3362d926d72127f30b0",
+      "hash": "sha256:cf64eeee44b9e11a3c02240fcd56225035b723b3c915b5c01584dfc42b582922",
       "tools": [
         "getCurrentTime",
         "convertTime",
