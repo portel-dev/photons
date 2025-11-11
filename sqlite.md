@@ -43,6 +43,12 @@ Open a SQLite database
 
 
 
+**Example:**
+
+```typescript
+open("./mydb.sqlite")
+```
+
 
 ---
 
@@ -61,6 +67,12 @@ Execute a SELECT query
 
 
 
+
+**Example:**
+
+```typescript
+query("SELECT * FROM users")
+```
 
 
 ---
@@ -81,6 +93,12 @@ Execute a single SELECT query and return first row
 
 
 
+**Example:**
+
+```typescript
+queryOne("SELECT * FROM users WHERE id = ?", [1])
+```
+
 
 ---
 
@@ -99,6 +117,12 @@ Execute an INSERT, UPDATE, or DELETE statement
 
 
 
+
+**Example:**
+
+```typescript
+execute("INSERT INTO users (name, email) VALUES (?, ?)", ["John", "john@example.com"])
+```
 
 
 ---
@@ -145,6 +169,12 @@ Get schema information for a table
 
 
 
+**Example:**
+
+```typescript
+schema("users")
+```
+
 
 ---
 
@@ -172,6 +202,12 @@ Create a backup of the database
 
 
 
+
+**Example:**
+
+```typescript
+backup("./mydb.backup.sqlite")
+```
 
 
 ---
