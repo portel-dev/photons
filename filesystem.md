@@ -52,9 +52,9 @@ Read file contents
 **Parameters:**
 
 
-- **`path`** (any) - File path (relative to workdir or absolute)
+- **`path`** (any) - {@min 1} File path (relative to workdir or absolute) {@example README.md}
 
-- **`encoding`** (any, optional) - File encoding
+- **`encoding`** (any) - File encoding {@example utf-8}
 
 
 
@@ -62,7 +62,7 @@ Read file contents
 **Example:**
 
 ```typescript
-read("README.md")
+README.md}
 ```
 
 
@@ -77,11 +77,11 @@ Write content to file
 **Parameters:**
 
 
-- **`path`** (any) - File path (relative to workdir or absolute)
+- **`path`** (any) - {@min 1} File path (relative to workdir or absolute) {@example report.json}
 
-- **`content`** (any) - File content
+- **`content`** (any) - {@min 1} File content {@example {"name":"John"}}
 
-- **`encoding`** (any, optional) - File encoding
+- **`encoding`** (any) - File encoding {@example utf-8}
 
 
 
@@ -89,7 +89,7 @@ Write content to file
 **Example:**
 
 ```typescript
-write("report.json", '{"name": "John"}')
+report.json}
 ```
 
 
@@ -104,11 +104,11 @@ Append content to file
 **Parameters:**
 
 
-- **`path`** (any) - File path (relative to workdir or absolute)
+- **`path`** (any) - {@min 1} File path (relative to workdir or absolute) {@example log.txt}
 
-- **`content`** (any) - Content to append
+- **`content`** (any) - {@min 1} Content to append {@example New log entry\n}
 
-- **`encoding`** (any, optional) - File encoding
+- **`encoding`** (any) - File encoding {@example utf-8}
 
 
 
@@ -116,7 +116,7 @@ Append content to file
 **Example:**
 
 ```typescript
-append("log.txt", "New log entry\n")
+log.txt}
 ```
 
 
@@ -131,7 +131,7 @@ Remove a file
 **Parameters:**
 
 
-- **`path`** (any) - File path (relative to workdir or absolute)
+- **`path`** (any) - {@min 1} File path (relative to workdir or absolute) {@example old-file.txt}
 
 
 
@@ -139,7 +139,7 @@ Remove a file
 **Example:**
 
 ```typescript
-remove("old-file.txt")
+old-file.txt}
 ```
 
 
@@ -154,9 +154,9 @@ Copy a file
 **Parameters:**
 
 
-- **`source`** (any) - Source file path
+- **`source`** (any) - {@min 1} Source file path {@example config.json}
 
-- **`destination`** (any) - Destination file path
+- **`destination`** (any) - {@min 1} Destination file path {@example config.backup.json}
 
 
 
@@ -164,7 +164,7 @@ Copy a file
 **Example:**
 
 ```typescript
-copy("config.json", "config.backup.json")
+config.json}
 ```
 
 
@@ -179,9 +179,9 @@ Move/rename a file
 **Parameters:**
 
 
-- **`source`** (any) - Source file path
+- **`source`** (any) - {@min 1} Source file path {@example old-name.txt}
 
-- **`destination`** (any) - Destination file path
+- **`destination`** (any) - {@min 1} Destination file path {@example new-name.txt}
 
 
 
@@ -189,7 +189,7 @@ Move/rename a file
 **Example:**
 
 ```typescript
-move("old-name.txt", "new-name.txt")
+old-name.txt}
 ```
 
 
@@ -204,7 +204,7 @@ List files in a directory
 **Parameters:**
 
 
-- **`path`** (any) - Directory path (relative to workdir or absolute, default: current workdir)
+- **`path`** (any) - Directory path (relative to workdir or absolute, default: current workdir) {@example my-folder}
 
 - **`recursive`** (any, optional) - List files recursively
 
@@ -214,7 +214,7 @@ List files in a directory
 **Example:**
 
 ```typescript
-list()
+my-folder}
 ```
 
 
@@ -229,7 +229,7 @@ Create a directory
 **Parameters:**
 
 
-- **`path`** (any) - Directory path (relative to workdir or absolute)
+- **`path`** (any) - {@min 1} Directory path (relative to workdir or absolute) {@example new-folder}
 
 - **`recursive`** (any, optional) - Create parent directories if needed
 
@@ -239,7 +239,7 @@ Create a directory
 **Example:**
 
 ```typescript
-mkdir("new-folder")
+new-folder}
 ```
 
 
@@ -254,7 +254,7 @@ Remove a directory
 **Parameters:**
 
 
-- **`path`** (any) - Directory path (relative to workdir or absolute)
+- **`path`** (any) - {@min 1} Directory path (relative to workdir or absolute) {@example old-folder}
 
 - **`recursive`** (any, optional) - Remove directory and all contents
 
@@ -264,7 +264,7 @@ Remove a directory
 **Example:**
 
 ```typescript
-rmdir("old-folder")
+old-folder}
 ```
 
 
@@ -279,7 +279,7 @@ Get file or directory information
 **Parameters:**
 
 
-- **`path`** (any) - File or directory path
+- **`path`** (any) - {@min 1} File or directory path {@example README.md}
 
 
 
@@ -287,7 +287,7 @@ Get file or directory information
 **Example:**
 
 ```typescript
-info("README.md")
+README.md}
 ```
 
 
@@ -302,7 +302,7 @@ Check if file or directory exists
 **Parameters:**
 
 
-- **`path`** (any) - File or directory path
+- **`path`** (any) - {@min 1} File or directory path {@example config.json}
 
 
 
@@ -310,7 +310,7 @@ Check if file or directory exists
 **Example:**
 
 ```typescript
-exists("config.json")
+config.json}
 ```
 
 
@@ -325,9 +325,9 @@ Search for files matching a pattern
 **Parameters:**
 
 
-- **`pattern`** (any) - File name pattern (glob-style: *.txt, **\/*.js)
+- **`pattern`** (any) - {@min 1} File name pattern (glob-style: *.txt, **\/*.js) {@example *.txt}
 
-- **`path`** (any, optional) - Directory to search
+- **`path`** (any, optional) - Directory to search  {@example documents}
 
 
 
@@ -335,7 +335,7 @@ Search for files matching a pattern
 **Example:**
 
 ```typescript
-search("*.txt")
+.txt}
 ```
 
 

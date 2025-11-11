@@ -84,7 +84,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:c810aa521f8bd2503a29e845793747c1af810ccd8de35c737134d2191e2e1fb3",
+      "hash": "sha256:334129f02fc95247aabf63b86aa0f9c1a00ec11c9fabfd21b47e63e2e623c848",
       "tools": [
         "read",
         "write",

@@ -59,8 +59,8 @@ export default class Filesystem {
 
   /**
    * Read file contents
-   * @param path File path (relative to workdir or absolute)
-   * @param encoding File encoding (default: utf-8)
+   * @param path {@min 1} File path (relative to workdir or absolute) {@example README.md}
+   * @param encoding File encoding {@example utf-8}
    * @example read("README.md")
    * @example read("data.txt", "utf-8")
    * @example read({ path: "README.md", encoding: "utf-8" })
@@ -102,9 +102,9 @@ export default class Filesystem {
 
   /**
    * Write content to file
-   * @param path File path (relative to workdir or absolute)
-   * @param content File content
-   * @param encoding File encoding (default: utf-8)
+   * @param path {@min 1} File path (relative to workdir or absolute) {@example report.json}
+   * @param content {@min 1} File content {@example {"name":"John"}}
+   * @param encoding File encoding {@example utf-8}
    * @example write("report.json", '{"name": "John"}')
    * @example write("data.txt", "Hello World", "utf-8")
    * @example write({ path: "report.json", content: '{"name": "John"}', encoding: "utf-8" })
@@ -148,9 +148,9 @@ export default class Filesystem {
 
   /**
    * Append content to file
-   * @param path File path (relative to workdir or absolute)
-   * @param content Content to append
-   * @param encoding File encoding (default: utf-8)
+   * @param path {@min 1} File path (relative to workdir or absolute) {@example log.txt}
+   * @param content {@min 1} Content to append {@example New log entry\n}
+   * @param encoding File encoding {@example utf-8}
    * @example append("log.txt", "New log entry\n")
    * @example append("data.txt", "More data", "utf-8")
    * @example append({ path: "log.txt", content: "New entry\n", encoding: "utf-8" })
@@ -185,7 +185,7 @@ export default class Filesystem {
 
   /**
    * Remove a file
-   * @param path File path (relative to workdir or absolute)
+   * @param path {@min 1} File path (relative to workdir or absolute) {@example old-file.txt}
    * @example remove("old-file.txt")
    * @example remove({ path: "old-file.txt" })
    */
@@ -223,8 +223,8 @@ export default class Filesystem {
 
   /**
    * Copy a file
-   * @param source Source file path
-   * @param destination Destination file path
+   * @param source {@min 1} Source file path {@example config.json}
+   * @param destination {@min 1} Destination file path {@example config.backup.json}
    * @example copy("config.json", "config.backup.json")
    * @example copy({ source: "config.json", destination: "config.backup.json" })
    */
@@ -260,8 +260,8 @@ export default class Filesystem {
 
   /**
    * Move/rename a file
-   * @param source Source file path
-   * @param destination Destination file path
+   * @param source {@min 1} Source file path {@example old-name.txt}
+   * @param destination {@min 1} Destination file path {@example new-name.txt}
    * @example move("old-name.txt", "new-name.txt")
    * @example move({ source: "old-name.txt", destination: "new-name.txt" })
    */
@@ -295,7 +295,7 @@ export default class Filesystem {
 
   /**
    * List files in a directory
-   * @param path Directory path (relative to workdir or absolute, default: current workdir)
+   * @param path Directory path (relative to workdir or absolute, default: current workdir) {@example my-folder}
    * @param recursive List files recursively (default: false)
    * @example list()
    * @example list("my-folder")
@@ -329,7 +329,7 @@ export default class Filesystem {
 
   /**
    * Create a directory
-   * @param path Directory path (relative to workdir or absolute)
+   * @param path {@min 1} Directory path (relative to workdir or absolute) {@example new-folder}
    * @param recursive Create parent directories if needed (default: true)
    * @example mkdir("new-folder")
    * @example mkdir("parent/child", true)
@@ -361,7 +361,7 @@ export default class Filesystem {
 
   /**
    * Remove a directory
-   * @param path Directory path (relative to workdir or absolute)
+   * @param path {@min 1} Directory path (relative to workdir or absolute) {@example old-folder}
    * @param recursive Remove directory and all contents (default: false)
    * @example rmdir("old-folder")
    * @example rmdir("folder-with-files", true)
@@ -402,7 +402,7 @@ export default class Filesystem {
 
   /**
    * Get file or directory information
-   * @param path File or directory path
+   * @param path {@min 1} File or directory path {@example README.md}
    * @example info("README.md")
    * @example info({ path: "README.md" })
    */
@@ -437,7 +437,7 @@ export default class Filesystem {
 
   /**
    * Check if file or directory exists
-   * @param path File or directory path
+   * @param path {@min 1} File or directory path {@example config.json}
    * @example exists("config.json")
    * @example exists({ path: "config.json" })
    */
@@ -466,8 +466,8 @@ export default class Filesystem {
 
   /**
    * Search for files matching a pattern
-   * @param pattern File name pattern (glob-style: *.txt, **\/*.js)
-   * @param path Directory to search (default: workdir)
+   * @param pattern {@min 1} File name pattern (glob-style: *.txt, **\/*.js) {@example *.txt}
+   * @param path Directory to search (default: workdir) {@example documents}
    * @example search("*.txt")
    * @example search("*.js", "src")
    * @example search({ pattern: "*.txt", path: "documents" })
