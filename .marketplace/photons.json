@@ -130,7 +130,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../github-issues.photon.ts",
-      "hash": "sha256:0e40bc3137dcccde8f89b36e4ce2efc4b588e05b619f9a93d23d731f1c6a96c3",
+      "hash": "sha256:d3a89a92653e0fd23b5fa28dc9a8123326500e5a452035b918b02b2be5070b77",
       "tools": [
         "list",
         "get",

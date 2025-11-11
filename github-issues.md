@@ -47,20 +47,26 @@ List issues in a repository
 **Parameters:**
 
 
-- **`owner`** (any) - Repository owner (username or organization)
+- **`owner`** (any) - {@min 1} {@max 100} Repository owner (username or organization) {@example octocat}
 
-- **`repo`** (any) - Repository name
+- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
 
-- **`state`** (any, optional) - Issue state filter
+- **`state`** (any, optional) - Issue state filter  {@example open}
 
-- **`labels`** (any) - Comma-separated label names to filter by
+- **`labels`** (any) - {@max 500} Comma-separated label names to filter by {@example bug,enhancement}
 
-- **`sort`** (any, optional) - Sort by created, updated, or comments
+- **`sort`** (any, optional) - Sort by created, updated, or comments  {@example created}
 
-- **`per_page`** (any, optional) - Number of results per page
+- **`per_page`** (any, optional) - {@min 1} {@max 100} Number of results per page
 
 
 
+
+**Example:**
+
+```typescript
+octocat}
+```
 
 
 ---
@@ -74,14 +80,20 @@ Get a single issue by number
 **Parameters:**
 
 
-- **`owner`** (any) - Repository owner
+- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
 
-- **`repo`** (any) - Repository name
+- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
 
-- **`issue_number`** (any) - Issue number
+- **`issue_number`** (any) - {@min 1} Issue number {@example 42}
 
 
 
+
+**Example:**
+
+```typescript
+octocat}
+```
 
 
 ---
@@ -95,20 +107,26 @@ Create a new issue
 **Parameters:**
 
 
-- **`owner`** (any) - Repository owner
+- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
 
-- **`repo`** (any) - Repository name
+- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
 
-- **`title`** (any) - Issue title
+- **`title`** (any) - {@min 1} {@max 200} Issue title {@example Bug in user authentication}
 
-- **`body`** (any) - Issue description/body
+- **`body`** (any) - {@max 5000} Issue description/body {@example Steps to reproduce: 1. Login 2. Navigate to profile}
 
-- **`labels`** (any) - Array of label names
+- **`labels`** (any) - {@min 1} Array of label names {@example ["bug","priority-high"]}
 
-- **`assignees`** (any) - Array of usernames to assign
+- **`assignees`** (any) - {@min 1} Array of usernames to assign {@example ["octocat","hubot"]}
 
 
 
+
+**Example:**
+
+```typescript
+octocat}
+```
 
 
 ---
@@ -122,22 +140,28 @@ Update an existing issue
 **Parameters:**
 
 
-- **`owner`** (any) - Repository owner
+- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
 
-- **`repo`** (any) - Repository name
+- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
 
-- **`issue_number`** (any) - Issue number to update
+- **`issue_number`** (any) - {@min 1} Issue number to update {@example 42}
 
-- **`title`** (any, optional) - New title
+- **`title`** (any, optional) - {@min 1} {@max 200} New title  {@example Updated: Bug in user authentication}
 
-- **`body`** (any, optional) - New body
+- **`body`** (any, optional) - {@max 5000} New body  {@example Additional details: This also affects mobile users}
 
-- **`state`** (any, optional) - New state: open or closed
+- **`state`** (any, optional) - New state: open or closed  {@example closed}
 
-- **`labels`** (any, optional) - New labels
+- **`labels`** (any, optional) - {@min 1} New labels  {@example ["bug","fixed"]}
 
 
 
+
+**Example:**
+
+```typescript
+octocat}
+```
 
 
 ---
@@ -151,16 +175,22 @@ Add a comment to an issue
 **Parameters:**
 
 
-- **`owner`** (any) - Repository owner
+- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
 
-- **`repo`** (any) - Repository name
+- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
 
-- **`issue_number`** (any) - Issue number
+- **`issue_number`** (any) - {@min 1} Issue number {@example 42}
 
-- **`body`** (any) - Comment text
+- **`body`** (any) - {@min 1} {@max 5000} Comment text {@example This issue has been fixed in the latest commit}
 
 
 
+
+**Example:**
+
+```typescript
+octocat}
+```
 
 
 ---
@@ -174,14 +204,20 @@ List comments on an issue
 **Parameters:**
 
 
-- **`owner`** (any) - Repository owner
+- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
 
-- **`repo`** (any) - Repository name
+- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
 
-- **`issue_number`** (any) - Issue number
+- **`issue_number`** (any) - {@min 1} Issue number {@example 42}
 
 
 
+
+**Example:**
+
+```typescript
+octocat}
+```
 
 
 ---
@@ -195,16 +231,22 @@ Search issues across repositories
 **Parameters:**
 
 
-- **`query`** (any) - Search query (e.g., "is:open label:bug")
+- **`query`** (any) - {@min 1} {@max 500} Search query {@example is:open label:bug repo:octocat/hello-world}
 
-- **`sort`** (any, optional) - Sort by created, updated, or comments
+- **`sort`** (any, optional) - Sort by created, updated, or comments  {@example created}
 
-- **`order`** (any, optional) - Sort order: asc or desc
+- **`order`** (any, optional) - Sort order: asc or desc  {@example desc}
 
-- **`per_page`** (any, optional) - Number of results per page
+- **`per_page`** (any, optional) - {@min 1} {@max 100} Number of results per page
 
 
 
+
+**Example:**
+
+```typescript
+is:open label:bug repo:octocat/hello-world}
+```
 
 
 ---
