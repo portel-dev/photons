@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **32** tools:
+This photon provides **26** tools:
 
 
 ### `discover`
@@ -142,15 +142,15 @@ Get current connection status
 ---
 
 
-### `setVolume`
+### `vol`
 
-Set volume level
+Get/set volume level
 
 
 **Parameters:**
 
 
-- **`level`** (any) - Volume level (0-100)
+- **`level`** (any) - Volume level (0-100, optional - omit to get current volume)
 
 
 
@@ -159,18 +159,7 @@ Set volume level
 ---
 
 
-### `getVolume`
-
-Get current volume
-
-
-
-
-
----
-
-
-### `volumeUp`
+### `volUp`
 
 Increase volume by 1
 
@@ -181,7 +170,7 @@ Increase volume by 1
 ---
 
 
-### `volumeDown`
+### `volDown`
 
 Decrease volume by 1
 
@@ -209,7 +198,7 @@ Toggle mute
 ---
 
 
-### `powerOff`
+### `off`
 
 Turn TV off
 
@@ -237,26 +226,17 @@ Show a notification toast on TV
 ---
 
 
-### `listApps`
+### `apps`
 
-List all installed apps
-
-
-
-
-
----
-
-
-### `launchApp`
-
-Launch an app by ID
+List all installed apps, or launch/get current app
 
 
 **Parameters:**
 
 
-- **`id`** (any) - App ID (e.g., "netflix", "youtube.leanback.v4")
+- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all or get current
+
+- **`current`** (any) - Set true to get currently running app
 
 
 
@@ -265,48 +245,17 @@ Launch an app by ID
 ---
 
 
-### `getCurrentApp`
+### `channel`
 
-Get currently running app
-
-
-
-
-
----
-
-
-### `listChannels`
-
-List available TV channels
-
-
-
-
-
----
-
-
-### `getCurrentChannel`
-
-Get current channel
-
-
-
-
-
----
-
-
-### `setChannel`
-
-Set channel by number
+Get current channel, set channel, or list all channels
 
 
 **Parameters:**
 
 
-- **`channel`** (any) - Channel number
+- **`number`** (any, optional) - Channel number to switch to
+
+- **`list`** (any) - Set true to list all channels
 
 
 
@@ -315,7 +264,7 @@ Set channel by number
 ---
 
 
-### `channelUp`
+### `chUp`
 
 Channel up
 
@@ -326,7 +275,7 @@ Channel up
 ---
 
 
-### `channelDown`
+### `chDown`
 
 Channel down
 
@@ -337,26 +286,15 @@ Channel down
 ---
 
 
-### `listInputs`
+### `input`
 
-List external inputs
-
-
-
-
-
----
-
-
-### `setInput`
-
-Switch to an input
+List inputs or switch to an input
 
 
 **Parameters:**
 
 
-- **`id`** (any) - Input ID
+- **`id`** (any) - Input ID to switch to (optional, omit to list all)
 
 
 
@@ -398,7 +336,7 @@ Stop media
 ---
 
 
-### `rewind`
+### `rw`
 
 Rewind media
 
@@ -409,7 +347,7 @@ Rewind media
 ---
 
 
-### `fastForward`
+### `ff`
 
 Fast forward media
 
@@ -420,7 +358,7 @@ Fast forward media
 ---
 
 
-### `button`
+### `btn`
 
 Send remote button press
 
@@ -437,7 +375,7 @@ Send remote button press
 ---
 
 
-### `getSystemInfo`
+### `info`
 
 Get TV system information (model, firmware, etc.)
 
@@ -448,7 +386,7 @@ Get TV system information (model, firmware, etc.)
 ---
 
 
-### `getSoftwareInfo`
+### `swInfo`
 
 Get current software/firmware information
 

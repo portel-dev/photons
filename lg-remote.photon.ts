@@ -521,31 +521,27 @@ export default class LGRemote {
   }
 
   /**
-   * Set volume level
-   * @param level Volume level (0-100)
+   * Get/set volume level
+   * @param level Volume level (0-100, optional - omit to get current volume)
    */
-  async setVolume(params: { level: number }) {
-    return this._request('ssap://audio/setVolume', { volume: params.level });
-  }
-
-  /**
-   * Get current volume
-   */
-  async getVolume() {
+  async vol(params?: { level?: number }) {
+    if (params?.level !== undefined) {
+      return this._request('ssap://audio/setVolume', { volume: params.level });
+    }
     return this._request('ssap://audio/getVolume');
   }
 
   /**
    * Increase volume by 1
    */
-  async volumeUp() {
+  async volUp() {
     return this._request('ssap://audio/volumeUp');
   }
 
   /**
    * Decrease volume by 1
    */
-  async volumeDown() {
+  async volDown() {
     return this._request('ssap://audio/volumeDown');
   }
 
@@ -560,7 +556,7 @@ export default class LGRemote {
   /**
    * Turn TV off
    */
-  async powerOff() {
+  async off() {
     return this._request('ssap://system/turnOff');
   }
 
@@ -575,76 +571,58 @@ export default class LGRemote {
   }
 
   /**
-   * List all installed apps
+   * List all installed apps, or launch/get current app
+   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), omit to list all or get current
+   * @param current Set true to get currently running app
    */
-  async listApps() {
+  async apps(params?: { id?: string; current?: boolean }) {
+    if (params?.id) {
+      return this._request('ssap://system.launcher/launch', { id: params.id });
+    }
+    if (params?.current) {
+      return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
+    }
     return this._request('ssap://com.webos.applicationManager/listApps');
   }
 
   /**
-   * Launch an app by ID
-   * @param id App ID (e.g., "netflix", "youtube.leanback.v4")
+   * Get current channel, set channel, or list all channels
+   * @param number Channel number to switch to (optional)
+   * @param list Set true to list all channels
    */
-  async launchApp(params: { id: string }) {
-    return this._request('ssap://system.launcher/launch', { id: params.id });
-  }
-
-  /**
-   * Get currently running app
-   */
-  async getCurrentApp() {
-    return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
-  }
-
-  /**
-   * List available TV channels
-   */
-  async listChannels() {
-    return this._request('ssap://tv/getChannelList');
-  }
-
-  /**
-   * Get current channel
-   */
-  async getCurrentChannel() {
+  async channel(params?: { number?: string; list?: boolean }) {
+    if (params?.number) {
+      return this._request('ssap://tv/openChannel', { channelNumber: params.number });
+    }
+    if (params?.list) {
+      return this._request('ssap://tv/getChannelList');
+    }
     return this._request('ssap://tv/getCurrentChannel');
-  }
-
-  /**
-   * Set channel by number
-   * @param channel Channel number
-   */
-  async setChannel(params: { channel: string }) {
-    return this._request('ssap://tv/openChannel', { channelNumber: params.channel });
   }
 
   /**
    * Channel up
    */
-  async channelUp() {
+  async chUp() {
     return this._request('ssap://tv/channelUp');
   }
 
   /**
    * Channel down
    */
-  async channelDown() {
+  async chDown() {
     return this._request('ssap://tv/channelDown');
   }
 
   /**
-   * List external inputs
+   * List inputs or switch to an input
+   * @param id Input ID to switch to (optional, omit to list all)
    */
-  async listInputs() {
+  async input(params?: { id?: string }) {
+    if (params?.id) {
+      return this._request('ssap://tv/switchInput', { inputId: params.id });
+    }
     return this._request('ssap://tv/getExternalInputList');
-  }
-
-  /**
-   * Switch to an input
-   * @param id Input ID
-   */
-  async setInput(params: { id: string }) {
-    return this._request('ssap://tv/switchInput', { inputId: params.id });
   }
 
   /**
@@ -671,14 +649,14 @@ export default class LGRemote {
   /**
    * Rewind media
    */
-  async rewind() {
+  async rw() {
     return this._request('ssap://media.controls/rewind');
   }
 
   /**
    * Fast forward media
    */
-  async fastForward() {
+  async ff() {
     return this._request('ssap://media.controls/fastForward');
   }
 
@@ -686,7 +664,7 @@ export default class LGRemote {
    * Send remote button press
    * @param button Button name (HOME, BACK, UP, DOWN, LEFT, RIGHT, ENTER, etc.)
    */
-  async button(params: { button: string }) {
+  async btn(params: { button: string }) {
     if (!this.pointerWs || this.pointerWs.readyState !== WebSocket.OPEN) {
       // Connect pointer socket
       const secure = this.currentClientKey ? true : false;
@@ -727,7 +705,7 @@ export default class LGRemote {
   /**
    * Get TV system information (model, firmware, etc.)
    */
-  async getSystemInfo() {
+  async info() {
     return this._request('luna://com.webos.service.tv.systemproperty/getSystemInfo', {
       keys: ['modelName', 'firmwareVersion', 'sdkVersion', 'UHD'],
     });
@@ -736,7 +714,7 @@ export default class LGRemote {
   /**
    * Get current software/firmware information
    */
-  async getSoftwareInfo() {
+  async swInfo() {
     return this._request('ssap://com.webos.service.update/getCurrentSWInformation');
   }
 
