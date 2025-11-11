@@ -413,20 +413,69 @@ export default class LGRemote {
   }
 
   /**
-   * List saved TV credentials
+   * List discovered and saved TVs
+   * @param refresh If true, re-discover TVs on network (default: false)
    */
-  async list() {
+  async list(params?: { refresh?: boolean }) {
     try {
+      // Re-discover if requested
+      if (params?.refresh) {
+        console.error('[lg-remote] 🔍 Refreshing TV list...');
+        await this.discover({ timeout: 5 });
+      }
+
       const credentials = await this._loadCredentials();
+      const credMap = new Map(credentials.map((c: TVCredentials) => [c.ip, c]));
+
+      // Merge discovered TVs with saved credentials
+      const allTVs = new Map<string, any>();
+
+      // Add discovered TVs
+      for (const tv of this.discoveredTVs) {
+        const cred = credMap.get(tv.ip);
+        allTVs.set(tv.ip, {
+          ip: tv.ip,
+          name: tv.name || cred?.name,
+          paired: !!cred,
+          secure: cred?.secure,
+          lastUsed: cred?.lastUsed,
+          isDefault: this.defaultTV?.ip === tv.ip,
+          isConnected: this.currentTVIP === tv.ip,
+        });
+      }
+
+      // Add saved TVs that weren't discovered
+      for (const cred of credentials) {
+        if (!allTVs.has(cred.ip)) {
+          allTVs.set(cred.ip, {
+            ip: cred.ip,
+            name: cred.name,
+            paired: true,
+            secure: cred.secure,
+            lastUsed: cred.lastUsed,
+            discovered: false,
+            isDefault: this.defaultTV?.ip === cred.ip,
+            isConnected: this.currentTVIP === cred.ip,
+          });
+        }
+      }
+
+      // Sort by lastUsed (most recent first), then by discovered
+      const devices = Array.from(allTVs.values()).sort((a, b) => {
+        if (a.lastUsed && b.lastUsed) {
+          return b.lastUsed - a.lastUsed;
+        }
+        if (a.lastUsed) return -1;
+        if (b.lastUsed) return 1;
+        return 0;
+      });
+
       return {
         success: true,
-        count: credentials.length,
-        devices: credentials.map((c: TVCredentials) => ({
-          ip: c.ip,
-          name: c.name,
-          secure: c.secure,
-          lastUsed: c.lastUsed,
-        })),
+        count: devices.length,
+        devices,
+        defaultTV: this.defaultTV?.ip,
+        connectedTV: this.currentTVIP,
       };
     } catch (error: any) {
       return {

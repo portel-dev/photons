@@ -99,7 +99,13 @@ Disconnect from the current TV
 
 ### `list`
 
-List saved TV credentials
+List discovered and saved TVs
+
+
+**Parameters:**
+
+
+- **`refresh`** (any, optional) - If true, re-discover TVs on network
 
 
 
