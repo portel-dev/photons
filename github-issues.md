@@ -47,26 +47,20 @@ List issues in a repository
 **Parameters:**
 
 
-- **`owner`** (any) - {@min 1} {@max 100} Repository owner (username or organization) {@example octocat}
+- **`owner`** (any) [min: 1, max: 100] - Repository owner (username or organization) (e.g., `octocat`)
 
-- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
+- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
 
-- **`state`** (any, optional) - Issue state filter  {@example open}
+- **`state`** (any, optional) - Issue state filter (e.g., `open`)
 
-- **`labels`** (any) - {@max 500} Comma-separated label names to filter by {@example bug,enhancement}
+- **`labels`** (any) [max: 500] - Comma-separated label names to filter by (e.g., `bug,enhancement`)
 
-- **`sort`** (any, optional) - Sort by created, updated, or comments  {@example created}
+- **`sort`** (any, optional) - Sort by created, updated, or comments (e.g., `created`)
 
-- **`per_page`** (any, optional) - {@min 1} {@max 100} Number of results per page
-
-
+- **`per_page`** (any, optional) [min: 1, max: 100] - Number of results per page
 
 
-**Example:**
 
-```typescript
-octocat}
-```
 
 
 ---
@@ -80,20 +74,14 @@ Get a single issue by number
 **Parameters:**
 
 
-- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
+- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
 
-- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
+- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
 
-- **`issue_number`** (any) - {@min 1} Issue number {@example 42}
-
-
+- **`issue_number`** (any) [min: 1] - Issue number (e.g., `42`)
 
 
-**Example:**
 
-```typescript
-octocat}
-```
 
 
 ---
@@ -107,26 +95,20 @@ Create a new issue
 **Parameters:**
 
 
-- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
+- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
 
-- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
+- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
 
-- **`title`** (any) - {@min 1} {@max 200} Issue title {@example Bug in user authentication}
+- **`title`** (any) [min: 1, max: 200] - Issue title (e.g., `Bug in user authentication`)
 
-- **`body`** (any) - {@max 5000} Issue description/body {@example Steps to reproduce: 1. Login 2. Navigate to profile}
+- **`body`** (any) [max: 5000] - Issue description/body (e.g., `Steps to reproduce: 1. Login 2. Navigate to profile`)
 
-- **`labels`** (any) - {@min 1} Array of label names {@example ["bug","priority-high"]}
+- **`labels`** (any) [min: 1] - Array of label names (e.g., `["bug","priority-high"]`)
 
-- **`assignees`** (any) - {@min 1} Array of usernames to assign {@example ["octocat","hubot"]}
-
-
+- **`assignees`** (any) [min: 1] - Array of usernames to assign (e.g., `["octocat","hubot"]`)
 
 
-**Example:**
 
-```typescript
-octocat}
-```
 
 
 ---
@@ -140,28 +122,22 @@ Update an existing issue
 **Parameters:**
 
 
-- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
+- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
 
-- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
+- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
 
-- **`issue_number`** (any) - {@min 1} Issue number to update {@example 42}
+- **`issue_number`** (any) [min: 1] - Issue number to update (e.g., `42`)
 
-- **`title`** (any, optional) - {@min 1} {@max 200} New title  {@example Updated: Bug in user authentication}
+- **`title`** (any, optional) [min: 1, max: 200] - New title (e.g., `Updated: Bug in user authentication`)
 
-- **`body`** (any, optional) - {@max 5000} New body  {@example Additional details: This also affects mobile users}
+- **`body`** (any, optional) [max: 5000] - New body (e.g., `Additional details: This also affects mobile users`)
 
-- **`state`** (any, optional) - New state: open or closed  {@example closed}
+- **`state`** (any, optional) - New state: open or closed (e.g., `closed`)
 
-- **`labels`** (any, optional) - {@min 1} New labels  {@example ["bug","fixed"]}
-
-
+- **`labels`** (any, optional) [min: 1] - New labels (e.g., `["bug","fixed"]`)
 
 
-**Example:**
 
-```typescript
-octocat}
-```
 
 
 ---
@@ -175,22 +151,16 @@ Add a comment to an issue
 **Parameters:**
 
 
-- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
+- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
 
-- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
+- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
 
-- **`issue_number`** (any) - {@min 1} Issue number {@example 42}
+- **`issue_number`** (any) [min: 1] - Issue number (e.g., `42`)
 
-- **`body`** (any) - {@min 1} {@max 5000} Comment text {@example This issue has been fixed in the latest commit}
-
-
+- **`body`** (any) [min: 1, max: 5000] - Comment text (e.g., `This issue has been fixed in the latest commit`)
 
 
-**Example:**
 
-```typescript
-octocat}
-```
 
 
 ---
@@ -204,20 +174,14 @@ List comments on an issue
 **Parameters:**
 
 
-- **`owner`** (any) - {@min 1} {@max 100} Repository owner {@example octocat}
+- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
 
-- **`repo`** (any) - {@min 1} {@max 100} Repository name {@example hello-world}
+- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
 
-- **`issue_number`** (any) - {@min 1} Issue number {@example 42}
-
-
+- **`issue_number`** (any) [min: 1] - Issue number (e.g., `42`)
 
 
-**Example:**
 
-```typescript
-octocat}
-```
 
 
 ---
@@ -231,22 +195,16 @@ Search issues across repositories
 **Parameters:**
 
 
-- **`query`** (any) - {@min 1} {@max 500} Search query {@example is:open label:bug repo:octocat/hello-world}
+- **`query`** (any) [min: 1, max: 500] - Search query (e.g., `is:open label:bug repo:octocat/hello-world`)
 
-- **`sort`** (any, optional) - Sort by created, updated, or comments  {@example created}
+- **`sort`** (any, optional) - Sort by created, updated, or comments (e.g., `created`)
 
-- **`order`** (any, optional) - Sort order: asc or desc  {@example desc}
+- **`order`** (any, optional) - Sort order: asc or desc (e.g., `desc`)
 
-- **`per_page`** (any, optional) - {@min 1} {@max 100} Number of results per page
-
-
+- **`per_page`** (any, optional) [min: 1, max: 100] - Number of results per page
 
 
-**Example:**
 
-```typescript
-is:open label:bug repo:octocat/hello-world}
-```
 
 
 ---

@@ -40,7 +40,7 @@ Create new entities with observations
 **Parameters:**
 
 
-- **`entities`** (any) - {@min 1} Array of entities to create {@example [{"name":"project-api","entityType":"project","observations":["80% complete"]}]}
+- **`entities`** (any) [min: 1] - Array of entities to create (e.g., `[{"name":"project-api","entityType":"project","observations":["80% complete"]}]`)
 
 
 
@@ -57,7 +57,7 @@ Create relations between entities
 **Parameters:**
 
 
-- **`relations`** (any) - {@min 1} Array of relations {@example [{"from":"user","to":"project-api","relationType":"working_on"}]}
+- **`relations`** (any) [min: 1] - Array of relations (e.g., `[{"from":"user","to":"project-api","relationType":"working_on"}]`)
 
 
 
@@ -74,18 +74,12 @@ Add observations to an entity
 **Parameters:**
 
 
-- **`entityName`** (any) - {@min 1} Entity name {@example project-api}
+- **`entityName`** (any) [min: 1] - Entity name (e.g., `project-api`)
 
-- **`observations`** (any) - {@min 1} Array of observation strings {@example ["deployed to staging"]}
-
-
+- **`observations`** (any) [min: 1] - Array of observation strings (e.g., `["deployed to staging"]`)
 
 
-**Example:**
 
-```typescript
-project-api}
-```
 
 
 ---
@@ -99,7 +93,7 @@ Delete entities and their relations
 **Parameters:**
 
 
-- **`entityNames`** (any) - {@min 1} Array of entity names to delete {@example ["old-project","archived-task"]}
+- **`entityNames`** (any) [min: 1] - Array of entity names to delete (e.g., `["old-project","archived-task"]`)
 
 
 
@@ -116,9 +110,9 @@ Delete specific observations from an entity
 **Parameters:**
 
 
-- **`entityName`** (any) - {@min 1} Entity name
+- **`entityName`** (any) [min: 1] - Entity name
 
-- **`observations`** (any) - {@min 1} Array of observations to delete (exact match)
+- **`observations`** (any) [min: 1] - Array of observations to delete (exact match)
 
 
 
@@ -135,7 +129,7 @@ Delete relations
 **Parameters:**
 
 
-- **`relations`** (any) - {@min 1} Array of relations to delete
+- **`relations`** (any) [min: 1] - Array of relations to delete
 
 
 
@@ -163,7 +157,7 @@ Search for entities matching a query
 **Parameters:**
 
 
-- **`query`** (any) - {@min 1} Search query (searches names, types, and observations) {@example TypeScript}
+- **`query`** (any) [min: 1] - Search query (searches names, types, and observations) (e.g., `TypeScript`)
 
 
 
@@ -180,7 +174,7 @@ Open specific entities by name with their relations
 **Parameters:**
 
 
-- **`names`** (any) - {@min 1} Array of entity names to retrieve {@example ["user","project-api"]}
+- **`names`** (any) [min: 1] - Array of entity names to retrieve (e.g., `["user","project-api"]`)
 
 
 
@@ -208,18 +202,12 @@ Export knowledge graph in various formats
 **Parameters:**
 
 
-- **`format`** (any) - Export format {@example json}
+- **`format`** (any) - Export format (e.g., `json`)
 
-- **`path`** (any) - Optional file path to save the export {@example ~/exports/graph.json}
-
-
+- **`path`** (any) - Optional file path to save the export (e.g., `~/exports/graph.json`)
 
 
-**Example:**
 
-```typescript
-json}
-```
 
 
 ---

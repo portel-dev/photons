@@ -92,11 +92,11 @@ Send an email
 **Parameters:**
 
 
-- **`to`** (any) - {@min 1} {@max 500} {@format email} Recipient email address or comma-separated addresses {@example user@example.com}
+- **`to`** (any) [min: 1, max: 500, format: email] - Recipient email address or comma-separated addresses (e.g., `user@example.com`)
 
-- **`subject`** (any) - {@min 1} {@max 200} Email subject {@example Daily Report}
+- **`subject`** (any) [min: 1, max: 200] - Email subject (e.g., `Daily Report`)
 
-- **`body`** (any) - {@min 1} {@max 50000} Email body (plain text or HTML)
+- **`body`** (any) [min: 1, max: 50000] - Email body (plain text or HTML)
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
@@ -108,12 +108,6 @@ Send an email
 
 
 
-
-**Example:**
-
-```typescript
-user@example.com}
-```
 
 
 ---
@@ -127,24 +121,18 @@ Send an email with attachments
 **Parameters:**
 
 
-- **`to`** (any) - {@min 1} {@max 500} {@format email} Recipient email address {@example user@example.com}
+- **`to`** (any) [min: 1, max: 500, format: email] - Recipient email address (e.g., `user@example.com`)
 
-- **`subject`** (any) - {@min 1} {@max 200} Email subject
+- **`subject`** (any) [min: 1, max: 200] - Email subject
 
-- **`body`** (any) - {@min 1} {@max 50000} Email body
+- **`body`** (any) [min: 1, max: 50000] - Email body
 
-- **`attachments`** (any) - {@min 1} Array of attachments with filename and content {@example [{"filename":"report.pdf","content":"..."}]}
+- **`attachments`** (any) [min: 1] - Array of attachments with filename and content (e.g., `[{"filename":"report.pdf","content":"..."}]`)
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
 
 
-
-**Example:**
-
-```typescript
-user@example.com}
-```
 
 
 ---
@@ -158,11 +146,11 @@ List emails from inbox
 **Parameters:**
 
 
-- **`limit`** (any, optional) - {@min 1} {@max 100} Maximum number of emails to return
+- **`limit`** (any, optional) [min: 1, max: 100] - Maximum number of emails to return
 
 - **`unreadOnly`** (any, optional) - Only return unread emails
 
-- **`mailbox`** (any) - Mailbox to check {@example INBOX}
+- **`mailbox`** (any) - Mailbox to check (e.g., `INBOX`)
 
 
 
@@ -179,9 +167,9 @@ Get a specific email by sequence number
 **Parameters:**
 
 
-- **`uid`** (any) - {@min 1} Email sequence number (from listInbox)
+- **`uid`** (any) [min: 1] - Email sequence number (from listInbox)
 
-- **`mailbox`** (any) - Mailbox to check {@example INBOX}
+- **`mailbox`** (any) - Mailbox to check (e.g., `INBOX`)
 
 
 
@@ -198,22 +186,16 @@ Search emails by criteria
 **Parameters:**
 
 
-- **`query`** (any) - {@min 1} Search query (from, subject, or body text) {@example meeting}
+- **`query`** (any) [min: 1] - Search query (from, subject, or body text) (e.g., `meeting`)
 
-- **`searchIn`** (any) - Where to search {@example subject}
+- **`searchIn`** (any) - Where to search (e.g., `subject`)
 
-- **`limit`** (any, optional) - {@min 1} {@max 100} Maximum results
+- **`limit`** (any, optional) [min: 1, max: 100] - Maximum results
 
-- **`mailbox`** (any) - Mailbox to search {@example INBOX}
-
-
+- **`mailbox`** (any) - Mailbox to search (e.g., `INBOX`)
 
 
-**Example:**
 
-```typescript
-meeting}
-```
 
 
 ---
@@ -227,9 +209,9 @@ Mark an email as read
 **Parameters:**
 
 
-- **`uid`** (any) - {@min 1} Email sequence number
+- **`uid`** (any) [min: 1] - Email sequence number
 
-- **`mailbox`** (any) - Mailbox name {@example INBOX}
+- **`mailbox`** (any) - Mailbox name (e.g., `INBOX`)
 
 
 
@@ -246,9 +228,9 @@ Delete an email
 **Parameters:**
 
 
-- **`uid`** (any) - {@min 1} Email sequence number
+- **`uid`** (any) [min: 1] - Email sequence number
 
-- **`mailbox`** (any) - Mailbox name {@example INBOX}
+- **`mailbox`** (any) - Mailbox name (e.g., `INBOX`)
 
 
 
@@ -265,20 +247,14 @@ Move email to another mailbox (archive)
 **Parameters:**
 
 
-- **`uid`** (any) - {@min 1} Email sequence number
+- **`uid`** (any) [min: 1] - Email sequence number
 
-- **`targetMailbox`** (any) - {@min 1} Target mailbox name {@example Archive}
+- **`targetMailbox`** (any) [min: 1] - Target mailbox name (e.g., `Archive`)
 
-- **`sourceMailbox`** (any) - Source mailbox {@example INBOX}
-
-
+- **`sourceMailbox`** (any) - Source mailbox (e.g., `INBOX`)
 
 
-**Example:**
 
-```typescript
-Archive}
-```
 
 
 ---

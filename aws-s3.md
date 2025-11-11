@@ -52,24 +52,18 @@ Upload object to bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
+- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
 
-- **`content`** (any) - {@min 1} Content to upload (string or base64) {@example Hello World}
+- **`content`** (any) [min: 1] - Content to upload (string or base64) (e.g., `Hello World`)
 
-- **`contentType`** (any, optional) - {@max 100} MIME type  {@example text/plain}
+- **`contentType`** (any, optional) [max: 100] - MIME type (e.g., `text/plain`)
 
-- **`encoding`** (any, optional) - {@max 20} Content encoding  {@example base64}
-
-
+- **`encoding`** (any, optional) [max: 20] - Content encoding (e.g., `base64`)
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -83,20 +77,14 @@ Download object from bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
+- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
 
-- **`encoding`** (any) - {@max 20} Return encoding (optional, "base64" for binary files) {@example base64}
-
-
+- **`encoding`** (any) [max: 20] - Return encoding (optional, "base64" for binary files) (e.g., `base64`)
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -110,20 +98,14 @@ List objects in bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`prefix`** (any, optional) - {@max 1024} Filter by key prefix  {@example documents/}
+- **`prefix`** (any, optional) [max: 1024] - Filter by key prefix (e.g., `documents/`)
 
-- **`maxKeys`** (any, optional) - {@min 1} {@max 1000} Maximum number of objects to return
-
-
+- **`maxKeys`** (any, optional) [min: 1, max: 1000] - Maximum number of objects to return
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -137,18 +119,12 @@ Delete object from bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/old-report.pdf}
-
-
+- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/old-report.pdf`)
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -162,18 +138,12 @@ Delete multiple objects from bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`keys`** (any) - {@min 1} Array of object keys to delete {@example ["old/file1.txt","old/file2.txt"]}
-
-
+- **`keys`** (any) [min: 1] - Array of object keys to delete (e.g., `["old/file1.txt","old/file2.txt"]`)
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -187,18 +157,12 @@ Get object metadata
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
-
-
+- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -212,22 +176,16 @@ Copy object within S3
 **Parameters:**
 
 
-- **`sourceBucket`** (any) - {@min 1} {@max 63} Source bucket name {@example my-source-bucket}
+- **`sourceBucket`** (any) [min: 1, max: 63] - Source bucket name (e.g., `my-source-bucket`)
 
-- **`sourceKey`** (any) - {@min 1} {@max 1024} Source object key {@example documents/original.pdf}
+- **`sourceKey`** (any) [min: 1, max: 1024] - Source object key (e.g., `documents/original.pdf`)
 
-- **`destinationBucket`** (any) - {@min 1} {@max 63} Destination bucket name {@example my-dest-bucket}
+- **`destinationBucket`** (any) [min: 1, max: 63] - Destination bucket name (e.g., `my-dest-bucket`)
 
-- **`destinationKey`** (any) - {@min 1} {@max 1024} Destination object key {@example backups/copy.pdf}
-
-
+- **`destinationKey`** (any) [min: 1, max: 1024] - Destination object key (e.g., `backups/copy.pdf`)
 
 
-**Example:**
 
-```typescript
-my-source-bucket}
-```
 
 
 ---
@@ -241,22 +199,16 @@ Generate presigned URL for object access
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
 
-- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
+- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
 
-- **`expiresIn`** (any, optional) - {@min 1} {@max 604800} Expiration time in seconds
+- **`expiresIn`** (any, optional) [min: 1, max: 604800] - Expiration time in seconds
 
-- **`operation`** (any, optional) - {@max 10} Operation type  {@example get}
-
-
+- **`operation`** (any, optional) [max: 10] - Operation type (e.g., `get`)
 
 
-**Example:**
 
-```typescript
-my-app-bucket}
-```
 
 
 ---
@@ -281,7 +233,7 @@ Create a new bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name (must be globally unique) {@example my-new-app-bucket-2024}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (must be globally unique) (e.g., `my-new-app-bucket-2024`)
 
 
 
@@ -298,7 +250,7 @@ Delete a bucket (must be empty)
 **Parameters:**
 
 
-- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-old-bucket}
+- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-old-bucket`)
 
 
 

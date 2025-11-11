@@ -40,7 +40,7 @@ Get current time in a specific timezone
 **Parameters:**
 
 
-- **`timezone`** (any) - IANA timezone name {@example America/New_York}
+- **`timezone`** (any) - IANA timezone name (e.g., `America/New_York`)
 
 
 
@@ -57,22 +57,16 @@ Convert time from one timezone to another
 **Parameters:**
 
 
-- **`source_timezone`** (any) - {@min 1} {@max 100} Source IANA timezone {@example America/New_York}
+- **`source_timezone`** (any) [min: 1, max: 100] - Source IANA timezone (e.g., `America/New_York`)
 
-- **`time`** (any) - {@min 1} {@max 10} {@format time} Time in 24-hour format (HH:MM) {@example 14:30}
+- **`time`** (any) [min: 1, max: 10, format: time] - Time in 24-hour format (HH:MM) (e.g., `14:30`)
 
-- **`target_timezone`** (any) - {@min 1} {@max 100} Target IANA timezone {@example Europe/London}
+- **`target_timezone`** (any) [min: 1, max: 100] - Target IANA timezone (e.g., `Europe/London`)
 
-- **`date`** (any) - {@max 20} {@format date} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
-
-
+- **`date`** (any) [max: 20, format: date] - Date in YYYY-MM-DD format (optional, default: today) (e.g., `2024-03-15`)
 
 
-**Example:**
 
-```typescript
-America/New_York}
-```
 
 
 ---
@@ -86,7 +80,7 @@ List common IANA timezones by region
 **Parameters:**
 
 
-- **`region`** (any) - Filter by region {@example America}
+- **`region`** (any) - Filter by region (e.g., `America`)
 
 
 

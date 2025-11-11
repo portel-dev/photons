@@ -52,20 +52,14 @@ List issues with JQL query
 **Parameters:**
 
 
-- **`jql`** (any) - {@min 1} {@max 1000} JQL query string {@example project = PROJ AND status = Open}
+- **`jql`** (any) [min: 1, max: 1000] - JQL query string (e.g., `project = PROJ AND status = Open`)
 
-- **`maxResults`** (any, optional) - {@min 1} {@max 100} Maximum number of results
+- **`maxResults`** (any, optional) [min: 1, max: 100] - Maximum number of results
 
-- **`fields`** (any) - {@max 500} Fields to return (optional, comma-separated) {@example summary,status,assignee}
-
-
+- **`fields`** (any) [max: 500] - Fields to return (optional, comma-separated) (e.g., `summary,status,assignee`)
 
 
-**Example:**
 
-```typescript
-project = PROJ AND status = Open}
-```
 
 
 ---
@@ -79,7 +73,7 @@ Get issue details
 **Parameters:**
 
 
-- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
+- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
 
 
 
@@ -96,26 +90,20 @@ Create a new issue
 **Parameters:**
 
 
-- **`project`** (any) - {@min 1} {@max 50} Project key {@example PROJ}
+- **`project`** (any) [min: 1, max: 50] - Project key (e.g., `PROJ`)
 
-- **`summary`** (any) - {@min 1} {@max 200} Issue title {@example Login authentication fails for users}
+- **`summary`** (any) [min: 1, max: 200] - Issue title (e.g., `Login authentication fails for users`)
 
-- **`issueType`** (any) - {@min 1} {@max 50} Issue type {@example Bug}
+- **`issueType`** (any) [min: 1, max: 50] - Issue type (e.g., `Bug`)
 
-- **`description`** (any, optional) - {@max 5000} Issue description  {@example Steps to reproduce: 1. Navigate to login 2. Enter credentials}
+- **`description`** (any, optional) [max: 5000] - Issue description (e.g., `Steps to reproduce: 1. Navigate to login 2. Enter credentials`)
 
-- **`priority`** (any, optional) - {@max 50} Priority name  {@example High}
+- **`priority`** (any, optional) [max: 50] - Priority name (e.g., `High`)
 
-- **`assignee`** (any, optional) - {@max 100} Assignee account ID  {@example 5b10a2844c20165700ede21g}
-
-
+- **`assignee`** (any, optional) [max: 100] - Assignee account ID (e.g., `5b10a2844c20165700ede21g`)
 
 
-**Example:**
 
-```typescript
-PROJ}
-```
 
 
 ---
@@ -129,24 +117,18 @@ Update an issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
+- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
 
-- **`summary`** (any, optional) - {@min 1} {@max 200} New summary  {@example Updated: Login authentication fixed}
+- **`summary`** (any, optional) [min: 1, max: 200] - New summary (e.g., `Updated: Login authentication fixed`)
 
-- **`description`** (any, optional) - {@max 5000} New description  {@example Fixed by updating OAuth configuration}
+- **`description`** (any, optional) [max: 5000] - New description (e.g., `Fixed by updating OAuth configuration`)
 
-- **`priority`** (any, optional) - {@max 50} New priority  {@example Medium}
+- **`priority`** (any, optional) [max: 50] - New priority (e.g., `Medium`)
 
-- **`assignee`** (any, optional) - {@max 100} New assignee account ID  {@example 5b10a2844c20165700ede21g}
-
-
+- **`assignee`** (any, optional) [max: 100] - New assignee account ID (e.g., `5b10a2844c20165700ede21g`)
 
 
-**Example:**
 
-```typescript
-PROJ-123}
-```
 
 
 ---
@@ -160,18 +142,12 @@ Transition issue to new status
 **Parameters:**
 
 
-- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
+- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
 
-- **`transitionId`** (any) - {@min 1} {@max 50} Transition ID or name {@example 21}
-
-
+- **`transitionId`** (any) [min: 1, max: 50] - Transition ID or name (e.g., `21`)
 
 
-**Example:**
 
-```typescript
-PROJ-123}
-```
 
 
 ---
@@ -185,7 +161,7 @@ Get available transitions for issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
+- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
 
 
 
@@ -202,18 +178,12 @@ Add comment to issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
+- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
 
-- **`comment`** (any) - {@min 1} {@max 5000} Comment text {@example This issue has been resolved in the latest deployment}
-
-
+- **`comment`** (any) [min: 1, max: 5000] - Comment text (e.g., `This issue has been resolved in the latest deployment`)
 
 
-**Example:**
 
-```typescript
-PROJ-123}
-```
 
 
 ---
@@ -227,18 +197,12 @@ Get comments for issue
 **Parameters:**
 
 
-- **`issueKey`** (any) - {@min 1} {@max 50} Issue key {@example PROJ-123}
+- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
 
-- **`maxResults`** (any, optional) - {@min 1} {@max 100} Maximum number of comments
-
-
+- **`maxResults`** (any, optional) [min: 1, max: 100] - Maximum number of comments
 
 
-**Example:**
 
-```typescript
-PROJ-123}
-```
 
 
 ---
@@ -263,7 +227,7 @@ Get project details
 **Parameters:**
 
 
-- **`projectKey`** (any) - {@min 1} {@max 50} Project key {@example PROJ}
+- **`projectKey`** (any) [min: 1, max: 50] - Project key (e.g., `PROJ`)
 
 
 

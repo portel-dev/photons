@@ -71,18 +71,12 @@ Execute a SQL query
 **Parameters:**
 
 
-- **`sql`** (any) - {@min 1} {@max 10000} SQL query to execute (supports $1, $2, etc. for parameters) {@example SELECT * FROM users WHERE active = $1}
+- **`sql`** (any) [min: 1, max: 10000] - SQL query to execute (supports $1, $2, etc. for parameters) (e.g., `SELECT * FROM users WHERE active = $1`)
 
-- **`params`** (any, optional) - Query parameters array  {@example [true]}
-
-
+- **`params`** (any, optional) - Query parameters array (e.g., `[true]`)
 
 
-**Example:**
 
-```typescript
-SELECT * FROM users WHERE active = $1}
-```
 
 
 ---
@@ -96,7 +90,7 @@ Execute multiple SQL statements in a transaction
 **Parameters:**
 
 
-- **`statements`** (any) - {@min 1} Array of SQL statements with optional parameters {@example [{"sql":"INSERT INTO users (name) VALUES ($1)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + $1","params":[100]}]}
+- **`statements`** (any) [min: 1] - Array of SQL statements with optional parameters (e.g., `[{"sql":"INSERT INTO users (name) VALUES ($1)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + $1","params":[100]}]`)
 
 
 
@@ -113,7 +107,7 @@ List all tables in the database
 **Parameters:**
 
 
-- **`schema`** (any, optional) - {@max 63} Schema name  {@example public}
+- **`schema`** (any, optional) [max: 63] - Schema name (e.g., `public`)
 
 
 
@@ -130,18 +124,12 @@ Get table schema information
 **Parameters:**
 
 
-- **`table`** (any) - {@min 1} {@max 63} Table name {@example users}
+- **`table`** (any) [min: 1, max: 63] - Table name (e.g., `users`)
 
-- **`schema`** (any, optional) - {@max 63} Schema name  {@example public}
-
-
+- **`schema`** (any, optional) [max: 63] - Schema name (e.g., `public`)
 
 
-**Example:**
 
-```typescript
-users}
-```
 
 
 ---
@@ -155,18 +143,12 @@ List all indexes on a table
 **Parameters:**
 
 
-- **`table`** (any) - {@min 1} {@max 63} Table name {@example users}
+- **`table`** (any) [min: 1, max: 63] - Table name (e.g., `users`)
 
-- **`schema`** (any, optional) - {@max 63} Schema name  {@example public}
-
-
+- **`schema`** (any, optional) [max: 63] - Schema name (e.g., `public`)
 
 
-**Example:**
 
-```typescript
-users}
-```
 
 
 ---
@@ -180,20 +162,14 @@ Execute a SQL INSERT statement
 **Parameters:**
 
 
-- **`table`** (any) - {@min 1} {@max 63} Table name {@example users}
+- **`table`** (any) [min: 1, max: 63] - Table name (e.g., `users`)
 
-- **`data`** (any) - {@min 1} Object with column names as keys {@example {"name":"John","email":"john@example.com"}}
+- **`data`** (any) [min: 1] - Object with column names as keys (e.g., `{"name":"John","email":"john@example.com"}`)
 
-- **`returning`** (any, optional) - Column names to return  {@example ["id","created_at"]}
-
-
+- **`returning`** (any, optional) - Column names to return (e.g., `["id","created_at"]`)
 
 
-**Example:**
 
-```typescript
-users}
-```
 
 
 ---

@@ -41,11 +41,11 @@ Fetch a URL and convert to markdown
 **Parameters:**
 
 
-- **`url`** (any) - {@min 1} {@max 2000} {@format uri} The URL to fetch {@example https://example.com}
+- **`url`** (any) [min: 1, max: 2000, format: uri] - The URL to fetch (e.g., `https://example.com`)
 
-- **`max_length`** (any, optional) - {@min 1} {@max 50000} Maximum length of returned content
+- **`max_length`** (any, optional) [min: 1, max: 50000] - Maximum length of returned content
 
-- **`start_index`** (any, optional) - {@min 0} Start index for pagination
+- **`start_index`** (any, optional) [min: 0] - Start index for pagination
 
 - **`raw`** (any, optional) - Return raw HTML instead of markdown
 
@@ -53,12 +53,6 @@ Fetch a URL and convert to markdown
 
 
 
-
-**Example:**
-
-```typescript
-https://example.com}
-```
 
 
 ---
@@ -72,20 +66,14 @@ Fetch multiple URLs in parallel
 **Parameters:**
 
 
-- **`urls`** (any) - {@min 1} {@max 10} Array of URLs to fetch {@example ["https://example.com","https://example.org"]}
+- **`urls`** (any) [min: 1, max: 10] - Array of URLs to fetch (e.g., `["https://example.com","https://example.org"]`)
 
-- **`max_length`** (any, optional) - {@min 1} {@max 50000} Maximum length per URL
+- **`max_length`** (any, optional) [min: 1, max: 50000] - Maximum length per URL
 
 - **`readability`** (any, optional) - Extract main content using Readability
 
 
 
-
-**Example:**
-
-```typescript
-["https://example.com","https://example.org"]}
-```
 
 
 ---

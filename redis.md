@@ -52,7 +52,7 @@ Get value by key
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example user:123:session}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `user:123:session`)
 
 
 
@@ -69,20 +69,14 @@ Set key-value pair
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example user:123:name}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `user:123:name`)
 
-- **`value`** (any) - {@min 1} Value to store {@example John}
+- **`value`** (any) [min: 1] - Value to store (e.g., `John`)
 
-- **`ttl`** (any) - {@min 1} {@max 2592000} Time to live in seconds (optional, max 30 days) {@example 3600}
-
-
+- **`ttl`** (any) [min: 1, max: 2592000] - Time to live in seconds (optional, max 30 days) (e.g., `3600`)
 
 
-**Example:**
 
-```typescript
-user:123:name}
-```
 
 
 ---
@@ -96,7 +90,7 @@ Delete one or more keys
 **Parameters:**
 
 
-- **`keys`** (any) - {@min 1} Key name(s) to delete (string or array) {@example ["user:123","user:124"]}
+- **`keys`** (any) [min: 1] - Key name(s) to delete (string or array) (e.g., `["user:123","user:124"]`)
 
 
 
@@ -113,7 +107,7 @@ Check if key exists
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example user:123}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `user:123`)
 
 
 
@@ -130,7 +124,7 @@ Get all keys matching pattern
 **Parameters:**
 
 
-- **`pattern`** (any) - {@min 1} {@max 200} Key pattern {@example user:*}
+- **`pattern`** (any) [min: 1, max: 200] - Key pattern (e.g., `user:*`)
 
 
 
@@ -147,18 +141,12 @@ Increment numeric value
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example counter:page_views}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `counter:page_views`)
 
-- **`amount`** (any, optional) - {@min 1} Amount to increment by  {@example 5}
-
-
+- **`amount`** (any, optional) [min: 1] - Amount to increment by (e.g., `5`)
 
 
-**Example:**
 
-```typescript
-counter:page_views}
-```
 
 
 ---
@@ -172,18 +160,12 @@ Decrement numeric value
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example counter:stock}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `counter:stock`)
 
-- **`amount`** (any, optional) - {@min 1} Amount to decrement by  {@example 3}
-
-
+- **`amount`** (any, optional) [min: 1] - Amount to decrement by (e.g., `3`)
 
 
-**Example:**
 
-```typescript
-counter:stock}
-```
 
 
 ---
@@ -197,18 +179,12 @@ Set expiration time on key
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example session:123}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `session:123`)
 
-- **`seconds`** (any) - {@min 1} {@max 2592000} Seconds until expiration (max 30 days) {@example 3600}
-
-
+- **`seconds`** (any) [min: 1, max: 2592000] - Seconds until expiration (max 30 days) (e.g., `3600`)
 
 
-**Example:**
 
-```typescript
-session:123}
-```
 
 
 ---
@@ -222,7 +198,7 @@ Get time to live for key
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Key name {@example session:123}
+- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `session:123`)
 
 
 
@@ -239,18 +215,12 @@ Push value to list (left side)
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} List key name {@example queue:jobs}
+- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
 
-- **`values`** (any) - {@min 1} Array of values to push {@example ["job1","job2"]}
-
-
+- **`values`** (any) [min: 1] - Array of values to push (e.g., `["job1","job2"]`)
 
 
-**Example:**
 
-```typescript
-queue:jobs}
-```
 
 
 ---
@@ -264,18 +234,12 @@ Push value to list (right side)
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} List key name {@example queue:jobs}
+- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
 
-- **`values`** (any) - {@min 1} Array of values to push {@example ["job1","job2"]}
-
-
+- **`values`** (any) [min: 1] - Array of values to push (e.g., `["job1","job2"]`)
 
 
-**Example:**
 
-```typescript
-queue:jobs}
-```
 
 
 ---
@@ -289,7 +253,7 @@ Pop value from list (left side)
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} List key name {@example queue:jobs}
+- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
 
 
 
@@ -306,7 +270,7 @@ Pop value from list (right side)
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} List key name {@example queue:jobs}
+- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
 
 
 
@@ -323,7 +287,7 @@ Get list length
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} List key name {@example queue:jobs}
+- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
 
 
 
@@ -340,18 +304,12 @@ Get hash field value
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Hash key name {@example user:123}
+- **`key`** (any) [min: 1, max: 512] - Hash key name (e.g., `user:123`)
 
-- **`field`** (any) - {@min 1} {@max 200} Field name {@example name}
-
-
+- **`field`** (any) [min: 1, max: 200] - Field name (e.g., `name`)
 
 
-**Example:**
 
-```typescript
-user:123}
-```
 
 
 ---
@@ -365,20 +323,14 @@ Set hash field value
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Hash key name {@example user:123}
+- **`key`** (any) [min: 1, max: 512] - Hash key name (e.g., `user:123`)
 
-- **`field`** (any) - {@min 1} {@max 200} Field name {@example name}
+- **`field`** (any) [min: 1, max: 200] - Field name (e.g., `name`)
 
-- **`value`** (any) - {@min 1} Value to set {@example John}
-
-
+- **`value`** (any) [min: 1] - Value to set (e.g., `John`)
 
 
-**Example:**
 
-```typescript
-user:123}
-```
 
 
 ---
@@ -392,7 +344,7 @@ Get all fields and values in hash
 **Parameters:**
 
 
-- **`key`** (any) - {@min 1} {@max 512} Hash key name {@example user:123}
+- **`key`** (any) [min: 1, max: 512] - Hash key name (e.g., `user:123`)
 
 
 

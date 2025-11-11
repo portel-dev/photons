@@ -41,9 +41,9 @@ Post a message to a channel or user
 **Parameters:**
 
 
-- **`channel`** (any) - {@min 1} Channel name or ID {@example #general}
+- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
 
-- **`text`** (any) - {@min 1} Message text {@example Hello team!}
+- **`text`** (any) [min: 1] - Message text (e.g., `Hello team!`)
 
 - **`thread_ts`** (any, optional) - Thread timestamp to reply to
 
@@ -51,12 +51,6 @@ Post a message to a channel or user
 
 
 
-
-**Example:**
-
-```typescript
-#general}
-```
 
 
 ---
@@ -70,18 +64,12 @@ List all channels in the workspace
 **Parameters:**
 
 
-- **`types`** (any) - Channel types {@example public_channel}
+- **`types`** (any) - Channel types (e.g., `public_channel`)
 
-- **`limit`** (any, optional) - {@min 1} {@max 1000} Maximum number of channels to return
-
-
+- **`limit`** (any, optional) [min: 1, max: 1000] - Maximum number of channels to return
 
 
-**Example:**
 
-```typescript
-public_channel}
-```
 
 
 ---
@@ -95,7 +83,7 @@ Get channel information
 **Parameters:**
 
 
-- **`channel`** (any) - {@min 1} Channel name or ID {@example #general}
+- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
 
 
 
@@ -112,9 +100,9 @@ Get conversation history from a channel
 **Parameters:**
 
 
-- **`channel`** (any) - {@min 1} Channel name or ID {@example #general}
+- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
 
-- **`limit`** (any, optional) - {@min 1} {@max 100} Number of messages to retrieve
+- **`limit`** (any, optional) [min: 1, max: 100] - Number of messages to retrieve
 
 - **`oldest`** (any) - Start of time range (Unix timestamp)
 
@@ -122,12 +110,6 @@ Get conversation history from a channel
 
 
 
-
-**Example:**
-
-```typescript
-#general}
-```
 
 
 ---
@@ -141,20 +123,14 @@ Add a reaction to a message
 **Parameters:**
 
 
-- **`channel`** (any) - {@min 1} Channel name or ID {@example #general}
+- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
 
-- **`timestamp`** (any) - {@min 1} Message timestamp
+- **`timestamp`** (any) [min: 1] - Message timestamp
 
-- **`name`** (any) - {@min 1} Reaction emoji name (without colons) {@example thumbsup}
-
-
+- **`name`** (any) [min: 1] - Reaction emoji name (without colons) (e.g., `thumbsup`)
 
 
-**Example:**
 
-```typescript
-#general}
-```
 
 
 ---
@@ -168,11 +144,11 @@ Upload a file to a channel
 **Parameters:**
 
 
-- **`channel`** (any) - {@min 1} Channel name or ID {@example #general}
+- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
 
-- **`content`** (any) - {@min 1} File content (text)
+- **`content`** (any) [min: 1] - File content (text)
 
-- **`filename`** (any) - {@min 1} Filename {@example report.txt}
+- **`filename`** (any) [min: 1] - Filename (e.g., `report.txt`)
 
 - **`title`** (any, optional) - File title
 
@@ -180,12 +156,6 @@ Upload a file to a channel
 
 
 
-
-**Example:**
-
-```typescript
-#general}
-```
 
 
 ---
@@ -199,20 +169,14 @@ Search for messages in the workspace
 **Parameters:**
 
 
-- **`query`** (any) - {@min 1} Search query {@example deployment}
+- **`query`** (any) [min: 1] - Search query (e.g., `deployment`)
 
-- **`count`** (any, optional) - {@min 1} {@max 100} Number of results to return
+- **`count`** (any, optional) [min: 1, max: 100] - Number of results to return
 
-- **`sort`** (any) - Sort order {@example score}
-
-
+- **`sort`** (any) - Sort order (e.g., `score`)
 
 
-**Example:**
 
-```typescript
-deployment}
-```
 
 
 ---
