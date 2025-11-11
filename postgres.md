@@ -78,6 +78,12 @@ Execute a SQL query
 
 
 
+**Example:**
+
+```typescript
+query("SELECT * FROM users")
+```
+
 
 ---
 
@@ -112,6 +118,12 @@ List all tables in the database
 
 
 
+**Example:**
+
+```typescript
+tables()
+```
+
 
 ---
 
@@ -131,6 +143,12 @@ Get table schema information
 
 
 
+**Example:**
+
+```typescript
+describe("users")
+```
+
 
 ---
 
@@ -149,6 +167,12 @@ List all indexes on a table
 
 
 
+
+**Example:**
+
+```typescript
+indexes("users")
+```
 
 
 ---
@@ -170,6 +194,12 @@ Execute a SQL INSERT statement
 
 
 
+
+**Example:**
+
+```typescript
+insert("users", { name: "John", email: "john@example.com" })
+```
 
 
 ---

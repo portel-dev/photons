@@ -280,7 +280,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:01141301150fcf09555f32a3e8bc2bab058fb7cc92445785b279e39eb60ce321",
+      "hash": "sha256:9754fdacaf5430288278d5ed7672b0f5da0d393503b66e5a887e217fac927e2f",
       "tools": [
         "query",
         "transaction",

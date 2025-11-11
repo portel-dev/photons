@@ -9,7 +9,9 @@
  * - Data management: "Insert a new user record"
  * - Schema exploration: "List all tables in the database"
  *
- * Example: query({ sql: "SELECT * FROM users WHERE active = $1", params: [true] })
+ * Example: query("SELECT * FROM users WHERE active = $1", [true])
+ * Example: describe("users")
+ * Example: tables()
  *
  * Configuration:
  * - host: Database host (default: localhost)
@@ -84,14 +86,21 @@ export default class PostgreSQL {
    * Execute a SQL query
    * @param sql SQL query to execute (supports $1, $2, etc. for parameters)
    * @param params Query parameters array (optional)
+   * @example query("SELECT * FROM users")
+   * @example query("SELECT * FROM users WHERE active = $1", [true])
+   * @example query({ sql: "SELECT * FROM users WHERE id = $1", params: [123] })
    */
-  async query(params: { sql: string; params?: any[] }) {
+  async query(params: { sql: string; params?: any[] } | string, queryParams?: any[]) {
+    // Support both query("sql", params) and query({ sql, params })
+    const sql = typeof params === 'string' ? params : params.sql;
+    const sqlParams = typeof params === 'string' ? queryParams : params.params;
+
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
 
     try {
-      const result = await this.pool.query(params.sql, params.params);
+      const result = await this.pool.query(sql, sqlParams);
 
       return {
         success: true,
@@ -155,15 +164,19 @@ export default class PostgreSQL {
   /**
    * List all tables in the database
    * @param schema Schema name (default: public)
+   * @example tables()
+   * @example tables("public")
+   * @example tables({ schema: "public" })
    */
-  async tables(params?: { schema?: string }) {
+  async tables(params?: { schema?: string } | string) {
+    // Support both tables(), tables("schema"), and tables({ schema })
+    const schema = typeof params === 'string' ? params : (params?.schema || 'public');
+
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
 
     try {
-      const schema = params?.schema || 'public';
-
       const result = await this.pool.query(
         `SELECT table_name, table_type
          FROM information_schema.tables
@@ -192,15 +205,20 @@ export default class PostgreSQL {
    * Get table schema information
    * @param table Table name
    * @param schema Schema name (default: public)
+   * @example describe("users")
+   * @example describe("users", "public")
+   * @example describe({ table: "users", schema: "public" })
    */
-  async describe(params: { table: string; schema?: string }) {
+  async describe(params: { table: string; schema?: string } | string, schema?: string) {
+    // Support both describe("table", "schema") and describe({ table, schema })
+    const table = typeof params === 'string' ? params : params.table;
+    const schemaName = typeof params === 'string' ? (schema || 'public') : (params.schema || 'public');
+
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
 
     try {
-      const schema = params.schema || 'public';
-
       const result = await this.pool.query(
         `SELECT
            column_name,
@@ -211,20 +229,20 @@ export default class PostgreSQL {
          FROM information_schema.columns
          WHERE table_schema = $1 AND table_name = $2
          ORDER BY ordinal_position`,
-        [schema, params.table]
+        [schemaName, table]
       );
 
       if (result.rowCount === 0) {
         return {
           success: false,
-          error: `Table ${params.table} not found`,
+          error: `Table ${table} not found`,
         };
       }
 
       return {
         success: true,
-        table: params.table,
-        schema,
+        table,
+        schema: schemaName,
         columns: result.rows.map(row => ({
           name: row.column_name,
           type: row.data_type,
@@ -245,15 +263,20 @@ export default class PostgreSQL {
    * List all indexes on a table
    * @param table Table name
    * @param schema Schema name (default: public)
+   * @example indexes("users")
+   * @example indexes("users", "public")
+   * @example indexes({ table: "users", schema: "public" })
    */
-  async indexes(params: { table: string; schema?: string }) {
+  async indexes(params: { table: string; schema?: string } | string, schema?: string) {
+    // Support both indexes("table", "schema") and indexes({ table, schema })
+    const table = typeof params === 'string' ? params : params.table;
+    const schemaName = typeof params === 'string' ? (schema || 'public') : (params.schema || 'public');
+
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
 
     try {
-      const schema = params.schema || 'public';
-
       const result = await this.pool.query(
         `SELECT
            i.relname AS index_name,
@@ -267,7 +290,7 @@ export default class PostgreSQL {
          JOIN pg_namespace n ON n.oid = t.relnamespace
          WHERE t.relname = $1 AND n.nspname = $2
          ORDER BY i.relname, a.attnum`,
-        [params.table, schema]
+        [table, schemaName]
       );
 
       // Group by index name
@@ -302,24 +325,32 @@ export default class PostgreSQL {
    * @param table Table name
    * @param data Object with column names as keys
    * @param returning Column names to return (optional)
+   * @example insert("users", { name: "John", email: "john@example.com" })
+   * @example insert("users", { name: "John", email: "john@example.com" }, ["id"])
+   * @example insert({ table: "users", data: { name: "John" }, returning: ["id", "created_at"] })
    */
-  async insert(params: { table: string; data: Record<string, any>; returning?: string[] }) {
+  async insert(params: { table: string; data: Record<string, any>; returning?: string[] } | string, data?: Record<string, any>, returning?: string[]) {
+    // Support both insert("table", data, returning) and insert({ table, data, returning })
+    const table = typeof params === 'string' ? params : params.table;
+    const insertData = typeof params === 'string' ? data! : params.data;
+    const returningCols = typeof params === 'string' ? returning : params.returning;
+
     if (!this.pool) {
       return { success: false, error: 'Database not initialized' };
     }
 
     try {
-      const columns = Object.keys(params.data);
-      const values = Object.values(params.data);
+      const columns = Object.keys(insertData);
+      const values = Object.values(insertData);
       const placeholders = values.map((_, i) => `$${i + 1}`).join(', ');
 
-      const returning = params.returning
-        ? `RETURNING ${params.returning.join(', ')}`
+      const returningClause = returningCols
+        ? `RETURNING ${returningCols.join(', ')}`
         : '';
 
-      const sql = `INSERT INTO ${params.table} (${columns.join(', ')})
+      const sql = `INSERT INTO ${table} (${columns.join(', ')})
                    VALUES (${placeholders})
-                   ${returning}`;
+                   ${returningClause}`;
 
       const result = await this.pool.query(sql, values);
 
