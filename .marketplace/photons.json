@@ -31,7 +31,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../docker.photon.ts",
-      "hash": "sha256:0f2e417c416fa03238579ce3214e2ef53bd6d80fae28b19ad646889cf0681f20",
+      "hash": "sha256:72af0b3309e2ef6754a31acc0a2bcc3554b2780212eebf720e773e00647fdc5c",
       "tools": [
         "containers",
         "start",

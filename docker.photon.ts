@@ -90,7 +90,7 @@ export default class DockerMCP {
 
   /**
    * Start a container
-   * @param id Container ID or name
+   * @param id {@min 1} {@max 200} Container ID or name {@example my-container}
    */
   async start(params: { id: string }) {
     try {
@@ -112,8 +112,8 @@ export default class DockerMCP {
 
   /**
    * Stop a container
-   * @param id Container ID or name
-   * @param timeout Seconds to wait before killing (default: 10)
+   * @param id {@min 1} {@max 200} Container ID or name {@example my-container}
+   * @param timeout {@min 0} {@max 300} Seconds to wait before killing (default: 10)
    */
   async stop(params: { id: string; timeout?: number }) {
     try {
@@ -135,8 +135,8 @@ export default class DockerMCP {
 
   /**
    * Restart a container
-   * @param id Container ID or name
-   * @param timeout Seconds to wait before killing (default: 10)
+   * @param id {@min 1} {@max 200} Container ID or name {@example my-container}
+   * @param timeout {@min 0} {@max 300} Seconds to wait before killing (default: 10)
    */
   async restart(params: { id: string; timeout?: number }) {
     try {
@@ -158,7 +158,7 @@ export default class DockerMCP {
 
   /**
    * Remove a container
-   * @param id Container ID or name
+   * @param id {@min 1} {@max 200} Container ID or name {@example my-container}
    * @param force Force remove even if running (default: false)
    */
   async remove(params: { id: string; force?: boolean }) {
@@ -182,8 +182,8 @@ export default class DockerMCP {
 
   /**
    * Get container logs
-   * @param id Container ID or name
-   * @param tail Number of lines from the end of logs (default: 100)
+   * @param id {@min 1} {@max 200} Container ID or name {@example my-container}
+   * @param tail {@min 1} {@max 10000} Number of lines from the end of logs (default: 100)
    * @param timestamps Show timestamps (default: true)
    */
   async logs(params: { id: string; tail?: number; timestamps?: boolean }) {
@@ -244,8 +244,8 @@ export default class DockerMCP {
 
   /**
    * Pull an image
-   * @param name Image name (e.g., "nginx", "redis:alpine")
-   * @param tag Image tag (default: 'latest')
+   * @param name {@min 1} {@max 200} Image name {@example nginx}
+   * @param tag {@max 50} Image tag (default: 'latest') {@example alpine}
    */
   async pull(params: { name: string; tag?: string }) {
     try {
@@ -276,7 +276,7 @@ export default class DockerMCP {
 
   /**
    * Remove an image
-   * @param id Image ID or name
+   * @param id {@min 1} {@max 200} Image ID or name {@example nginx:alpine}
    * @param force Force removal even if used by containers (default: false)
    */
   async removeImage(params: { id: string; force?: boolean }) {
@@ -300,7 +300,7 @@ export default class DockerMCP {
 
   /**
    * Get container stats
-   * @param id Container ID or name
+   * @param id {@min 1} {@max 200} Container ID or name {@example my-container}
    */
   async stats(params: { id: string }) {
     try {

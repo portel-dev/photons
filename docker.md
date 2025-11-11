@@ -57,7 +57,7 @@ Start a container
 **Parameters:**
 
 
-- **`id`** (any) - Container ID or name
+- **`id`** (any) - {@min 1} {@max 200} Container ID or name {@example my-container}
 
 
 
@@ -74,12 +74,18 @@ Stop a container
 **Parameters:**
 
 
-- **`id`** (any) - Container ID or name
+- **`id`** (any) - {@min 1} {@max 200} Container ID or name {@example my-container}
 
-- **`timeout`** (any, optional) - Seconds to wait before killing
+- **`timeout`** (any, optional) - {@min 0} {@max 300} Seconds to wait before killing
 
 
 
+
+**Example:**
+
+```typescript
+my-container}
+```
 
 
 ---
@@ -93,12 +99,18 @@ Restart a container
 **Parameters:**
 
 
-- **`id`** (any) - Container ID or name
+- **`id`** (any) - {@min 1} {@max 200} Container ID or name {@example my-container}
 
-- **`timeout`** (any, optional) - Seconds to wait before killing
+- **`timeout`** (any, optional) - {@min 0} {@max 300} Seconds to wait before killing
 
 
 
+
+**Example:**
+
+```typescript
+my-container}
+```
 
 
 ---
@@ -112,12 +124,18 @@ Remove a container
 **Parameters:**
 
 
-- **`id`** (any) - Container ID or name
+- **`id`** (any) - {@min 1} {@max 200} Container ID or name {@example my-container}
 
 - **`force`** (any, optional) - Force remove even if running
 
 
 
+
+**Example:**
+
+```typescript
+my-container}
+```
 
 
 ---
@@ -131,14 +149,20 @@ Get container logs
 **Parameters:**
 
 
-- **`id`** (any) - Container ID or name
+- **`id`** (any) - {@min 1} {@max 200} Container ID or name {@example my-container}
 
-- **`tail`** (any, optional) - Number of lines from the end of logs
+- **`tail`** (any, optional) - {@min 1} {@max 10000} Number of lines from the end of logs
 
 - **`timestamps`** (any, optional) - Show timestamps
 
 
 
+
+**Example:**
+
+```typescript
+my-container}
+```
 
 
 ---
@@ -163,12 +187,18 @@ Pull an image
 **Parameters:**
 
 
-- **`name`** (any) - Image name (e.g., "nginx", "redis:alpine")
+- **`name`** (any) - {@min 1} {@max 200} Image name {@example nginx}
 
-- **`tag`** (any, optional) - Image tag
+- **`tag`** (any, optional) - {@max 50} Image tag  {@example alpine}
 
 
 
+
+**Example:**
+
+```typescript
+nginx}
+```
 
 
 ---
@@ -182,12 +212,18 @@ Remove an image
 **Parameters:**
 
 
-- **`id`** (any) - Image ID or name
+- **`id`** (any) - {@min 1} {@max 200} Image ID or name {@example nginx:alpine}
 
 - **`force`** (any, optional) - Force removal even if used by containers
 
 
 
+
+**Example:**
+
+```typescript
+nginx:alpine}
+```
 
 
 ---
@@ -201,7 +237,7 @@ Get container stats
 **Parameters:**
 
 
-- **`id`** (any) - Container ID or name
+- **`id`** (any) - {@min 1} {@max 200} Container ID or name {@example my-container}
 
 
 
