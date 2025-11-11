@@ -72,7 +72,7 @@ export default class KnowledgeGraph {
 
   /**
    * Create new entities with observations
-   * @param entities Array of entities with name, type, and observations
+   * @param entities {@min 1} Array of entities to create {@example [{"name":"project-api","entityType":"project","observations":["80% complete"]}]}
    */
   async entities(params: {
     entities: Array<{ name: string; entityType: string; observations: string[] }>;
@@ -114,7 +114,7 @@ export default class KnowledgeGraph {
 
   /**
    * Create relations between entities
-   * @param relations Array of relations with from, to, and type
+   * @param relations {@min 1} Array of relations {@example [{"from":"user","to":"project-api","relationType":"working_on"}]}
    */
   async relations(params: {
     relations: Array<{ from: string; to: string; relationType: string }>;
@@ -164,8 +164,8 @@ export default class KnowledgeGraph {
 
   /**
    * Add observations to an entity
-   * @param entityName Entity name
-   * @param observations Array of observation strings
+   * @param entityName {@min 1} Entity name {@example project-api}
+   * @param observations {@min 1} Array of observation strings {@example ["deployed to staging"]}
    */
   async observe(params: { entityName: string; observations: string[] }) {
     try {
@@ -194,7 +194,7 @@ export default class KnowledgeGraph {
 
   /**
    * Delete entities and their relations
-   * @param entityNames Array of entity names to delete
+   * @param entityNames {@min 1} Array of entity names to delete {@example ["old-project","archived-task"]}
    */
   async removeEntities(params: { entityNames: string[] }) {
     try {
@@ -231,8 +231,8 @@ export default class KnowledgeGraph {
 
   /**
    * Delete specific observations from an entity
-   * @param entityName Entity name
-   * @param observations Array of observations to delete (exact match)
+   * @param entityName {@min 1} Entity name
+   * @param observations {@min 1} Array of observations to delete (exact match)
    */
   async removeObservations(params: { entityName: string; observations: string[] }) {
     try {
@@ -266,7 +266,7 @@ export default class KnowledgeGraph {
 
   /**
    * Delete relations
-   * @param relations Array of relations to delete
+   * @param relations {@min 1} Array of relations to delete
    */
   async removeRelations(params: {
     relations: Array<{ from: string; to: string; relationType: string }>;
@@ -320,7 +320,7 @@ export default class KnowledgeGraph {
 
   /**
    * Search for entities matching a query
-   * @param query Search query (searches names, types, and observations)
+   * @param query {@min 1} Search query (searches names, types, and observations) {@example TypeScript}
    */
   async search(params: { query: string }) {
     try {
@@ -346,7 +346,7 @@ export default class KnowledgeGraph {
 
   /**
    * Open specific entities by name with their relations
-   * @param names Array of entity names to retrieve
+   * @param names {@min 1} Array of entity names to retrieve {@example ["user","project-api"]}
    */
   async nodes(params: { names: string[] }) {
     try {
@@ -407,8 +407,8 @@ export default class KnowledgeGraph {
 
   /**
    * Export knowledge graph in various formats
-   * @param format Export format (json or mermaid)
-   * @param path Optional file path to save the export
+   * @param format Export format {@example json}
+   * @param path Optional file path to save the export {@example ~/exports/graph.json}
    */
   async export(params: { format: 'json' | 'mermaid'; path?: string }) {
     try {

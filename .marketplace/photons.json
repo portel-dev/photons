@@ -189,7 +189,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../knowledge-graph.photon.ts",
-      "hash": "sha256:5a8cdf126fed197113c03486ef59e7b001f476917b68ef70c83478f23903a7ad",
+      "hash": "sha256:b2619d1ea9df7a7df0787bdff85ee7312e6ec87f4ff3bac3c24c25497c78cf77",
       "tools": [
         "entities",
         "relations",
