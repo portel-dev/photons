@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **26** tools:
+This photon provides **22** tools:
 
 
 ### `discover`
@@ -150,29 +150,7 @@ Get/set volume level
 **Parameters:**
 
 
-- **`level`** (any) - Volume level (0-100, optional - omit to get current volume)
-
-
-
-
-
----
-
-
-### `volUp`
-
-Increase volume by 1
-
-
-
-
-
----
-
-
-### `volDown`
-
-Decrease volume by 1
+- **`level`** (any) - Volume level (0-100), "+1" to increase, "-1" to decrease, or omit to get current
 
 
 
@@ -251,29 +229,7 @@ Get current channel, set channel, or list all channels
 **Parameters:**
 
 
-- **`number`** (any, optional) - Channel number to switch to , or "list" to list all
-
-
-
-
-
----
-
-
-### `chUp`
-
-Channel up
-
-
-
-
-
----
-
-
-### `chDown`
-
-Channel down
+- **`number`** (any) - Channel number to switch to, "+1" for next, "-1" for previous, "list" to list all, or omit to get current
 
 
 

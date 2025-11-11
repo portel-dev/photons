@@ -522,30 +522,23 @@ export default class LGRemote {
 
   /**
    * Get/set volume level
-   * @param level Volume level (0-100, optional - omit to get current volume)
+   * @param level Volume level (0-100), "+1" to increase, "-1" to decrease, or omit to get current
    */
-  async volume(params?: { level?: number } | number) {
-    // Support both volume(50) and volume({ level: 50 })
-    const level = typeof params === 'number' ? params : params?.level;
+  async volume(params?: { level?: number | string } | number | string) {
+    // Support multiple formats: volume(50), volume("+1"), volume({ level: 50 })
+    const level = typeof params === 'object' ? params?.level : params;
 
+    if (level === '+1' || level === '1' || level === 1) {
+      return this._request('ssap://audio/volumeUp');
+    }
+    if (level === '-1' || level === -1) {
+      return this._request('ssap://audio/volumeDown');
+    }
     if (level !== undefined) {
-      return this._request('ssap://audio/setVolume', { volume: level });
+      const numLevel = typeof level === 'string' ? parseInt(level) : level;
+      return this._request('ssap://audio/setVolume', { volume: numLevel });
     }
     return this._request('ssap://audio/getVolume');
-  }
-
-  /**
-   * Increase volume by 1
-   */
-  async volUp() {
-    return this._request('ssap://audio/volumeUp');
-  }
-
-  /**
-   * Decrease volume by 1
-   */
-  async volDown() {
-    return this._request('ssap://audio/volumeDown');
   }
 
   /**
@@ -601,14 +594,20 @@ export default class LGRemote {
 
   /**
    * Get current channel, set channel, or list all channels
-   * @param number Channel number to switch to (optional), or "list" to list all
+   * @param number Channel number to switch to, "+1" for next, "-1" for previous, "list" to list all, or omit to get current
    */
   async channel(params?: { number?: string; list?: boolean } | string) {
-    // Support both channel("5") and channel({ number: "5" })
+    // Support multiple formats: channel("5"), channel("+1"), channel("list")
     const number = typeof params === 'string' && params !== 'list' ? params :
                    typeof params === 'object' ? params?.number : undefined;
     const list = params === 'list' || (typeof params === 'object' && params?.list);
 
+    if (number === '+1' || number === '1') {
+      return this._request('ssap://tv/channelUp');
+    }
+    if (number === '-1') {
+      return this._request('ssap://tv/channelDown');
+    }
     if (number) {
       return this._request('ssap://tv/openChannel', { channelNumber: number });
     }
@@ -616,20 +615,6 @@ export default class LGRemote {
       return this._request('ssap://tv/getChannelList');
     }
     return this._request('ssap://tv/getCurrentChannel');
-  }
-
-  /**
-   * Channel up
-   */
-  async chUp() {
-    return this._request('ssap://tv/channelUp');
-  }
-
-  /**
-   * Channel down
-   */
-  async chDown() {
-    return this._request('ssap://tv/channelDown');
   }
 
   /**
