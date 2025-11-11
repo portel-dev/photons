@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **30** tools:
+This photon provides **32** tools:
 
 
 ### `discover`
@@ -429,6 +429,28 @@ Send remote button press
 
 
 - **`button`** (any) - Button name (HOME, BACK, UP, DOWN, LEFT, RIGHT, ENTER, etc.)
+
+
+
+
+
+---
+
+
+### `getSystemInfo`
+
+Get TV system information (model, firmware, etc.)
+
+
+
+
+
+---
+
+
+### `getSoftwareInfo`
+
+Get current software/firmware information
 
 
 

@@ -724,6 +724,22 @@ export default class LGRemote {
     }
   }
 
+  /**
+   * Get TV system information (model, firmware, etc.)
+   */
+  async getSystemInfo() {
+    return this._request('luna://com.webos.service.tv.systemproperty/getSystemInfo', {
+      keys: ['modelName', 'firmwareVersion', 'sdkVersion', 'UHD'],
+    });
+  }
+
+  /**
+   * Get current software/firmware information
+   */
+  async getSoftwareInfo() {
+    return this._request('ssap://com.webos.service.update/getCurrentSWInformation');
+  }
+
   // Private methods
 
   private _sendRegister(clientKey?: string) {
