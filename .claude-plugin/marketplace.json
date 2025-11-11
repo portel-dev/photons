@@ -190,6 +190,24 @@
       }
     },
     {
+      "name": "lg-remote",
+      "description": "LG Remote - Control LG WebOS TVs",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "lg-remote": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "lg-remote"
+          ]
+        }
+      }
+    },
+    {
       "name": "math",
       "description": "Math Photon MCP - Advanced math expression evaluator",
       "source": "./",
