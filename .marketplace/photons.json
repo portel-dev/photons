@@ -256,7 +256,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../mongodb.photon.ts",
-      "hash": "sha256:d97f4d2fe9b1ddd0b8e1a66005c50950ca04c17c5c74c11fbef4a5830f98cc86",
+      "hash": "sha256:2d447f717db4588465608e414a90dd043c37960f24ccf87f7263564e9aea21b2",
       "tools": [
         "find",
         "findOne",

@@ -46,16 +46,22 @@ Find documents in a collection
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter (MongoDB query object)
+- **`filter`** (any) - Query filter (MongoDB query object) {@example {"age":{"$gt":25}}}
 
-- **`limit`** (any, optional) - Maximum number of documents to return
+- **`limit`** (any, optional) - {@min 1} {@max 1000} Maximum number of documents to return
 
-- **`sort`** (any) - Sort specification (e.g., { age: -1 } for descending)
+- **`sort`** (any) - Sort specification {@example {"age":-1}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -69,12 +75,18 @@ Find a single document
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter (MongoDB query object)
+- **`filter`** (any) - {@min 1} Query filter (MongoDB query object) {@example {"email":"user@example.com"}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -88,12 +100,18 @@ Insert a document
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`document`** (any) - Document to insert
+- **`document`** (any) - {@min 1} Document to insert {@example {"name":"John","email":"john@example.com","age":30}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -107,12 +125,18 @@ Insert multiple documents
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`documents`** (any) - Array of documents to insert
+- **`documents`** (any) - {@min 1} Array of documents to insert {@example [{"name":"John"},{"name":"Jane"}]}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -126,16 +150,22 @@ Update a document
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter to match documents
+- **`filter`** (any) - {@min 1} Query filter to match documents {@example {"email":"user@example.com"}}
 
-- **`update`** (any) - Update operations (e.g., { $set: { name: "John" } })
+- **`update`** (any) - {@min 1} Update operations {@example {"$set":{"name":"John"}}}
 
 - **`upsert`** (any, optional) - Create document if it doesn't exist
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -149,14 +179,20 @@ Update multiple documents
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter to match documents
+- **`filter`** (any) - {@min 1} Query filter to match documents {@example {"age":{"$gt":25}}}
 
-- **`update`** (any) - Update operations
+- **`update`** (any) - {@min 1} Update operations {@example {"$inc":{"loginCount":1}}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -170,12 +206,18 @@ Delete a document
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter to match document
+- **`filter`** (any) - {@min 1} Query filter to match document {@example {"email":"user@example.com"}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -189,12 +231,18 @@ Delete multiple documents
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter to match documents
+- **`filter`** (any) - {@min 1} Query filter to match documents {@example {"status":"inactive"}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -208,12 +256,18 @@ Run aggregation pipeline
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example orders}
 
-- **`pipeline`** (any) - Aggregation pipeline array (e.g., [{ $match: {...} }, { $group: {...} }])
+- **`pipeline`** (any) - {@min 1} Aggregation pipeline array {@example [{"$match":{"status":"completed"}},{"$group":{"_id":"$customerId","total":{"$sum":"$amount"}}}]}
 
 
 
+
+**Example:**
+
+```typescript
+orders}
+```
 
 
 ---
@@ -227,12 +281,18 @@ Count documents matching filter
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`filter`** (any) - Query filter (optional, counts all if omitted)
+- **`filter`** (any) - Query filter (optional, counts all if omitted) {@example {"status":"active"}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -257,14 +317,20 @@ Create an index on a collection
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`keys`** (any) - Index specification (e.g., { email: 1 } for ascending)
+- **`keys`** (any) - {@min 1} Index specification {@example {"email":1}}
 
 - **`unique`** (any, optional) - Create unique index
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---
@@ -278,14 +344,20 @@ Get distinct values for a field
 **Parameters:**
 
 
-- **`collection`** (any) - Collection name
+- **`collection`** (any) - {@min 1} {@max 120} Collection name {@example users}
 
-- **`field`** (any) - Field name to get distinct values from
+- **`field`** (any) - {@min 1} {@max 200} Field name to get distinct values from {@example country}
 
-- **`filter`** (any) - Optional query filter
+- **`filter`** (any) - Optional query filter {@example {"status":"active"}}
 
 
 
+
+**Example:**
+
+```typescript
+users}
+```
 
 
 ---

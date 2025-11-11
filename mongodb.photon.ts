@@ -66,10 +66,10 @@ export default class MongoDB {
 
   /**
    * Find documents in a collection
-   * @param collection Collection name
-   * @param filter Query filter (MongoDB query object)
-   * @param limit Maximum number of documents to return (default: 10)
-   * @param sort Sort specification (e.g., { age: -1 } for descending)
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter Query filter (MongoDB query object) {@example {"age":{"$gt":25}}}
+   * @param limit {@min 1} {@max 1000} Maximum number of documents to return (default: 10)
+   * @param sort Sort specification {@example {"age":-1}}
    */
   async find(params: { collection: string; filter?: object; limit?: number; sort?: object }) {
     try {
@@ -101,8 +101,8 @@ export default class MongoDB {
 
   /**
    * Find a single document
-   * @param collection Collection name
-   * @param filter Query filter (MongoDB query object)
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter {@min 1} Query filter (MongoDB query object) {@example {"email":"user@example.com"}}
    */
   async findOne(params: { collection: string; filter: object }) {
     try {
@@ -131,8 +131,8 @@ export default class MongoDB {
 
   /**
    * Insert a document
-   * @param collection Collection name
-   * @param document Document to insert
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param document {@min 1} Document to insert {@example {"name":"John","email":"john@example.com","age":30}}
    */
   async insertOne(params: { collection: string; document: object }) {
     try {
@@ -155,8 +155,8 @@ export default class MongoDB {
 
   /**
    * Insert multiple documents
-   * @param collection Collection name
-   * @param documents Array of documents to insert
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param documents {@min 1} Array of documents to insert {@example [{"name":"John"},{"name":"Jane"}]}
    */
   async insertMany(params: { collection: string; documents: object[] }) {
     try {
@@ -180,9 +180,9 @@ export default class MongoDB {
 
   /**
    * Update a document
-   * @param collection Collection name
-   * @param filter Query filter to match documents
-   * @param update Update operations (e.g., { $set: { name: "John" } })
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter {@min 1} Query filter to match documents {@example {"email":"user@example.com"}}
+   * @param update {@min 1} Update operations {@example {"$set":{"name":"John"}}}
    * @param upsert Create document if it doesn't exist (default: false)
    */
   async updateOne(params: { collection: string; filter: object; update: object; upsert?: boolean }) {
@@ -215,9 +215,9 @@ export default class MongoDB {
 
   /**
    * Update multiple documents
-   * @param collection Collection name
-   * @param filter Query filter to match documents
-   * @param update Update operations
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter {@min 1} Query filter to match documents {@example {"age":{"$gt":25}}}
+   * @param update {@min 1} Update operations {@example {"$inc":{"loginCount":1}}}
    */
   async updateMany(params: { collection: string; filter: object; update: object }) {
     try {
@@ -241,8 +241,8 @@ export default class MongoDB {
 
   /**
    * Delete a document
-   * @param collection Collection name
-   * @param filter Query filter to match document
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter {@min 1} Query filter to match document {@example {"email":"user@example.com"}}
    */
   async removeOne(params: { collection: string; filter: object }) {
     try {
@@ -266,8 +266,8 @@ export default class MongoDB {
 
   /**
    * Delete multiple documents
-   * @param collection Collection name
-   * @param filter Query filter to match documents
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter {@min 1} Query filter to match documents {@example {"status":"inactive"}}
    */
   async removeMany(params: { collection: string; filter: object }) {
     try {
@@ -290,8 +290,8 @@ export default class MongoDB {
 
   /**
    * Run aggregation pipeline
-   * @param collection Collection name
-   * @param pipeline Aggregation pipeline array (e.g., [{ $match: {...} }, { $group: {...} }])
+   * @param collection {@min 1} {@max 120} Collection name {@example orders}
+   * @param pipeline {@min 1} Aggregation pipeline array {@example [{"$match":{"status":"completed"}},{"$group":{"_id":"$customerId","total":{"$sum":"$amount"}}}]}
    */
   async aggregate(params: { collection: string; pipeline: object[] }) {
     try {
@@ -314,8 +314,8 @@ export default class MongoDB {
 
   /**
    * Count documents matching filter
-   * @param collection Collection name
-   * @param filter Query filter (optional, counts all if omitted)
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param filter Query filter (optional, counts all if omitted) {@example {"status":"active"}}
    */
   async count(params: { collection: string; filter?: object }) {
     try {
@@ -361,8 +361,8 @@ export default class MongoDB {
 
   /**
    * Create an index on a collection
-   * @param collection Collection name
-   * @param keys Index specification (e.g., { email: 1 } for ascending)
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param keys {@min 1} Index specification {@example {"email":1}}
    * @param unique Create unique index (default: false)
    */
   async index(params: { collection: string; keys: object; unique?: boolean }) {
@@ -388,9 +388,9 @@ export default class MongoDB {
 
   /**
    * Get distinct values for a field
-   * @param collection Collection name
-   * @param field Field name to get distinct values from
-   * @param filter Optional query filter
+   * @param collection {@min 1} {@max 120} Collection name {@example users}
+   * @param field {@min 1} {@max 200} Field name to get distinct values from {@example country}
+   * @param filter Optional query filter {@example {"status":"active"}}
    */
   async distinct(params: { collection: string; field: string; filter?: object }) {
     try {
