@@ -71,7 +71,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../fetch.photon.ts",
-      "hash": "sha256:38461538fafd748b18884f87848cf2acf041ed35ebd36d162620d40303179c95",
+      "hash": "sha256:70e09ec4d31030c5fc4c7fd5844a00937b25ef0dbb09a1cd80ac8ab85e035eb9",
       "tools": [
         "fetch",
         "batch"

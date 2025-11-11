@@ -47,9 +47,9 @@ export default class Fetch {
 
   /**
    * Fetch a URL and convert to markdown
-   * @param url The URL to fetch
-   * @param max_length Maximum length of returned content (default: 5000)
-   * @param start_index Start index for pagination (default: 0)
+   * @param url {@min 1} {@pattern ^https?://} The URL to fetch {@example https://example.com}
+   * @param max_length {@min 1} {@max 50000} Maximum length of returned content (default: 5000)
+   * @param start_index {@min 0} Start index for pagination (default: 0)
    * @param raw Return raw HTML instead of markdown (default: false)
    * @param readability Extract main content using Readability (default: true)
    */
@@ -160,8 +160,8 @@ export default class Fetch {
 
   /**
    * Fetch multiple URLs in parallel
-   * @param urls Array of URLs to fetch
-   * @param max_length Maximum length per URL (default: 5000)
+   * @param urls {@min 1} {@max 10} Array of URLs to fetch {@example ["https://example.com","https://example.org"]}
+   * @param max_length {@min 1} {@max 50000} Maximum length per URL (default: 5000)
    * @param readability Extract main content using Readability (default: true)
    */
   async batch(params: { urls: string[]; max_length?: number; readability?: boolean }) {
