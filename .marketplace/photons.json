@@ -9,7 +9,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../aws-s3.photon.ts",
-      "hash": "sha256:194c4329827a1721e66a83740068a82b53d1946d0c0e1ab16378aff379bcafe6",
+      "hash": "sha256:86252f54192c14f5e13798ff73581073aaf5bff2150ffea800d46644895f1c06",
       "tools": [
         "upload",
         "download",

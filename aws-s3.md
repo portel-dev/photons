@@ -52,18 +52,24 @@ Upload object to bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`key`** (any) - Object key (file path)
+- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
 
-- **`content`** (any) - Content to upload (string or base64)
+- **`content`** (any) - {@min 1} Content to upload (string or base64) {@example Hello World}
 
-- **`contentType`** (any) - MIME type (optional, e.g., "text/plain", "image/png")
+- **`contentType`** (any, optional) - {@max 100} MIME type  {@example text/plain}
 
-- **`encoding`** (any) - Content encoding (optional, e.g., "base64" for binary files)
+- **`encoding`** (any, optional) - {@max 20} Content encoding  {@example base64}
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -77,14 +83,20 @@ Download object from bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`key`** (any) - Object key (file path)
+- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
 
-- **`encoding`** (any) - Return encoding (optional, "base64" for binary files)
+- **`encoding`** (any) - {@max 20} Return encoding (optional, "base64" for binary files) {@example base64}
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -98,14 +110,20 @@ List objects in bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`prefix`** (any, optional) - Filter by key prefix
+- **`prefix`** (any, optional) - {@max 1024} Filter by key prefix  {@example documents/}
 
-- **`maxKeys`** (any, optional) - Maximum number of objects to return
+- **`maxKeys`** (any, optional) - {@min 1} {@max 1000} Maximum number of objects to return
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -119,12 +137,18 @@ Delete object from bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`key`** (any) - Object key (file path)
+- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/old-report.pdf}
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -138,12 +162,18 @@ Delete multiple objects from bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`keys`** (any) - Array of object keys to delete
+- **`keys`** (any) - {@min 1} Array of object keys to delete {@example ["old/file1.txt","old/file2.txt"]}
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -157,12 +187,18 @@ Get object metadata
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`key`** (any) - Object key (file path)
+- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -176,16 +212,22 @@ Copy object within S3
 **Parameters:**
 
 
-- **`sourceBucket`** (any) - Source bucket name
+- **`sourceBucket`** (any) - {@min 1} {@max 63} Source bucket name {@example my-source-bucket}
 
-- **`sourceKey`** (any) - Source object key
+- **`sourceKey`** (any) - {@min 1} {@max 1024} Source object key {@example documents/original.pdf}
 
-- **`destinationBucket`** (any) - Destination bucket name
+- **`destinationBucket`** (any) - {@min 1} {@max 63} Destination bucket name {@example my-dest-bucket}
 
-- **`destinationKey`** (any) - Destination object key
+- **`destinationKey`** (any) - {@min 1} {@max 1024} Destination object key {@example backups/copy.pdf}
 
 
 
+
+**Example:**
+
+```typescript
+my-source-bucket}
+```
 
 
 ---
@@ -199,16 +241,22 @@ Generate presigned URL for object access
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-app-bucket}
 
-- **`key`** (any) - Object key (file path)
+- **`key`** (any) - {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
 
-- **`expiresIn`** (any, optional) - Expiration time in seconds
+- **`expiresIn`** (any, optional) - {@min 1} {@max 604800} Expiration time in seconds
 
-- **`operation`** (any, optional) - Operation type
+- **`operation`** (any, optional) - {@max 10} Operation type  {@example get}
 
 
 
+
+**Example:**
+
+```typescript
+my-app-bucket}
+```
 
 
 ---
@@ -233,7 +281,7 @@ Create a new bucket
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name (must be globally unique)
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name (must be globally unique) {@example my-new-app-bucket-2024}
 
 
 
@@ -250,7 +298,7 @@ Delete a bucket (must be empty)
 **Parameters:**
 
 
-- **`bucket`** (any) - Bucket name
+- **`bucket`** (any) - {@min 1} {@max 63} Bucket name {@example my-old-bucket}
 
 
 

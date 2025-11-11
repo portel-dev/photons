@@ -76,11 +76,11 @@ export default class AwsS3 {
 
   /**
    * Upload object to bucket
-   * @param bucket Bucket name
-   * @param key Object key (file path)
-   * @param content Content to upload (string or base64)
-   * @param contentType MIME type (optional, e.g., "text/plain", "image/png")
-   * @param encoding Content encoding (optional, e.g., "base64" for binary files)
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param key {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
+   * @param content {@min 1} Content to upload (string or base64) {@example Hello World}
+   * @param contentType {@max 100} MIME type (optional) {@example text/plain}
+   * @param encoding {@max 20} Content encoding (optional) {@example base64}
    */
   async upload(params: {
     bucket: string;
@@ -120,9 +120,9 @@ export default class AwsS3 {
 
   /**
    * Download object from bucket
-   * @param bucket Bucket name
-   * @param key Object key (file path)
-   * @param encoding Return encoding (optional, "base64" for binary files)
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param key {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
+   * @param encoding {@max 20} Return encoding (optional, "base64" for binary files) {@example base64}
    */
   async download(params: { bucket: string; key: string; encoding?: string }) {
     try {
@@ -170,9 +170,9 @@ export default class AwsS3 {
 
   /**
    * List objects in bucket
-   * @param bucket Bucket name
-   * @param prefix Filter by key prefix (optional)
-   * @param maxKeys Maximum number of objects to return (default: 1000)
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param prefix {@max 1024} Filter by key prefix (optional) {@example documents/}
+   * @param maxKeys {@min 1} {@max 1000} Maximum number of objects to return (default: 1000)
    */
   async list(params: { bucket: string; prefix?: string; maxKeys?: number }) {
     try {
@@ -207,8 +207,8 @@ export default class AwsS3 {
 
   /**
    * Delete object from bucket
-   * @param bucket Bucket name
-   * @param key Object key (file path)
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param key {@min 1} {@max 1024} Object key (file path) {@example documents/old-report.pdf}
    */
   async remove(params: { bucket: string; key: string }) {
     try {
@@ -235,8 +235,8 @@ export default class AwsS3 {
 
   /**
    * Delete multiple objects from bucket
-   * @param bucket Bucket name
-   * @param keys Array of object keys to delete
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param keys {@min 1} Array of object keys to delete {@example ["old/file1.txt","old/file2.txt"]}
    */
   async removeMany(params: { bucket: string; keys: string[] }) {
     try {
@@ -266,8 +266,8 @@ export default class AwsS3 {
 
   /**
    * Get object metadata
-   * @param bucket Bucket name
-   * @param key Object key (file path)
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param key {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
    */
   async metadata(params: { bucket: string; key: string }) {
     try {
@@ -298,10 +298,10 @@ export default class AwsS3 {
 
   /**
    * Copy object within S3
-   * @param sourceBucket Source bucket name
-   * @param sourceKey Source object key
-   * @param destinationBucket Destination bucket name
-   * @param destinationKey Destination object key
+   * @param sourceBucket {@min 1} {@max 63} Source bucket name {@example my-source-bucket}
+   * @param sourceKey {@min 1} {@max 1024} Source object key {@example documents/original.pdf}
+   * @param destinationBucket {@min 1} {@max 63} Destination bucket name {@example my-dest-bucket}
+   * @param destinationKey {@min 1} {@max 1024} Destination object key {@example backups/copy.pdf}
    */
   async copy(params: {
     sourceBucket: string;
@@ -334,10 +334,10 @@ export default class AwsS3 {
 
   /**
    * Generate presigned URL for object access
-   * @param bucket Bucket name
-   * @param key Object key (file path)
-   * @param expiresIn Expiration time in seconds (default: 3600)
-   * @param operation Operation type (default: "get", can be "get" or "put")
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-app-bucket}
+   * @param key {@min 1} {@max 1024} Object key (file path) {@example documents/report.pdf}
+   * @param expiresIn {@min 1} {@max 604800} Expiration time in seconds (default: 3600)
+   * @param operation {@max 10} Operation type (default: "get") {@example get}
    */
   async presign(params: {
     bucket: string;
@@ -401,7 +401,7 @@ export default class AwsS3 {
 
   /**
    * Create a new bucket
-   * @param bucket Bucket name (must be globally unique)
+   * @param bucket {@min 1} {@max 63} Bucket name (must be globally unique) {@example my-new-app-bucket-2024}
    */
   async bucket(params: { bucket: string }) {
     try {
@@ -433,7 +433,7 @@ export default class AwsS3 {
 
   /**
    * Delete a bucket (must be empty)
-   * @param bucket Bucket name
+   * @param bucket {@min 1} {@max 63} Bucket name {@example my-old-bucket}
    */
   async removeBucket(params: { bucket: string }) {
     try {
