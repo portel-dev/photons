@@ -51,6 +51,19 @@ interface DiscoveredTV {
   location?: string;
 }
 
+/**
+ * Supported remote control button names
+ */
+type ButtonName =
+  | 'HOME' | 'BACK' | 'EXIT'
+  | 'UP' | 'DOWN' | 'LEFT' | 'RIGHT' | 'ENTER' | 'CLICK'
+  | 'RED' | 'GREEN' | 'YELLOW' | 'BLUE'
+  | 'CHANNEL_UP' | 'CHANNEL_DOWN'
+  | 'VOLUME_UP' | 'VOLUME_DOWN'
+  | 'PLAY' | 'PAUSE' | 'STOP' | 'REWIND' | 'FAST_FORWARD'
+  | 'ASTERISK'
+  | 'all';
+
 const REGISTRATION_MANIFEST = {
   manifestVersion: 1,
   appVersion: '1.1',
@@ -667,11 +680,14 @@ export default class LGRemote {
    * Send remote button press or list supported buttons
    * @param button Button name or "all" to list supported buttons
    *
-   * Supported buttons: HOME, BACK, EXIT, UP, DOWN, LEFT, RIGHT, ENTER, CLICK,
-   * RED, GREEN, YELLOW, BLUE, CHANNEL_UP, CHANNEL_DOWN, VOLUME_UP, VOLUME_DOWN,
-   * PLAY, PAUSE, STOP, REWIND, FAST_FORWARD, ASTERISK
+   * Navigation: HOME, BACK, EXIT, UP, DOWN, LEFT, RIGHT, ENTER, CLICK
+   * Colors: RED, GREEN, YELLOW, BLUE
+   * Channel: CHANNEL_UP, CHANNEL_DOWN
+   * Volume: VOLUME_UP, VOLUME_DOWN
+   * Media: PLAY, PAUSE, STOP, REWIND, FAST_FORWARD
+   * Other: ASTERISK
    */
-  async button(params?: { button?: string } | string) {
+  async button(params?: { button?: ButtonName } | ButtonName) {
     // Support both button("HOME") and button({ button: "HOME" })
     const button = typeof params === 'string' ? params : params?.button;
 
