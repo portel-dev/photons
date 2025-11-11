@@ -312,13 +312,17 @@ Fast forward media
 
 ### `button`
 
-Send remote button press
+Send remote button press or list supported buttons
 
 
 **Parameters:**
 
 
-- **`button`** (any) - Button name (HOME, BACK, UP, DOWN, LEFT, RIGHT, ENTER, etc.)
+- **`button`** (any) - Button name or "all" to list supported buttons
+   *
+   * Supported buttons: HOME, BACK, EXIT, UP, DOWN, LEFT, RIGHT, ENTER, CLICK,
+   * RED, GREEN, YELLOW, BLUE, CHANNEL_UP, CHANNEL_DOWN, VOLUME_UP, VOLUME_DOWN,
+   * PLAY, PAUSE, STOP, REWIND, FAST_FORWARD, ASTERISK
 
 
 

@@ -664,12 +664,30 @@ export default class LGRemote {
   }
 
   /**
-   * Send remote button press
-   * @param button Button name (HOME, BACK, UP, DOWN, LEFT, RIGHT, ENTER, etc.)
+   * Send remote button press or list supported buttons
+   * @param button Button name or "all" to list supported buttons
+   *
+   * Supported buttons: HOME, BACK, EXIT, UP, DOWN, LEFT, RIGHT, ENTER, CLICK,
+   * RED, GREEN, YELLOW, BLUE, CHANNEL_UP, CHANNEL_DOWN, VOLUME_UP, VOLUME_DOWN,
+   * PLAY, PAUSE, STOP, REWIND, FAST_FORWARD, ASTERISK
    */
-  async button(params: { button: string } | string) {
+  async button(params?: { button?: string } | string) {
     // Support both button("HOME") and button({ button: "HOME" })
-    const button = typeof params === 'string' ? params : params.button;
+    const button = typeof params === 'string' ? params : params?.button;
+
+    // List all supported buttons
+    if (button === 'all' || !button) {
+      return {
+        success: true,
+        buttons: [
+          'HOME', 'BACK', 'EXIT', 'UP', 'DOWN', 'LEFT', 'RIGHT', 'ENTER', 'CLICK',
+          'RED', 'GREEN', 'YELLOW', 'BLUE',
+          'CHANNEL_UP', 'CHANNEL_DOWN', 'VOLUME_UP', 'VOLUME_DOWN',
+          'PLAY', 'PAUSE', 'STOP', 'REWIND', 'FAST_FORWARD', 'ASTERISK'
+        ],
+        message: 'List of supported remote control buttons'
+      };
+    }
 
     if (!this.pointerWs || this.pointerWs.readyState !== WebSocket.OPEN) {
       // Connect pointer socket
