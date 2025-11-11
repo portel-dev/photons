@@ -71,9 +71,9 @@ Execute a SQL query
 **Parameters:**
 
 
-- **`sql`** (any) - SQL query to execute (supports $1, $2, etc. for parameters)
+- **`sql`** (any) - {@min 1} {@max 10000} SQL query to execute (supports $1, $2, etc. for parameters) {@example SELECT * FROM users WHERE active = $1}
 
-- **`params`** (any, optional) - Query parameters array
+- **`params`** (any, optional) - Query parameters array  {@example [true]}
 
 
 
@@ -81,7 +81,7 @@ Execute a SQL query
 **Example:**
 
 ```typescript
-query("SELECT * FROM users")
+SELECT * FROM users WHERE active = $1}
 ```
 
 
@@ -96,7 +96,7 @@ Execute multiple SQL statements in a transaction
 **Parameters:**
 
 
-- **`statements`** (any) - Array of SQL statements with optional parameters
+- **`statements`** (any) - {@min 1} Array of SQL statements with optional parameters {@example [{"sql":"INSERT INTO users (name) VALUES ($1)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + $1","params":[100]}]}
 
 
 
@@ -113,16 +113,10 @@ List all tables in the database
 **Parameters:**
 
 
-- **`schema`** (any, optional) - Schema name
+- **`schema`** (any, optional) - {@max 63} Schema name  {@example public}
 
 
 
-
-**Example:**
-
-```typescript
-tables()
-```
 
 
 ---
@@ -136,9 +130,9 @@ Get table schema information
 **Parameters:**
 
 
-- **`table`** (any) - Table name
+- **`table`** (any) - {@min 1} {@max 63} Table name {@example users}
 
-- **`schema`** (any, optional) - Schema name
+- **`schema`** (any, optional) - {@max 63} Schema name  {@example public}
 
 
 
@@ -146,7 +140,7 @@ Get table schema information
 **Example:**
 
 ```typescript
-describe("users")
+users}
 ```
 
 
@@ -161,9 +155,9 @@ List all indexes on a table
 **Parameters:**
 
 
-- **`table`** (any) - Table name
+- **`table`** (any) - {@min 1} {@max 63} Table name {@example users}
 
-- **`schema`** (any, optional) - Schema name
+- **`schema`** (any, optional) - {@max 63} Schema name  {@example public}
 
 
 
@@ -171,7 +165,7 @@ List all indexes on a table
 **Example:**
 
 ```typescript
-indexes("users")
+users}
 ```
 
 
@@ -186,11 +180,11 @@ Execute a SQL INSERT statement
 **Parameters:**
 
 
-- **`table`** (any) - Table name
+- **`table`** (any) - {@min 1} {@max 63} Table name {@example users}
 
-- **`data`** (any) - Object with column names as keys
+- **`data`** (any) - {@min 1} Object with column names as keys {@example {"name":"John","email":"john@example.com"}}
 
-- **`returning`** (any, optional) - Column names to return
+- **`returning`** (any, optional) - Column names to return  {@example ["id","created_at"]}
 
 
 
@@ -198,7 +192,7 @@ Execute a SQL INSERT statement
 **Example:**
 
 ```typescript
-insert("users", { name: "John", email: "john@example.com" })
+users}
 ```
 
 

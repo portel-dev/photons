@@ -84,11 +84,8 @@ export default class PostgreSQL {
 
   /**
    * Execute a SQL query
-   * @param sql SQL query to execute (supports $1, $2, etc. for parameters)
-   * @param params Query parameters array (optional)
-   * @example query("SELECT * FROM users")
-   * @example query("SELECT * FROM users WHERE active = $1", [true])
-   * @example query({ sql: "SELECT * FROM users WHERE id = $1", params: [123] })
+   * @param sql {@min 1} {@max 10000} SQL query to execute (supports $1, $2, etc. for parameters) {@example SELECT * FROM users WHERE active = $1}
+   * @param params Query parameters array (optional) {@example [true]}
    */
   async query(params: { sql: string; params?: any[] } | string, queryParams?: any[]) {
     // Support both query("sql", params) and query({ sql, params })
@@ -122,7 +119,7 @@ export default class PostgreSQL {
 
   /**
    * Execute multiple SQL statements in a transaction
-   * @param statements Array of SQL statements with optional parameters
+   * @param statements {@min 1} Array of SQL statements with optional parameters {@example [{"sql":"INSERT INTO users (name) VALUES ($1)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + $1","params":[100]}]}
    */
   async transaction(params: { statements: Array<{ sql: string; params?: any[] }> }) {
     if (!this.pool) {
@@ -163,10 +160,7 @@ export default class PostgreSQL {
 
   /**
    * List all tables in the database
-   * @param schema Schema name (default: public)
-   * @example tables()
-   * @example tables("public")
-   * @example tables({ schema: "public" })
+   * @param schema {@max 63} Schema name (default: public) {@example public}
    */
   async tables(params?: { schema?: string } | string) {
     // Support both tables(), tables("schema"), and tables({ schema })
@@ -203,11 +197,8 @@ export default class PostgreSQL {
 
   /**
    * Get table schema information
-   * @param table Table name
-   * @param schema Schema name (default: public)
-   * @example describe("users")
-   * @example describe("users", "public")
-   * @example describe({ table: "users", schema: "public" })
+   * @param table {@min 1} {@max 63} Table name {@example users}
+   * @param schema {@max 63} Schema name (default: public) {@example public}
    */
   async describe(params: { table: string; schema?: string } | string, schema?: string) {
     // Support both describe("table", "schema") and describe({ table, schema })
@@ -261,11 +252,8 @@ export default class PostgreSQL {
 
   /**
    * List all indexes on a table
-   * @param table Table name
-   * @param schema Schema name (default: public)
-   * @example indexes("users")
-   * @example indexes("users", "public")
-   * @example indexes({ table: "users", schema: "public" })
+   * @param table {@min 1} {@max 63} Table name {@example users}
+   * @param schema {@max 63} Schema name (default: public) {@example public}
    */
   async indexes(params: { table: string; schema?: string } | string, schema?: string) {
     // Support both indexes("table", "schema") and indexes({ table, schema })
@@ -322,12 +310,9 @@ export default class PostgreSQL {
 
   /**
    * Execute a SQL INSERT statement
-   * @param table Table name
-   * @param data Object with column names as keys
-   * @param returning Column names to return (optional)
-   * @example insert("users", { name: "John", email: "john@example.com" })
-   * @example insert("users", { name: "John", email: "john@example.com" }, ["id"])
-   * @example insert({ table: "users", data: { name: "John" }, returning: ["id", "created_at"] })
+   * @param table {@min 1} {@max 63} Table name {@example users}
+   * @param data {@min 1} Object with column names as keys {@example {"name":"John","email":"john@example.com"}}
+   * @param returning Column names to return (optional) {@example ["id","created_at"]}
    */
   async insert(params: { table: string; data: Record<string, any>; returning?: string[] } | string, data?: Record<string, any>, returning?: string[]) {
     // Support both insert("table", data, returning) and insert({ table, data, returning })
