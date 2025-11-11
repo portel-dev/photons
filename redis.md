@@ -78,6 +78,12 @@ Set key-value pair
 
 
 
+**Example:**
+
+```typescript
+set("user:123", "John", 3600)
+```
+
 
 ---
 
@@ -90,10 +96,16 @@ Delete one or more keys
 **Parameters:**
 
 
-- **`keys`** (any) - Array of key names to delete
+- **`keys`** (any) - Key name(s) to delete (string or array)
 
 
 
+
+**Example:**
+
+```typescript
+del("user:123")
+```
 
 
 ---
@@ -148,6 +160,12 @@ Increment numeric value
 
 
 
+**Example:**
+
+```typescript
+incr("counter", 5)
+```
+
 
 ---
 
@@ -166,6 +184,12 @@ Decrement numeric value
 
 
 
+
+**Example:**
+
+```typescript
+decr("counter", 3)
+```
 
 
 ---
@@ -217,10 +241,16 @@ Push value to list (left side)
 
 - **`key`** (any) - List key name
 
-- **`values`** (any) - Array of values to push
+- **`values`** (any) - Array of values to push or rest parameters
 
 
 
+
+**Example:**
+
+```typescript
+lpush("queue", "job1", "job2", "job3")
+```
 
 
 ---
@@ -236,10 +266,16 @@ Push value to list (right side)
 
 - **`key`** (any) - List key name
 
-- **`values`** (any) - Array of values to push
+- **`values`** (any) - Array of values to push or rest parameters
 
 
 
+
+**Example:**
+
+```typescript
+rpush("queue", "job1", "job2", "job3")
+```
 
 
 ---

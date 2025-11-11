@@ -85,9 +85,11 @@ export default class Redis {
    * Get value by key
    * @param key Key name
    */
-  async get(params: { key: string }) {
+  async get(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const value = await this.client.get(params.key);
+      const value = await this.client.get(key);
 
       if (value === null) {
         return {
@@ -98,7 +100,7 @@ export default class Redis {
 
       return {
         success: true,
-        key: params.key,
+        key,
         value,
       };
     } catch (error: any) {
@@ -114,19 +116,26 @@ export default class Redis {
    * @param key Key name
    * @param value Value to store
    * @param ttl Time to live in seconds (optional)
+   * @example set("user:123", "John", 3600)
+   * @example set("counter", "0")
    */
-  async set(params: { key: string; value: string; ttl?: number }) {
+  async set(params: { key: string; value: string; ttl?: number } | string, value?: string, ttl?: number) {
+    // Support both set("key", "value", ttl) and set({ key, value, ttl })
+    const key = typeof params === 'string' ? params : params.key;
+    const val = typeof params === 'string' ? value! : params.value;
+    const ttlValue = typeof params === 'string' ? ttl : params.ttl;
+
     try {
-      if (params.ttl) {
-        await this.client.setEx(params.key, params.ttl, params.value);
+      if (ttlValue) {
+        await this.client.setEx(key, ttlValue, val);
       } else {
-        await this.client.set(params.key, params.value);
+        await this.client.set(key, val);
       }
 
       return {
         success: true,
-        key: params.key,
-        ttl: params.ttl,
+        key,
+        ttl: ttlValue,
         message: 'Key set successfully',
       };
     } catch (error: any) {
@@ -139,11 +148,23 @@ export default class Redis {
 
   /**
    * Delete one or more keys
-   * @param keys Array of key names to delete
+   * @param keys Key name(s) to delete (string or array)
+   * @example del("user:123")
+   * @example del(["user:123", "user:124"])
    */
-  async del(params: { keys: string[] }) {
+  async del(params: { keys: string[] } | string | string[], ...additionalKeys: string[]) {
+    // Support del("key"), del(["key1", "key2"]), or del("key1", "key2", "key3")
+    let keys: string[];
+    if (typeof params === 'string') {
+      keys = [params, ...additionalKeys];
+    } else if (Array.isArray(params)) {
+      keys = params;
+    } else {
+      keys = params.keys;
+    }
+
     try {
-      const count = await this.client.del(params.keys);
+      const count = await this.client.del(keys);
 
       return {
         success: true,
@@ -162,13 +183,15 @@ export default class Redis {
    * Check if key exists
    * @param key Key name
    */
-  async exists(params: { key: string }) {
+  async exists(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const exists = await this.client.exists(params.key);
+      const exists = await this.client.exists(key);
 
       return {
         success: true,
-        key: params.key,
+        key,
         exists: exists === 1,
       };
     } catch (error: any) {
@@ -183,13 +206,15 @@ export default class Redis {
    * Get all keys matching pattern
    * @param pattern Key pattern (e.g., "user:*", "*session*")
    */
-  async keys(params: { pattern: string }) {
+  async keys(params: { pattern: string } | string) {
+    const pattern = typeof params === 'string' ? params : params.pattern;
+
     try {
-      const keys = await this.client.keys(params.pattern);
+      const keys = await this.client.keys(pattern);
 
       return {
         success: true,
-        pattern: params.pattern,
+        pattern,
         count: keys.length,
         keys,
       };
@@ -205,17 +230,21 @@ export default class Redis {
    * Increment numeric value
    * @param key Key name
    * @param amount Amount to increment by (default: 1)
+   * @example incr("counter", 5)
+   * @example incr("views")
    */
-  async incr(params: { key: string; amount?: number }) {
+  async incr(params: { key: string; amount?: number } | string, amount?: number) {
+    const key = typeof params === 'string' ? params : params.key;
+    const incrementAmount = typeof params === 'string' ? (amount || 1) : (params.amount || 1);
+
     try {
-      const amount = params.amount || 1;
-      const newValue = amount === 1
-        ? await this.client.incr(params.key)
-        : await this.client.incrBy(params.key, amount);
+      const newValue = incrementAmount === 1
+        ? await this.client.incr(key)
+        : await this.client.incrBy(key, incrementAmount);
 
       return {
         success: true,
-        key: params.key,
+        key,
         value: newValue,
       };
     } catch (error: any) {
@@ -230,17 +259,21 @@ export default class Redis {
    * Decrement numeric value
    * @param key Key name
    * @param amount Amount to decrement by (default: 1)
+   * @example decr("counter", 3)
+   * @example decr("stock")
    */
-  async decr(params: { key: string; amount?: number }) {
+  async decr(params: { key: string; amount?: number } | string, amount?: number) {
+    const key = typeof params === 'string' ? params : params.key;
+    const decrementAmount = typeof params === 'string' ? (amount || 1) : (params.amount || 1);
+
     try {
-      const amount = params.amount || 1;
-      const newValue = amount === 1
-        ? await this.client.decr(params.key)
-        : await this.client.decrBy(params.key, amount);
+      const newValue = decrementAmount === 1
+        ? await this.client.decr(key)
+        : await this.client.decrBy(key, decrementAmount);
 
       return {
         success: true,
-        key: params.key,
+        key,
         value: newValue,
       };
     } catch (error: any) {
@@ -255,10 +288,14 @@ export default class Redis {
    * Set expiration time on key
    * @param key Key name
    * @param seconds Seconds until expiration
+   * @example expire("session:123", 3600)
    */
-  async expire(params: { key: string; seconds: number }) {
+  async expire(params: { key: string; seconds: number } | string, seconds?: number) {
+    const key = typeof params === 'string' ? params : params.key;
+    const ttl = typeof params === 'string' ? seconds! : params.seconds;
+
     try {
-      const result = await this.client.expire(params.key, params.seconds);
+      const result = await this.client.expire(key, ttl);
 
       if (result === false) {
         return {
@@ -269,8 +306,8 @@ export default class Redis {
 
       return {
         success: true,
-        key: params.key,
-        ttl: params.seconds,
+        key,
+        ttl,
         message: 'Expiration set successfully',
       };
     } catch (error: any) {
@@ -284,10 +321,13 @@ export default class Redis {
   /**
    * Get time to live for key
    * @param key Key name
+   * @example ttl("session:123")
    */
-  async ttl(params: { key: string }) {
+  async ttl(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const ttl = await this.client.ttl(params.key);
+      const ttl = await this.client.ttl(key);
 
       let message;
       if (ttl === -2) {
@@ -300,7 +340,7 @@ export default class Redis {
 
       return {
         success: true,
-        key: params.key,
+        key,
         ttl,
         message,
       };
@@ -315,17 +355,37 @@ export default class Redis {
   /**
    * Push value to list (left side)
    * @param key List key name
-   * @param values Array of values to push
+   * @param values Array of values to push or rest parameters
+   * @example lpush("queue", "job1", "job2", "job3")
+   * @example lpush("queue", ["job1", "job2"])
    */
-  async lpush(params: { key: string; values: string[] }) {
+  async lpush(params: { key: string; values: string[] } | string, values?: string | string[], ...additionalValues: string[]) {
+    // Support lpush("key", "val1", "val2"), lpush("key", ["val1", "val2"]), or lpush({ key, values })
+    let key: string;
+    let vals: string[];
+
+    if (typeof params === 'string') {
+      key = params;
+      if (Array.isArray(values)) {
+        vals = values;
+      } else if (values !== undefined) {
+        vals = [values, ...additionalValues];
+      } else {
+        vals = [];
+      }
+    } else {
+      key = params.key;
+      vals = params.values;
+    }
+
     try {
-      const length = await this.client.lPush(params.key, params.values);
+      const length = await this.client.lPush(key, vals);
 
       return {
         success: true,
-        key: params.key,
+        key,
         length,
-        message: `${params.values.length} item(s) pushed to list`,
+        message: `${vals.length} item(s) pushed to list`,
       };
     } catch (error: any) {
       return {
@@ -338,17 +398,37 @@ export default class Redis {
   /**
    * Push value to list (right side)
    * @param key List key name
-   * @param values Array of values to push
+   * @param values Array of values to push or rest parameters
+   * @example rpush("queue", "job1", "job2", "job3")
+   * @example rpush("queue", ["job1", "job2"])
    */
-  async rpush(params: { key: string; values: string[] }) {
+  async rpush(params: { key: string; values: string[] } | string, values?: string | string[], ...additionalValues: string[]) {
+    // Support rpush("key", "val1", "val2"), rpush("key", ["val1", "val2"]), or rpush({ key, values })
+    let key: string;
+    let vals: string[];
+
+    if (typeof params === 'string') {
+      key = params;
+      if (Array.isArray(values)) {
+        vals = values;
+      } else if (values !== undefined) {
+        vals = [values, ...additionalValues];
+      } else {
+        vals = [];
+      }
+    } else {
+      key = params.key;
+      vals = params.values;
+    }
+
     try {
-      const length = await this.client.rPush(params.key, params.values);
+      const length = await this.client.rPush(key, vals);
 
       return {
         success: true,
-        key: params.key,
+        key,
         length,
-        message: `${params.values.length} item(s) pushed to list`,
+        message: `${vals.length} item(s) pushed to list`,
       };
     } catch (error: any) {
       return {
@@ -361,10 +441,13 @@ export default class Redis {
   /**
    * Pop value from list (left side)
    * @param key List key name
+   * @example lpop("queue")
    */
-  async lpop(params: { key: string }) {
+  async lpop(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const value = await this.client.lPop(params.key);
+      const value = await this.client.lPop(key);
 
       if (value === null) {
         return {
@@ -375,7 +458,7 @@ export default class Redis {
 
       return {
         success: true,
-        key: params.key,
+        key,
         value,
       };
     } catch (error: any) {
@@ -389,10 +472,13 @@ export default class Redis {
   /**
    * Pop value from list (right side)
    * @param key List key name
+   * @example rpop("queue")
    */
-  async rpop(params: { key: string }) {
+  async rpop(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const value = await this.client.rPop(params.key);
+      const value = await this.client.rPop(key);
 
       if (value === null) {
         return {
@@ -403,7 +489,7 @@ export default class Redis {
 
       return {
         success: true,
-        key: params.key,
+        key,
         value,
       };
     } catch (error: any) {
@@ -417,14 +503,17 @@ export default class Redis {
   /**
    * Get list length
    * @param key List key name
+   * @example llen("queue")
    */
-  async llen(params: { key: string }) {
+  async llen(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const length = await this.client.lLen(params.key);
+      const length = await this.client.lLen(key);
 
       return {
         success: true,
-        key: params.key,
+        key,
         length,
       };
     } catch (error: any) {
@@ -439,10 +528,14 @@ export default class Redis {
    * Get hash field value
    * @param key Hash key name
    * @param field Field name
+   * @example hget("user:123", "name")
    */
-  async hget(params: { key: string; field: string }) {
+  async hget(params: { key: string; field: string } | string, field?: string) {
+    const key = typeof params === 'string' ? params : params.key;
+    const fieldName = typeof params === 'string' ? field! : params.field;
+
     try {
-      const value = await this.client.hGet(params.key, params.field);
+      const value = await this.client.hGet(key, fieldName);
 
       if (value === null) {
         return {
@@ -453,8 +546,8 @@ export default class Redis {
 
       return {
         success: true,
-        key: params.key,
-        field: params.field,
+        key,
+        field: fieldName,
         value,
       };
     } catch (error: any) {
@@ -470,15 +563,20 @@ export default class Redis {
    * @param key Hash key name
    * @param field Field name
    * @param value Value to set
+   * @example hset("user:123", "name", "John")
    */
-  async hset(params: { key: string; field: string; value: string }) {
+  async hset(params: { key: string; field: string; value: string } | string, field?: string, value?: string) {
+    const key = typeof params === 'string' ? params : params.key;
+    const fieldName = typeof params === 'string' ? field! : params.field;
+    const val = typeof params === 'string' ? value! : params.value;
+
     try {
-      await this.client.hSet(params.key, params.field, params.value);
+      await this.client.hSet(key, fieldName, val);
 
       return {
         success: true,
-        key: params.key,
-        field: params.field,
+        key,
+        field: fieldName,
         message: 'Hash field set successfully',
       };
     } catch (error: any) {
@@ -492,14 +590,17 @@ export default class Redis {
   /**
    * Get all fields and values in hash
    * @param key Hash key name
+   * @example hgetall("user:123")
    */
-  async hgetall(params: { key: string }) {
+  async hgetall(params: { key: string } | string) {
+    const key = typeof params === 'string' ? params : params.key;
+
     try {
-      const hash = await this.client.hGetAll(params.key);
+      const hash = await this.client.hGetAll(key);
 
       return {
         success: true,
-        key: params.key,
+        key,
         count: Object.keys(hash).length,
         hash,
       };
