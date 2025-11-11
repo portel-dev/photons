@@ -211,7 +211,7 @@
       "author": "Photon (based on pokemote by mithileshchellappan)",
       "license": "MIT",
       "source": "../lg-remote.photon.ts",
-      "hash": "sha256:3905c0795b2daa66eb11cc85c5425b11fa0d9181676d9c800afbcc6d8a4d22be",
+      "hash": "sha256:d619f7134c612b6b9ae0807e2ec9d9b14df5b8931a1f8f25590920965b57ecb5",
       "tools": [
         "discover",
         "connect",
@@ -230,11 +230,11 @@
         "play",
         "pause",
         "stop",
-        "rw",
-        "ff",
-        "btn",
-        "info",
-        "swInfo"
+        "rewind",
+        "forward",
+        "button",
+        "systemInfo",
+        "softwareInfo"
       ]
     },
     {

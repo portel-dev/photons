@@ -288,7 +288,7 @@ Stop media
 ---
 
 
-### `rw`
+### `rewind`
 
 Rewind media
 
@@ -299,7 +299,7 @@ Rewind media
 ---
 
 
-### `ff`
+### `forward`
 
 Fast forward media
 
@@ -310,7 +310,7 @@ Fast forward media
 ---
 
 
-### `btn`
+### `button`
 
 Send remote button press
 
@@ -327,7 +327,7 @@ Send remote button press
 ---
 
 
-### `info`
+### `systemInfo`
 
 Get TV system information (model, firmware, etc.)
 
@@ -338,7 +338,7 @@ Get TV system information (model, firmware, etc.)
 ---
 
 
-### `swInfo`
+### `softwareInfo`
 
 Get current software/firmware information
 

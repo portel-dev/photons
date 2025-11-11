@@ -655,14 +655,14 @@ export default class LGRemote {
   /**
    * Rewind media
    */
-  async rw() {
+  async rewind() {
     return this._request('ssap://media.controls/rewind');
   }
 
   /**
    * Fast forward media
    */
-  async ff() {
+  async forward() {
     return this._request('ssap://media.controls/fastForward');
   }
 
@@ -670,8 +670,8 @@ export default class LGRemote {
    * Send remote button press
    * @param button Button name (HOME, BACK, UP, DOWN, LEFT, RIGHT, ENTER, etc.)
    */
-  async btn(params: { button: string } | string) {
-    // Support both btn("HOME") and btn({ button: "HOME" })
+  async button(params: { button: string } | string) {
+    // Support both button("HOME") and button({ button: "HOME" })
     const button = typeof params === 'string' ? params : params.button;
 
     if (!this.pointerWs || this.pointerWs.readyState !== WebSocket.OPEN) {
@@ -714,7 +714,7 @@ export default class LGRemote {
   /**
    * Get TV system information (model, firmware, etc.)
    */
-  async info() {
+  async systemInfo() {
     return this._request('luna://com.webos.service.tv.systemproperty/getSystemInfo', {
       keys: ['modelName', 'firmwareVersion', 'sdkVersion', 'UHD'],
     });
@@ -723,7 +723,7 @@ export default class LGRemote {
   /**
    * Get current software/firmware information
    */
-  async swInfo() {
+  async softwareInfo() {
     return this._request('ssap://com.webos.service.update/getCurrentSWInformation');
   }
 
