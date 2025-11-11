@@ -59,6 +59,12 @@ Read file contents
 
 
 
+**Example:**
+
+```typescript
+read("README.md")
+```
+
 
 ---
 
@@ -79,6 +85,12 @@ Write content to file
 
 
 
+
+**Example:**
+
+```typescript
+write("report.json", '{"name": "John"}')
+```
 
 
 ---
@@ -101,6 +113,12 @@ Append content to file
 
 
 
+**Example:**
+
+```typescript
+append("log.txt", "New log entry\n")
+```
+
 
 ---
 
@@ -117,6 +135,12 @@ Remove a file
 
 
 
+
+**Example:**
+
+```typescript
+remove("old-file.txt")
+```
 
 
 ---
@@ -137,6 +161,12 @@ Copy a file
 
 
 
+**Example:**
+
+```typescript
+copy("config.json", "config.backup.json")
+```
+
 
 ---
 
@@ -155,6 +185,12 @@ Move/rename a file
 
 
 
+
+**Example:**
+
+```typescript
+move("old-name.txt", "new-name.txt")
+```
 
 
 ---
@@ -175,6 +211,12 @@ List files in a directory
 
 
 
+**Example:**
+
+```typescript
+list()
+```
+
 
 ---
 
@@ -193,6 +235,12 @@ Create a directory
 
 
 
+
+**Example:**
+
+```typescript
+mkdir("new-folder")
+```
 
 
 ---
@@ -213,6 +261,12 @@ Remove a directory
 
 
 
+**Example:**
+
+```typescript
+rmdir("old-folder")
+```
+
 
 ---
 
@@ -230,6 +284,12 @@ Get file or directory information
 
 
 
+**Example:**
+
+```typescript
+info("README.md")
+```
+
 
 ---
 
@@ -246,6 +306,12 @@ Check if file or directory exists
 
 
 
+
+**Example:**
+
+```typescript
+exists("config.json")
+```
 
 
 ---
@@ -265,6 +331,12 @@ Search for files matching a pattern
 
 
 
+
+**Example:**
+
+```typescript
+search("*.txt")
+```
 
 
 ---
