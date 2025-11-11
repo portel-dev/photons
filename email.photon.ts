@@ -113,9 +113,9 @@ export default class Email {
 
   /**
    * Send an email
-   * @param to Recipient email address or comma-separated addresses
-   * @param subject Email subject
-   * @param body Email body (plain text or HTML)
+   * @param to {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address or comma-separated addresses {@example user@example.com}
+   * @param subject {@min 1} Email subject {@example Daily Report}
+   * @param body {@min 1} Email body (plain text or HTML)
    * @param html Set to true if body contains HTML (default: false)
    * @param cc CC recipients (optional, comma-separated)
    * @param bcc BCC recipients (optional, comma-separated)
@@ -163,10 +163,10 @@ export default class Email {
 
   /**
    * Send an email with attachments
-   * @param to Recipient email address
-   * @param subject Email subject
-   * @param body Email body
-   * @param attachments Array of attachments with filename and content
+   * @param to {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address {@example user@example.com}
+   * @param subject {@min 1} Email subject
+   * @param body {@min 1} Email body
+   * @param attachments {@min 1} Array of attachments with filename and content {@example [{"filename":"report.pdf","content":"..."}]}
    * @param html Set to true if body contains HTML (default: false)
    */
   async sendAttachment(params: {
@@ -211,9 +211,9 @@ export default class Email {
 
   /**
    * List emails from inbox
-   * @param limit Maximum number of emails to return (default: 10)
+   * @param limit {@min 1} {@max 100} Maximum number of emails to return (default: 10)
    * @param unreadOnly Only return unread emails (default: false)
-   * @param mailbox Mailbox to check (default: INBOX)
+   * @param mailbox Mailbox to check {@example INBOX}
    */
   async inbox(params?: { limit?: number; unreadOnly?: boolean; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -312,8 +312,8 @@ export default class Email {
 
   /**
    * Get a specific email by sequence number
-   * @param uid Email sequence number (from listInbox)
-   * @param mailbox Mailbox to check (default: INBOX)
+   * @param uid {@min 1} Email sequence number (from listInbox)
+   * @param mailbox Mailbox to check {@example INBOX}
    */
   async get(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -381,10 +381,10 @@ export default class Email {
 
   /**
    * Search emails by criteria
-   * @param query Search query (from, subject, or body text)
-   * @param searchIn Where to search: from, subject, or body (default: subject)
-   * @param limit Maximum results (default: 10)
-   * @param mailbox Mailbox to search (default: INBOX)
+   * @param query {@min 1} Search query (from, subject, or body text) {@example meeting}
+   * @param searchIn Where to search {@example subject}
+   * @param limit {@min 1} {@max 100} Maximum results (default: 10)
+   * @param mailbox Mailbox to search {@example INBOX}
    */
   async search(params: {
     query: string;
@@ -491,8 +491,8 @@ export default class Email {
 
   /**
    * Mark an email as read
-   * @param uid Email sequence number
-   * @param mailbox Mailbox name (default: INBOX)
+   * @param uid {@min 1} Email sequence number
+   * @param mailbox Mailbox name {@example INBOX}
    */
   async markRead(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -538,8 +538,8 @@ export default class Email {
 
   /**
    * Delete an email
-   * @param uid Email sequence number
-   * @param mailbox Mailbox name (default: INBOX)
+   * @param uid {@min 1} Email sequence number
+   * @param mailbox Mailbox name {@example INBOX}
    */
   async remove(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -592,9 +592,9 @@ export default class Email {
 
   /**
    * Move email to another mailbox (archive)
-   * @param uid Email sequence number
-   * @param targetMailbox Target mailbox name (e.g., Archive, Trash)
-   * @param sourceMailbox Source mailbox (default: INBOX)
+   * @param uid {@min 1} Email sequence number
+   * @param targetMailbox {@min 1} Target mailbox name {@example Archive}
+   * @param sourceMailbox Source mailbox {@example INBOX}
    */
   async move(params: { uid: number; targetMailbox: string; sourceMailbox?: string }) {
     if (!this.imapConfig) {

@@ -52,7 +52,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../email.photon.ts",
-      "hash": "sha256:a22e753245f3d375908e9556745a08ebef46495a89a2a40e5c38ad378b557b1a",
+      "hash": "sha256:959ecf64d31c99c29fa35baf5926e2c124619bce1243cc46481b7a4437443e28",
       "tools": [
         "send",
         "sendAttachment",

@@ -92,11 +92,11 @@ Send an email
 **Parameters:**
 
 
-- **`to`** (any) - Recipient email address or comma-separated addresses
+- **`to`** (any) - {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address or comma-separated addresses {@example user@example.com}
 
-- **`subject`** (any) - Email subject
+- **`subject`** (any) - {@min 1} Email subject {@example Daily Report}
 
-- **`body`** (any) - Email body (plain text or HTML)
+- **`body`** (any) - {@min 1} Email body (plain text or HTML)
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
@@ -108,6 +108,12 @@ Send an email
 
 
 
+
+**Example:**
+
+```typescript
+user@example.com}
+```
 
 
 ---
@@ -121,18 +127,24 @@ Send an email with attachments
 **Parameters:**
 
 
-- **`to`** (any) - Recipient email address
+- **`to`** (any) - {@min 1} {@pattern ^[^@]+@[^@]+\.[^@]+$} Recipient email address {@example user@example.com}
 
-- **`subject`** (any) - Email subject
+- **`subject`** (any) - {@min 1} Email subject
 
-- **`body`** (any) - Email body
+- **`body`** (any) - {@min 1} Email body
 
-- **`attachments`** (any) - Array of attachments with filename and content
+- **`attachments`** (any) - {@min 1} Array of attachments with filename and content {@example [{"filename":"report.pdf","content":"..."}]}
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
 
 
+
+**Example:**
+
+```typescript
+user@example.com}
+```
 
 
 ---
@@ -146,11 +158,11 @@ List emails from inbox
 **Parameters:**
 
 
-- **`limit`** (any, optional) - Maximum number of emails to return
+- **`limit`** (any, optional) - {@min 1} {@max 100} Maximum number of emails to return
 
 - **`unreadOnly`** (any, optional) - Only return unread emails
 
-- **`mailbox`** (any, optional) - Mailbox to check
+- **`mailbox`** (any) - Mailbox to check {@example INBOX}
 
 
 
@@ -167,9 +179,9 @@ Get a specific email by sequence number
 **Parameters:**
 
 
-- **`uid`** (any) - Email sequence number (from listInbox)
+- **`uid`** (any) - {@min 1} Email sequence number (from listInbox)
 
-- **`mailbox`** (any, optional) - Mailbox to check
+- **`mailbox`** (any) - Mailbox to check {@example INBOX}
 
 
 
@@ -186,16 +198,22 @@ Search emails by criteria
 **Parameters:**
 
 
-- **`query`** (any) - Search query (from, subject, or body text)
+- **`query`** (any) - {@min 1} Search query (from, subject, or body text) {@example meeting}
 
-- **`searchIn`** (any, optional) - Where to search: from, subject, or body
+- **`searchIn`** (any) - Where to search {@example subject}
 
-- **`limit`** (any, optional) - Maximum results
+- **`limit`** (any, optional) - {@min 1} {@max 100} Maximum results
 
-- **`mailbox`** (any, optional) - Mailbox to search
+- **`mailbox`** (any) - Mailbox to search {@example INBOX}
 
 
 
+
+**Example:**
+
+```typescript
+meeting}
+```
 
 
 ---
@@ -209,9 +227,9 @@ Mark an email as read
 **Parameters:**
 
 
-- **`uid`** (any) - Email sequence number
+- **`uid`** (any) - {@min 1} Email sequence number
 
-- **`mailbox`** (any, optional) - Mailbox name
+- **`mailbox`** (any) - Mailbox name {@example INBOX}
 
 
 
@@ -228,9 +246,9 @@ Delete an email
 **Parameters:**
 
 
-- **`uid`** (any) - Email sequence number
+- **`uid`** (any) - {@min 1} Email sequence number
 
-- **`mailbox`** (any, optional) - Mailbox name
+- **`mailbox`** (any) - Mailbox name {@example INBOX}
 
 
 
@@ -247,14 +265,20 @@ Move email to another mailbox (archive)
 **Parameters:**
 
 
-- **`uid`** (any) - Email sequence number
+- **`uid`** (any) - {@min 1} Email sequence number
 
-- **`targetMailbox`** (any) - Target mailbox name (e.g., Archive, Trash)
+- **`targetMailbox`** (any) - {@min 1} Target mailbox name {@example Archive}
 
-- **`sourceMailbox`** (any, optional) - Source mailbox
+- **`sourceMailbox`** (any) - Source mailbox {@example INBOX}
 
 
 
+
+**Example:**
+
+```typescript
+Archive}
+```
 
 
 ---
