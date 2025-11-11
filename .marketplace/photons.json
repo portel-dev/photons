@@ -345,7 +345,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:f31512894ad6fb40fda49973c49110c50dc45aa7b2bfa4258a78207d5ce16a9c",
+      "hash": "sha256:c7bdd369b53c0a8589b579f27e1d49e43f3840778cfe189fbfb82faef63b92e9",
       "tools": [
         "open",
         "query",

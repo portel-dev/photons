@@ -36,9 +36,9 @@ Open a SQLite database
 **Parameters:**
 
 
-- **`path`** (any) - Database file path (use ":memory:" for in-memory database)
+- **`path`** (any) - {@min 1} {@max 500} Database file path (use ":memory:" for in-memory database) {@example ./mydb.sqlite}
 
-- **`readonly`** (any, optional) - Open in readonly mode
+- **`readonly`** (any, optional) - Open in readonly mode  {@example false}
 
 
 
@@ -46,7 +46,7 @@ Open a SQLite database
 **Example:**
 
 ```typescript
-open("./mydb.sqlite")
+./mydb.sqlite}
 ```
 
 
@@ -61,9 +61,9 @@ Execute a SELECT query
 **Parameters:**
 
 
-- **`sql`** (any) - SQL query string
+- **`sql`** (any) - {@min 1} {@max 10000} SQL query string {@example SELECT * FROM users WHERE id = ?}
 
-- **`params`** (any) - Query parameters (for prepared statements)
+- **`params`** (any) - Query parameters (for prepared statements) {@example [1]}
 
 
 
@@ -71,7 +71,7 @@ Execute a SELECT query
 **Example:**
 
 ```typescript
-query("SELECT * FROM users")
+SELECT * FROM users WHERE id = ?}
 ```
 
 
@@ -86,9 +86,9 @@ Execute a single SELECT query and return first row
 **Parameters:**
 
 
-- **`sql`** (any) - SQL query string
+- **`sql`** (any) - {@min 1} {@max 10000} SQL query string {@example SELECT * FROM users WHERE id = ?}
 
-- **`params`** (any) - Query parameters (for prepared statements)
+- **`params`** (any) - Query parameters (for prepared statements) {@example [1]}
 
 
 
@@ -96,7 +96,7 @@ Execute a single SELECT query and return first row
 **Example:**
 
 ```typescript
-queryOne("SELECT * FROM users WHERE id = ?", [1])
+SELECT * FROM users WHERE id = ?}
 ```
 
 
@@ -111,9 +111,9 @@ Execute an INSERT, UPDATE, or DELETE statement
 **Parameters:**
 
 
-- **`sql`** (any) - SQL statement string
+- **`sql`** (any) - {@min 1} {@max 10000} SQL statement string {@example INSERT INTO users (name, email) VALUES (?, ?)}
 
-- **`params`** (any) - Statement parameters (for prepared statements)
+- **`params`** (any) - Statement parameters (for prepared statements) {@example ["John","john@example.com"]}
 
 
 
@@ -121,7 +121,7 @@ Execute an INSERT, UPDATE, or DELETE statement
 **Example:**
 
 ```typescript
-execute("INSERT INTO users (name, email) VALUES (?, ?)", ["John", "john@example.com"])
+INSERT INTO users (name, email) VALUES (?, ?)}
 ```
 
 
@@ -136,7 +136,7 @@ Execute multiple SQL statements in a transaction
 **Parameters:**
 
 
-- **`statements`** (any) - Array of SQL statements with optional parameters
+- **`statements`** (any) - {@min 1} Array of SQL statements with optional parameters {@example [{"sql":"INSERT INTO users (name) VALUES (?)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + ?","params":[100]}]}
 
 
 
@@ -164,16 +164,10 @@ Get schema information for a table
 **Parameters:**
 
 
-- **`table`** (any) - Table name
+- **`table`** (any) - {@min 1} {@max 200} Table name {@example users}
 
 
 
-
-**Example:**
-
-```typescript
-schema("users")
-```
 
 
 ---
@@ -198,16 +192,10 @@ Create a backup of the database
 **Parameters:**
 
 
-- **`destination`** (any) - Path to backup file
+- **`destination`** (any) - {@min 1} {@max 500} Path to backup file {@example ./mydb.backup.sqlite}
 
 
 
-
-**Example:**
-
-```typescript
-backup("./mydb.backup.sqlite")
-```
 
 
 ---

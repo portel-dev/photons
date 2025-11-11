@@ -43,12 +43,8 @@ export default class SQLite {
 
   /**
    * Open a SQLite database
-   * @param path Database file path (use ":memory:" for in-memory database)
-   * @param readonly Open in readonly mode (default: false)
-   * @example open("./mydb.sqlite")
-   * @example open(":memory:")
-   * @example open("./mydb.sqlite", true)
-   * @example open({ path: "./mydb.sqlite", readonly: true })
+   * @param path {@min 1} {@max 500} Database file path (use ":memory:" for in-memory database) {@example ./mydb.sqlite}
+   * @param readonly Open in readonly mode (default: false) {@example false}
    */
   async open(params: { path: string; readonly?: boolean } | string, readonly?: boolean) {
     // Support both open("path", readonly) and open({ path, readonly })
@@ -78,11 +74,8 @@ export default class SQLite {
 
   /**
    * Execute a SELECT query
-   * @param sql SQL query string
-   * @param params Query parameters (for prepared statements)
-   * @example query("SELECT * FROM users")
-   * @example query("SELECT * FROM users WHERE id = ?", [1])
-   * @example query({ sql: "SELECT * FROM users WHERE id = ?", params: [1] })
+   * @param sql {@min 1} {@max 10000} SQL query string {@example SELECT * FROM users WHERE id = ?}
+   * @param params Query parameters (for prepared statements) {@example [1]}
    */
   async query(params: { sql: string; params?: any[] } | string, queryParams?: any[]) {
     // Support both query("sql", params) and query({ sql, params })
@@ -109,10 +102,8 @@ export default class SQLite {
 
   /**
    * Execute a single SELECT query and return first row
-   * @param sql SQL query string
-   * @param params Query parameters (for prepared statements)
-   * @example queryOne("SELECT * FROM users WHERE id = ?", [1])
-   * @example queryOne({ sql: "SELECT * FROM users WHERE id = ?", params: [1] })
+   * @param sql {@min 1} {@max 10000} SQL query string {@example SELECT * FROM users WHERE id = ?}
+   * @param params Query parameters (for prepared statements) {@example [1]}
    */
   async queryOne(params: { sql: string; params?: any[] } | string, queryParams?: any[]) {
     // Support both queryOne("sql", params) and queryOne({ sql, params })
@@ -138,11 +129,8 @@ export default class SQLite {
 
   /**
    * Execute an INSERT, UPDATE, or DELETE statement
-   * @param sql SQL statement string
-   * @param params Statement parameters (for prepared statements)
-   * @example execute("INSERT INTO users (name, email) VALUES (?, ?)", ["John", "john@example.com"])
-   * @example execute("UPDATE users SET name = ? WHERE id = ?", ["Jane", 1])
-   * @example execute({ sql: "DELETE FROM users WHERE id = ?", params: [1] })
+   * @param sql {@min 1} {@max 10000} SQL statement string {@example INSERT INTO users (name, email) VALUES (?, ?)}
+   * @param params Statement parameters (for prepared statements) {@example ["John","john@example.com"]}
    */
   async execute(params: { sql: string; params?: any[] } | string, executeParams?: any[]) {
     // Support both execute("sql", params) and execute({ sql, params })
@@ -169,7 +157,7 @@ export default class SQLite {
 
   /**
    * Execute multiple SQL statements in a transaction
-   * @param statements Array of SQL statements with optional parameters
+   * @param statements {@min 1} Array of SQL statements with optional parameters {@example [{"sql":"INSERT INTO users (name) VALUES (?)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + ?","params":[100]}]}
    */
   async transaction(params: { statements: Array<{ sql: string; params?: any[] }> }) {
     if (!this.db) {
@@ -226,9 +214,7 @@ export default class SQLite {
 
   /**
    * Get schema information for a table
-   * @param table Table name
-   * @example schema("users")
-   * @example schema({ table: "users" })
+   * @param table {@min 1} {@max 200} Table name {@example users}
    */
   async schema(params: { table: string } | string) {
     // Support both schema("table") and schema({ table })
@@ -274,9 +260,7 @@ export default class SQLite {
 
   /**
    * Create a backup of the database
-   * @param destination Path to backup file
-   * @example backup("./mydb.backup.sqlite")
-   * @example backup({ destination: "./mydb.backup.sqlite" })
+   * @param destination {@min 1} {@max 500} Path to backup file {@example ./mydb.backup.sqlite}
    */
   async backup(params: { destination: string } | string) {
     // Support both backup("destination") and backup({ destination })
