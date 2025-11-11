@@ -27,7 +27,7 @@ This photon provides **1** tools:
 
 ### `calculate`
 
-Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E. Example: { expression: "mean([1,2,3,4]) + max(5, 10) - abs(-7)" }
+Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E.
 
 
 **Parameters:**
@@ -37,6 +37,12 @@ Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, l
 
 
 
+
+**Example:**
+
+```typescript
+calculate("2 + 2")
+```
 
 
 ---

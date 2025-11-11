@@ -244,7 +244,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../math.photon.ts",
-      "hash": "sha256:8ba55daf6f715dd0f329631a948af1ac9d95fe097742229fca39099c2553f92e",
+      "hash": "sha256:111ca4a39814ea862d42ee0b0f629cc51dbc641966c4db78f4367da8a032a0e5",
       "tools": [
         "calculate"
       ]
