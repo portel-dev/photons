@@ -211,7 +211,7 @@
       "author": "Photon (based on pokemote by mithileshchellappan)",
       "license": "MIT",
       "source": "../lg-remote.photon.ts",
-      "hash": "sha256:4989bc5d3bcbb0ba0d6251ac2bd130bd097a5858baf310e9c95cb06e184e17c6",
+      "hash": "sha256:cd535f348c9fb1882b410f0fd9c875e0f2304d4379e3eaeed6cc392e381eca4a",
       "tools": [
         "discover",
         "connect",

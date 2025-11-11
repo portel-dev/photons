@@ -318,7 +318,7 @@ Send remote button press or list supported buttons
 **Parameters:**
 
 
-- **`button`** (any) - Button name or "all" to list supported buttons
+- **`button`** (any) - Button name (omit or use 'all' to list all supported buttons)
    *
    * Navigation: HOME, BACK, EXIT, UP, DOWN, LEFT, RIGHT, ENTER, CLICK
    * Colors: RED, GREEN, YELLOW, BLUE
