@@ -327,7 +327,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../slack.photon.ts",
-      "hash": "sha256:636cd44deec3cb151320c948b5c99d61f6dc6352b3957f8a78c575f04f79e0ba",
+      "hash": "sha256:71d3eb9931ab7e87dabb8f1eb7e047ba7122247ad7ac7b92e8274b7e0007b7d9",
       "tools": [
         "post",
         "channels",

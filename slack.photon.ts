@@ -53,8 +53,8 @@ export default class Slack {
 
   /**
    * Post a message to a channel or user
-   * @param channel Channel name (e.g., "#general") or channel ID
-   * @param text Message text
+   * @param channel {@min 1} Channel name or ID {@example #general}
+   * @param text {@min 1} Message text {@example Hello team!}
    * @param thread_ts Thread timestamp to reply to (optional)
    * @param blocks Rich message blocks (optional, JSON string)
    */
@@ -96,11 +96,11 @@ export default class Slack {
 
   /**
    * List all channels in the workspace
-   * @param types Channel types: public_channel, private_channel, mpim, im (default: public_channel)
-   * @param limit Maximum number of channels to return (default: 100)
+   * @param types Channel types {@example public_channel}
+   * @param limit {@min 1} {@max 1000} Maximum number of channels to return (default: 100)
    */
   async channels(params?: {
-    types?: string;
+    types?: 'public_channel' | 'private_channel' | 'mpim' | 'im';
     limit?: number;
   }) {
     try {
@@ -134,7 +134,7 @@ export default class Slack {
 
   /**
    * Get channel information
-   * @param channel Channel name (e.g., "#general") or channel ID
+   * @param channel {@min 1} Channel name or ID {@example #general}
    */
   async channel(params: { channel: string }) {
     try {
@@ -171,8 +171,8 @@ export default class Slack {
 
   /**
    * Get conversation history from a channel
-   * @param channel Channel name (e.g., "#general") or channel ID
-   * @param limit Number of messages to retrieve (default: 10, max: 100)
+   * @param channel {@min 1} Channel name or ID {@example #general}
+   * @param limit {@min 1} {@max 100} Number of messages to retrieve (default: 10)
    * @param oldest Start of time range (Unix timestamp)
    * @param latest End of time range (Unix timestamp)
    */
@@ -217,9 +217,9 @@ export default class Slack {
 
   /**
    * Add a reaction to a message
-   * @param channel Channel name (e.g., "#general") or channel ID
-   * @param timestamp Message timestamp
-   * @param name Reaction emoji name (without colons, e.g., "thumbsup")
+   * @param channel {@min 1} Channel name or ID {@example #general}
+   * @param timestamp {@min 1} Message timestamp
+   * @param name {@min 1} Reaction emoji name (without colons) {@example thumbsup}
    */
   async react(params: { channel: string; timestamp: string; name: string }) {
     try {
@@ -247,9 +247,9 @@ export default class Slack {
 
   /**
    * Upload a file to a channel
-   * @param channel Channel name (e.g., "#general") or channel ID
-   * @param content File content (text)
-   * @param filename Filename
+   * @param channel {@min 1} Channel name or ID {@example #general}
+   * @param content {@min 1} File content (text)
+   * @param filename {@min 1} Filename {@example report.txt}
    * @param title File title (optional)
    * @param initial_comment Comment to add with the file (optional)
    */
@@ -291,11 +291,11 @@ export default class Slack {
 
   /**
    * Search for messages in the workspace
-   * @param query Search query
-   * @param count Number of results to return (default: 20)
-   * @param sort Sort order: score or timestamp (default: score)
+   * @param query {@min 1} Search query {@example deployment}
+   * @param count {@min 1} {@max 100} Number of results to return (default: 20)
+   * @param sort Sort order {@example score}
    */
-  async search(params: { query: string; count?: number; sort?: string }) {
+  async search(params: { query: string; count?: number; sort?: 'score' | 'timestamp' }) {
     try {
       const response = await this.client.search.messages({
         query: params.query,
