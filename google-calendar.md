@@ -52,16 +52,22 @@ List upcoming events
 **Parameters:**
 
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
-- **`maxResults`** (any, optional) - Maximum number of events to return
+- **`maxResults`** (any, optional) - {@min 1} {@max 100} Maximum number of events to return
 
-- **`timeMin`** (any) - Start time (ISO 8601, default: now)
+- **`timeMin`** (any) - {@format date-time} Start time (ISO 8601, default: now) {@example 2024-03-15T09:00:00Z}
 
-- **`timeMax`** (any) - End time (ISO 8601, optional)
+- **`timeMax`** (any) - {@format date-time} End time (ISO 8601, optional) {@example 2024-03-20T18:00:00Z}
 
 
 
+
+**Example:**
+
+```typescript
+primary}
+```
 
 
 ---
@@ -75,12 +81,18 @@ Get a specific event
 **Parameters:**
 
 
-- **`eventId`** (any) - Event ID
+- **`eventId`** (any) - {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
 
 
+
+**Example:**
+
+```typescript
+abc123def456ghi789}
+```
 
 
 ---
@@ -94,22 +106,28 @@ Create a new event
 **Parameters:**
 
 
-- **`summary`** (any) - Event title
+- **`summary`** (any) - {@min 1} {@max 200} Event title {@example Team Meeting}
 
-- **`start`** (any) - Start time (ISO 8601)
+- **`start`** (any) - {@min 1} {@format date-time} Start time (ISO 8601) {@example 2024-03-15T14:00:00Z}
 
-- **`end`** (any) - End time (ISO 8601)
+- **`end`** (any) - {@min 1} {@format date-time} End time (ISO 8601) {@example 2024-03-15T15:00:00Z}
 
-- **`description`** (any, optional) - Event description
+- **`description`** (any, optional) - {@max 5000} Event description  {@example Quarterly planning session}
 
-- **`location`** (any, optional) - Event location
+- **`location`** (any, optional) - {@max 500} Event location  {@example Conference Room A}
 
-- **`attendees`** (any, optional) - Array of attendee email addresses
+- **`attendees`** (any, optional) - {@min 1} Array of attendee email addresses  {@example ["user@example.com","colleague@company.com"]}
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
 
 
+
+**Example:**
+
+```typescript
+Team Meeting}
+```
 
 
 ---
@@ -123,14 +141,20 @@ Update an existing event
 **Parameters:**
 
 
-- **`eventId`** (any) - Event ID
+- **`eventId`** (any) - {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
 
 - **`updates`** (any) - Object containing fields to update
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
 
 
+
+**Example:**
+
+```typescript
+abc123def456ghi789}
+```
 
 
 ---
@@ -144,12 +168,18 @@ Delete an event
 **Parameters:**
 
 
-- **`eventId`** (any) - Event ID
+- **`eventId`** (any) - {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
 
 
+
+**Example:**
+
+```typescript
+abc123def456ghi789}
+```
 
 
 ---
@@ -174,14 +204,20 @@ Check free/busy status
 **Parameters:**
 
 
-- **`emails`** (any) - Array of email addresses to check
+- **`emails`** (any) - {@min 1} Array of email addresses to check {@example ["user@example.com","colleague@company.com"]}
 
-- **`timeMin`** (any) - Start time (ISO 8601)
+- **`timeMin`** (any) - {@min 1} {@format date-time} Start time (ISO 8601) {@example 2024-03-15T09:00:00Z}
 
-- **`timeMax`** (any) - End time (ISO 8601)
+- **`timeMax`** (any) - {@min 1} {@format date-time} End time (ISO 8601) {@example 2024-03-15T18:00:00Z}
 
 
 
+
+**Example:**
+
+```typescript
+["user@example.com","colleague@company.com"]}
+```
 
 
 ---
@@ -195,14 +231,20 @@ Search for events
 **Parameters:**
 
 
-- **`query`** (any) - Search query
+- **`query`** (any) - {@min 1} {@max 500} Search query {@example team meeting}
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
-- **`maxResults`** (any, optional) - Maximum number of results
+- **`maxResults`** (any, optional) - {@min 1} {@max 100} Maximum number of results
 
 
 
+
+**Example:**
+
+```typescript
+team meeting}
+```
 
 
 ---
@@ -216,12 +258,18 @@ Get upcoming events within specified hours
 **Parameters:**
 
 
-- **`hours`** (any, optional) - Number of hours from now
+- **`hours`** (any, optional) - {@min 1} {@max 720} Number of hours from now  {@example 48}
 
-- **`calendarId`** (any, optional) - Calendar ID
+- **`calendarId`** (any, optional) - {@max 200} Calendar ID  {@example primary}
 
 
 
+
+**Example:**
+
+```typescript
+48}
+```
 
 
 ---

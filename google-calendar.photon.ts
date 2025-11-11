@@ -57,10 +57,10 @@ export default class GoogleCalendar {
 
   /**
    * List upcoming events
-   * @param calendarId Calendar ID (default: 'primary')
-   * @param maxResults Maximum number of events to return (default: 10)
-   * @param timeMin Start time (ISO 8601, default: now)
-   * @param timeMax End time (ISO 8601, optional)
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * @param maxResults {@min 1} {@max 100} Maximum number of events to return (default: 10)
+   * @param timeMin {@format date-time} Start time (ISO 8601, default: now) {@example 2024-03-15T09:00:00Z}
+   * @param timeMax {@format date-time} End time (ISO 8601, optional) {@example 2024-03-20T18:00:00Z}
    */
   async list(params?: {
     calendarId?: string;
@@ -107,8 +107,8 @@ export default class GoogleCalendar {
 
   /**
    * Get a specific event
-   * @param eventId Event ID
-   * @param calendarId Calendar ID (default: 'primary')
+   * @param eventId {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
    */
   async get(params: { eventId: string; calendarId?: string }) {
     try {
@@ -149,13 +149,13 @@ export default class GoogleCalendar {
 
   /**
    * Create a new event
-   * @param summary Event title
-   * @param start Start time (ISO 8601)
-   * @param end End time (ISO 8601)
-   * @param description Event description (optional)
-   * @param location Event location (optional)
-   * @param attendees Array of attendee email addresses (optional)
-   * @param calendarId Calendar ID (default: 'primary')
+   * @param summary {@min 1} {@max 200} Event title {@example Team Meeting}
+   * @param start {@min 1} {@format date-time} Start time (ISO 8601) {@example 2024-03-15T14:00:00Z}
+   * @param end {@min 1} {@format date-time} End time (ISO 8601) {@example 2024-03-15T15:00:00Z}
+   * @param description {@max 5000} Event description (optional) {@example Quarterly planning session}
+   * @param location {@max 500} Event location (optional) {@example Conference Room A}
+   * @param attendees {@min 1} Array of attendee email addresses (optional) {@example ["user@example.com","colleague@company.com"]}
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
    */
   async create(params: {
     summary: string;
@@ -212,9 +212,9 @@ export default class GoogleCalendar {
 
   /**
    * Update an existing event
-   * @param eventId Event ID
+   * @param eventId {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
    * @param updates Object containing fields to update
-   * @param calendarId Calendar ID (default: 'primary')
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
    */
   async update(params: {
     eventId: string;
@@ -290,8 +290,8 @@ export default class GoogleCalendar {
 
   /**
    * Delete an event
-   * @param eventId Event ID
-   * @param calendarId Calendar ID (default: 'primary')
+   * @param eventId {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
    */
   async remove(params: { eventId: string; calendarId?: string }) {
     try {
@@ -344,9 +344,9 @@ export default class GoogleCalendar {
 
   /**
    * Check free/busy status
-   * @param emails Array of email addresses to check
-   * @param timeMin Start time (ISO 8601)
-   * @param timeMax End time (ISO 8601)
+   * @param emails {@min 1} Array of email addresses to check {@example ["user@example.com","colleague@company.com"]}
+   * @param timeMin {@min 1} {@format date-time} Start time (ISO 8601) {@example 2024-03-15T09:00:00Z}
+   * @param timeMax {@min 1} {@format date-time} End time (ISO 8601) {@example 2024-03-15T18:00:00Z}
    */
   async freeBusy(params: { emails: string[]; timeMin: string; timeMax: string }) {
     try {
@@ -378,9 +378,9 @@ export default class GoogleCalendar {
 
   /**
    * Search for events
-   * @param query Search query
-   * @param calendarId Calendar ID (default: 'primary')
-   * @param maxResults Maximum number of results (default: 10)
+   * @param query {@min 1} {@max 500} Search query {@example team meeting}
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * @param maxResults {@min 1} {@max 100} Maximum number of results (default: 10)
    */
   async search(params: { query: string; calendarId?: string; maxResults?: number }) {
     try {
@@ -418,8 +418,8 @@ export default class GoogleCalendar {
 
   /**
    * Get upcoming events within specified hours
-   * @param hours Number of hours from now (default: 24)
-   * @param calendarId Calendar ID (default: 'primary')
+   * @param hours {@min 1} {@max 720} Number of hours from now (default: 24) {@example 48}
+   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
    */
   async upcoming(params?: { hours?: number; calendarId?: string }) {
     try {

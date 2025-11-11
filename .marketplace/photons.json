@@ -148,7 +148,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../google-calendar.photon.ts",
-      "hash": "sha256:9db30c20f1e0fa35b49f30422433b1934bf5b34ef22b8a0ac12829d6470d8050",
+      "hash": "sha256:8915b6efedfa85a68ceba999ac2a5c798744c4121164c398f65e25c79d7a0ac5",
       "tools": [
         "list",
         "get",
