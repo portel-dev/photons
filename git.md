@@ -57,11 +57,11 @@ View commit history
 **Parameters:**
 
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
-- **`maxCount`** (any, optional) - Maximum number of commits to retrieve
+- **`maxCount`** (any, optional) - {@min 1} {@max 100} Maximum number of commits to retrieve
 
-- **`branch`** (any, optional) - Branch name to get logs from
+- **`branch`** (any, optional) - {@max 200} Branch name to get logs from  {@example main}
 
 
 
@@ -78,11 +78,11 @@ Show differences in repository
 **Parameters:**
 
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
 - **`staged`** (any, optional) - Show staged changes only
 
-- **`file`** (any, optional) - Specific file to show diff for
+- **`file`** (any, optional) - {@max 500} Specific file to show diff for
 
 
 
@@ -116,14 +116,20 @@ Create a new branch
 **Parameters:**
 
 
-- **`name`** (any) - Branch name to create
+- **`name`** (any) - {@min 1} {@max 200} Branch name to create {@example feature/new-feature}
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
 - **`checkout`** (any, optional) - Checkout the new branch after creation
 
 
 
+
+**Example:**
+
+```typescript
+feature/new-feature}
+```
 
 
 ---
@@ -137,12 +143,18 @@ Checkout (switch to) a branch
 **Parameters:**
 
 
-- **`name`** (any) - Branch name to checkout
+- **`name`** (any) - {@min 1} {@max 200} Branch name to checkout {@example main}
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
 
 
+
+**Example:**
+
+```typescript
+main}
+```
 
 
 ---
@@ -156,14 +168,20 @@ Delete a branch
 **Parameters:**
 
 
-- **`name`** (any) - Branch name to delete
+- **`name`** (any) - {@min 1} {@max 200} Branch name to delete {@example old-feature}
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
 - **`force`** (any, optional) - Force delete even if not fully merged
 
 
 
+
+**Example:**
+
+```typescript
+old-feature}
+```
 
 
 ---
@@ -177,12 +195,18 @@ Stage files for commit
 **Parameters:**
 
 
-- **`files`** (any) - Array of file paths to stage (use '.' for all files)
+- **`files`** (any) - {@min 1} Array of file paths to stage (use '.' for all files) {@example ["src/index.ts","README.md"]}
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
 
 
+
+**Example:**
+
+```typescript
+["src/index.ts","README.md"]}
+```
 
 
 ---
@@ -196,14 +220,20 @@ Create a commit
 **Parameters:**
 
 
-- **`message`** (any) - Commit message
+- **`message`** (any) - {@min 1} {@max 500} Commit message {@example fix: resolve authentication bug}
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
-- **`author`** (any) - Optional author override (format: "Name <email>")
+- **`author`** (any) - {@max 200} Optional author override (format: "Name <email>")
 
 
 
+
+**Example:**
+
+```typescript
+fix: resolve authentication bug}
+```
 
 
 ---
@@ -217,16 +247,22 @@ Push commits to remote repository
 **Parameters:**
 
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
-- **`remote`** (any, optional) - Remote name
+- **`remote`** (any, optional) - {@max 200} Remote name  {@example origin}
 
-- **`branch`** (any, optional) - Branch name
+- **`branch`** (any, optional) - {@max 200} Branch name  {@example main}
 
 - **`force`** (any, optional) - Force push
 
 
 
+
+**Example:**
+
+```typescript
+origin}
+```
 
 
 ---
@@ -240,14 +276,20 @@ Pull changes from remote repository
 **Parameters:**
 
 
-- **`path`** (any, optional) - Repository path
+- **`path`** (any, optional) - {@max 500} Repository path
 
-- **`remote`** (any, optional) - Remote name
+- **`remote`** (any, optional) - {@max 200} Remote name  {@example origin}
 
-- **`branch`** (any, optional) - Branch name
+- **`branch`** (any, optional) - {@max 200} Branch name  {@example main}
 
 
 
+
+**Example:**
+
+```typescript
+origin}
+```
 
 
 ---

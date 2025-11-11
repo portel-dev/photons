@@ -74,9 +74,9 @@ export default class Git {
 
   /**
    * View commit history
-   * @param path Repository path (default: configured repoPath)
-   * @param maxCount Maximum number of commits to retrieve (default: 10)
-   * @param branch Branch name to get logs from (default: current branch)
+   * @param path {@max 500} Repository path (default: configured repoPath)
+   * @param maxCount {@min 1} {@max 100} Maximum number of commits to retrieve (default: 10)
+   * @param branch {@max 200} Branch name to get logs from (default: current branch) {@example main}
    */
   async log(params?: { path?: string; maxCount?: number; branch?: string }) {
     try {
@@ -116,9 +116,9 @@ export default class Git {
 
   /**
    * Show differences in repository
-   * @param path Repository path (default: configured repoPath)
+   * @param path {@max 500} Repository path (default: configured repoPath)
    * @param staged Show staged changes only (default: false)
-   * @param file Specific file to show diff for (optional)
+   * @param file {@max 500} Specific file to show diff for (optional)
    */
   async diff(params?: { path?: string; staged?: boolean; file?: string }) {
     try {
@@ -186,8 +186,8 @@ export default class Git {
 
   /**
    * Create a new branch
-   * @param name Branch name to create
-   * @param path Repository path (default: configured repoPath)
+   * @param name {@min 1} {@max 200} Branch name to create {@example feature/new-feature}
+   * @param path {@max 500} Repository path (default: configured repoPath)
    * @param checkout Checkout the new branch after creation (default: false)
    */
   async branch(params: { name: string; path?: string; checkout?: boolean }) {
@@ -220,8 +220,8 @@ export default class Git {
 
   /**
    * Checkout (switch to) a branch
-   * @param name Branch name to checkout
-   * @param path Repository path (default: configured repoPath)
+   * @param name {@min 1} {@max 200} Branch name to checkout {@example main}
+   * @param path {@max 500} Repository path (default: configured repoPath)
    */
   async checkout(params: { name: string; path?: string }) {
     try {
@@ -247,8 +247,8 @@ export default class Git {
 
   /**
    * Delete a branch
-   * @param name Branch name to delete
-   * @param path Repository path (default: configured repoPath)
+   * @param name {@min 1} {@max 200} Branch name to delete {@example old-feature}
+   * @param path {@max 500} Repository path (default: configured repoPath)
    * @param force Force delete even if not fully merged (default: false)
    */
   async removeBranch(params: { name: string; path?: string; force?: boolean }) {
@@ -281,8 +281,8 @@ export default class Git {
 
   /**
    * Stage files for commit
-   * @param files Array of file paths to stage (use '.' for all files)
-   * @param path Repository path (default: configured repoPath)
+   * @param files {@min 1} Array of file paths to stage (use '.' for all files) {@example ["src/index.ts","README.md"]}
+   * @param path {@max 500} Repository path (default: configured repoPath)
    */
   async add(params: { files: string[]; path?: string }) {
     try {
@@ -308,9 +308,9 @@ export default class Git {
 
   /**
    * Create a commit
-   * @param message Commit message
-   * @param path Repository path (default: configured repoPath)
-   * @param author Optional author override (format: "Name <email>")
+   * @param message {@min 1} {@max 500} Commit message {@example fix: resolve authentication bug}
+   * @param path {@max 500} Repository path (default: configured repoPath)
+   * @param author {@max 200} Optional author override (format: "Name <email>")
    */
   async commit(params: { message: string; path?: string; author?: string }) {
     try {
@@ -344,9 +344,9 @@ export default class Git {
 
   /**
    * Push commits to remote repository
-   * @param path Repository path (default: configured repoPath)
-   * @param remote Remote name (default: 'origin')
-   * @param branch Branch name (default: current branch)
+   * @param path {@max 500} Repository path (default: configured repoPath)
+   * @param remote {@max 200} Remote name (default: 'origin') {@example origin}
+   * @param branch {@max 200} Branch name (default: current branch) {@example main}
    * @param force Force push (default: false)
    */
   async push(params?: { path?: string; remote?: string; branch?: string; force?: boolean }) {
@@ -384,9 +384,9 @@ export default class Git {
 
   /**
    * Pull changes from remote repository
-   * @param path Repository path (default: configured repoPath)
-   * @param remote Remote name (default: 'origin')
-   * @param branch Branch name (default: current branch)
+   * @param path {@max 500} Repository path (default: configured repoPath)
+   * @param remote {@max 200} Remote name (default: 'origin') {@example origin}
+   * @param branch {@max 200} Branch name (default: current branch) {@example main}
    */
   async pull(params?: { path?: string; remote?: string; branch?: string }) {
     try {

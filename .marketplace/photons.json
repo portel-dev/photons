@@ -108,7 +108,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git.photon.ts",
-      "hash": "sha256:cb68d799d4fd23e97f08f43ee6436ffc3f67d3696068268319feb8a677d8843b",
+      "hash": "sha256:2c977676371191c8e1d25dce076c7638cf1cd06113e511fa416462625224dbcb",
       "tools": [
         "status",
         "log",
