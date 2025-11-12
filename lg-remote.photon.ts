@@ -19,6 +19,8 @@
  * Dependencies are auto-installed on first run.
  *
  * @dependencies ws@^8.18.0
+ * @stateful true
+ * @idleTimeout 600000
  *
  * @version 1.0.0
  * @author Photon (based on pokemote by mithileshchellappan)
@@ -29,6 +31,7 @@ import { WebSocket } from 'ws';
 import { createSocket } from 'dgram';
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import * as os from 'os';
 
 interface TVCredentials {
   ip: string;
@@ -43,6 +46,7 @@ interface TVMessage {
   id?: string;
   uri?: string;
   payload?: any;
+  error?: string;
 }
 
 interface DiscoveredTV {
@@ -52,71 +56,112 @@ interface DiscoveredTV {
 }
 
 const REGISTRATION_MANIFEST = {
-  manifestVersion: 1,
-  appVersion: '1.1',
-  signed: {
-    created: '20140509',
-    appId: 'com.lge.test',
-    vendorId: 'com.lge',
-    localizedAppNames: {
-      '': 'LG Remote App',
-      'ko-KR': 'ÈÇ ¸®¸ðÄÁ',
-      'zxx-XX': 'Photon LG Remote',
-    },
-    localizedVendorNames: {
-      '': 'LG Electronics',
+  forcePairing: false,
+  pairingType: "PIN",
+  manifest: {
+    manifestVersion: 1,
+    appVersion: '1.1',
+    signed: {
+      created: '20140509',
+      appId: 'com.lge.test',
+      vendorId: 'com.lge',
+      localizedAppNames: {
+        '': 'LG Remote App',
+        'en-US': 'LG Remote App',
+        'en-GB': 'LG Remote App',
+        'en-IN': 'LG Remote App'
+      },
+      localizedVendorNames: {
+        '': 'LG Electronics',
+        'en-US': 'LG Electronics',
+        'en-GB': 'LG Electronics'
+      },
+      permissions: [
+        'TEST_SECURE',
+        'CONTROL_INPUT_TEXT',
+        'CONTROL_MOUSE_AND_KEYBOARD',
+        'CONTROL_INPUT_POINTER',
+        'READ_INSTALLED_APPS',
+        'READ_LGE_SDX',
+        'READ_NOTIFICATIONS',
+        'SEARCH',
+        'WRITE_SETTINGS',
+        'WRITE_NOTIFICATION_ALERT',
+        'CONTROL_POWER',
+        'READ_CURRENT_CHANNEL',
+        'READ_RUNNING_APPS',
+        'READ_UPDATE_INFO',
+        'UPDATE_FROM_REMOTE_APP',
+        'READ_LGE_TV_INPUT_EVENTS',
+        'READ_TV_CURRENT_TIME',
+      ],
+      serial: '2f930e2d2cfe083771f68e4fe7bb07',
     },
     permissions: [
-      'TEST_SECURE',
+      'LAUNCH',
+      'LAUNCH_WEBAPP',
+      'APP_TO_APP',
+      'CLOSE',
+      'TEST_OPEN',
+      'TEST_PROTECTED',
+      'CONTROL_AUDIO',
+      'CONTROL_DISPLAY',
+      'CONTROL_INPUT_JOYSTICK',
+      'CONTROL_INPUT_MEDIA_RECORDING',
+      'CONTROL_INPUT_MEDIA_PLAYBACK',
+      'CONTROL_INPUT_TV',
       'CONTROL_INPUT_TEXT',
       'CONTROL_MOUSE_AND_KEYBOARD',
-      'READ_INSTALLED_APPS',
-      'READ_LGE_SDX',
-      'READ_NOTIFICATIONS',
-      'SEARCH',
-      'WRITE_SETTINGS',
-      'WRITE_NOTIFICATIONS',
       'CONTROL_POWER',
+      'READ_APP_STATUS',
       'READ_CURRENT_CHANNEL',
+      'READ_INPUT_DEVICE_LIST',
+      'READ_NETWORK_STATE',
       'READ_RUNNING_APPS',
-      'READ_UPDATE_INFO',
-      'UPDATE_FROM_REMOTE_APP',
-      'READ_LGE_TV_INPUT_EVENTS',
+      'READ_INSTALLED_APPS',
+      'READ_TV_CHANNEL_LIST',
+      'WRITE_NOTIFICATION_TOAST',
+      'READ_POWER_STATE',
+      'READ_COUNTRY_INFO',
+      'READ_SETTINGS',
+      'CONTROL_TV_SCREEN',
+      'CONTROL_TV_STANBY',
+      'CONTROL_FAVORITE_GROUP',
+      'CONTROL_USER_INFO',
+      'CHECK_BLUETOOTH_DEVICE',
+      'CONTROL_BLUETOOTH',
+      'CONTROL_TIMER_INFO',
+      'STB_INTERNAL_CONNECTION',
+      'CONTROL_RECORDING',
+      'READ_RECORDING_STATE',
+      'WRITE_RECORDING_LIST',
+      'READ_RECORDING_LIST',
+      'READ_RECORDING_SCHEDULE',
+      'WRITE_RECORDING_SCHEDULE',
+      'READ_STORAGE_DEVICE_LIST',
+      'READ_TV_PROGRAM_INFO',
+      'CONTROL_BOX_CHANNEL',
+      'READ_TV_ACR_AUTH_TOKEN',
+      'READ_TV_CONTENT_STATE',
       'READ_TV_CURRENT_TIME',
+      'ADD_LAUNCHER_CHANNEL',
+      'SET_CHANNEL_SKIP',
+      'RELEASE_CHANNEL_SKIP',
+      'CONTROL_CHANNEL_BLOCK',
+      'DELETE_SELECT_CHANNEL',
+      'CONTROL_CHANNEL_GROUP',
+      'SCAN_TV_CHANNELS',
+      'CONTROL_TV_POWER',
+      'CONTROL_WOL',
     ],
-    serial: '2f930e2d2cfe083771f68e4fe7bb07',
+    signatures: [
+      {
+        signatureVersion: 1,
+        signature:
+          'eyJhbGdvcml0aG0iOiJSU0EtU0hBMjU2Iiwia2V5SWQiOiJ0ZXN0LXNpZ25pbmctY2VydCIsInNpZ25hdHVyZVZlcnNpb24iOjF9.hrVRgjCwXVvE2OOSpDZ58hR+59aFNwYDyjQgKk3auukd7pcegmE2CzPCa0bJ0ZsRAcKkCTJrWo5iDzNhMBWRyaMOv5zWSrthlf7G128qvIlpMT0YNY+n/FaOHE73uLrS/g7swl3/qH/BGFG2Hu4RlL48eb3lLKqTt2xKHdCs6Cd4RMfJPYnzgvI4BNrFUKsjkcu+WD4OO2A27Pq1n50cMchmcaXadJhGrOqH5YmHdOCj5NSHzJYrsW0HPlpuAx/ECMeIZYDh6RMqaFM2DXzdKX9NmmyqzJ3o/0lkk/N97gfVRLW5hA29yeAwaCViZNCP8iC9aO0q9fQojoa7NQnAtw==',
+      },
+    ],
   },
-  permissions: [
-    'LAUNCH',
-    'LAUNCH_WEBAPP',
-    'APP_TO_APP',
-    'CLOSE',
-    'TEST_OPEN',
-    'TEST_PROTECTED',
-    'CONTROL_AUDIO',
-    'CONTROL_DISPLAY',
-    'CONTROL_INPUT_JOYSTICK',
-    'CONTROL_INPUT_MEDIA_RECORDING',
-    'CONTROL_INPUT_MEDIA_PLAYBACK',
-    'CONTROL_INPUT_TV',
-    'CONTROL_POWER',
-    'READ_APP_STATUS',
-    'READ_CURRENT_CHANNEL',
-    'READ_INPUT_DEVICE_LIST',
-    'READ_NETWORK_STATE',
-    'READ_RUNNING_APPS',
-    'READ_TV_CHANNEL_LIST',
-    'WRITE_NOTIFICATION_TOAST',
-    'READ_POWER_STATE',
-    'READ_COUNTRY_INFO',
-  ],
-  signatures: [
-    {
-      signatureVersion: 1,
-      signature:
-        'eyJhbGdvcml0aG0iOiJSU0EtU0hBMjU2Iiwia2V5SWQiOiJ0ZXN0LXNpZ25pbmctY2VydCIsInNpZ25hdHVyZVZlcnNpb24iOjF9.hrVRgjCwXVvE2OOSpDZ58hR+59aFNwYDyjQgKk3auukd7pcegmE2CzPCa0bJ0ZsRAcKkCTJrWo5iDzNhMBWRyaMOv5zWSrthlf7G128qvIlpMT0YNY+n/FaOHE73uLrS/g7swl3/qH/BGFG2Hu4RlL48eb3lLKqTt2xKHdCs6Cd4RMfJPYnzgvI4BNrFUKsjkcu+WD4OO2A27Pq1n50cMchmcaXadJhGrOqH5YmHdOCj5NSHzJYrsW0HPlpuAx/ECMeIZYDh6RMqaFM2DXzdKX9NmmyqzJ3o/0lkk/N97gfVRLW5hA29yeAwaCViZNCP8iC9aO0q9fQojoa7NQnAtw==',
-    },
-  ],
 };
 
 export default class LGRemote {
@@ -130,22 +175,32 @@ export default class LGRemote {
   private discoveredTVs: DiscoveredTV[] = [];
   private defaultTV?: DiscoveredTV;
   private discoveryInProgress = false;
+  private initPromise?: Promise<void>;
+  private registrationConfirmed = false;
+  private lastRegistrationTime = 0;
 
   constructor(credentials_file?: string) {
-    this.credentialsFile = credentials_file || 'lg-tv-credentials.json';
+    // Default to absolute path in .photon directory
+    if (credentials_file) {
+      this.credentialsFile = credentials_file;
+    } else {
+      const photonDir = path.join(os.homedir(), '.photon');
+      this.credentialsFile = path.join(photonDir, 'lg-tv-credentials.json');
+    }
   }
 
   async onInitialize() {
     console.error('[lg-remote] ✅ Initialized');
     console.error(`[lg-remote] Credentials file: ${this.credentialsFile}`);
 
-    // Start background discovery (non-blocking)
-    this._autoDiscoverAndConnect();
+    // Start background discovery (non-blocking in MCP, but we track it for CLI)
+    this.initPromise = this._autoDiscoverAndConnect();
   }
 
   /**
    * Discover LG TVs on the network using SSDP
    * @param timeout Discovery timeout in seconds (default: 5)
+   * @format table
    */
   async discover(params?: { timeout?: number }) {
     const timeout = (params?.timeout || 5) * 1000;
@@ -229,6 +284,7 @@ export default class LGRemote {
    * Connect to an LG TV
    * @param ip TV IP address (optional, uses auto-discovered default TV if not specified)
    * @param secure Use secure WebSocket (wss://) (default: false)
+   * @format table
    */
   async connect(params?: { ip?: string; secure?: boolean }) {
     try {
@@ -266,12 +322,15 @@ export default class LGRemote {
       const protocol = secure ? 'wss' : 'ws';
       const url = `${protocol}://${targetIP}:${port}`;
 
+      console.error(`[lg-remote] Connecting to ${url} (secure: ${secure})`);
+
       // Close existing connection if any
       if (this.ws) {
         this.ws.close();
       }
 
       this.currentTVIP = targetIP;
+      this.registrationConfirmed = false;
 
       return new Promise<any>((resolve, reject) => {
         const ws = new WebSocket(url, {
@@ -293,28 +352,51 @@ export default class LGRemote {
               lastUsed: Date.now(),
             });
 
-            // Wait for registration response
+            // Wait for registration confirmation
+            const checkInterval = setInterval(() => {
+              if (this.registrationConfirmed) {
+                clearInterval(checkInterval);
+                resolve({
+                  success: true,
+                  message: 'Connected using saved credentials',
+                  ip: targetIP,
+                  paired: true,
+                });
+              }
+            }, 100);
+
+            // Timeout after 5 seconds
             setTimeout(() => {
-              resolve({
-                success: true,
-                message: 'Connected using saved credentials',
-                ip: targetIP,
-                paired: true,
-              });
-            }, 1000);
+              clearInterval(checkInterval);
+              if (!this.registrationConfirmed) {
+                resolve({
+                  success: false,
+                  error: 'Registration timeout. TV may have rejected saved credentials.',
+                });
+              }
+            }, 5000);
           } else {
-            // Start pairing process
+            // Start PIN pairing process
             this._sendRegister();
 
+            console.error('[lg-remote] 📺 TV will show a 6-digit PIN...');
+            console.error('[lg-remote] ℹ️  Call pair({ pin: "XXXXXX" }) with the PIN to complete pairing');
+
+            // Wait for PIN prompt
+            (this as any)._pairingResolve = resolve;
+            (this as any)._pairingIP = targetIP;
+            (this as any)._pairingSecure = secure;
+
+            // Timeout after 60 seconds
             setTimeout(() => {
-              resolve({
-                success: true,
-                message: 'Connected. Please check TV for pairing prompt and call pair() with the credentials',
-                ip: targetIP,
-                paired: false,
-                needsPairing: true,
-              });
-            }, 1000);
+              if ((this as any)._pairingResolve) {
+                resolve({
+                  success: false,
+                  error: 'Pairing timeout.',
+                });
+                (this as any)._pairingResolve = null;
+              }
+            }, 60000);
           }
         });
 
@@ -332,6 +414,7 @@ export default class LGRemote {
         ws.on('close', () => {
           this.ws = undefined;
           this.currentClientKey = undefined;
+          this.registrationConfirmed = false;
         });
       });
     } catch (error: any) {
@@ -344,9 +427,10 @@ export default class LGRemote {
 
   /**
    * Complete pairing after TV prompt
+   * @param pin The 6-digit PIN shown on TV (required for new pairing)
    * @param name Optional name for the TV
    */
-  async pair(params?: { name?: string }) {
+  async pair(params?: { pin?: string; name?: string }) {
     if (!this.currentTVIP) {
       return {
         success: false,
@@ -354,43 +438,106 @@ export default class LGRemote {
       };
     }
 
-    // Wait for client-key in messages
-    return new Promise<any>((resolve) => {
-      const checkInterval = setInterval(() => {
-        if (this.currentClientKey) {
-          clearInterval(checkInterval);
+    // If we already have a client key, just save it
+    if (this.currentClientKey) {
+      this._saveCredentials({
+        ip: this.currentTVIP!,
+        clientKey: this.currentClientKey,
+        name: params?.name,
+        lastUsed: Date.now(),
+      });
 
-          // Save credentials
-          this._saveCredentials({
-            ip: this.currentTVIP!,
-            clientKey: this.currentClientKey,
-            name: params?.name,
-            lastUsed: Date.now(),
-          });
+      return {
+        success: true,
+        message: 'Pairing completed and credentials saved',
+        ip: this.currentTVIP,
+      };
+    }
 
-          resolve({
-            success: true,
-            message: 'Pairing completed and credentials saved',
-            ip: this.currentTVIP,
-          });
-        }
-      }, 500);
+    // If PIN provided, submit it
+    if (params?.pin) {
+      const pinRequestId = `pin_${Date.now()}_${Math.random()}`;
 
-      // Timeout after 30 seconds
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        if (!this.currentClientKey) {
-          resolve({
-            success: false,
-            error: 'Pairing timeout. Make sure you accept the pairing prompt on the TV.',
-          });
-        }
-      }, 30000);
-    });
+      console.error('[lg-remote] 🔑 Submitting PIN...');
+
+      // Use the _request method to properly handle errors
+      return new Promise<any>((resolve) => {
+        const timeout = setTimeout(() => {
+          this.pendingRequests.delete(pinRequestId);
+          if (!this.currentClientKey) {
+            resolve({
+              success: false,
+              error: 'Pairing timeout. TV did not respond.',
+            });
+          }
+        }, 30000);
+
+        this.pendingRequests.set(pinRequestId, {
+          resolve: (data: any) => {
+            clearTimeout(timeout);
+
+            // After PIN is accepted, wait for registration
+            const checkInterval = setInterval(() => {
+              if (this.currentClientKey) {
+                clearInterval(checkInterval);
+
+                // Save credentials
+                this._saveCredentials({
+                  ip: this.currentTVIP!,
+                  clientKey: this.currentClientKey,
+                  name: params?.name,
+                  lastUsed: Date.now(),
+                });
+
+                resolve({
+                  success: true,
+                  message: 'Pairing completed and credentials saved',
+                  ip: this.currentTVIP,
+                });
+              }
+            }, 500);
+
+            // Timeout after 10 seconds if client-key not received
+            setTimeout(() => {
+              clearInterval(checkInterval);
+              if (!this.currentClientKey) {
+                resolve({
+                  success: false,
+                  error: 'PIN accepted but pairing not completed.',
+                });
+              }
+            }, 10000);
+          },
+          reject: (error: Error) => {
+            clearTimeout(timeout);
+            resolve({
+              success: false,
+              error: error.message || 'PIN rejected by TV',
+            });
+          },
+          timeout,
+        });
+
+        // Send PIN request
+        this.ws?.send(JSON.stringify({
+          type: 'request',
+          id: pinRequestId,
+          uri: 'ssap://pairing/setPin',
+          payload: { pin: params.pin },
+        }));
+      });
+    }
+
+    // No PIN provided and no client key yet
+    return {
+      success: false,
+      error: 'PIN required. Call pair({ pin: "123456" }) with the 6-digit PIN shown on TV.',
+    };
   }
 
   /**
    * Disconnect from the current TV
+   * @format none
    */
   async disconnect() {
     if (this.ws) {
@@ -405,6 +552,7 @@ export default class LGRemote {
 
     this.currentTVIP = undefined;
     this.currentClientKey = undefined;
+    this.registrationConfirmed = false;
 
     return {
       success: true,
@@ -415,6 +563,7 @@ export default class LGRemote {
   /**
    * List discovered and saved TVs
    * @param refresh If true, re-discover TVs on network (default: false)
+   * @format table
    */
   async list(params?: { refresh?: boolean }) {
     try {
@@ -510,6 +659,7 @@ export default class LGRemote {
 
   /**
    * Get current connection status
+   * @format table
    */
   async status() {
     return {
@@ -522,42 +672,105 @@ export default class LGRemote {
 
   /**
    * Get/set volume level
-   * @param level Volume level (0-100), "+1" to increase, "-1" to decrease, or omit to get current
+   * @param level Volume level (0-100), "+N" to increase by N, "-N" to decrease by N, or omit to get current
+   * @format table
    */
   async volume(params?: { level?: number | string } | number | string) {
-    // Support multiple formats: volume(50), volume("+1"), volume({ level: 50 })
+    // Support multiple formats: volume(50), volume("+5"), volume({ level: 50 })
     const level = typeof params === 'object' ? params?.level : params;
 
-    if (level === '+1' || level === '1' || level === 1) {
-      return this._request('ssap://audio/volumeUp');
+    // Handle relative adjustments: +N or -N
+    if (typeof level === 'string' && (level.startsWith('+') || level.startsWith('-'))) {
+      const delta = parseInt(level);
+
+      if (isNaN(delta)) {
+        return {
+          success: false,
+          error: `Invalid volume delta: ${level}`,
+        };
+      }
+
+      // Get current volume
+      const currentResult = await this._request('ssap://audio/getVolume');
+      if (!currentResult.success || !currentResult.data || currentResult.data.volume === undefined) {
+        return {
+          success: false,
+          error: 'Failed to get current volume',
+        };
+      }
+
+      // Calculate new volume
+      const currentVolume = currentResult.data.volume;
+      const newVolume = Math.max(0, Math.min(100, currentVolume + delta));
+
+      // Set the new volume
+      await this._request('ssap://audio/setVolume', { volume: newVolume });
+
+      // Return current volume info
+      return this._request('ssap://audio/getVolume');
     }
-    if (level === '-1' || level === -1) {
-      return this._request('ssap://audio/volumeDown');
-    }
+
+    // Handle absolute volume
     if (level !== undefined) {
       const numLevel = typeof level === 'string' ? parseInt(level) : level;
-      return this._request('ssap://audio/setVolume', { volume: numLevel });
+
+      if (isNaN(numLevel)) {
+        return {
+          success: false,
+          error: `Invalid volume level: ${level}`,
+        };
+      }
+
+      // Set the volume
+      await this._request('ssap://audio/setVolume', { volume: numLevel });
+
+      // Return current volume info
+      return this._request('ssap://audio/getVolume');
     }
+
+    // Get current volume
     return this._request('ssap://audio/getVolume');
   }
 
   /**
    * Toggle mute
    * @param mute True to mute, false to unmute (optional - omit to toggle)
+   * @format table
    */
   async mute(params?: { mute?: boolean } | boolean) {
     // Support both mute(true) and mute({ mute: true })
     const muteValue = typeof params === 'boolean' ? params : params?.mute;
 
     if (muteValue !== undefined) {
-      return this._request('ssap://audio/setMute', { mute: muteValue });
+      // Set mute state
+      await this._request('ssap://audio/setMute', { mute: muteValue });
+
+      // Return current volume info
+      return this._request('ssap://audio/getVolume');
     }
-    // If no param, we can't toggle without knowing current state, so default to mute
-    return this._request('ssap://audio/setMute', { mute: true });
+
+    // If no param, toggle by getting current state first
+    const currentResult = await this._request('ssap://audio/getVolume');
+    if (!currentResult.success || !currentResult.data) {
+      return {
+        success: false,
+        error: 'Failed to get current mute state',
+      };
+    }
+
+    const currentMuted = currentResult.data.muted || false;
+    const newMuted = !currentMuted;
+
+    // Set new mute state
+    await this._request('ssap://audio/setMute', { mute: newMuted });
+
+    // Return current volume info
+    return this._request('ssap://audio/getVolume');
   }
 
   /**
    * Turn TV off
+   * @format none
    */
   async off() {
     return this._request('ssap://system/turnOff');
@@ -566,6 +779,7 @@ export default class LGRemote {
   /**
    * Show a notification toast on TV
    * @param message Notification message
+   * @format none
    */
   async notify(params: { message: string } | string) {
     // Support both notify("Hello") and notify({ message: "Hello" })
@@ -575,61 +789,162 @@ export default class LGRemote {
   }
 
   /**
-   * Get current app, launch app, or list all apps
-   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), "all" to list all, or omit to get current
+   * Get current app or launch an app
+   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), or omit to get current
+   * @format table
    */
-  async apps(params?: { id?: string } | string) {
-    // Support both apps("netflix") and apps({ id: "netflix" })
+  async app(params?: { id?: string } | string) {
+    // Support both app("netflix") and app({ id: "netflix" })
     const id = typeof params === 'string' ? params : params?.id;
 
-    if (id === 'all') {
-      return this._request('ssap://com.webos.applicationManager/listApps');
-    }
     if (id) {
-      return this._request('ssap://system.launcher/launch', { id });
+      // Launch app
+      await this._request('ssap://system.launcher/launch', { id });
+
+      // Return current app info
+      return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
     }
+
+    // Get current app
     return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
   }
 
   /**
-   * Get current channel, set channel, or list all channels
-   * @param number Channel number to switch to, "+1" for next, "-1" for previous, "all" to list all, or omit to get current
+   * List all installed apps
+   * @format tree
    */
-  async channel(params?: { number?: string } | string) {
-    // Support multiple formats: channel("5"), channel("+1"), channel("all")
-    const number = typeof params === 'string' ? params : params?.number;
-
-    if (number === 'all') {
-      return this._request('ssap://tv/getChannelList');
-    }
-    if (number === '+1' || number === '1') {
-      return this._request('ssap://tv/channelUp');
-    }
-    if (number === '-1') {
-      return this._request('ssap://tv/channelDown');
-    }
-    if (number) {
-      return this._request('ssap://tv/openChannel', { channelNumber: number });
-    }
-    return this._request('ssap://tv/getCurrentChannel');
+  async apps() {
+    return this._request('ssap://com.webos.applicationManager/listApps');
   }
 
   /**
-   * List inputs or switch to an input
-   * @param id Input ID to switch to, or "all" to list all inputs (default: list all)
+   * Get current channel or switch to a channel
+   * @param number Channel number to switch to, "+1" for next, "-1" for previous, or omit to get current
+   * @format table
    */
-  async input(params?: { id?: string } | string) {
-    // Support both input("HDMI_1") and input({ id: "HDMI_1" })
-    const id = typeof params === 'string' ? params : params?.id;
+  async channel(params?: { number?: string } | string) {
+    // Support multiple formats: channel("5"), channel("+1")
+    const number = typeof params === 'string' ? params : params?.number;
 
-    if (id === 'all' || !id) {
-      return this._request('ssap://tv/getExternalInputList');
+    let result: any;
+
+    if (number === '+1' || number === '1') {
+      // Channel up
+      await this._request('ssap://tv/channelUp');
+
+      // Return current channel
+      result = await this._request('ssap://tv/getCurrentChannel');
+    } else if (number === '-1') {
+      // Channel down
+      await this._request('ssap://tv/channelDown');
+
+      // Return current channel
+      result = await this._request('ssap://tv/getCurrentChannel');
+    } else if (number) {
+      // Switch to specific channel
+      await this._request('ssap://tv/openChannel', { channelNumber: number });
+
+      // Return current channel
+      result = await this._request('ssap://tv/getCurrentChannel');
+    } else {
+      // Get current channel
+      result = await this._request('ssap://tv/getCurrentChannel');
     }
-    return this._request('ssap://tv/switchInput', { inputId: id });
+
+    // If there was an error, add context about current input
+    if (result && result.success === false) {
+      const appResult = await this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
+
+      if (appResult.success && appResult.data?.appId) {
+        const appId = appResult.data.appId;
+        let inputName = 'external input';
+
+        // Map app IDs to friendly names
+        if (appId.includes('hdmi')) {
+          const hdmiNum = appId.match(/hdmi(\d+)/i)?.[1];
+          inputName = hdmiNum ? `HDMI${hdmiNum}` : 'HDMI';
+        } else if (appId.includes('av')) {
+          const avNum = appId.match(/av(\d+)/i)?.[1];
+          inputName = avNum ? `AV${avNum}` : 'AV';
+        } else if (appId.includes('component')) {
+          const compNum = appId.match(/component(\d+)/i)?.[1];
+          inputName = compNum ? `Component${compNum}` : 'Component';
+        }
+
+        return {
+          success: false,
+          error: `TV channels not available. Currently on ${inputName}. Switch to a TV tuner input to access channels.`,
+        };
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * List all available channels
+   * @format tree
+   */
+  async channels() {
+    const result = await this._request('ssap://tv/getChannelList');
+
+    // If there was an error, add context about current input
+    if (result && result.success === false) {
+      const appResult = await this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
+
+      if (appResult.success && appResult.data?.appId) {
+        const appId = appResult.data.appId;
+        let inputName = 'external input';
+
+        // Map app IDs to friendly names
+        if (appId.includes('hdmi')) {
+          const hdmiNum = appId.match(/hdmi(\d+)/i)?.[1];
+          inputName = hdmiNum ? `HDMI${hdmiNum}` : 'HDMI';
+        } else if (appId.includes('av')) {
+          const avNum = appId.match(/av(\d+)/i)?.[1];
+          inputName = avNum ? `AV${avNum}` : 'AV';
+        } else if (appId.includes('component')) {
+          const compNum = appId.match(/component(\d+)/i)?.[1];
+          inputName = compNum ? `Component${compNum}` : 'Component';
+        }
+
+        return {
+          success: false,
+          error: `TV channels not available. Currently on ${inputName}. Switch to a TV tuner input to access channels.`,
+        };
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Switch to an input
+   * @param id Input ID to switch to (e.g., "HDMI_1", "HDMI_2")
+   * @format table
+   */
+  async input(params: { id: string } | string) {
+    // Support both input("HDMI_1") and input({ id: "HDMI_1" })
+    const id = typeof params === 'string' ? params : params.id;
+
+    // Switch input
+    await this._request('ssap://tv/switchInput', { inputId: id });
+
+    // Return input list (TV doesn't have a "get current input" endpoint)
+    return this._request('ssap://tv/getExternalInputList');
+  }
+
+  /**
+   * List all available inputs
+   * @format tree
+   */
+  async inputs() {
+    return this._request('ssap://tv/getExternalInputList');
   }
 
   /**
    * Play media
+   * @format none
    */
   async play() {
     return this._request('ssap://media.controls/play');
@@ -637,6 +952,7 @@ export default class LGRemote {
 
   /**
    * Pause media
+   * @format none
    */
   async pause() {
     return this._request('ssap://media.controls/pause');
@@ -644,6 +960,7 @@ export default class LGRemote {
 
   /**
    * Stop media
+   * @format none
    */
   async stop() {
     return this._request('ssap://media.controls/stop');
@@ -651,6 +968,7 @@ export default class LGRemote {
 
   /**
    * Rewind media
+   * @format none
    */
   async rewind() {
     return this._request('ssap://media.controls/rewind');
@@ -658,6 +976,7 @@ export default class LGRemote {
 
   /**
    * Fast forward media
+   * @format none
    */
   async forward() {
     return this._request('ssap://media.controls/fastForward');
@@ -765,6 +1084,8 @@ export default class LGRemote {
       payload,
     };
 
+    console.error(`[lg-remote] Sending registration${clientKey ? ' with saved client-key' : ' (new pairing)'}`);
+
     if (this.ws) {
       this.ws.send(JSON.stringify(message));
     }
@@ -774,10 +1095,54 @@ export default class LGRemote {
     try {
       const message: TVMessage = JSON.parse(data);
 
-      // Handle registration response
+      // Debug logging
+      console.error(`[lg-remote] TV message: ${message.type}${message.id ? ` (${message.id})` : ''}`);
+      console.error(`[lg-remote] Full message: ${JSON.stringify(message)}`);
+
+      // Handle PIN pairing flow
+      if (message.type === 'response' && message.payload?.pairingType === 'PIN' && (this as any)._pairingResolve) {
+        console.error('[lg-remote] 🔑 PIN is displayed on TV');
+        console.error('[lg-remote] ℹ️  Call pair({ pin: "XXXXXX" }) with the 6-digit PIN to complete pairing');
+
+        // Resolve connect() - user needs to call pair() with PIN
+        (this as any)._pairingResolve({
+          success: true,
+          message: 'TV is ready for pairing. Call pair({ pin: "XXXXXX" }) with the 6-digit PIN shown on TV.',
+          ip: (this as any)._pairingIP,
+          paired: false,
+          waitingForPin: true,
+        });
+
+        (this as any)._pairingResolve = null;
+        return;
+      }
+
+      // Handle registration response (after PIN is accepted)
       if (message.type === 'registered') {
+        this.registrationConfirmed = true;
+        this.lastRegistrationTime = Date.now();
         if (message.payload?.['client-key']) {
           this.currentClientKey = message.payload['client-key'];
+        }
+        console.error(`[lg-remote] Registration confirmed, client-key: ${this.currentClientKey ? 'present' : 'missing'}`);
+
+        // If we're in PIN pairing flow, save and resolve
+        if ((this as any)._pairingResolve && this.currentClientKey) {
+          this._saveCredentials({
+            ip: (this as any)._pairingIP,
+            clientKey: this.currentClientKey,
+            secure: (this as any)._pairingSecure,
+            lastUsed: Date.now(),
+          });
+
+          (this as any)._pairingResolve({
+            success: true,
+            message: 'Connected and paired successfully',
+            ip: (this as any)._pairingIP,
+            paired: true,
+          });
+
+          (this as any)._pairingResolve = null;
         }
       }
 
@@ -793,11 +1158,14 @@ export default class LGRemote {
 
       // Handle errors
       if (message.type === 'error' && message.id) {
+        const errorMsg = message.error || message.payload?.error || 'Unknown error';
+        console.error(`[lg-remote] TV error: ${errorMsg}`);
         const pending = this.pendingRequests.get(message.id);
         if (pending) {
           clearTimeout(pending.timeout);
           this.pendingRequests.delete(message.id);
-          pending.reject(new Error(message.payload?.error || 'Unknown error'));
+          // Pass the raw error - let individual methods provide context
+          pending.reject(new Error(errorMsg));
         }
       }
     } catch (error) {
@@ -805,12 +1173,27 @@ export default class LGRemote {
     }
   }
 
+  private async _ensureReady(): Promise<void> {
+    // Wait for initialization to complete if in progress
+    if (this.initPromise) {
+      await this.initPromise;
+    }
+  }
+
   private async _request(uri: string, payload?: any): Promise<any> {
+    // Wait for auto-discovery to complete
+    await this._ensureReady();
+
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
       return {
         success: false,
         error: 'Not connected to TV',
       };
+    }
+
+    // Wait a bit after registration to ensure TV processes permissions
+    if (this.registrationConfirmed && Date.now() - this.lastRegistrationTime < 500) {
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     return new Promise((resolve, reject) => {
@@ -821,6 +1204,8 @@ export default class LGRemote {
         uri,
         payload: payload || {},
       };
+
+      console.error(`[lg-remote] Sending request: ${uri}, payload: ${JSON.stringify(payload)}`);
 
       const timeout = setTimeout(() => {
         this.pendingRequests.delete(id);
@@ -869,7 +1254,7 @@ export default class LGRemote {
     await fs.writeFile(this.credentialsFile, JSON.stringify(credentials, null, 2));
   }
 
-  private async _autoDiscoverAndConnect() {
+  private async _autoDiscoverAndConnect(): Promise<void> {
     if (this.discoveryInProgress) {
       return;
     }

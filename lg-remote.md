@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **22** tools:
+This photon provides **25** tools:
 
 
 ### `discover`
@@ -76,6 +76,8 @@ Complete pairing after TV prompt
 
 **Parameters:**
 
+
+- **`pin`** (any) - The 6-digit PIN shown on TV (required for new pairing)
 
 - **`name`** (any) - Optional name for the TV
 
@@ -150,7 +152,7 @@ Get/set volume level
 **Parameters:**
 
 
-- **`level`** (any) - Volume level (0-100), "+1" to increase, "-1" to decrease, or omit to get current
+- **`level`** (any) - Volume level (0-100), "+N" to increase by N, "-N" to decrease by N, or omit to get current
 
 
 
@@ -204,15 +206,26 @@ Show a notification toast on TV
 ---
 
 
-### `apps`
+### `app`
 
-Get current app, launch app, or list all apps
+Get current app or launch an app
 
 
 **Parameters:**
 
 
-- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), "all" to list all, or omit to get current
+- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), or omit to get current
+
+
+
+
+
+---
+
+
+### `apps`
+
+List all installed apps
 
 
 
@@ -223,13 +236,24 @@ Get current app, launch app, or list all apps
 
 ### `channel`
 
-Get current channel, set channel, or list all channels
+Get current channel or switch to a channel
 
 
 **Parameters:**
 
 
-- **`number`** (any) - Channel number to switch to, "+1" for next, "-1" for previous, "all" to list all, or omit to get current
+- **`number`** (any) - Channel number to switch to, "+1" for next, "-1" for previous, or omit to get current
+
+
+
+
+
+---
+
+
+### `channels`
+
+List all available channels
 
 
 
@@ -240,13 +264,24 @@ Get current channel, set channel, or list all channels
 
 ### `input`
 
-List inputs or switch to an input
+Switch to an input
 
 
 **Parameters:**
 
 
-- **`id`** (any, optional) - Input ID to switch to, or "all" to list all inputs
+- **`id`** (any) - Input ID to switch to (e.g., "HDMI_1", "HDMI_2")
+
+
+
+
+
+---
+
+
+### `inputs`
+
+List all available inputs
 
 
 
