@@ -52,9 +52,10 @@ We welcome contributions! Submit pull requests for:
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
 | **SQLite Photon MCP** | SQLite database operations | 9 | [View →](sqlite.md) |
 | **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
+| **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 10 | [View →](tuya-smart-light.md) |
 
 
-**Total:** 18 photons ready to use
+**Total:** 19 photons ready to use
 
 ---
 
@@ -98,7 +99,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 18 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 19 focused tools at its fingertips.
 
 ---
 
@@ -164,7 +165,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 18 production-ready photons available
+- 📦 19 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

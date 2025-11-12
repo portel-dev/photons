@@ -332,6 +332,24 @@
           ]
         }
       }
+    },
+    {
+      "name": "tuya-smart-light",
+      "description": "Tuya Smart Light - Control Tuya/Wipro/Smart Life WiFi bulbs",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "tuya-smart-light": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "tuya-smart-light"
+          ]
+        }
+      }
     }
   ]
 }

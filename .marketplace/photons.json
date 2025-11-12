@@ -374,6 +374,27 @@
         "convertTime",
         "listTimezones"
       ]
+    },
+    {
+      "name": "tuya-smart-light",
+      "version": "2.0.0",
+      "description": "Tuya Smart Light - Control Tuya/Wipro/Smart Life WiFi bulbs",
+      "author": "Photon",
+      "license": "MIT",
+      "source": "../tuya-smart-light.photon.ts",
+      "hash": "sha256:086d917a7752ccdf3b120af6e19fa997d322ad7cd109eccd04e18e79452069c6",
+      "tools": [
+        "setup",
+        "list",
+        "on",
+        "off",
+        "toggle",
+        "setBrightness",
+        "setColorTemp",
+        "setColor",
+        "setColorByName",
+        "status"
+      ]
     }
   ]
 }
