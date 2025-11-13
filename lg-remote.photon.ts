@@ -897,7 +897,7 @@ export default class LGRemote {
 
   /**
    * Get current app or launch an app
-   * @param id App ID to launch (e.g., "netflix", "youtube.leanback.v4"), or omit to get current
+   * @param id App ID or title to launch (e.g., "netflix", "YouTube"), or omit to get current
    * @format table
    */
   async app(params?: { id?: string } | string) {
@@ -905,8 +905,41 @@ export default class LGRemote {
     const id = typeof params === 'string' ? params : params?.id;
 
     if (id) {
-      // Launch app
-      await this._request('ssap://system.launcher/launch', { id });
+      // Get list of apps to match ID or title
+      const appsResult = await this._request('ssap://com.webos.applicationManager/listApps');
+
+      if (!appsResult.success) {
+        return appsResult;
+      }
+
+      const apps = appsResult.data.apps || [];
+
+      // Try exact ID match first
+      let app = apps.find((a: any) => a.id === id);
+
+      // If not found, try case-insensitive title match
+      if (!app) {
+        const searchLower = id.toLowerCase();
+        app = apps.find((a: any) => a.title.toLowerCase() === searchLower);
+      }
+
+      if (!app) {
+        return {
+          success: false,
+          error: `App "${id}" not found`,
+          hint: 'Use "photon cli lg-remote apps" to see available apps'
+        };
+      }
+
+      // Launch app with the correct ID
+      const launchResult = await this._request('ssap://system.launcher/launch', { id: app.id });
+
+      if (!launchResult.success) {
+        return launchResult;
+      }
+
+      // Wait a moment for app to launch
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Return current app info
       return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');

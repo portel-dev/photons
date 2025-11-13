@@ -252,7 +252,7 @@ Get current app or launch an app
 **Parameters:**
 
 
-- **`id`** (any) - App ID to launch (e.g., "netflix", "youtube.leanback.v4"), or omit to get current
+- **`id`** (any) - App ID or title to launch (e.g., "netflix", "YouTube"), or omit to get current
 
 
 
