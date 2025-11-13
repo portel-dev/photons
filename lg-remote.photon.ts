@@ -918,10 +918,27 @@ export default class LGRemote {
 
   /**
    * List all installed apps
-   * @format tree
+   * @format table
    */
   async apps() {
-    return this._request('ssap://com.webos.applicationManager/listApps');
+    const result = await this._request('ssap://com.webos.applicationManager/listApps');
+
+    if (!result.success) {
+      return result;
+    }
+
+    // Extract only essential fields for cleaner output
+    const apps = result.data.apps || [];
+    const cleanApps = apps.map((app: any) => ({
+      title: app.title,
+      id: app.id,
+      version: app.version,
+      type: app.type,
+      removable: app.removable ? 'Yes' : 'No'
+    }));
+
+    // Return just the array for table formatting
+    return cleanApps;
   }
 
   /**
