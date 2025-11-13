@@ -18,7 +18,7 @@
  *
  * Dependencies are auto-installed on first run.
  *
- * @dependencies ws@^8.18.0
+ * @dependencies ws@^8.18.0, wake_on_lan@^1.0.0
  * @stateful true
  * @idleTimeout 600000
  *
@@ -32,10 +32,12 @@ import { createSocket } from 'dgram';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import * as wol from 'wake_on_lan';
 
 interface TVCredentials {
   ip: string;
   clientKey: string;
+  mac?: string;
   name?: string;
   secure?: boolean;
   lastUsed?: number;
@@ -440,9 +442,13 @@ export default class LGRemote {
 
     // If we already have a client key, just save it
     if (this.currentClientKey) {
+      // Try to fetch MAC address from TV
+      const mac = await this._getMacAddress();
+
       this._saveCredentials({
         ip: this.currentTVIP!,
         clientKey: this.currentClientKey,
+        mac: mac,
         name: params?.name,
         lastUsed: Date.now(),
       });
@@ -451,6 +457,7 @@ export default class LGRemote {
         success: true,
         message: 'Pairing completed and credentials saved',
         ip: this.currentTVIP,
+        mac: mac,
       };
     }
 
@@ -481,18 +488,22 @@ export default class LGRemote {
               if (this.currentClientKey) {
                 clearInterval(checkInterval);
 
-                // Save credentials
-                this._saveCredentials({
-                  ip: this.currentTVIP!,
-                  clientKey: this.currentClientKey,
-                  name: params?.name,
-                  lastUsed: Date.now(),
-                });
+                // Fetch MAC address and save credentials
+                this._getMacAddress().then(mac => {
+                  this._saveCredentials({
+                    ip: this.currentTVIP!,
+                    clientKey: this.currentClientKey,
+                    mac: mac,
+                    name: params?.name,
+                    lastUsed: Date.now(),
+                  });
 
-                resolve({
-                  success: true,
-                  message: 'Pairing completed and credentials saved',
-                  ip: this.currentTVIP,
+                  resolve({
+                    success: true,
+                    message: 'Pairing completed and credentials saved',
+                    ip: this.currentTVIP,
+                    mac: mac,
+                  });
                 });
               }
             }, 500);
@@ -766,6 +777,64 @@ export default class LGRemote {
 
     // Return current volume info
     return this._request('ssap://audio/getVolume');
+  }
+
+  /**
+   * Turn TV on using Wake-on-LAN
+   * @param mac TV's MAC address (optional if already saved)
+   * @param ip TV's IP address (optional if already saved)
+   * @format table
+   */
+  async on(params?: { mac?: string; ip?: string } | string) {
+    const mac = typeof params === 'string' ? params : params?.mac;
+    const ip = typeof params === 'object' ? params?.ip : undefined;
+
+    // Try to get MAC from saved credentials if not provided
+    let targetMac = mac;
+    let targetIp = ip;
+
+    if (!targetMac || !targetIp) {
+      const credentials = await this._loadCredentials();
+
+      if (credentials.length > 0) {
+        // Use most recently used TV
+        const sorted = credentials.sort((a: TVCredentials, b: TVCredentials) =>
+          (b.lastUsed || 0) - (a.lastUsed || 0)
+        );
+        const mostRecent = sorted[0];
+
+        targetMac = targetMac || mostRecent.mac;
+        targetIp = targetIp || mostRecent.ip;
+      }
+    }
+
+    if (!targetMac) {
+      return {
+        success: false,
+        error: 'TV MAC address required for Wake-on-LAN',
+        hint: 'Provide MAC address: photon cli lg-remote on --mac AA:BB:CC:DD:EE:FF'
+      };
+    }
+
+    // Send WOL magic packet
+    return new Promise((resolve) => {
+      wol.wake(targetMac, (error: Error | null) => {
+        if (error) {
+          resolve({
+            success: false,
+            error: `Failed to send Wake-on-LAN packet: ${error.message}`
+          });
+        } else {
+          resolve({
+            success: true,
+            message: 'Wake-on-LAN packet sent',
+            mac: targetMac,
+            ip: targetIp,
+            hint: 'TV should turn on in a few seconds. Use "connect" if needed.'
+          });
+        }
+      });
+    });
   }
 
   /**
@@ -1184,11 +1253,31 @@ export default class LGRemote {
     // Wait for auto-discovery to complete
     await this._ensureReady();
 
+    // Auto-reconnect if disconnected
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      return {
-        success: false,
-        error: 'Not connected to TV',
-      };
+      console.error('[lg-remote] Connection lost, attempting to reconnect...');
+
+      try {
+        // Try to reconnect using saved credentials or discovered TV
+        const reconnectResult = await this.connect();
+
+        if (reconnectResult.success) {
+          console.error('[lg-remote] Reconnected successfully');
+          // Connection restored, continue with request below
+        } else {
+          return {
+            success: false,
+            error: 'TV connection lost. Please reconnect using: photon cli lg-remote connect --ip <tv-ip>',
+            hint: 'Use "photon cli lg-remote discover" to find your TV\'s IP address'
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          error: 'TV connection lost. Please reconnect using: photon cli lg-remote connect --ip <tv-ip>',
+          hint: 'Use "photon cli lg-remote discover" to find your TV\'s IP address'
+        };
+      }
     }
 
     // Wait a bit after registration to ensure TV processes permissions
@@ -1252,6 +1341,22 @@ export default class LGRemote {
     }
 
     await fs.writeFile(this.credentialsFile, JSON.stringify(credentials, null, 2));
+  }
+
+  private async _getMacAddress(): Promise<string | undefined> {
+    try {
+      const result = await this._request('ssap://com.webos.service.net/getInfo');
+      if (result.success && result.data?.wiredInfo?.macAddress) {
+        return result.data.wiredInfo.macAddress;
+      } else if (result.success && result.data?.wifiInfo?.macAddress) {
+        return result.data.wifiInfo.macAddress;
+      }
+      console.error('[lg-remote] ⚠️  Could not retrieve MAC address from TV');
+      return undefined;
+    } catch (error) {
+      console.error('[lg-remote] ⚠️  Failed to fetch MAC address');
+      return undefined;
+    }
   }
 
   private async _autoDiscoverAndConnect(): Promise<void> {

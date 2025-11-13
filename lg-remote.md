@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **25** tools:
+This photon provides **26** tools:
 
 
 ### `discover`
@@ -170,6 +170,25 @@ Toggle mute
 
 
 - **`mute`** (any) - True to mute, false to unmute (optional - omit to toggle)
+
+
+
+
+
+---
+
+
+### `on`
+
+Turn TV on using Wake-on-LAN
+
+
+**Parameters:**
+
+
+- **`mac`** (any) - TV's MAC address (optional if already saved)
+
+- **`ip`** (any) - TV's IP address (optional if already saved)
 
 
 
@@ -436,7 +455,7 @@ photon mcp lg-remote --config
 This photon automatically installs the following dependencies:
 
 ```
-ws@^8.18.0
+ws@^8.18.0, wake_on_lan@^1.0.0
 ```
 
 
