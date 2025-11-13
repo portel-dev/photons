@@ -383,17 +383,16 @@
       "author": "Photon",
       "license": "MIT",
       "source": "../tuya-smart-light.photon.ts",
-      "hash": "sha256:086d917a7752ccdf3b120af6e19fa997d322ad7cd109eccd04e18e79452069c6",
+      "hash": "sha256:f47572ba53e01b6663c5d84b0946dea00247830091930709f51cf24eefceb2d1",
       "tools": [
         "setup",
         "list",
         "on",
         "off",
         "toggle",
-        "setBrightness",
-        "setColorTemp",
-        "setColor",
-        "setColorByName",
+        "brightness",
+        "temperature",
+        "color",
         "status"
       ]
     }

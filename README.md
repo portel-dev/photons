@@ -52,7 +52,7 @@ We welcome contributions! Submit pull requests for:
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
 | **SQLite Photon MCP** | SQLite database operations | 9 | [View →](sqlite.md) |
 | **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
-| **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 10 | [View →](tuya-smart-light.md) |
+| **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |
 
 
 **Total:** 19 photons ready to use

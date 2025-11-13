@@ -25,7 +25,7 @@ Control Tuya/Wipro/Smart Life WiFi bulbs
 
 ## 🔧 Tools
 
-This photon provides **10** tools:
+This photon provides **9** tools:
 
 
 ### `setup`
@@ -123,7 +123,7 @@ Toggle light on/off
 ---
 
 
-### `setBrightness`
+### `brightness`
 
 Set brightness level
 
@@ -131,11 +131,11 @@ Set brightness level
 **Parameters:**
 
 
+- **`level`** (any) - Brightness level (0-1000)
+
 - **`device_id`** (any) - Device ID (optional if name provided)
 
 - **`name`** (any) - Device name (optional if device_id provided)
-
-- **`level`** (any) - Brightness level (0-100 or 0-1000 depending on device)
 
 
 
@@ -144,7 +144,7 @@ Set brightness level
 ---
 
 
-### `setColorTemp`
+### `temperature`
 
 Set color temperature (warm to cool white)
 
@@ -152,36 +152,11 @@ Set color temperature (warm to cool white)
 **Parameters:**
 
 
-- **`device_id`** (any) - Device ID (optional if name provided)
-
-- **`name`** (any) - Device name (optional if device_id provided)
-
 - **`temp`** (any) - Temperature value (0-1000, where 0 is warm, 1000 is cool)
 
-
-
-
-
----
-
-
-### `setColor`
-
-Set RGB color
-
-
-**Parameters:**
-
-
 - **`device_id`** (any) - Device ID (optional if name provided)
 
 - **`name`** (any) - Device name (optional if device_id provided)
-
-- **`h`** (any) - Hue (0-360)
-
-- **`s`** (any) - Saturation (0-100)
-
-- **`v`** (any) - Value/Brightness (0-100)
 
 
 
@@ -190,19 +165,19 @@ Set RGB color
 ---
 
 
-### `setColorByName`
+### `color`
 
-Set color by name (common colors)
+Set color (supports hex RGB or color names)
 
 
 **Parameters:**
 
 
+- **`color`** (any) - Color as hex (FF0000, #FF0000) or name (red, blue, green, etc.)
+
 - **`device_id`** (any) - Device ID (optional if name provided)
 
 - **`name`** (any) - Device name (optional if device_id provided)
-
-- **`color`** (any) - Color name: red, green, blue, yellow, cyan, magenta, white, orange, purple, pink
 
 
 

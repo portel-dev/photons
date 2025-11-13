@@ -24,7 +24,7 @@
  * 6. Wait ~10 minutes for permissions to activate
  * 7. Run setup() once with your credentials
  *
- * All device data and credentials stored in ~/.photon/tuya-devices.json
+ * All device data and credentials stored in ~/.photon/tuya-smart-light.json
  *
  * Dependencies are auto-installed on first run.
  *
@@ -86,7 +86,7 @@ export default class TuyaSmartLight {
       this.devicesFile = devices_file;
     } else {
       const photonDir = path.join(os.homedir(), '.photon');
-      this.devicesFile = path.join(photonDir, 'tuya-devices.json');
+      this.devicesFile = path.join(photonDir, 'tuya-smart-light.json');
     }
   }
 
@@ -230,39 +230,47 @@ export default class TuyaSmartLight {
 
   /**
    * Set brightness level
+   * @param level Brightness level (0-1000)
    * @param device_id Device ID (optional if name provided)
    * @param name Device name (optional if device_id provided)
-   * @param level Brightness level (0-100 or 0-1000 depending on device)
    * @format table
    */
-  async setBrightness(params: { device_id?: string; name?: string; level: number }) {
-    const device = await this._getDevice(params);
+  async brightness(level: number | { level: number; device_id?: string; name?: string }, params?: { device_id?: string; name?: string }) {
+    // Handle both brightness(50) and brightness({ level: 50, name: "X" })
+    const actualLevel = typeof level === 'number' ? level : level.level;
+    const actualParams = typeof level === 'number' ? params : level;
+
+    const device = await this._getDevice(actualParams);
     if (!device.success) return device;
 
-    return this._executeCommand(device.device!, { dps: 3, set: params.level }, `Brightness set to ${params.level}`);
+    return this._executeCommand(device.device!, { dps: 3, set: actualLevel }, `Brightness set to ${actualLevel}`);
   }
 
   /**
    * Set color temperature (warm to cool white)
+   * @param temp Temperature value (0-1000, where 0 is warm, 1000 is cool)
    * @param device_id Device ID (optional if name provided)
    * @param name Device name (optional if device_id provided)
-   * @param temp Temperature value (0-1000, where 0 is warm, 1000 is cool)
    * @format table
    */
-  async setColorTemp(params: { device_id?: string; name?: string; temp: number }) {
-    const device = await this._getDevice(params);
+  async temperature(temp: number | { temp: number; device_id?: string; name?: string }, params?: { device_id?: string; name?: string }) {
+    // Handle both temperature(500) and temperature({ temp: 500, name: "X" })
+    const actualTemp = typeof temp === 'number' ? temp : temp.temp;
+    const actualParams = typeof temp === 'number' ? params : temp;
+
+    const device = await this._getDevice(actualParams);
     if (!device.success) return device;
 
     try {
       const conn = await this._getConnection(device.device!);
       await conn.set({ multiple: true, data: {
         '2': 'white',
-        '4': params.temp,
+        '4': actualTemp,
       }});
 
       return {
         success: true,
-        message: `Color temperature set to ${params.temp}`,
+        message: `Color temperature set to ${actualTemp}`,
       };
     } catch (error: any) {
       return {
@@ -273,23 +281,64 @@ export default class TuyaSmartLight {
   }
 
   /**
-   * Set RGB color
+   * Set color (supports hex RGB or color names)
+   * @param color Color as hex (FF0000, #FF0000) or name (red, blue, green, etc.)
    * @param device_id Device ID (optional if name provided)
    * @param name Device name (optional if device_id provided)
-   * @param h Hue (0-360)
-   * @param s Saturation (0-100)
-   * @param v Value/Brightness (0-100)
    * @format table
    */
-  async setColor(params: { device_id?: string; name?: string; h: number; s: number; v: number }) {
-    const device = await this._getDevice(params);
+  async color(color: string | { color: string; device_id?: string; name?: string }, params?: { device_id?: string; name?: string }) {
+    // Handle both color("FF0000") and color({ color: "red", name: "X" })
+    const actualColor = typeof color === 'string' ? color : color.color;
+    const actualParams = typeof color === 'string' ? params : color;
+
+    const device = await this._getDevice(actualParams);
     if (!device.success) return device;
+
+    // Named colors
+    const namedColors: { [key: string]: string } = {
+      red: 'FF0000',
+      green: '00FF00',
+      blue: '0000FF',
+      yellow: 'FFFF00',
+      cyan: '00FFFF',
+      magenta: 'FF00FF',
+      white: 'FFFFFF',
+      orange: 'FF8000',
+      purple: '8000FF',
+      pink: 'FF69B4',
+      lime: '00FF00',
+      navy: '000080',
+      teal: '008080',
+      olive: '808000',
+      maroon: '800000',
+    };
+
+    // Convert color to RGB hex
+    let rgbHex = actualColor.replace('#', '').toUpperCase();
+
+    // Check if it's a named color
+    const colorLower = actualColor.toLowerCase();
+    if (namedColors[colorLower]) {
+      rgbHex = namedColors[colorLower];
+    }
+
+    // Validate hex
+    if (!/^[0-9A-F]{6}$/.test(rgbHex)) {
+      return {
+        success: false,
+        error: `Invalid color: ${actualColor}. Use hex (FF0000) or name (${Object.keys(namedColors).join(', ')})`,
+      };
+    }
+
+    // Convert RGB to HSV
+    const hsv = this._rgbToHsv(rgbHex);
 
     try {
       // Tuya uses HSV format: HHHHssssvvvv (12 hex chars)
-      const h = Math.round(params.h);
-      const s = Math.round(params.s * 10); // 0-1000
-      const v = Math.round(params.v * 10); // 0-1000
+      const h = Math.round(hsv.h);
+      const s = Math.round(hsv.s * 10); // 0-1000
+      const v = Math.round(hsv.v * 10); // 0-1000
 
       const hHex = h.toString(16).padStart(4, '0');
       const sHex = s.toString(16).padStart(4, '0');
@@ -305,7 +354,8 @@ export default class TuyaSmartLight {
 
       return {
         success: true,
-        message: `Color set to HSV(${h}, ${params.s}, ${params.v})`,
+        message: `Color set to #${rgbHex}`,
+        device: device.device!.name,
       };
     } catch (error: any) {
       return {
@@ -313,38 +363,6 @@ export default class TuyaSmartLight {
         error: error.message,
       };
     }
-  }
-
-  /**
-   * Set color by name (common colors)
-   * @param device_id Device ID (optional if name provided)
-   * @param name Device name (optional if device_id provided)
-   * @param color Color name: red, green, blue, yellow, cyan, magenta, white, orange, purple, pink
-   * @format none
-   */
-  async setColorByName(params: { device_id?: string; name?: string; color: string }) {
-    const colors: { [key: string]: { h: number; s: number; v: number } } = {
-      red: { h: 0, s: 100, v: 100 },
-      green: { h: 120, s: 100, v: 100 },
-      blue: { h: 240, s: 100, v: 100 },
-      yellow: { h: 60, s: 100, v: 100 },
-      cyan: { h: 180, s: 100, v: 100 },
-      magenta: { h: 300, s: 100, v: 100 },
-      white: { h: 0, s: 0, v: 100 },
-      orange: { h: 30, s: 100, v: 100 },
-      purple: { h: 270, s: 100, v: 100 },
-      pink: { h: 330, s: 75, v: 100 },
-    };
-
-    const colorName = params.color.toLowerCase();
-    if (!colors[colorName]) {
-      return {
-        success: false,
-        error: `Unknown color: ${colorName}. Available: ${Object.keys(colors).join(', ')}`,
-      };
-    }
-
-    return this.setColor({ ...params, ...colors[colorName] });
   }
 
   /**
@@ -621,6 +639,39 @@ export default class TuyaSmartLight {
     };
 
     await fs.writeFile(this.devicesFile, JSON.stringify(stored, null, 2));
+  }
+
+  private _rgbToHsv(rgbHex: string): { h: number; s: number; v: number } {
+    // Parse RGB (each component is 0-255)
+    const r = parseInt(rgbHex.substr(0, 2), 16) / 255;
+    const g = parseInt(rgbHex.substr(2, 2), 16) / 255;
+    const b = parseInt(rgbHex.substr(4, 2), 16) / 255;
+
+    // Convert to HSV
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+
+    // Calculate hue (0-360)
+    let h = 0;
+    if (delta !== 0) {
+      if (max === r) {
+        h = 60 * (((g - b) / delta) % 6);
+      } else if (max === g) {
+        h = 60 * (((b - r) / delta) + 2);
+      } else {
+        h = 60 * (((r - g) / delta) + 4);
+      }
+    }
+    if (h < 0) h += 360;
+
+    // Calculate saturation (0-100)
+    const s = max === 0 ? 0 : (delta / max) * 100;
+
+    // Calculate value (0-100)
+    const v = max * 100;
+
+    return { h, s, v };
   }
 
   private _decryptUDP(data: Buffer): Buffer | null {
