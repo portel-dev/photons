@@ -780,6 +780,42 @@ export default class LGRemote {
   }
 
   /**
+   * Set MAC address for a saved TV (for Wake-on-LAN)
+   * @param ip TV IP address
+   * @param mac TV MAC address (format: AA:BB:CC:DD:EE:FF)
+   * @format table
+   */
+  async setMac(params: { ip: string; mac: string }) {
+    const credentials = await this._loadCredentials();
+    const cred = credentials.find((c: TVCredentials) => c.ip === params.ip);
+
+    if (!cred) {
+      return {
+        success: false,
+        error: `No saved credentials found for TV at ${params.ip}`,
+        hint: 'Use "photon cli lg-remote list" to see saved TVs'
+      };
+    }
+
+    // Update MAC address
+    cred.mac = params.mac;
+    cred.lastUsed = Date.now();
+
+    // Save updated credentials
+    const index = credentials.findIndex((c: TVCredentials) => c.ip === params.ip);
+    credentials[index] = cred;
+    await fs.writeFile(this.credentialsFile, JSON.stringify(credentials, null, 2));
+
+    return {
+      success: true,
+      message: 'MAC address saved',
+      ip: params.ip,
+      mac: params.mac,
+      hint: 'You can now use "photon cli lg-remote on" to turn on the TV'
+    };
+  }
+
+  /**
    * Turn TV on using Wake-on-LAN
    * @param mac TV's MAC address (optional if already saved)
    * @param ip TV's IP address (optional if already saved)
@@ -812,7 +848,9 @@ export default class LGRemote {
       return {
         success: false,
         error: 'TV MAC address required for Wake-on-LAN',
-        hint: 'Provide MAC address: photon cli lg-remote on --mac AA:BB:CC:DD:EE:FF'
+        hint: targetIp
+          ? `Set MAC address: photon cli lg-remote setMac --ip ${targetIp} --mac AA:BB:CC:DD:EE:FF`
+          : 'Provide MAC address: photon cli lg-remote on --mac AA:BB:CC:DD:EE:FF'
       };
     }
 

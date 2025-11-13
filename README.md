@@ -44,7 +44,7 @@ We welcome contributions! Submit pull requests for:
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
-| **LG Remote** | Control LG WebOS TVs | 26 | [View →](lg-remote.md) |
+| **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |

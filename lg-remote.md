@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **26** tools:
+This photon provides **27** tools:
 
 
 ### `discover`
@@ -170,6 +170,25 @@ Toggle mute
 
 
 - **`mute`** (any) - True to mute, false to unmute (optional - omit to toggle)
+
+
+
+
+
+---
+
+
+### `setMac`
+
+Set MAC address for a saved TV (for Wake-on-LAN)
+
+
+**Parameters:**
+
+
+- **`ip`** (any) - TV IP address
+
+- **`mac`** (any) - TV MAC address (format: AA:BB:CC:DD:EE:FF)
 
 
 

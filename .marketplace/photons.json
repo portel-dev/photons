@@ -211,7 +211,7 @@
       "author": "Photon (based on pokemote by mithileshchellappan)",
       "license": "MIT",
       "source": "../lg-remote.photon.ts",
-      "hash": "sha256:b5eeb13f4fffd4775ae3bc7ae17fe169d7ae105ff35e9f04d18bfb55d29b4d74",
+      "hash": "sha256:e49d8f5fd8ecea0aed4d38e85d3dad80d4a7a833b6b812671f4e9091afa27730",
       "tools": [
         "discover",
         "connect",
@@ -222,6 +222,7 @@
         "status",
         "volume",
         "mute",
+        "setMac",
         "on",
         "off",
         "notify",
