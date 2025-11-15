@@ -684,7 +684,7 @@ export default class LGRemote {
   /**
    * Get/set volume level
    * @param level Volume level (0-100), "+N" to increase by N, "-N" to decrease by N, or omit to get current
-   * @format table
+   * @format primitive
    */
   async volume(params?: { level?: number | string } | number | string) {
     // Support multiple formats: volume(50), volume("+5"), volume({ level: 50 })
@@ -714,11 +714,14 @@ export default class LGRemote {
       const currentVolume = currentResult.data.volume;
       const newVolume = Math.max(0, Math.min(100, currentVolume + delta));
 
-      // Set the new volume
-      await this._request('ssap://audio/setVolume', { volume: newVolume });
+      // Set the new volume - no need to fetch again
+      const result = await this._request('ssap://audio/setVolume', { volume: newVolume });
 
-      // Return current volume info
-      return this._request('ssap://audio/getVolume');
+      if (!result.success) {
+        return result;
+      }
+
+      return `Volume ${delta > 0 ? '+' : ''}${delta} → ${newVolume}`;
     }
 
     // Handle absolute volume
@@ -732,11 +735,14 @@ export default class LGRemote {
         };
       }
 
-      // Set the volume
-      await this._request('ssap://audio/setVolume', { volume: numLevel });
+      // Set the volume - no need to fetch current state
+      const result = await this._request('ssap://audio/setVolume', { volume: numLevel });
 
-      // Return current volume info
-      return this._request('ssap://audio/getVolume');
+      if (!result.success) {
+        return result;
+      }
+
+      return `Volume → ${numLevel}`;
     }
 
     // Get current volume
@@ -746,18 +752,21 @@ export default class LGRemote {
   /**
    * Toggle mute
    * @param mute True to mute, false to unmute (optional - omit to toggle)
-   * @format table
+   * @format primitive
    */
   async mute(params?: { mute?: boolean } | boolean) {
     // Support both mute(true) and mute({ mute: true })
     const muteValue = typeof params === 'boolean' ? params : params?.mute;
 
     if (muteValue !== undefined) {
-      // Set mute state
-      await this._request('ssap://audio/setMute', { mute: muteValue });
+      // Set mute state directly - no need to fetch volume info
+      const result = await this._request('ssap://audio/setMute', { mute: muteValue });
 
-      // Return current volume info
-      return this._request('ssap://audio/getVolume');
+      if (!result.success) {
+        return result;
+      }
+
+      return muteValue ? 'Muted' : 'Unmuted';
     }
 
     // If no param, toggle by getting current state first
@@ -773,10 +782,13 @@ export default class LGRemote {
     const newMuted = !currentMuted;
 
     // Set new mute state
-    await this._request('ssap://audio/setMute', { mute: newMuted });
+    const result = await this._request('ssap://audio/setMute', { mute: newMuted });
 
-    // Return current volume info
-    return this._request('ssap://audio/getVolume');
+    if (!result.success) {
+      return result;
+    }
+
+    return newMuted ? 'Muted' : 'Unmuted';
   }
 
   /**
