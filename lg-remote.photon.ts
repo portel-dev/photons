@@ -886,7 +886,7 @@ export default class LGRemote {
    * @format none
    */
   async off() {
-    return this._request('ssap://system/turnOff');
+    return this._request('ssap://system/turnOff', undefined, true);
   }
 
   /**
@@ -898,7 +898,7 @@ export default class LGRemote {
     // Support both notify("Hello") and notify({ message: "Hello" })
     const message = typeof params === 'string' ? params : params.message;
 
-    return this._request('ssap://system.notifications/createToast', { message });
+    return this._request('ssap://system.notifications/createToast', { message }, true);
   }
 
   /**
@@ -937,15 +937,8 @@ export default class LGRemote {
         };
       }
 
-      // Launch app with the correct ID
-      const launchResult = await this._request('ssap://system.launcher/launch', { id: app.id });
-
-      if (!launchResult.success) {
-        return launchResult;
-      }
-
-      // Wait a moment for app to launch
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Launch app with the correct ID (fire-and-forget for instant TV response)
+      await this._request('ssap://system.launcher/launch', { id: app.id }, true);
 
       // Return current app info
       return this._request('ssap://com.webos.applicationManager/getForegroundAppInfo');
@@ -986,20 +979,20 @@ export default class LGRemote {
     let result: any;
 
     if (number === '+1' || number === '1') {
-      // Channel up
-      await this._request('ssap://tv/channelUp');
+      // Channel up (fire-and-forget for instant TV response)
+      await this._request('ssap://tv/channelUp', undefined, true);
 
       // Return current channel
       result = await this._request('ssap://tv/getCurrentChannel');
     } else if (number === '-1') {
-      // Channel down
-      await this._request('ssap://tv/channelDown');
+      // Channel down (fire-and-forget for instant TV response)
+      await this._request('ssap://tv/channelDown', undefined, true);
 
       // Return current channel
       result = await this._request('ssap://tv/getCurrentChannel');
     } else if (number) {
-      // Switch to specific channel
-      await this._request('ssap://tv/openChannel', { channelNumber: number });
+      // Switch to specific channel (fire-and-forget for instant TV response)
+      await this._request('ssap://tv/openChannel', { channelNumber: number }, true);
 
       // Return current channel
       result = await this._request('ssap://tv/getCurrentChannel');
@@ -1084,8 +1077,8 @@ export default class LGRemote {
     // Support both input("HDMI_1") and input({ id: "HDMI_1" })
     const id = typeof params === 'string' ? params : params.id;
 
-    // Switch input
-    await this._request('ssap://tv/switchInput', { inputId: id });
+    // Switch input (fire-and-forget for instant TV response)
+    await this._request('ssap://tv/switchInput', { inputId: id }, true);
 
     // Return input list (TV doesn't have a "get current input" endpoint)
     return this._request('ssap://tv/getExternalInputList');
@@ -1104,7 +1097,7 @@ export default class LGRemote {
    * @format none
    */
   async play() {
-    return this._request('ssap://media.controls/play');
+    return this._request('ssap://media.controls/play', undefined, true);
   }
 
   /**
@@ -1112,7 +1105,7 @@ export default class LGRemote {
    * @format none
    */
   async pause() {
-    return this._request('ssap://media.controls/pause');
+    return this._request('ssap://media.controls/pause', undefined, true);
   }
 
   /**
@@ -1120,7 +1113,7 @@ export default class LGRemote {
    * @format none
    */
   async stop() {
-    return this._request('ssap://media.controls/stop');
+    return this._request('ssap://media.controls/stop', undefined, true);
   }
 
   /**
@@ -1128,7 +1121,7 @@ export default class LGRemote {
    * @format none
    */
   async rewind() {
-    return this._request('ssap://media.controls/rewind');
+    return this._request('ssap://media.controls/rewind', undefined, true);
   }
 
   /**
@@ -1136,7 +1129,7 @@ export default class LGRemote {
    * @format none
    */
   async forward() {
-    return this._request('ssap://media.controls/fastForward');
+    return this._request('ssap://media.controls/fastForward', undefined, true);
   }
 
   /**
