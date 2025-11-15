@@ -684,7 +684,7 @@ export default class LGRemote {
   /**
    * Get/set volume level
    * @param level Volume level (0-100), "+N" to increase by N, "-N" to decrease by N, or omit to get current
-   * @format primitive
+   * @format table
    */
   async volume(params?: { level?: number | string } | number | string) {
     // Support multiple formats: volume(50), volume("+5"), volume({ level: 50 })
@@ -714,14 +714,14 @@ export default class LGRemote {
       const currentVolume = currentResult.data.volume;
       const newVolume = Math.max(0, Math.min(100, currentVolume + delta));
 
-      // Set the new volume - no need to fetch again
-      const result = await this._request('ssap://audio/setVolume', { volume: newVolume });
+      // Set the new volume (fire-and-forget for instant response)
+      await this._request('ssap://audio/setVolume', { volume: newVolume }, true);
 
-      if (!result.success) {
-        return result;
-      }
-
-      return `Volume ${delta > 0 ? '+' : ''}${delta} → ${newVolume}`;
+      // Return updated info immediately (optimistic)
+      return {
+        ...currentResult.data,
+        volume: newVolume
+      };
     }
 
     // Handle absolute volume
@@ -735,14 +735,11 @@ export default class LGRemote {
         };
       }
 
-      // Set the volume - no need to fetch current state
-      const result = await this._request('ssap://audio/setVolume', { volume: numLevel });
+      // Set the volume (fire-and-forget for instant response)
+      await this._request('ssap://audio/setVolume', { volume: numLevel }, true);
 
-      if (!result.success) {
-        return result;
-      }
-
-      return `Volume → ${numLevel}`;
+      // Get current state to show details
+      return this._request('ssap://audio/getVolume');
     }
 
     // Get current volume
@@ -752,21 +749,18 @@ export default class LGRemote {
   /**
    * Toggle mute
    * @param mute True to mute, false to unmute (optional - omit to toggle)
-   * @format primitive
+   * @format table
    */
   async mute(params?: { mute?: boolean } | boolean) {
     // Support both mute(true) and mute({ mute: true })
     const muteValue = typeof params === 'boolean' ? params : params?.mute;
 
     if (muteValue !== undefined) {
-      // Set mute state directly - no need to fetch volume info
-      const result = await this._request('ssap://audio/setMute', { mute: muteValue });
+      // Set mute state (fire-and-forget for instant response)
+      await this._request('ssap://audio/setMute', { mute: muteValue }, true);
 
-      if (!result.success) {
-        return result;
-      }
-
-      return muteValue ? 'Muted' : 'Unmuted';
+      // Return current volume info
+      return this._request('ssap://audio/getVolume');
     }
 
     // If no param, toggle by getting current state first
@@ -781,14 +775,14 @@ export default class LGRemote {
     const currentMuted = currentResult.data.muted || false;
     const newMuted = !currentMuted;
 
-    // Set new mute state
-    const result = await this._request('ssap://audio/setMute', { mute: newMuted });
+    // Set new mute state (fire-and-forget for instant TV response)
+    await this._request('ssap://audio/setMute', { mute: newMuted }, true);
 
-    if (!result.success) {
-      return result;
-    }
-
-    return newMuted ? 'Muted' : 'Unmuted';
+    // Return updated info immediately (optimistic)
+    return {
+      ...currentResult.data,
+      muted: newMuted
+    };
   }
 
   /**
@@ -1343,7 +1337,7 @@ export default class LGRemote {
     }
   }
 
-  private async _request(uri: string, payload?: any): Promise<any> {
+  private async _request(uri: string, payload?: any, fireAndForget: boolean = false): Promise<any> {
     // Wait for auto-discovery to complete
     await this._ensureReady();
 
@@ -1379,17 +1373,24 @@ export default class LGRemote {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
+    const id = `req_${Date.now()}_${Math.random()}`;
+    const message: TVMessage = {
+      type: 'request',
+      id,
+      uri,
+      payload: payload || {},
+    };
+
+    console.error(`[lg-remote] Sending request: ${uri}, payload: ${JSON.stringify(payload)}`);
+
+    // Fire-and-forget mode: send command and return immediately
+    if (fireAndForget) {
+      this.ws!.send(JSON.stringify(message));
+      return { success: true };
+    }
+
+    // Normal mode: wait for response
     return new Promise((resolve, reject) => {
-      const id = `req_${Date.now()}_${Math.random()}`;
-      const message: TVMessage = {
-        type: 'request',
-        id,
-        uri,
-        payload: payload || {},
-      };
-
-      console.error(`[lg-remote] Sending request: ${uri}, payload: ${JSON.stringify(payload)}`);
-
       const timeout = setTimeout(() => {
         this.pendingRequests.delete(id);
         reject(new Error('Request timeout'));
