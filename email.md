@@ -4,7 +4,7 @@ Send and receive emails via SMTP and IMAP
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -92,11 +92,11 @@ Send an email
 **Parameters:**
 
 
-- **`to`** (any) [min: 1, max: 500, format: email] - Recipient email address or comma-separated addresses (e.g., `user@example.com`)
+- **`to`** (any) - Recipient email address or comma-separated addresses
 
-- **`subject`** (any) [min: 1, max: 200] - Email subject (e.g., `Daily Report`)
+- **`subject`** (any) - Email subject
 
-- **`body`** (any) [min: 1, max: 50000] - Email body (plain text or HTML)
+- **`body`** (any) - Email body (plain text or HTML)
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
@@ -121,13 +121,13 @@ Send an email with attachments
 **Parameters:**
 
 
-- **`to`** (any) [min: 1, max: 500, format: email] - Recipient email address (e.g., `user@example.com`)
+- **`to`** (any) - Recipient email address
 
-- **`subject`** (any) [min: 1, max: 200] - Email subject
+- **`subject`** (any) - Email subject
 
-- **`body`** (any) [min: 1, max: 50000] - Email body
+- **`body`** (any) - Email body
 
-- **`attachments`** (any) [min: 1] - Array of attachments with filename and content (e.g., `[{"filename":"report.pdf","content":"..."}]`)
+- **`attachments`** (any) - Array of attachments with filename and content
 
 - **`html`** (any, optional) - Set to true if body contains HTML
 
@@ -146,11 +146,11 @@ List emails from inbox
 **Parameters:**
 
 
-- **`limit`** (any, optional) [min: 1, max: 100] - Maximum number of emails to return
+- **`limit`** (any, optional) - Maximum number of emails to return
 
 - **`unreadOnly`** (any, optional) - Only return unread emails
 
-- **`mailbox`** (any) - Mailbox to check (e.g., `INBOX`)
+- **`mailbox`** (any, optional) - Mailbox to check
 
 
 
@@ -167,9 +167,9 @@ Get a specific email by sequence number
 **Parameters:**
 
 
-- **`uid`** (any) [min: 1] - Email sequence number (from listInbox)
+- **`uid`** (any) - Email sequence number (from listInbox)
 
-- **`mailbox`** (any) - Mailbox to check (e.g., `INBOX`)
+- **`mailbox`** (any, optional) - Mailbox to check
 
 
 
@@ -186,13 +186,13 @@ Search emails by criteria
 **Parameters:**
 
 
-- **`query`** (any) [min: 1] - Search query (from, subject, or body text) (e.g., `meeting`)
+- **`query`** (any) - Search query (from, subject, or body text)
 
-- **`searchIn`** (any) - Where to search (e.g., `subject`)
+- **`searchIn`** (any, optional) - Where to search: from, subject, or body
 
-- **`limit`** (any, optional) [min: 1, max: 100] - Maximum results
+- **`limit`** (any, optional) - Maximum results
 
-- **`mailbox`** (any) - Mailbox to search (e.g., `INBOX`)
+- **`mailbox`** (any, optional) - Mailbox to search
 
 
 
@@ -209,9 +209,9 @@ Mark an email as read
 **Parameters:**
 
 
-- **`uid`** (any) [min: 1] - Email sequence number
+- **`uid`** (any) - Email sequence number
 
-- **`mailbox`** (any) - Mailbox name (e.g., `INBOX`)
+- **`mailbox`** (any, optional) - Mailbox name
 
 
 
@@ -228,9 +228,9 @@ Delete an email
 **Parameters:**
 
 
-- **`uid`** (any) [min: 1] - Email sequence number
+- **`uid`** (any) - Email sequence number
 
-- **`mailbox`** (any) - Mailbox name (e.g., `INBOX`)
+- **`mailbox`** (any, optional) - Mailbox name
 
 
 
@@ -247,11 +247,11 @@ Move email to another mailbox (archive)
 **Parameters:**
 
 
-- **`uid`** (any) [min: 1] - Email sequence number
+- **`uid`** (any) - Email sequence number
 
-- **`targetMailbox`** (any) [min: 1] - Target mailbox name (e.g., `Archive`)
+- **`targetMailbox`** (any) - Target mailbox name (e.g., Archive, Trash)
 
-- **`sourceMailbox`** (any) - Source mailbox (e.g., `INBOX`)
+- **`sourceMailbox`** (any, optional) - Source mailbox
 
 
 
@@ -311,4 +311,4 @@ nodemailer@^6.9.0, imap@^0.8.19, mailparser@^3.6.0
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

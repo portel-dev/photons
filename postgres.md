@@ -4,7 +4,7 @@ Database operations for PostgreSQL
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -71,9 +71,9 @@ Execute a SQL query
 **Parameters:**
 
 
-- **`sql`** (any) [min: 1, max: 10000] - SQL query to execute (supports $1, $2, etc. for parameters) (e.g., `SELECT * FROM users WHERE active = $1`)
+- **`sql`** (any) - SQL query to execute (supports $1, $2, etc. for parameters)
 
-- **`params`** (any, optional) - Query parameters array (e.g., `[true]`)
+- **`params`** (any, optional) - Query parameters array
 
 
 
@@ -90,7 +90,7 @@ Execute multiple SQL statements in a transaction
 **Parameters:**
 
 
-- **`statements`** (any) [min: 1] - Array of SQL statements with optional parameters (e.g., `[{"sql":"INSERT INTO users (name) VALUES ($1)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + $1","params":[100]}]`)
+- **`statements`** (any) - Array of SQL statements with optional parameters
 
 
 
@@ -107,7 +107,7 @@ List all tables in the database
 **Parameters:**
 
 
-- **`schema`** (any, optional) [max: 63] - Schema name (e.g., `public`)
+- **`schema`** (any, optional) - Schema name
 
 
 
@@ -124,9 +124,9 @@ Get table schema information
 **Parameters:**
 
 
-- **`table`** (any) [min: 1, max: 63] - Table name (e.g., `users`)
+- **`table`** (any) - Table name
 
-- **`schema`** (any, optional) [max: 63] - Schema name (e.g., `public`)
+- **`schema`** (any, optional) - Schema name
 
 
 
@@ -143,9 +143,9 @@ List all indexes on a table
 **Parameters:**
 
 
-- **`table`** (any) [min: 1, max: 63] - Table name (e.g., `users`)
+- **`table`** (any) - Table name
 
-- **`schema`** (any, optional) [max: 63] - Schema name (e.g., `public`)
+- **`schema`** (any, optional) - Schema name
 
 
 
@@ -162,11 +162,11 @@ Execute a SQL INSERT statement
 **Parameters:**
 
 
-- **`table`** (any) [min: 1, max: 63] - Table name (e.g., `users`)
+- **`table`** (any) - Table name
 
-- **`data`** (any) [min: 1] - Object with column names as keys (e.g., `{"name":"John","email":"john@example.com"}`)
+- **`data`** (any) - Object with column names as keys
 
-- **`returning`** (any, optional) - Column names to return (e.g., `["id","created_at"]`)
+- **`returning`** (any, optional) - Column names to return
 
 
 
@@ -237,4 +237,4 @@ pg@^8.11.0
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

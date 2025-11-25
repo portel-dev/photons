@@ -22,7 +22,7 @@
  * @stateful true
  * @idleTimeout 600000
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Photon (based on pokemote by mithileshchellappan)
  * @license MIT
  */

@@ -4,7 +4,7 @@ Manage GitHub repository issues
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -39,7 +39,7 @@ Dependencies are auto-installed on first run.
 This photon provides **7** tools:
 
 
-### `list`
+### `listIssues`
 
 List issues in a repository
 
@@ -47,17 +47,17 @@ List issues in a repository
 **Parameters:**
 
 
-- **`owner`** (any) [min: 1, max: 100] - Repository owner (username or organization) (e.g., `octocat`)
+- **`owner`** (any) - Repository owner (username or organization)
 
-- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
+- **`repo`** (any) - Repository name
 
-- **`state`** (any, optional) - Issue state filter (e.g., `open`)
+- **`state`** (any, optional) - Issue state filter
 
-- **`labels`** (any) [max: 500] - Comma-separated label names to filter by (e.g., `bug,enhancement`)
+- **`labels`** (any) - Comma-separated label names to filter by
 
-- **`sort`** (any, optional) - Sort by created, updated, or comments (e.g., `created`)
+- **`sort`** (any, optional) - Sort by created, updated, or comments
 
-- **`per_page`** (any, optional) [min: 1, max: 100] - Number of results per page
+- **`per_page`** (any, optional) - Number of results per page
 
 
 
@@ -66,7 +66,7 @@ List issues in a repository
 ---
 
 
-### `get`
+### `getIssue`
 
 Get a single issue by number
 
@@ -74,11 +74,11 @@ Get a single issue by number
 **Parameters:**
 
 
-- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
+- **`owner`** (any) - Repository owner
 
-- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
+- **`repo`** (any) - Repository name
 
-- **`issue_number`** (any) [min: 1] - Issue number (e.g., `42`)
+- **`issue_number`** (any) - Issue number
 
 
 
@@ -87,7 +87,7 @@ Get a single issue by number
 ---
 
 
-### `create`
+### `createIssue`
 
 Create a new issue
 
@@ -95,17 +95,17 @@ Create a new issue
 **Parameters:**
 
 
-- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
+- **`owner`** (any) - Repository owner
 
-- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
+- **`repo`** (any) - Repository name
 
-- **`title`** (any) [min: 1, max: 200] - Issue title (e.g., `Bug in user authentication`)
+- **`title`** (any) - Issue title
 
-- **`body`** (any) [max: 5000] - Issue description/body (e.g., `Steps to reproduce: 1. Login 2. Navigate to profile`)
+- **`body`** (any) - Issue description/body
 
-- **`labels`** (any) [min: 1] - Array of label names (e.g., `["bug","priority-high"]`)
+- **`labels`** (any) - Array of label names
 
-- **`assignees`** (any) [min: 1] - Array of usernames to assign (e.g., `["octocat","hubot"]`)
+- **`assignees`** (any) - Array of usernames to assign
 
 
 
@@ -114,7 +114,7 @@ Create a new issue
 ---
 
 
-### `update`
+### `updateIssue`
 
 Update an existing issue
 
@@ -122,19 +122,19 @@ Update an existing issue
 **Parameters:**
 
 
-- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
+- **`owner`** (any) - Repository owner
 
-- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
+- **`repo`** (any) - Repository name
 
-- **`issue_number`** (any) [min: 1] - Issue number to update (e.g., `42`)
+- **`issue_number`** (any) - Issue number to update
 
-- **`title`** (any, optional) [min: 1, max: 200] - New title (e.g., `Updated: Bug in user authentication`)
+- **`title`** (any, optional) - New title
 
-- **`body`** (any, optional) [max: 5000] - New body (e.g., `Additional details: This also affects mobile users`)
+- **`body`** (any, optional) - New body
 
-- **`state`** (any, optional) - New state: open or closed (e.g., `closed`)
+- **`state`** (any, optional) - New state: open or closed
 
-- **`labels`** (any, optional) [min: 1] - New labels (e.g., `["bug","fixed"]`)
+- **`labels`** (any, optional) - New labels
 
 
 
@@ -143,7 +143,7 @@ Update an existing issue
 ---
 
 
-### `comment`
+### `addComment`
 
 Add a comment to an issue
 
@@ -151,13 +151,13 @@ Add a comment to an issue
 **Parameters:**
 
 
-- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
+- **`owner`** (any) - Repository owner
 
-- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
+- **`repo`** (any) - Repository name
 
-- **`issue_number`** (any) [min: 1] - Issue number (e.g., `42`)
+- **`issue_number`** (any) - Issue number
 
-- **`body`** (any) [min: 1, max: 5000] - Comment text (e.g., `This issue has been fixed in the latest commit`)
+- **`body`** (any) - Comment text
 
 
 
@@ -166,7 +166,7 @@ Add a comment to an issue
 ---
 
 
-### `comments`
+### `listComments`
 
 List comments on an issue
 
@@ -174,11 +174,11 @@ List comments on an issue
 **Parameters:**
 
 
-- **`owner`** (any) [min: 1, max: 100] - Repository owner (e.g., `octocat`)
+- **`owner`** (any) - Repository owner
 
-- **`repo`** (any) [min: 1, max: 100] - Repository name (e.g., `hello-world`)
+- **`repo`** (any) - Repository name
 
-- **`issue_number`** (any) [min: 1] - Issue number (e.g., `42`)
+- **`issue_number`** (any) - Issue number
 
 
 
@@ -187,7 +187,7 @@ List comments on an issue
 ---
 
 
-### `search`
+### `searchIssues`
 
 Search issues across repositories
 
@@ -195,13 +195,13 @@ Search issues across repositories
 **Parameters:**
 
 
-- **`query`** (any) [min: 1, max: 500] - Search query (e.g., `is:open label:bug repo:octocat/hello-world`)
+- **`query`** (any) - Search query (e.g., "is:open label:bug")
 
-- **`sort`** (any, optional) - Sort by created, updated, or comments (e.g., `created`)
+- **`sort`** (any, optional) - Sort by created, updated, or comments
 
-- **`order`** (any, optional) - Sort order: asc or desc (e.g., `desc`)
+- **`order`** (any, optional) - Sort order: asc or desc
 
-- **`per_page`** (any, optional) [min: 1, max: 100] - Number of results per page
+- **`per_page`** (any, optional) - Number of results per page
 
 
 
@@ -261,4 +261,4 @@ This photon automatically installs the following dependencies:
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

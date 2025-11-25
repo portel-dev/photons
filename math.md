@@ -4,7 +4,7 @@ Advanced math expression evaluator
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -27,22 +27,16 @@ This photon provides **1** tools:
 
 ### `calculate`
 
-Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E.
+Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E. Example: { expression: "mean([1,2,3,4]) + max(5, 10) - abs(-7)" }
 
 
 **Parameters:**
 
 
-- **`expression`** (any) [min: 1] - The math expression to calculate (e.g., `mean([1,2,3,4]) + max(5, 10)`)
+- **`expression`** (any) - The math expression to calculate
 
 
 
-
-**Example:**
-
-```typescript
-calculate("2 + 2")
-```
 
 
 ---
@@ -95,4 +89,4 @@ No external dependencies required.
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

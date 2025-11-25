@@ -226,6 +226,24 @@
       }
     },
     {
+      "name": "memory",
+      "description": "Memory - Knowledge graph-based persistent memory",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "memory": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "memory"
+          ]
+        }
+      }
+    },
+    {
       "name": "mongodb",
       "description": "MongoDB - NoSQL database operations",
       "source": "./",

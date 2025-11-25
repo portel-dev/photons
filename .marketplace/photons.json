@@ -47,12 +47,12 @@
     },
     {
       "name": "email",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Email - Send and receive emails via SMTP and IMAP",
       "author": "Portel",
       "license": "MIT",
       "source": "../email.photon.ts",
-      "hash": "sha256:6d61e68402ff7e6dcc247f0fe80a6195f91e830db3a6bc314104da391779dd47",
+      "hash": "sha256:cbab8eb92576292f5cf083343430b12b26158191e56919cc678ee2e3634f3c7d",
       "tools": [
         "send",
         "sendAttachment",
@@ -66,25 +66,25 @@
     },
     {
       "name": "fetch",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "description": "Fetch - Web content fetching and markdown conversion",
       "author": "Portel",
       "license": "MIT",
       "source": "../fetch.photon.ts",
-      "hash": "sha256:02d4e6be72c9c94f4305e80da4dd81724c7352c6e943fdf4649ef5b8438f421b",
+      "hash": "sha256:d99edec1075279b31215cca10834ef65a1e3c8eba39e5529c2c6b9a9dfe0351d",
       "tools": [
-        "fetch",
+        "url",
         "batch"
       ]
     },
     {
       "name": "filesystem",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Filesystem - File and directory operations",
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:334129f02fc95247aabf63b86aa0f9c1a00ec11c9fabfd21b47e63e2e623c848",
+      "hash": "sha256:30ee30bc4b15dfebca4f74204a2c40ff9730c18ee09b0af34906d65204554bef",
       "tools": [
         "read",
         "write",
@@ -125,20 +125,20 @@
     },
     {
       "name": "github-issues",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "GitHub Issues - Manage GitHub repository issues",
       "author": "Portel",
       "license": "MIT",
       "source": "../github-issues.photon.ts",
-      "hash": "sha256:d3a89a92653e0fd23b5fa28dc9a8123326500e5a452035b918b02b2be5070b77",
+      "hash": "sha256:fce353220061b56dc8cf09606fe23b2d849adacc87d5faafcb23f3aafa27d678",
       "tools": [
-        "list",
-        "get",
-        "create",
-        "update",
-        "comment",
-        "comments",
-        "search"
+        "listIssues",
+        "getIssue",
+        "createIssue",
+        "updateIssue",
+        "addComment",
+        "listComments",
+        "searchIssues"
       ]
     },
     {
@@ -206,12 +206,12 @@
     },
     {
       "name": "lg-remote",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "LG Remote - Control LG WebOS TVs",
       "author": "Photon (based on pokemote by mithileshchellappan)",
       "license": "MIT",
       "source": "../lg-remote.photon.ts",
-      "hash": "sha256:b1301a744d94909aa81069d6cc2c76c594b0192ad86672f4fc23717568553426",
+      "hash": "sha256:a78131f6e650aa9a3dac147801f37e635e1f20259183b432d7435a8257c49f18",
       "tools": [
         "discover",
         "connect",
@@ -244,14 +244,35 @@
     },
     {
       "name": "math",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Math Photon MCP - Advanced math expression evaluator",
       "author": "Portel",
       "license": "MIT",
       "source": "../math.photon.ts",
-      "hash": "sha256:78d5ae24ccd375b7f7b38670b1d04602ba6b4af90d4642d3a17ccbe889ed4795",
+      "hash": "sha256:54cbf9ca37fd03cbf9106468ff281bdbffc0f2ddc0efe8870957eac194aab621",
       "tools": [
         "calculate"
+      ]
+    },
+    {
+      "name": "memory",
+      "version": "1.1.0",
+      "description": "Memory - Knowledge graph-based persistent memory",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../memory.photon.ts",
+      "hash": "sha256:b2630e9c20d559462e9a4548abfbe9b79a3624230fdbf25bc399699c48d2abc7",
+      "tools": [
+        "createEntities",
+        "createRelations",
+        "addObservations",
+        "deleteEntities",
+        "deleteObservations",
+        "deleteRelations",
+        "readGraph",
+        "searchNodes",
+        "openNodes",
+        "clearGraph"
       ]
     },
     {
@@ -280,12 +301,12 @@
     },
     {
       "name": "postgres",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "PostgreSQL - Database operations for PostgreSQL",
       "author": "Portel",
       "license": "MIT",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:d3bd1ff23036ad746a16a1f3cd3afb96ed89b35a3c26ddbda5337437d46a5782",
+      "hash": "sha256:de003be5300d0be65df5d50778bb652b62568579d5c9b209cf31e00b70526915",
       "tools": [
         "query",
         "transaction",
@@ -345,19 +366,19 @@
     },
     {
       "name": "sqlite",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "SQLite Photon MCP - SQLite database operations",
       "author": "Portel",
       "license": "MIT",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:c7bdd369b53c0a8589b579f27e1d49e43f3840778cfe189fbfb82faef63b92e9",
+      "hash": "sha256:454b1baaf0c611f87c6c432bac9b1f2a16ea05ae14a1ed943c7770ff9f493ac8",
       "tools": [
         "open",
         "query",
         "queryOne",
         "execute",
         "transaction",
-        "tables",
+        "listTables",
         "schema",
         "close",
         "backup"
@@ -379,12 +400,12 @@
     },
     {
       "name": "tuya-smart-light",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "description": "Tuya Smart Light - Control Tuya/Wipro/Smart Life WiFi bulbs",
       "author": "Photon",
       "license": "MIT",
       "source": "../tuya-smart-light.photon.ts",
-      "hash": "sha256:f47572ba53e01b6663c5d84b0946dea00247830091930709f51cf24eefceb2d1",
+      "hash": "sha256:5f43d45a3b8bd78cd9774a83d3ddf9244a3975118d69baabc752aac4cff2b53a",
       "tools": [
         "setup",
         "list",

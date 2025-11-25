@@ -4,7 +4,7 @@ File and directory operations
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -52,18 +52,12 @@ Read file contents
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - File path (relative to workdir or absolute) (e.g., `README.md`)
+- **`path`** (any) - File path (relative to workdir or absolute)
 
-- **`encoding`** (any) - File encoding (e.g., `utf-8`)
-
-
+- **`encoding`** (any, optional) - File encoding
 
 
-**Example:**
 
-```typescript
-read("README.md")
-```
 
 
 ---
@@ -77,20 +71,14 @@ Write content to file
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - File path (relative to workdir or absolute) (e.g., `report.json`)
+- **`path`** (any) - File path (relative to workdir or absolute)
 
-- **`content`** (any) [min: 1] - File content (e.g., `{"name":"John"}`)
+- **`content`** (any) - File content
 
-- **`encoding`** (any) - File encoding (e.g., `utf-8`)
-
-
+- **`encoding`** (any, optional) - File encoding
 
 
-**Example:**
 
-```typescript
-write("report.json", '{"name": "John"}')
-```
 
 
 ---
@@ -104,20 +92,14 @@ Append content to file
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - File path (relative to workdir or absolute) (e.g., `log.txt`)
+- **`path`** (any) - File path (relative to workdir or absolute)
 
-- **`content`** (any) [min: 1] - Content to append (e.g., `New log entry\n`)
+- **`content`** (any) - Content to append
 
-- **`encoding`** (any) - File encoding (e.g., `utf-8`)
-
-
+- **`encoding`** (any, optional) - File encoding
 
 
-**Example:**
 
-```typescript
-append("log.txt", "New log entry\n")
-```
 
 
 ---
@@ -131,16 +113,10 @@ Remove a file
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - File path (relative to workdir or absolute) (e.g., `old-file.txt`)
+- **`path`** (any) - File path (relative to workdir or absolute)
 
 
 
-
-**Example:**
-
-```typescript
-remove("old-file.txt")
-```
 
 
 ---
@@ -154,18 +130,12 @@ Copy a file
 **Parameters:**
 
 
-- **`source`** (any) [min: 1] - Source file path (e.g., `config.json`)
+- **`source`** (any) - Source file path
 
-- **`destination`** (any) [min: 1] - Destination file path (e.g., `config.backup.json`)
-
-
+- **`destination`** (any) - Destination file path
 
 
-**Example:**
 
-```typescript
-copy("config.json", "config.backup.json")
-```
 
 
 ---
@@ -179,18 +149,12 @@ Move/rename a file
 **Parameters:**
 
 
-- **`source`** (any) [min: 1] - Source file path (e.g., `old-name.txt`)
+- **`source`** (any) - Source file path
 
-- **`destination`** (any) [min: 1] - Destination file path (e.g., `new-name.txt`)
-
-
+- **`destination`** (any) - Destination file path
 
 
-**Example:**
 
-```typescript
-move("old-name.txt", "new-name.txt")
-```
 
 
 ---
@@ -204,18 +168,12 @@ List files in a directory
 **Parameters:**
 
 
-- **`path`** (any) - Directory path (relative to workdir or absolute, default: current workdir) (e.g., `my-folder`)
+- **`path`** (any) - Directory path (relative to workdir or absolute, default: current workdir)
 
 - **`recursive`** (any, optional) - List files recursively
 
 
 
-
-**Example:**
-
-```typescript
-list()
-```
 
 
 ---
@@ -229,18 +187,12 @@ Create a directory
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - Directory path (relative to workdir or absolute) (e.g., `new-folder`)
+- **`path`** (any) - Directory path (relative to workdir or absolute)
 
 - **`recursive`** (any, optional) - Create parent directories if needed
 
 
 
-
-**Example:**
-
-```typescript
-mkdir("new-folder")
-```
 
 
 ---
@@ -254,18 +206,12 @@ Remove a directory
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - Directory path (relative to workdir or absolute) (e.g., `old-folder`)
+- **`path`** (any) - Directory path (relative to workdir or absolute)
 
 - **`recursive`** (any, optional) - Remove directory and all contents
 
 
 
-
-**Example:**
-
-```typescript
-rmdir("old-folder")
-```
 
 
 ---
@@ -279,16 +225,10 @@ Get file or directory information
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - File or directory path (e.g., `README.md`)
+- **`path`** (any) - File or directory path
 
 
 
-
-**Example:**
-
-```typescript
-info("README.md")
-```
 
 
 ---
@@ -302,16 +242,10 @@ Check if file or directory exists
 **Parameters:**
 
 
-- **`path`** (any) [min: 1] - File or directory path (e.g., `config.json`)
+- **`path`** (any) - File or directory path
 
 
 
-
-**Example:**
-
-```typescript
-exists("config.json")
-```
 
 
 ---
@@ -325,18 +259,12 @@ Search for files matching a pattern
 **Parameters:**
 
 
-- **`pattern`** (any) [min: 1] - File name pattern (glob-style: *.txt, **\/*.js) (e.g., `*.txt`)
+- **`pattern`** (any) - File name pattern (glob-style: *.txt, **\/*.js)
 
-- **`path`** (any, optional) - Directory to search (e.g., `documents`)
-
-
+- **`path`** (any, optional) - Directory to search
 
 
-**Example:**
 
-```typescript
-search("*.txt")
-```
 
 
 ---
@@ -400,4 +328,4 @@ No external dependencies required.
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

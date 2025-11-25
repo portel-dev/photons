@@ -4,7 +4,7 @@ Web content fetching and markdown conversion
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.2.0
 **Author:** Portel
 **License:** MIT
 
@@ -33,7 +33,7 @@ Dependencies are auto-installed on first run.
 This photon provides **2** tools:
 
 
-### `fetch`
+### `url`
 
 Fetch a URL and convert to markdown
 
@@ -60,7 +60,7 @@ Fetch a URL and convert to markdown
 
 ### `batch`
 
-Fetch multiple URLs in parallel
+Fetch multiple URLs in parallel and join them
 
 
 **Parameters:**
@@ -124,10 +124,10 @@ photon mcp fetch --config
 This photon automatically installs the following dependencies:
 
 ```
-turndown@^7.2.0, @mozilla/readability@^0.5.0, jsdom@^25.0.0
+turndown@^7.2.0, @mozilla/readability@^0.5.0, jsdom@^25.0.0, js-yaml@^4.1.0
 ```
 
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.2.0

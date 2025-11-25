@@ -5,6 +5,8 @@
  * Extracts main content (like Safari Reader Mode) before converting to markdown.
  * Supports pagination for large pages and raw content retrieval.
  *
+ * Returns a single Markdown string with YAML frontmatter containing metadata.
+ *
  * Common use cases:
  * - Documentation retrieval: "Fetch the Python requests documentation"
  * - Content analysis: "Get the content from this blog post"
@@ -17,32 +19,45 @@
  *
  * Dependencies are auto-installed on first run.
  *
- * @dependencies turndown@^7.2.0, @mozilla/readability@^0.5.0, jsdom@^25.0.0
+ * @dependencies turndown@^7.2.0, @mozilla/readability@^0.5.0, jsdom@^25.0.0, js-yaml@^4.1.0
  *
- * @version 1.0.0
+ * @version 1.2.0
  * @author Portel
  * @license MIT
  */
 
-import TurndownService from 'turndown';
-import { Readability } from '@mozilla/readability';
-import { JSDOM } from 'jsdom';
+import TurndownService from "turndown";
+import { Readability } from "@mozilla/readability";
+import { JSDOM } from "jsdom";
+import * as yaml from "js-yaml";
 
 export default class Fetch {
   private turndown: TurndownService;
   private userAgent: string;
 
   constructor(user_agent?: string) {
-    this.userAgent = user_agent || 'Photon-MCP-Fetch/1.0';
+    this.userAgent = user_agent || "Photon-MCP-Fetch/1.0";
     this.turndown = new TurndownService({
-      headingStyle: 'atx',
-      codeBlockStyle: 'fenced',
+      headingStyle: "atx",
+      codeBlockStyle: "fenced",
     });
   }
 
   async onInitialize() {
-    console.error('[fetch] ✅ Initialized');
+    console.error("[fetch] ✅ Initialized");
     console.error(`[fetch] User-Agent: ${this.userAgent}`);
+  }
+
+  /**
+   * Helper to format response as Markdown with YAML frontmatter
+   */
+  private formatResponse(
+    metadata: Record<string, any>,
+    content: string,
+  ): string {
+    // Ensure clean separation for frontmatter
+    const frontMatter = yaml.dump(metadata, { lineWidth: -1 });
+    return `---\n${frontMatter}---\n\n${content}`;
   }
 
   /**
@@ -52,14 +67,15 @@ export default class Fetch {
    * @param start_index {@min 0} Start index for pagination (default: 0)
    * @param raw Return raw HTML instead of markdown (default: false)
    * @param readability Extract main content using Readability (default: true)
+   * @returns string {markdown} Markdown document with YAML metadata header
    */
-  async fetch(params: {
+  async url(params: {
     url: string;
     max_length?: number;
     start_index?: number;
     raw?: boolean;
     readability?: boolean;
-  }) {
+  }): Promise<string> {
     try {
       // Validate URL
       const url = new URL(params.url);
@@ -67,20 +83,24 @@ export default class Fetch {
       // Fetch content
       const response = await fetch(url.href, {
         headers: {
-          'User-Agent': this.userAgent,
+          "User-Agent": this.userAgent,
         },
-        redirect: 'follow',
+        redirect: "follow",
       });
 
       if (!response.ok) {
-        return {
-          success: false,
-          error: `HTTP ${response.status}: ${response.statusText}`,
-          status: response.status,
-        };
+        return this.formatResponse(
+          {
+            success: false,
+            url: url.href,
+            status: response.status,
+            error: response.statusText,
+          },
+          `# Error: HTTP ${response.status}\n\nCould not fetch content from ${url.href}.`,
+        );
       }
 
-      const contentType = response.headers.get('content-type') || '';
+      const contentType = response.headers.get("content-type") || "";
 
       // Get content
       let content = await response.text();
@@ -88,7 +108,7 @@ export default class Fetch {
       let articleExcerpt: string | undefined;
 
       // Process HTML content
-      if (!params.raw && contentType.includes('text/html')) {
+      if (!params.raw && contentType.includes("text/html")) {
         // Apply readability extraction if enabled (default: true)
         const useReadability = params.readability !== false;
 
@@ -105,7 +125,9 @@ export default class Fetch {
             }
           } catch (error) {
             // Fall back to raw HTML if readability fails
-            console.error('[fetch] Readability extraction failed, using raw HTML');
+            console.error(
+              "[fetch] Readability extraction failed, using raw HTML",
+            );
           }
         }
 
@@ -121,71 +143,78 @@ export default class Fetch {
       const endIndex = Math.min(startIndex + maxLength, totalLength);
       const paginatedContent = content.slice(startIndex, endIndex);
 
-      return {
+      // Construct Metadata Object
+      const metadata = {
         success: true,
         url: url.href,
-        content: paginatedContent,
-        ...(articleTitle && { title: articleTitle }),
-        ...(articleExcerpt && { excerpt: articleExcerpt }),
-        metadata: {
-          status: response.status,
-          contentType,
+        title: articleTitle || "Untitled",
+        excerpt: articleExcerpt || null,
+        status: response.status,
+        contentType,
+        pagination: {
           totalLength,
           startIndex,
           endIndex,
           hasMore: endIndex < totalLength,
         },
       };
+
+      return this.formatResponse(metadata, paginatedContent);
     } catch (error: any) {
-      if (error.code === 'ENOTFOUND') {
-        return {
-          success: false,
-          error: 'Domain not found. Check the URL.',
-        };
+      // Error Handling: Return formatted markdown even on crash so AI sees the error context
+      let errorMessage = error.message;
+
+      if (error.code === "ENOTFOUND") {
+        errorMessage = "Domain not found. Check the URL.";
+      } else if (
+        error.name === "TypeError" &&
+        error.message.includes("Invalid URL")
+      ) {
+        errorMessage = "Invalid URL format.";
       }
 
-      if (error.name === 'TypeError' && error.message.includes('Invalid URL')) {
-        return {
+      return this.formatResponse(
+        {
           success: false,
-          error: 'Invalid URL format',
-        };
-      }
-
-      return {
-        success: false,
-        error: error.message,
-      };
+          url: params.url,
+          error: errorMessage,
+        },
+        `# Error\n\n${errorMessage}`,
+      );
     }
   }
 
   /**
-   * Fetch multiple URLs in parallel
+   * Fetch multiple URLs in parallel and join them
    * @param urls {@min 1} {@max 10} Array of URLs to fetch {@example ["https://example.com","https://example.org"]}
    * @param max_length {@min 1} {@max 50000} Maximum length per URL (default: 5000)
    * @param readability Extract main content using Readability (default: true)
+   * @returns string[] {markdown} Array of Markdown documents
    */
-  async batch(params: { urls: string[]; max_length?: number; readability?: boolean }) {
+  async batch(params: {
+    urls: string[];
+    max_length?: number;
+    readability?: boolean;
+  }): Promise<string[]> {
     try {
       const results = await Promise.all(
         params.urls.map((url) =>
-          this.fetch({
+          this.url({
             url,
             max_length: params.max_length,
-            readability: params.readability
-          })
-        )
+            readability: params.readability,
+          }),
+        ),
       );
-
-      return {
-        success: true,
-        count: results.length,
-        results,
-      };
+      return results;
     } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
+      // Return the error as a single-element array to satisfy string[] return type
+      return [
+        this.formatResponse(
+          { success: false, error: "Batch processing failed" },
+          error.message,
+        ),
+      ];
     }
   }
 }

@@ -10,16 +10,14 @@
  * - Directory operations: "List all files in my Downloads folder"
  * - File management: "Copy config.json to config.backup.json"
  *
- * Example: read("README.md")
- * Example: write("report.json", '{"data": "value"}')
- * Example: copy("config.json", "config.backup.json")
+ * Example: read({ path: "README.md" })
  *
  * Configuration:
  * - workdir: Working directory base path (default: ~/Documents)
  * - maxFileSize: Maximum file size in bytes (default: 10MB)
  * - allowHidden: Allow access to hidden files/directories (default: false)
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Portel
  * @license MIT
  */
@@ -59,23 +57,16 @@ export default class Filesystem {
 
   /**
    * Read file contents
-   * @param path {@min 1} File path (relative to workdir or absolute) {@example README.md}
-   * @param encoding File encoding {@example utf-8}
-   * @example read("README.md")
-   * @example read("data.txt", "utf-8")
-   * @example read({ path: "README.md", encoding: "utf-8" })
+   * @param path File path (relative to workdir or absolute)
+   * @param encoding File encoding (default: utf-8)
    */
-  async read(params: { path: string; encoding?: string } | string, encoding?: string) {
-    // Support both read("path", "encoding") and read({ path, encoding })
-    const filePath = typeof params === 'string' ? params : params.path;
-    const fileEncoding = typeof params === 'string' ? encoding : params.encoding;
-
+  async read(params: { path: string; encoding?: string }) {
     try {
-      const resolvedPath = this.resolvePath(filePath);
-      this.validatePath(resolvedPath);
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
       // Check file size
-      const stats = await fs.stat(resolvedPath);
+      const stats = await fs.stat(filePath);
       if (stats.size > this.maxFileSize) {
         return {
           success: false,
@@ -83,11 +74,11 @@ export default class Filesystem {
         };
       }
 
-      const content = await fs.readFile(resolvedPath, fileEncoding || 'utf-8');
+      const content = await fs.readFile(filePath, params.encoding || 'utf-8');
 
       return {
         success: true,
-        path: resolvedPath,
+        path: filePath,
         content,
         size: stats.size,
         modified: stats.mtime,
@@ -102,25 +93,17 @@ export default class Filesystem {
 
   /**
    * Write content to file
-   * @param path {@min 1} File path (relative to workdir or absolute) {@example report.json}
-   * @param content {@min 1} File content {@example {"name":"John"}}
-   * @param encoding File encoding {@example utf-8}
-   * @example write("report.json", '{"name": "John"}')
-   * @example write("data.txt", "Hello World", "utf-8")
-   * @example write({ path: "report.json", content: '{"name": "John"}', encoding: "utf-8" })
+   * @param path File path (relative to workdir or absolute)
+   * @param content File content
+   * @param encoding File encoding (default: utf-8)
    */
-  async write(params: { path: string; content: string; encoding?: string } | string, content?: string, encoding?: string) {
-    // Support both write("path", "content", "encoding") and write({ path, content, encoding })
-    const filePath = typeof params === 'string' ? params : params.path;
-    const fileContent = typeof params === 'string' ? content! : params.content;
-    const fileEncoding = typeof params === 'string' ? encoding : params.encoding;
-
+  async write(params: { path: string; content: string; encoding?: string }) {
     try {
-      const resolvedPath = this.resolvePath(filePath);
-      this.validatePath(resolvedPath);
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
       // Check content size
-      const contentSize = Buffer.byteLength(fileContent, fileEncoding as BufferEncoding || 'utf-8');
+      const contentSize = Buffer.byteLength(params.content, params.encoding as BufferEncoding || 'utf-8');
       if (contentSize > this.maxFileSize) {
         return {
           success: false,
@@ -128,13 +111,13 @@ export default class Filesystem {
         };
       }
 
-      await fs.writeFile(resolvedPath, fileContent, fileEncoding || 'utf-8');
+      await fs.writeFile(filePath, params.content, params.encoding || 'utf-8');
 
-      const stats = await fs.stat(resolvedPath);
+      const stats = await fs.stat(filePath);
 
       return {
         success: true,
-        path: resolvedPath,
+        path: filePath,
         size: stats.size,
         modified: stats.mtime,
       };
@@ -148,30 +131,22 @@ export default class Filesystem {
 
   /**
    * Append content to file
-   * @param path {@min 1} File path (relative to workdir or absolute) {@example log.txt}
-   * @param content {@min 1} Content to append {@example New log entry\n}
-   * @param encoding File encoding {@example utf-8}
-   * @example append("log.txt", "New log entry\n")
-   * @example append("data.txt", "More data", "utf-8")
-   * @example append({ path: "log.txt", content: "New entry\n", encoding: "utf-8" })
+   * @param path File path (relative to workdir or absolute)
+   * @param content Content to append
+   * @param encoding File encoding (default: utf-8)
    */
-  async append(params: { path: string; content: string; encoding?: string } | string, content?: string, encoding?: string) {
-    // Support both append("path", "content", "encoding") and append({ path, content, encoding })
-    const filePath = typeof params === 'string' ? params : params.path;
-    const fileContent = typeof params === 'string' ? content! : params.content;
-    const fileEncoding = typeof params === 'string' ? encoding : params.encoding;
-
+  async append(params: { path: string; content: string; encoding?: string }) {
     try {
-      const resolvedPath = this.resolvePath(filePath);
-      this.validatePath(resolvedPath);
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-      await fs.appendFile(resolvedPath, fileContent, fileEncoding || 'utf-8');
+      await fs.appendFile(filePath, params.content, params.encoding || 'utf-8');
 
-      const stats = await fs.stat(resolvedPath);
+      const stats = await fs.stat(filePath);
 
       return {
         success: true,
-        path: resolvedPath,
+        path: filePath,
         size: stats.size,
         modified: stats.mtime,
       };
@@ -185,20 +160,15 @@ export default class Filesystem {
 
   /**
    * Remove a file
-   * @param path {@min 1} File path (relative to workdir or absolute) {@example old-file.txt}
-   * @example remove("old-file.txt")
-   * @example remove({ path: "old-file.txt" })
+   * @param path File path (relative to workdir or absolute)
    */
-  async remove(params: { path: string } | string) {
-    // Support both remove("path") and remove({ path })
-    const filePath = typeof params === 'string' ? params : params.path;
-
+  async remove(params: { path: string }) {
     try {
-      const resolvedPath = this.resolvePath(filePath);
-      this.validatePath(resolvedPath);
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
       // Ensure it's a file, not a directory
-      const stats = await fs.stat(resolvedPath);
+      const stats = await fs.stat(filePath);
       if (stats.isDirectory()) {
         return {
           success: false,
@@ -206,11 +176,11 @@ export default class Filesystem {
         };
       }
 
-      await fs.unlink(resolvedPath);
+      await fs.unlink(filePath);
 
       return {
         success: true,
-        path: resolvedPath,
+        path: filePath,
         message: 'File deleted successfully',
       };
     } catch (error: any) {
@@ -223,31 +193,25 @@ export default class Filesystem {
 
   /**
    * Copy a file
-   * @param source {@min 1} Source file path {@example config.json}
-   * @param destination {@min 1} Destination file path {@example config.backup.json}
-   * @example copy("config.json", "config.backup.json")
-   * @example copy({ source: "config.json", destination: "config.backup.json" })
+   * @param source Source file path
+   * @param destination Destination file path
    */
-  async copy(params: { source: string; destination: string } | string, destination?: string) {
-    // Support both copy("source", "destination") and copy({ source, destination })
-    const sourcePath = typeof params === 'string' ? params : params.source;
-    const destPath = typeof params === 'string' ? destination! : params.destination;
-
+  async copy(params: { source: string; destination: string }) {
     try {
-      const resolvedSource = this.resolvePath(sourcePath);
-      const resolvedDest = this.resolvePath(destPath);
+      const sourcePath = this.resolvePath(params.source);
+      const destPath = this.resolvePath(params.destination);
 
-      this.validatePath(resolvedSource);
-      this.validatePath(resolvedDest);
+      this.validatePath(sourcePath);
+      this.validatePath(destPath);
 
-      await fs.copyFile(resolvedSource, resolvedDest);
+      await fs.copyFile(sourcePath, destPath);
 
-      const stats = await fs.stat(resolvedDest);
+      const stats = await fs.stat(destPath);
 
       return {
         success: true,
-        source: resolvedSource,
-        destination: resolvedDest,
+        source: sourcePath,
+        destination: destPath,
         size: stats.size,
       };
     } catch (error: any) {
@@ -260,29 +224,23 @@ export default class Filesystem {
 
   /**
    * Move/rename a file
-   * @param source {@min 1} Source file path {@example old-name.txt}
-   * @param destination {@min 1} Destination file path {@example new-name.txt}
-   * @example move("old-name.txt", "new-name.txt")
-   * @example move({ source: "old-name.txt", destination: "new-name.txt" })
+   * @param source Source file path
+   * @param destination Destination file path
    */
-  async move(params: { source: string; destination: string } | string, destination?: string) {
-    // Support both move("source", "destination") and move({ source, destination })
-    const sourcePath = typeof params === 'string' ? params : params.source;
-    const destPath = typeof params === 'string' ? destination! : params.destination;
-
+  async move(params: { source: string; destination: string }) {
     try {
-      const resolvedSource = this.resolvePath(sourcePath);
-      const resolvedDest = this.resolvePath(destPath);
+      const sourcePath = this.resolvePath(params.source);
+      const destPath = this.resolvePath(params.destination);
 
-      this.validatePath(resolvedSource);
-      this.validatePath(resolvedDest);
+      this.validatePath(sourcePath);
+      this.validatePath(destPath);
 
-      await fs.rename(resolvedSource, resolvedDest);
+      await fs.rename(sourcePath, destPath);
 
       return {
         success: true,
-        source: resolvedSource,
-        destination: resolvedDest,
+        source: sourcePath,
+        destination: destPath,
         message: 'File moved successfully',
       };
     } catch (error: any) {
@@ -295,27 +253,19 @@ export default class Filesystem {
 
   /**
    * List files in a directory
-   * @param path Directory path (relative to workdir or absolute, default: current workdir) {@example my-folder}
+   * @param path Directory path (relative to workdir or absolute, default: current workdir)
    * @param recursive List files recursively (default: false)
-   * @example list()
-   * @example list("my-folder")
-   * @example list("my-folder", true)
-   * @example list({ path: "my-folder", recursive: true })
    */
-  async list(params?: { path?: string; recursive?: boolean } | string, recursive?: boolean) {
-    // Support list(), list("path"), list("path", true), or list({ path, recursive })
-    const dirPath = typeof params === 'string' ? params : (params?.path || '.');
-    const isRecursive = typeof params === 'string' ? (recursive || false) : (params?.recursive || false);
-
+  async list(params?: { path?: string; recursive?: boolean }) {
     try {
-      const resolvedPath = this.resolvePath(dirPath);
-      this.validatePath(resolvedPath);
+      const dirPath = this.resolvePath(params?.path || '.');
+      this.validatePath(dirPath);
 
-      const entries = await this._listDirectory(resolvedPath, isRecursive);
+      const entries = await this._listDirectory(dirPath, params?.recursive || false);
 
       return {
         success: true,
-        path: resolvedPath,
+        path: dirPath,
         count: entries.length,
         files: entries,
       };
@@ -329,26 +279,19 @@ export default class Filesystem {
 
   /**
    * Create a directory
-   * @param path {@min 1} Directory path (relative to workdir or absolute) {@example new-folder}
+   * @param path Directory path (relative to workdir or absolute)
    * @param recursive Create parent directories if needed (default: true)
-   * @example mkdir("new-folder")
-   * @example mkdir("parent/child", true)
-   * @example mkdir({ path: "new-folder", recursive: true })
    */
-  async mkdir(params: { path: string; recursive?: boolean } | string, recursive?: boolean) {
-    // Support both mkdir("path", recursive) and mkdir({ path, recursive })
-    const dirPath = typeof params === 'string' ? params : params.path;
-    const isRecursive = typeof params === 'string' ? (recursive !== false) : (params.recursive !== false);
-
+  async mkdir(params: { path: string; recursive?: boolean }) {
     try {
-      const resolvedPath = this.resolvePath(dirPath);
-      this.validatePath(resolvedPath);
+      const dirPath = this.resolvePath(params.path);
+      this.validatePath(dirPath);
 
-      await fs.mkdir(resolvedPath, { recursive: isRecursive });
+      await fs.mkdir(dirPath, { recursive: params.recursive !== false });
 
       return {
         success: true,
-        path: resolvedPath,
+        path: dirPath,
         message: 'Directory created successfully',
       };
     } catch (error: any) {
@@ -361,23 +304,16 @@ export default class Filesystem {
 
   /**
    * Remove a directory
-   * @param path {@min 1} Directory path (relative to workdir or absolute) {@example old-folder}
+   * @param path Directory path (relative to workdir or absolute)
    * @param recursive Remove directory and all contents (default: false)
-   * @example rmdir("old-folder")
-   * @example rmdir("folder-with-files", true)
-   * @example rmdir({ path: "old-folder", recursive: true })
    */
-  async rmdir(params: { path: string; recursive?: boolean } | string, recursive?: boolean) {
-    // Support both rmdir("path", recursive) and rmdir({ path, recursive })
-    const dirPath = typeof params === 'string' ? params : params.path;
-    const isRecursive = typeof params === 'string' ? (recursive || false) : (params.recursive || false);
-
+  async rmdir(params: { path: string; recursive?: boolean }) {
     try {
-      const resolvedPath = this.resolvePath(dirPath);
-      this.validatePath(resolvedPath);
+      const dirPath = this.resolvePath(params.path);
+      this.validatePath(dirPath);
 
       // Ensure it's a directory
-      const stats = await fs.stat(resolvedPath);
+      const stats = await fs.stat(dirPath);
       if (!stats.isDirectory()) {
         return {
           success: false,
@@ -385,11 +321,11 @@ export default class Filesystem {
         };
       }
 
-      await fs.rm(resolvedPath, { recursive: isRecursive });
+      await fs.rm(dirPath, { recursive: params.recursive || false });
 
       return {
         success: true,
-        path: resolvedPath,
+        path: dirPath,
         message: 'Directory deleted successfully',
       };
     } catch (error: any) {
@@ -402,24 +338,19 @@ export default class Filesystem {
 
   /**
    * Get file or directory information
-   * @param path {@min 1} File or directory path {@example README.md}
-   * @example info("README.md")
-   * @example info({ path: "README.md" })
+   * @param path File or directory path
    */
-  async info(params: { path: string } | string) {
-    // Support both info("path") and info({ path })
-    const filePath = typeof params === 'string' ? params : params.path;
-
+  async info(params: { path: string}) {
     try {
-      const resolvedPath = this.resolvePath(filePath);
-      this.validatePath(resolvedPath);
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-      const stats = await fs.stat(resolvedPath);
+      const stats = await fs.stat(filePath);
 
       return {
         success: true,
-        path: resolvedPath,
-        name: path.basename(resolvedPath),
+        path: filePath,
+        name: path.basename(filePath),
         type: stats.isDirectory() ? 'directory' : 'file',
         size: stats.size,
         created: stats.birthtime,
@@ -437,23 +368,18 @@ export default class Filesystem {
 
   /**
    * Check if file or directory exists
-   * @param path {@min 1} File or directory path {@example config.json}
-   * @example exists("config.json")
-   * @example exists({ path: "config.json" })
+   * @param path File or directory path
    */
-  async exists(params: { path: string } | string) {
-    // Support both exists("path") and exists({ path })
-    const filePath = typeof params === 'string' ? params : params.path;
-
+  async exists(params: { path: string }) {
     try {
-      const resolvedPath = this.resolvePath(filePath);
-      this.validatePath(resolvedPath);
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-      const exists = existsSync(resolvedPath);
+      const exists = existsSync(filePath);
 
       return {
         success: true,
-        path: resolvedPath,
+        path: filePath,
         exists,
       };
     } catch (error: any) {
@@ -466,27 +392,20 @@ export default class Filesystem {
 
   /**
    * Search for files matching a pattern
-   * @param pattern {@min 1} File name pattern (glob-style: *.txt, **\/*.js) {@example *.txt}
-   * @param path Directory to search (default: workdir) {@example documents}
-   * @example search("*.txt")
-   * @example search("*.js", "src")
-   * @example search({ pattern: "*.txt", path: "documents" })
+   * @param pattern File name pattern (glob-style: *.txt, **\/*.js)
+   * @param path Directory to search (default: workdir)
    */
-  async search(params: { pattern: string; path?: string } | string, path?: string) {
-    // Support both search("pattern", "path") and search({ pattern, path })
-    const pattern = typeof params === 'string' ? params : params.pattern;
-    const searchPath = typeof params === 'string' ? (path || '.') : (params.path || '.');
-
+  async search(params: { pattern: string; path?: string }) {
     try {
-      const resolvedPath = this.resolvePath(searchPath);
-      this.validatePath(resolvedPath);
+      const searchPath = this.resolvePath(params.path || '.');
+      this.validatePath(searchPath);
 
-      const results = await this._searchDirectory(resolvedPath, pattern);
+      const results = await this._searchDirectory(searchPath, params.pattern);
 
       return {
         success: true,
-        pattern,
-        path: resolvedPath,
+        pattern: params.pattern,
+        path: searchPath,
         count: results.length,
         files: results,
       };

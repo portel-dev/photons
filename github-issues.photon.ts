@@ -19,7 +19,7 @@
  *
  * @dependencies @octokit/rest@^20.0.0
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Portel
  * @license MIT
  */
@@ -50,14 +50,14 @@ export default class GitHubIssues {
 
   /**
    * List issues in a repository
-   * @param owner {@min 1} {@max 100} Repository owner (username or organization) {@example octocat}
-   * @param repo {@min 1} {@max 100} Repository name {@example hello-world}
-   * @param state Issue state filter (default: all) {@example open}
-   * @param labels {@max 500} Comma-separated label names to filter by {@example bug,enhancement}
-   * @param sort Sort by created, updated, or comments (default: created) {@example created}
-   * @param per_page {@min 1} {@max 100} Number of results per page (default: 30)
+   * @param owner Repository owner (username or organization)
+   * @param repo Repository name
+   * @param state Issue state filter (default: all)
+   * @param labels Comma-separated label names to filter by
+   * @param sort Sort by created, updated, or comments (default: created)
+   * @param per_page Number of results per page (default: 30, max: 100)
    */
-  async list(params: {
+  async listIssues(params: {
     owner: string;
     repo: string;
     state?: 'open' | 'closed' | 'all';
@@ -103,11 +103,11 @@ export default class GitHubIssues {
 
   /**
    * Get a single issue by number
-   * @param owner {@min 1} {@max 100} Repository owner {@example octocat}
-   * @param repo {@min 1} {@max 100} Repository name {@example hello-world}
-   * @param issue_number {@min 1} Issue number {@example 42}
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param issue_number Issue number
    */
-  async get(params: { owner: string; repo: string; issue_number: number }) {
+  async getIssue(params: { owner: string; repo: string; issue_number: number }) {
     try {
       const response = await this.octokit.issues.get({
         owner: params.owner,
@@ -143,14 +143,14 @@ export default class GitHubIssues {
 
   /**
    * Create a new issue
-   * @param owner {@min 1} {@max 100} Repository owner {@example octocat}
-   * @param repo {@min 1} {@max 100} Repository name {@example hello-world}
-   * @param title {@min 1} {@max 200} Issue title {@example Bug in user authentication}
-   * @param body {@max 5000} Issue description/body {@example Steps to reproduce: 1. Login 2. Navigate to profile}
-   * @param labels {@min 1} Array of label names {@example ["bug","priority-high"]}
-   * @param assignees {@min 1} Array of usernames to assign {@example ["octocat","hubot"]}
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param title Issue title
+   * @param body Issue description/body
+   * @param labels Array of label names
+   * @param assignees Array of usernames to assign
    */
-  async create(params: {
+  async createIssue(params: {
     owner: string;
     repo: string;
     title: string;
@@ -186,15 +186,15 @@ export default class GitHubIssues {
 
   /**
    * Update an existing issue
-   * @param owner {@min 1} {@max 100} Repository owner {@example octocat}
-   * @param repo {@min 1} {@max 100} Repository name {@example hello-world}
-   * @param issue_number {@min 1} Issue number to update {@example 42}
-   * @param title {@min 1} {@max 200} New title (optional) {@example Updated: Bug in user authentication}
-   * @param body {@max 5000} New body (optional) {@example Additional details: This also affects mobile users}
-   * @param state New state: open or closed (optional) {@example closed}
-   * @param labels {@min 1} New labels (optional) {@example ["bug","fixed"]}
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param issue_number Issue number to update
+   * @param title New title (optional)
+   * @param body New body (optional)
+   * @param state New state: open or closed (optional)
+   * @param labels New labels (optional)
    */
-  async update(params: {
+  async updateIssue(params: {
     owner: string;
     repo: string;
     issue_number: number;
@@ -233,12 +233,12 @@ export default class GitHubIssues {
 
   /**
    * Add a comment to an issue
-   * @param owner {@min 1} {@max 100} Repository owner {@example octocat}
-   * @param repo {@min 1} {@max 100} Repository name {@example hello-world}
-   * @param issue_number {@min 1} Issue number {@example 42}
-   * @param body {@min 1} {@max 5000} Comment text {@example This issue has been fixed in the latest commit}
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param issue_number Issue number
+   * @param body Comment text
    */
-  async comment(params: {
+  async addComment(params: {
     owner: string;
     repo: string;
     issue_number: number;
@@ -272,11 +272,11 @@ export default class GitHubIssues {
 
   /**
    * List comments on an issue
-   * @param owner {@min 1} {@max 100} Repository owner {@example octocat}
-   * @param repo {@min 1} {@max 100} Repository name {@example hello-world}
-   * @param issue_number {@min 1} Issue number {@example 42}
+   * @param owner Repository owner
+   * @param repo Repository name
+   * @param issue_number Issue number
    */
-  async comments(params: { owner: string; repo: string; issue_number: number }) {
+  async listComments(params: { owner: string; repo: string; issue_number: number }) {
     try {
       const response = await this.octokit.issues.listComments({
         owner: params.owner,
@@ -308,12 +308,12 @@ export default class GitHubIssues {
 
   /**
    * Search issues across repositories
-   * @param query {@min 1} {@max 500} Search query {@example is:open label:bug repo:octocat/hello-world}
-   * @param sort Sort by created, updated, or comments (default: created) {@example created}
-   * @param order Sort order: asc or desc (default: desc) {@example desc}
-   * @param per_page {@min 1} {@max 100} Number of results per page (default: 30)
+   * @param query Search query (e.g., "is:open label:bug")
+   * @param sort Sort by created, updated, or comments (default: created)
+   * @param order Sort order: asc or desc (default: desc)
+   * @param per_page Number of results per page (default: 30)
    */
-  async search(params: {
+  async searchIssues(params: {
     query: string;
     sort?: 'created' | 'updated' | 'comments';
     order?: 'asc' | 'desc';

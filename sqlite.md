@@ -4,7 +4,7 @@ SQLite database operations
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -36,9 +36,9 @@ Open a SQLite database
 **Parameters:**
 
 
-- **`path`** (any) [min: 1, max: 500] - Database file path (use ":memory:" for in-memory database) (e.g., `./mydb.sqlite`)
+- **`path`** (any) - Database file path (use ":memory:" for in-memory database)
 
-- **`readonly`** (any, optional) - Open in readonly mode (e.g., `false`)
+- **`readonly`** (any, optional) - Open in readonly mode
 
 
 
@@ -55,9 +55,9 @@ Execute a SELECT query
 **Parameters:**
 
 
-- **`sql`** (any) [min: 1, max: 10000] - SQL query string (e.g., `SELECT * FROM users WHERE id = ?`)
+- **`sql`** (any) - SQL query string
 
-- **`params`** (any) - Query parameters (for prepared statements) (e.g., `[1]`)
+- **`params`** (any) - Query parameters (for prepared statements)
 
 
 
@@ -74,9 +74,9 @@ Execute a single SELECT query and return first row
 **Parameters:**
 
 
-- **`sql`** (any) [min: 1, max: 10000] - SQL query string (e.g., `SELECT * FROM users WHERE id = ?`)
+- **`sql`** (any) - SQL query string
 
-- **`params`** (any) - Query parameters (for prepared statements) (e.g., `[1]`)
+- **`params`** (any) - Query parameters (for prepared statements)
 
 
 
@@ -93,9 +93,9 @@ Execute an INSERT, UPDATE, or DELETE statement
 **Parameters:**
 
 
-- **`sql`** (any) [min: 1, max: 10000] - SQL statement string (e.g., `INSERT INTO users (name, email) VALUES (?, ?)`)
+- **`sql`** (any) - SQL statement string
 
-- **`params`** (any) - Statement parameters (for prepared statements) (e.g., `["John","john@example.com"]`)
+- **`params`** (any) - Statement parameters (for prepared statements)
 
 
 
@@ -112,7 +112,7 @@ Execute multiple SQL statements in a transaction
 **Parameters:**
 
 
-- **`statements`** (any) [min: 1] - Array of SQL statements with optional parameters (e.g., `[{"sql":"INSERT INTO users (name) VALUES (?)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + ?","params":[100]}]`)
+- **`statements`** (any) - Array of SQL statements with optional parameters
 
 
 
@@ -121,7 +121,7 @@ Execute multiple SQL statements in a transaction
 ---
 
 
-### `tables`
+### `listTables`
 
 List all tables in the database
 
@@ -140,7 +140,7 @@ Get schema information for a table
 **Parameters:**
 
 
-- **`table`** (any) [min: 1, max: 200] - Table name (e.g., `users`)
+- **`table`** (any) - Table name
 
 
 
@@ -168,7 +168,7 @@ Create a backup of the database
 **Parameters:**
 
 
-- **`destination`** (any) [min: 1, max: 500] - Path to backup file (e.g., `./mydb.backup.sqlite`)
+- **`destination`** (any) - Path to backup file
 
 
 
@@ -228,4 +228,4 @@ better-sqlite3@^11.0.0
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

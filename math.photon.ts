@@ -14,7 +14,7 @@
  * 
  * photon math --dev
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Portel
  * @license MIT
  */
@@ -23,13 +23,10 @@ export default class Math {
   /**
    * Calculate a math expression string.
    * Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E.
-   * @param expression {@min 1} The math expression to calculate {@example mean([1,2,3,4]) + max(5, 10)}
-   * @example calculate("2 + 2")
-   * @example calculate("mean([1,2,3,4]) + max(5, 10)")
+   * Example: { expression: "mean([1,2,3,4]) + max(5, 10) - abs(-7)" }
+   * @param expression The math expression to calculate
    */
-  async calculate(params: { expression: string } | string) {
-    // Support both calculate("2 + 2") and calculate({ expression: "2 + 2" })
-    const expression = typeof params === 'string' ? params : params.expression;
+  async calculate(params: { expression: string }) {
     // Helper functions for advanced math
     function sum(arr: number[]): number {
       return arr.reduce((a, b) => a + b, 0);
@@ -72,14 +69,14 @@ export default class Math {
     };
     try {
       // Replace ^ with ** for exponentiation
-      const expr = expression.replace(/\^/g, '**');
+      const expr = params.expression.replace(/\^/g, '**');
       // eslint-disable-next-line no-new-func
       const fn = new Function(...Object.keys(allowed), `return (${expr})`);
       const result = fn(...Object.values(allowed));
       if (typeof result !== 'number' || !isFinite(result)) {
         throw new Error('Invalid calculation result');
       }
-      return { result, operation: 'calculate', expression };
+      return { result, operation: 'calculate', expression: params.expression };
     } catch (e) {
       throw new Error('Failed to calculate expression: ' + (e as Error).message);
     }

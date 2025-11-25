@@ -4,7 +4,7 @@ Control Tuya/Wipro/Smart Life WiFi bulbs
 
 ## 📋 Overview
 
-**Version:** 2.0.0
+**Version:** 2.1.0
 **Author:** Photon
 **License:** MIT
 
@@ -256,4 +256,4 @@ tuyapi@^7.7.0
 
 ## 📄 License
 
-MIT • Version 2.0.0
+MIT • Version 2.1.0

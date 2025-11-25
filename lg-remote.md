@@ -4,7 +4,7 @@ Control LG WebOS TVs
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Author:** Photon (based on pokemote by mithileshchellappan)
 **License:** MIT
 
@@ -480,4 +480,4 @@ ws@^8.18.0, wake_on_lan@^1.0.0
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.1.0

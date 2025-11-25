@@ -4,15 +4,13 @@
  * Provides SQLite database utilities: query, execute, insert, update, delete, and schema operations.
  * Supports both in-memory and file-based databases.
  *
- * Example: query("SELECT * FROM users WHERE id = ?", [1])
- * Example: open("./mydb.sqlite")
- * Example: schema("users")
+ * Example: query({ sql: "SELECT * FROM users WHERE id = ?", params: [1] })
  *
  * Dependencies are auto-installed on first run.
  *
  * @dependencies better-sqlite3@^11.0.0
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Portel
  * @license MIT
  */
@@ -43,29 +41,25 @@ export default class SQLite {
 
   /**
    * Open a SQLite database
-   * @param path {@min 1} {@max 500} Database file path (use ":memory:" for in-memory database) {@example ./mydb.sqlite}
-   * @param readonly Open in readonly mode (default: false) {@example false}
+   * @param path Database file path (use ":memory:" for in-memory database)
+   * @param readonly Open in readonly mode (default: false)
    */
-  async open(params: { path: string; readonly?: boolean } | string, readonly?: boolean) {
-    // Support both open("path", readonly) and open({ path, readonly })
-    const dbPath = typeof params === 'string' ? params : params.path;
-    const isReadonly = typeof params === 'string' ? (readonly || false) : (params.readonly || false);
-
+  async open(params: { path: string; readonly?: boolean }) {
     try {
       if (this.db) {
         this.db.close();
       }
 
-      this.dbPath = dbPath;
-      this.db = new Database(dbPath, {
-        readonly: isReadonly,
+      this.dbPath = params.path;
+      this.db = new Database(params.path, {
+        readonly: params.readonly || false,
         fileMustExist: false,
       });
 
       return {
         success: true,
-        message: `Database opened: ${dbPath}`,
-        isMemory: dbPath === ':memory:',
+        message: `Database opened: ${params.path}`,
+        isMemory: params.path === ':memory:',
       };
     } catch (error: any) {
       return { success: false, error: error.message };
@@ -74,21 +68,17 @@ export default class SQLite {
 
   /**
    * Execute a SELECT query
-   * @param sql {@min 1} {@max 10000} SQL query string {@example SELECT * FROM users WHERE id = ?}
-   * @param params Query parameters (for prepared statements) {@example [1]}
+   * @param sql SQL query string
+   * @param params Query parameters (for prepared statements)
    */
-  async query(params: { sql: string; params?: any[] } | string, queryParams?: any[]) {
-    // Support both query("sql", params) and query({ sql, params })
-    const sql = typeof params === 'string' ? params : params.sql;
-    const sqlParams = typeof params === 'string' ? queryParams : params.params;
-
+  async query(params: { sql: string; params?: any[] }) {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
 
     try {
-      const stmt = this.db.prepare(sql);
-      const rows = stmt.all(...(sqlParams || []));
+      const stmt = this.db.prepare(params.sql);
+      const rows = stmt.all(...(params.params || []));
 
       return {
         success: true,
@@ -102,21 +92,17 @@ export default class SQLite {
 
   /**
    * Execute a single SELECT query and return first row
-   * @param sql {@min 1} {@max 10000} SQL query string {@example SELECT * FROM users WHERE id = ?}
-   * @param params Query parameters (for prepared statements) {@example [1]}
+   * @param sql SQL query string
+   * @param params Query parameters (for prepared statements)
    */
-  async queryOne(params: { sql: string; params?: any[] } | string, queryParams?: any[]) {
-    // Support both queryOne("sql", params) and queryOne({ sql, params })
-    const sql = typeof params === 'string' ? params : params.sql;
-    const sqlParams = typeof params === 'string' ? queryParams : params.params;
-
+  async queryOne(params: { sql: string; params?: any[] }) {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
 
     try {
-      const stmt = this.db.prepare(sql);
-      const row = stmt.get(...(sqlParams || []));
+      const stmt = this.db.prepare(params.sql);
+      const row = stmt.get(...(params.params || []));
 
       return {
         success: true,
@@ -129,21 +115,17 @@ export default class SQLite {
 
   /**
    * Execute an INSERT, UPDATE, or DELETE statement
-   * @param sql {@min 1} {@max 10000} SQL statement string {@example INSERT INTO users (name, email) VALUES (?, ?)}
-   * @param params Statement parameters (for prepared statements) {@example ["John","john@example.com"]}
+   * @param sql SQL statement string
+   * @param params Statement parameters (for prepared statements)
    */
-  async execute(params: { sql: string; params?: any[] } | string, executeParams?: any[]) {
-    // Support both execute("sql", params) and execute({ sql, params })
-    const sql = typeof params === 'string' ? params : params.sql;
-    const sqlParams = typeof params === 'string' ? executeParams : params.params;
-
+  async execute(params: { sql: string; params?: any[] }) {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
 
     try {
-      const stmt = this.db.prepare(sql);
-      const info = stmt.run(...(sqlParams || []));
+      const stmt = this.db.prepare(params.sql);
+      const info = stmt.run(...(params.params || []));
 
       return {
         success: true,
@@ -157,7 +139,7 @@ export default class SQLite {
 
   /**
    * Execute multiple SQL statements in a transaction
-   * @param statements {@min 1} Array of SQL statements with optional parameters {@example [{"sql":"INSERT INTO users (name) VALUES (?)","params":["John"]},{"sql":"UPDATE accounts SET balance = balance + ?","params":[100]}]}
+   * @param statements Array of SQL statements with optional parameters
    */
   async transaction(params: { statements: Array<{ sql: string; params?: any[] }> }) {
     if (!this.db) {
@@ -193,7 +175,7 @@ export default class SQLite {
   /**
    * List all tables in the database
    */
-  async tables() {
+  async listTables(params: {}) {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
@@ -214,22 +196,19 @@ export default class SQLite {
 
   /**
    * Get schema information for a table
-   * @param table {@min 1} {@max 200} Table name {@example users}
+   * @param table Table name
    */
-  async schema(params: { table: string } | string) {
-    // Support both schema("table") and schema({ table })
-    const table = typeof params === 'string' ? params : params.table;
-
+  async schema(params: { table: string }) {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
 
     try {
-      const columns = this.db.prepare(`PRAGMA table_info(${table})`).all();
+      const columns = this.db.prepare(`PRAGMA table_info(${params.table})`).all();
 
       return {
         success: true,
-        table,
+        table: params.table,
         columns,
       };
     } catch (error: any) {
@@ -240,7 +219,7 @@ export default class SQLite {
   /**
    * Close the database connection
    */
-  async close() {
+  async close(params: {}) {
     if (!this.db) {
       return { success: false, error: 'No database is open' };
     }
@@ -260,12 +239,9 @@ export default class SQLite {
 
   /**
    * Create a backup of the database
-   * @param destination {@min 1} {@max 500} Path to backup file {@example ./mydb.backup.sqlite}
+   * @param destination Path to backup file
    */
-  async backup(params: { destination: string } | string) {
-    // Support both backup("destination") and backup({ destination })
-    const destination = typeof params === 'string' ? params : params.destination;
-
+  async backup(params: { destination: string }) {
     if (!this.db) {
       return { success: false, error: 'No database open. Use open() first.' };
     }
@@ -275,14 +251,14 @@ export default class SQLite {
     }
 
     try {
-      const backup = this.db.backup(destination);
+      const backup = this.db.backup(params.destination);
 
       return new Promise((resolve) => {
         backup.step(-1);
         backup.close();
         resolve({
           success: true,
-          message: `Database backed up to ${destination}`,
+          message: `Database backed up to ${params.destination}`,
         });
       });
     } catch (error: any) {
