@@ -65,19 +65,6 @@
       ]
     },
     {
-      "name": "fetch",
-      "version": "1.2.0",
-      "description": "Fetch - Web content fetching and markdown conversion",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../fetch.photon.ts",
-      "hash": "sha256:d99edec1075279b31215cca10834ef65a1e3c8eba39e5529c2c6b9a9dfe0351d",
-      "tools": [
-        "url",
-        "batch"
-      ]
-    },
-    {
       "name": "filesystem",
       "version": "1.1.0",
       "description": "Filesystem - File and directory operations",
@@ -255,27 +242,6 @@
       ]
     },
     {
-      "name": "memory",
-      "version": "1.1.0",
-      "description": "Memory - Knowledge graph-based persistent memory",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../memory.photon.ts",
-      "hash": "sha256:b2630e9c20d559462e9a4548abfbe9b79a3624230fdbf25bc399699c48d2abc7",
-      "tools": [
-        "createEntities",
-        "createRelations",
-        "addObservations",
-        "deleteEntities",
-        "deleteObservations",
-        "deleteRelations",
-        "readGraph",
-        "searchNodes",
-        "openNodes",
-        "clearGraph"
-      ]
-    },
-    {
       "name": "mongodb",
       "version": "1.0.0",
       "description": "MongoDB - NoSQL database operations",
@@ -416,6 +382,19 @@
         "temperature",
         "color",
         "status"
+      ]
+    },
+    {
+      "name": "web",
+      "version": "1.0.0",
+      "description": "Web Agent Photon (Search + Read)",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../web.photon.ts",
+      "hash": "sha256:2aa9f0ff052614b1d1e47f482bbfcc2a6f9fd071ba49f67bd78a3946af87f7c8",
+      "tools": [
+        "search",
+        "read"
       ]
     }
   ]

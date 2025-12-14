@@ -64,24 +64,6 @@
       }
     },
     {
-      "name": "fetch",
-      "description": "Fetch - Web content fetching and markdown conversion",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "fetch": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "fetch"
-          ]
-        }
-      }
-    },
-    {
       "name": "filesystem",
       "description": "Filesystem - File and directory operations",
       "source": "./",
@@ -226,24 +208,6 @@
       }
     },
     {
-      "name": "memory",
-      "description": "Memory - Knowledge graph-based persistent memory",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "memory": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "memory"
-          ]
-        }
-      }
-    },
-    {
       "name": "mongodb",
       "description": "MongoDB - NoSQL database operations",
       "source": "./",
@@ -365,6 +329,24 @@
           "args": [
             "mcp",
             "tuya-smart-light"
+          ]
+        }
+      }
+    },
+    {
+      "name": "web",
+      "description": "Web Agent Photon (Search + Read)",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "web": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "web"
           ]
         }
       }

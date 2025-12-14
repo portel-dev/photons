@@ -37,7 +37,6 @@ We welcome contributions! Submit pull requests for:
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
-| **Fetch** | Web content fetching and markdown conversion | 2 | [View →](fetch.md) |
 | **Filesystem** | File and directory operations | 13 | [View →](filesystem.md) |
 | **Git** | Local git repository operations | 11 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
@@ -46,7 +45,6 @@ We welcome contributions! Submit pull requests for:
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
-| **Memory** | Knowledge graph-based persistent memory | 10 | [View →](memory.md) |
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
 | **Redis** | In-memory data store and cache | 18 | [View →](redis.md) |
@@ -54,9 +52,10 @@ We welcome contributions! Submit pull requests for:
 | **SQLite Photon MCP** | SQLite database operations | 9 | [View →](sqlite.md) |
 | **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
 | **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |
+| **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
 
 
-**Total:** 20 photons ready to use
+**Total:** 19 photons ready to use
 
 ---
 
@@ -100,7 +99,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 20 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 19 focused tools at its fingertips.
 
 ---
 
@@ -166,7 +165,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 20 production-ready photons available
+- 📦 19 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

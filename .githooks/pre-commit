@@ -7,7 +7,7 @@ if git diff --cached --name-only | grep -qE '\.photon\.ts$|\.marketplace/|\.clau
   echo "🔄 Syncing marketplace manifest..."
 
   # Run photon sync marketplace with --claude-code to generate plugin files
-  if photon sync marketplace --claude-code; then
+  if photon maker sync --claude-code; then
     # Stage the generated files
     git add .marketplace/photons.json README.md *.md .claude-plugin/ 2>/dev/null
     echo "✅ Marketplace and Claude Code plugin synced and staged"
