@@ -60,6 +60,10 @@ Connect to a Google TV / Android TV device
 
 - **`ip`** (any) - TV IP address (required for first connection)
 
+- **`code`** (any) - 6-digit pairing code shown on TV (for first-time pairing)
+
+- **`name`** (any) - Optional friendly name for the TV
+
 
 
 

@@ -229,10 +229,14 @@ export default class GoogleTV {
   /**
    * Connect to a Google TV / Android TV device
    * @param ip TV IP address (required for first connection)
+   * @param code 6-digit pairing code shown on TV (for first-time pairing)
+   * @param name Optional friendly name for the TV
    * @format table
    */
-  async connect(params: { ip: string } | string) {
+  async connect(params: { ip: string; code?: string; name?: string } | string) {
     const ip = typeof params === 'string' ? params : params.ip;
+    const code = typeof params === 'object' ? params.code : undefined;
+    const name = typeof params === 'object' ? params.name : undefined;
 
     if (!AndroidRemote) {
       return {
@@ -260,7 +264,80 @@ export default class GoogleTV {
       this.remote = new AndroidRemote(ip, options);
       this.currentTVIP = ip;
 
-      // Set up event handlers
+      // If code is provided, set up to send it when secret event fires
+      if (code && !existingCred?.cert) {
+        return new Promise<any>((resolve) => {
+          let resolved = false;
+
+          this.remote.on('secret', () => {
+            console.error('[google-tv] 🔑 Sending pairing code...');
+            this.remote.sendCode(code);
+          });
+
+          this.remote.on('ready', async () => {
+            if (resolved) return;
+            resolved = true;
+            console.error('[google-tv] ✅ Connected and paired');
+            this.isConnected = true;
+            this.isPairing = false;
+
+            // Save credentials
+            const cert = this.remote.getCertificate();
+            await this._saveCredentials({
+              ip,
+              cert,
+              name,
+              lastUsed: Date.now(),
+            });
+
+            resolve({
+              success: true,
+              message: 'Connected and paired successfully',
+              ip,
+              paired: true,
+            });
+          });
+
+          this.remote.on('powered', (powered: boolean) => {
+            this.isPoweredOn = powered;
+          });
+
+          this.remote.on('volume', (volume: { level: number; maximum: number; muted: boolean }) => {
+            this.currentVolume = Math.round((volume.level / volume.maximum) * 100);
+            this.currentMaxVolume = volume.maximum;
+            this.isMuted = volume.muted;
+          });
+
+          this.remote.on('current_app', (app: string) => {
+            this.currentApp = app;
+          });
+
+          this.remote.on('error', (error: Error) => {
+            if (resolved) return;
+            resolved = true;
+            console.error(`[google-tv] ❌ Error: ${error.message}`);
+            resolve({
+              success: false,
+              error: error.message,
+            });
+          });
+
+          // Timeout after 30 seconds
+          setTimeout(() => {
+            if (resolved) return;
+            resolved = true;
+            resolve({
+              success: false,
+              error: 'Pairing timeout. Code may be incorrect or TV rejected the pairing.',
+            });
+          }, 30000);
+
+          // Start connection
+          this.remote.start();
+        });
+      }
+
+      // Set up event handlers for non-code flow
       this._setupEventHandlers();
 
       // Start connection
@@ -283,7 +360,7 @@ export default class GoogleTV {
         this.isPairing = true;
         return {
           success: true,
-          message: 'TV will show a 6-digit code. Call pair({ code: "XXXXXX" }) to complete pairing.',
+          message: 'TV is showing a 6-digit code. Run: connect --ip ' + ip + ' --code XXXXXX',
           ip,
           paired: false,
           waitingForCode: true,
