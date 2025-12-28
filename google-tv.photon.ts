@@ -11,7 +11,7 @@
  * - Apps: "Launch Netflix", "Open YouTube"
  * - Navigation: "Press home", "Go back"
  *
- * Example: connect({ ip: "192.168.1.100" }) then pair({ code: "123456" })
+ * Example: connect({ ip: "192.168.1.100" })  // Will prompt for pairing code if needed
  *
  * Configuration:
  * - credentials_file: Path to store TV credentials (optional, default: "google-tv-credentials.json")
@@ -228,13 +228,17 @@ export default class GoogleTV {
 
   /**
    * Connect to a Google TV / Android TV device
+   * Uses generator pattern - yields for pairing code input when needed
+   *
    * @param ip TV IP address (required for first connection)
    * @param name Optional friendly name for the TV
+   * @param pairing_code Pre-provided pairing code (for REST APIs)
    * @format table
    */
-  async connect(params: { ip: string; name?: string } | string) {
+  async *connect(params: { ip: string; name?: string; pairing_code?: string } | string) {
     const ip = typeof params === 'string' ? params : params.ip;
     const name = typeof params === 'object' ? params.name : undefined;
+    const preProvidedCode = typeof params === 'object' ? params.pairing_code : undefined;
 
     if (!AndroidRemote) {
       return {
@@ -261,171 +265,140 @@ export default class GoogleTV {
 
       this.remote = new AndroidRemote(ip, options);
       this.currentTVIP = ip;
-      (this as any)._pairingName = name;
 
       // Set up event handlers
       this._setupEventHandlers();
 
-      // For new pairing, we need to wait for the 'secret' event
+      // For new pairing, we need to get the code from user
       if (!existingCred?.cert) {
-        return new Promise<any>((resolve) => {
-          // Store resolve for use in pair()
-          (this as any)._pairingResolve = resolve;
-          this.isPairing = true;
+        // Wait for TV to show the pairing code
+        const secretPromise = new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Timeout waiting for TV to show pairing code. Is the TV on?'));
+          }, 30000);
 
-          // Override the secret handler to resolve connect
           this.remote.on('secret', () => {
+            clearTimeout(timeout);
             console.error('[google-tv] 📺 TV is showing a pairing code');
-            console.error('[google-tv] ℹ️  Call pair({ code: "XXXXXX" }) with the code to complete');
-
-            resolve({
-              success: true,
-              message: 'TV is showing a 6-digit code. Call pair("XXXXXX") to complete.',
-              ip,
-              paired: false,
-              waitingForCode: true,
-            });
+            resolve();
           });
 
-          // Start connection (don't await - let it run in background)
-          this.remote.start();
-
-          // Timeout after 30 seconds waiting for TV prompt
-          setTimeout(() => {
-            if (this.isPairing && (this as any)._pairingResolve) {
-              (this as any)._pairingResolve = null;
-              resolve({
-                success: false,
-                error: 'Timeout waiting for TV to show pairing code. Is the TV on?',
-              });
-            }
-          }, 30000);
+          this.remote.on('error', (error: Error) => {
+            clearTimeout(timeout);
+            reject(error);
+          });
         });
+
+        // Start connection
+        this.remote.start();
+
+        // Wait for TV to show the code
+        await secretPromise;
+
+        // YIELD: Get the pairing code from user
+        // Runtime will handle this based on protocol:
+        // - CLI: readline prompt
+        // - MCP: elicitation
+        // - REST: use pre-provided pairing_code param
+        // - Fallback: native OS dialog
+        const code: string = preProvidedCode || (yield {
+          prompt: 'Enter the 6-digit pairing code shown on TV:',
+          type: 'text',
+          id: 'pairing_code',
+          pattern: '^[0-9A-Fa-f]{6}$',
+          required: true,
+        });
+
+        if (!code) {
+          return {
+            success: false,
+            error: 'Pairing code is required',
+          };
+        }
+
+        // Send the code and wait for ready
+        console.error('[google-tv] 🔑 Sending pairing code...');
+
+        const readyPromise = new Promise<void>((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Pairing timeout. Code may be incorrect.'));
+          }, 30000);
+
+          this.remote.on('ready', () => {
+            clearTimeout(timeout);
+            resolve();
+          });
+
+          this.remote.on('error', (error: Error) => {
+            clearTimeout(timeout);
+            reject(error);
+          });
+        });
+
+        this.remote.sendCode(code);
+        await readyPromise;
+
+        // Save credentials
+        console.error('[google-tv] ✅ Paired successfully');
+        this.isConnected = true;
+        this.isPairing = false;
+
+        const cert = this.remote.getCertificate();
+        await this._saveCredentials({
+          ip,
+          cert,
+          name,
+          lastUsed: Date.now(),
+        });
+
+        return {
+          success: true,
+          message: 'Connected and paired successfully',
+          ip,
+          paired: true,
+        };
       }
 
       // Has existing credentials - connect and wait for ready
-      return new Promise<any>((resolve) => {
-        this.remote.on('ready', async () => {
-          console.error('[google-tv] ✅ Connected');
-          this.isConnected = true;
+      const readyPromise = new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Connection timeout'));
+        }, 15000);
 
-          await this._saveCredentials({
-            ...existingCred,
-            lastUsed: Date.now(),
-          });
-
-          resolve({
-            success: true,
-            message: 'Connected using saved credentials',
-            ip,
-            paired: true,
-          });
+        this.remote.on('ready', () => {
+          clearTimeout(timeout);
+          resolve();
         });
 
         this.remote.on('error', (error: Error) => {
-          resolve({
-            success: false,
-            error: error.message,
-          });
+          clearTimeout(timeout);
+          reject(error);
         });
-
-        this.remote.start();
-
-        // Timeout
-        setTimeout(() => {
-          if (!this.isConnected) {
-            resolve({
-              success: false,
-              error: 'Connection timeout',
-            });
-          }
-        }, 15000);
       });
+
+      this.remote.start();
+      await readyPromise;
+
+      console.error('[google-tv] ✅ Connected');
+      this.isConnected = true;
+
+      await this._saveCredentials({
+        ...existingCred,
+        lastUsed: Date.now(),
+      });
+
+      return {
+        success: true,
+        message: 'Connected using saved credentials',
+        ip,
+        paired: true,
+      };
     } catch (error: any) {
       return {
         success: false,
         error: error.message,
       };
     }
-  }
-
-  /**
-   * Complete pairing with the TV
-   * @param code The 6-digit code shown on TV
-   * @param name Optional friendly name for the TV
-   */
-  async pair(params: { code: string; name?: string } | string) {
-    const code = typeof params === 'string' ? params : params.code;
-    const name = typeof params === 'object' ? params.name : (this as any)._pairingName;
-
-    if (!this.remote) {
-      return {
-        success: false,
-        error: 'Not connected. Call connect() first.',
-      };
-    }
-
-    if (!this.isPairing) {
-      return {
-        success: false,
-        error: 'Not in pairing mode. Connection may already be established.',
-      };
-    }
-
-    return new Promise<any>((resolve) => {
-      let resolved = false;
-
-      // Listen for ready event (successful pairing)
-      this.remote.on('ready', async () => {
-        if (resolved) return;
-        resolved = true;
-
-        console.error('[google-tv] ✅ Paired successfully');
-        this.isPairing = false;
-        this.isConnected = true;
-
-        // Save credentials
-        const cert = this.remote.getCertificate();
-        await this._saveCredentials({
-          ip: this.currentTVIP!,
-          cert,
-          name,
-          lastUsed: Date.now(),
-        });
-
-        resolve({
-          success: true,
-          message: 'Paired successfully. Credentials saved.',
-          ip: this.currentTVIP,
-        });
-      });
-
-      // Listen for error
-      this.remote.on('error', (error: Error) => {
-        if (resolved) return;
-        resolved = true;
-
-        console.error(`[google-tv] ❌ Pairing error: ${error.message}`);
-        resolve({
-          success: false,
-          error: `Pairing failed: ${error.message}`,
-        });
-      });
-
-      // Send the code
-      console.error('[google-tv] 🔑 Sending pairing code...');
-      this.remote.sendCode(code);
-
-      // Timeout
-      setTimeout(() => {
-        if (resolved) return;
-        resolved = true;
-        resolve({
-          success: false,
-          error: 'Pairing timeout. Code may be incorrect.',
-        });
-      }, 30000);
-    });
   }
 
   /**
@@ -1142,8 +1115,15 @@ export default class GoogleTV {
         const sorted = credentials.sort((a: TVCredentials, b: TVCredentials) =>
           (b.lastUsed || 0) - (a.lastUsed || 0)
         );
-        const result = await this.connect({ ip: sorted[0].ip });
-        if (result.success && result.paired) {
+        // connect() is a generator - run it to completion
+        // For saved credentials, it won't yield (no pairing needed)
+        const generator = this.connect({ ip: sorted[0].ip });
+        let result = await generator.next();
+        while (!result.done) {
+          // If it yields (shouldn't happen with saved creds), skip
+          result = await generator.next();
+        }
+        if (result.value?.success && result.value?.paired) {
           return { success: true };
         }
       }

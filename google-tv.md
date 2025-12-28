@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **37** tools:
+This photon provides **35** tools:
 
 
 ### `discover`
@@ -42,44 +42,6 @@ Discover Google TV / Android TV devices on the network using mDNS
 
 
 - **`timeout`** (any, optional) - Discovery timeout in seconds
-
-
-
-
-
----
-
-
-### `connect`
-
-Connect to a Google TV / Android TV device
-
-
-**Parameters:**
-
-
-- **`ip`** (any) - TV IP address (required for first connection)
-
-- **`name`** (any) - Optional friendly name for the TV
-
-
-
-
-
----
-
-
-### `pair`
-
-Complete pairing with the TV
-
-
-**Parameters:**
-
-
-- **`code`** (any) - The 6-digit code shown on TV
-
-- **`name`** (any) - Optional friendly name for the TV
 
 
 

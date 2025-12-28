@@ -41,7 +41,7 @@ We welcome contributions! Submit pull requests for:
 | **Git** | Local git repository operations | 11 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
-| **Google TV Remote** | Control Google TV and Android TV devices | 37 | [View →](google-tv.md) |
+| **Google TV Remote** | Control Google TV and Android TV devices | 35 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
