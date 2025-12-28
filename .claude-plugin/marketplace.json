@@ -136,6 +136,24 @@
       }
     },
     {
+      "name": "google-tv",
+      "description": "Google TV Remote - Control Google TV and Android TV devices",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "google-tv": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "google-tv"
+          ]
+        }
+      }
+    },
+    {
       "name": "jira",
       "description": "Jira - Project management and issue tracking",
       "source": "./",
