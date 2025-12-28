@@ -211,14 +211,16 @@ export default class GoogleTV {
         const devices = Array.from(discovered.values());
         this.discoveredTVs = devices;
 
-        resolve({
-          success: true,
-          count: devices.length,
-          devices,
-          hint: devices.length === 0
-            ? 'No devices found. Ensure your TV has "Android TV Remote Service" enabled.'
-            : undefined,
-        });
+        if (devices.length === 0) {
+          resolve({
+            success: false,
+            message: 'No devices found',
+            hint: 'Ensure your TV has "Android TV Remote Service" enabled.',
+          });
+        } else {
+          // Return devices array directly for proper table formatting
+          resolve(devices);
+        }
       }, timeout);
     });
   }
@@ -437,12 +439,16 @@ export default class GoogleTV {
       return 0;
     });
 
-    return {
-      success: true,
-      count: devices.length,
-      devices,
-      connectedTV: this.currentTVIP,
-    };
+    if (devices.length === 0) {
+      return {
+        success: false,
+        message: 'No TVs found',
+        hint: 'Use discover() to find TVs on your network',
+      };
+    }
+
+    // Return devices array directly for proper table formatting
+    return devices;
   }
 
   /**
