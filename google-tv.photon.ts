@@ -233,6 +233,7 @@ export default class GoogleTV {
    * @param ip TV IP address (required for first connection)
    * @param name Optional friendly name for the TV
    * @param pairing_code Pre-provided pairing code (for REST APIs)
+   * @yields {pairing_code} prompt Enter the 6-digit pairing code shown on TV
    * @format table
    */
   async *connect(params: { ip: string; name?: string; pairing_code?: string } | string) {
