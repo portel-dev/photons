@@ -155,7 +155,7 @@
       "author": "Photon",
       "license": "MIT",
       "source": "../google-tv.photon.ts",
-      "hash": "sha256:5df6db4964d4d758cc6ade23af6270e1bc0620a93364147308ba7c46fdea844a",
+      "hash": "sha256:b054452db94cac1030747f8aff0fd09f237ed6f012fe7e86632ac220c11e3e9c",
       "tools": [
         "discover",
         "connect",

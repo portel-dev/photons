@@ -139,7 +139,8 @@ export default class GoogleTV {
     // Dynamically import androidtv-remote
     try {
       const module = await import('androidtv-remote');
-      AndroidRemote = module.default || module.AndroidRemote || module;
+      // Module exports: { AndroidRemote, RemoteDirection, RemoteKeyCode, default }
+      AndroidRemote = module.AndroidRemote;
       RemoteKeyCode = module.RemoteKeyCode;
       RemoteDirection = module.RemoteDirection;
       console.error('[google-tv] ✅ Initialized');
