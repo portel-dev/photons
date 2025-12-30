@@ -31,7 +31,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../code-diagram.photon.ts",
-      "hash": "sha256:70e97c7583008c548785602182caa9dd12288b27c15d39b05a6d8c4435bd4736",
+      "hash": "sha256:1a6ec32f2eeb60f5ff6ee3152c82cedbb8d331c6576a6e5f6066ce8fcfc7b609",
       "tools": [
         "generate",
         "fromFile",

@@ -37,6 +37,8 @@ Generate a Mermaid diagram from code string
 
 - **`type`** (any, optional) - Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls'
 
+- **`style`** (any, optional) - Diagram style: 'linear' (quick overview) | 'branching' (shows if/else/switch)
+
 - **`name`** (any, optional) - Optional name for the diagram
 
 
@@ -58,6 +60,8 @@ Generate a Mermaid diagram from a file
 
 - **`type`** (any, optional) - Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls'
 
+- **`style`** (any, optional) - Diagram style: 'linear' | 'branching'
+
 
 
 
@@ -67,7 +71,7 @@ Generate a Mermaid diagram from a file
 
 ### `types`
 
-List available diagram types with descriptions
+List available diagram types and styles
 
 
 
@@ -118,7 +122,11 @@ photon mcp code-diagram --config
 ## 📦 Dependencies
 
 
-No external dependencies required.
+This photon automatically installs the following dependencies:
+
+```
+typescript@^5.0.0
+```
 
 
 ## 📄 License

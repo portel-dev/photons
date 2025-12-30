@@ -8,11 +8,14 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @dependencies typescript@^5.0.0
  */
 
 import * as fs from 'fs/promises';
+import ts from 'typescript';
 
 type DiagramType = 'auto' | 'workflow' | 'api' | 'deps' | 'calls';
+type DiagramStyle = 'linear' | 'branching';
 
 interface YieldStatement {
   type: 'ask' | 'emit';
@@ -46,21 +49,25 @@ export default class CodeDiagram {
    *
    * @param code The TypeScript/JavaScript code to analyze
    * @param type Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls' (default: 'auto')
+   * @param style Diagram style: 'linear' (quick overview) | 'branching' (shows if/else/switch) (default: 'linear')
    * @param name Optional name for the diagram (default: 'Code')
    */
   async generate(params: {
     code: string;
     type?: DiagramType;
+    style?: DiagramStyle;
     name?: string;
-  }): Promise<{ diagram: string; detectedType: string }> {
-    const { code, type = 'auto', name = 'Code' } = params;
+  }): Promise<{ diagram: string; detectedType: string; style: string }> {
+    const { code, type = 'auto', style = 'linear', name = 'Code' } = params;
 
     const detectedType = type === 'auto' ? this.detectType(code) : type;
 
     let diagram: string;
     switch (detectedType) {
       case 'workflow':
-        diagram = this.generateWorkflowDiagram(code, name);
+        diagram = style === 'branching'
+          ? this.generateBranchingWorkflowDiagram(code, name)
+          : this.generateWorkflowDiagram(code, name);
         break;
       case 'deps':
         diagram = this.generateDepsDiagram(code, name);
@@ -74,7 +81,7 @@ export default class CodeDiagram {
         break;
     }
 
-    return { diagram, detectedType };
+    return { diagram, detectedType, style };
   }
 
   /**
@@ -82,24 +89,29 @@ export default class CodeDiagram {
    *
    * @param path Path to the TypeScript/JavaScript file
    * @param type Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls' (default: 'auto')
+   * @param style Diagram style: 'linear' | 'branching' (default: 'linear')
    */
   async fromFile(params: {
     path: string;
     type?: DiagramType;
-  }): Promise<{ diagram: string; detectedType: string; name: string }> {
-    const { path, type = 'auto' } = params;
+    style?: DiagramStyle;
+  }): Promise<{ diagram: string; detectedType: string; style: string; name: string }> {
+    const { path, type = 'auto', style = 'linear' } = params;
 
     const code = await fs.readFile(path, 'utf-8');
     const name = this.extractName(path, code);
 
-    const result = await this.generate({ code, type, name });
+    const result = await this.generate({ code, type, style, name });
     return { ...result, name };
   }
 
   /**
-   * List available diagram types with descriptions
+   * List available diagram types and styles
    */
-  async types(): Promise<{ types: Array<{ name: string; description: string; bestFor: string }> }> {
+  async types(): Promise<{
+    types: Array<{ name: string; description: string; bestFor: string }>;
+    styles: Array<{ name: string; description: string; bestFor: string }>;
+  }> {
     return {
       types: [
         {
@@ -126,6 +138,18 @@ export default class CodeDiagram {
           name: 'calls',
           description: 'Call graph showing function relationships',
           bestFor: 'Understanding code flow, finding dead code',
+        },
+      ],
+      styles: [
+        {
+          name: 'linear',
+          description: 'Sequential flow showing the happy path',
+          bestFor: 'Quick overview, documentation, understanding main flow',
+        },
+        {
+          name: 'branching',
+          description: 'Full control flow with if/else/switch branches',
+          bestFor: 'Debugging, understanding edge cases, finding all paths',
         },
       ],
     };
@@ -226,6 +250,267 @@ export default class CodeDiagram {
     lines.push(`        SUCCESS([✅ Success])`);
     lines.push(`        ${prevNode} --> SUCCESS`);
     lines.push('    end');
+
+    return lines.join('\n');
+  }
+
+  /**
+   * Generate workflow diagram with full control flow analysis using TypeScript AST
+   */
+  private generateBranchingWorkflowDiagram(code: string, name: string): string {
+    const sourceFile = ts.createSourceFile(
+      'code.ts',
+      code,
+      ts.ScriptTarget.Latest,
+      true
+    );
+
+    const lines: string[] = ['flowchart TD'];
+    lines.push(`    subgraph ${this.sanitizeId(name)}["📦 ${this.titleCase(name)}"]`);
+    lines.push('        START([▶ Start])');
+
+    let nodeCounter = 0;
+    const edges: string[] = [];
+
+    const createNode = (label: string, shape: 'rect' | 'diamond' | 'stadium' = 'rect'): string => {
+      const id = `N${nodeCounter++}`;
+      switch (shape) {
+        case 'diamond':
+          lines.push(`        ${id}{${label}}`);
+          break;
+        case 'stadium':
+          lines.push(`        ${id}([${label}])`);
+          break;
+        default:
+          lines.push(`        ${id}[${label}]`);
+      }
+      return id;
+    };
+
+    const addEdge = (from: string, to: string, label?: string) => {
+      if (label) {
+        edges.push(`        ${from} -->|${label}| ${to}`);
+      } else {
+        edges.push(`        ${from} --> ${to}`);
+      }
+    };
+
+    // Walk the AST to find the main generator/async function
+    let prevNode = 'START';
+    let successNode = '';
+
+    const processNode = (node: ts.Node, currentPrev: string): string => {
+      // Yield expression with ask/emit
+      if (ts.isYieldExpression(node) && node.expression && ts.isObjectLiteralExpression(node.expression)) {
+        const props = node.expression.properties;
+        let type = '';
+        let subtype = '';
+        let message = '';
+
+        for (const prop of props) {
+          if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name)) {
+            const propName = prop.name.text;
+            if (propName === 'ask' || propName === 'emit') {
+              type = propName;
+              if (ts.isStringLiteral(prop.initializer)) {
+                subtype = prop.initializer.text;
+              }
+            } else if (propName === 'message') {
+              if (ts.isStringLiteral(prop.initializer) || ts.isNoSubstitutionTemplateLiteral(prop.initializer)) {
+                message = prop.initializer.text;
+              } else if (ts.isTemplateExpression(prop.initializer)) {
+                message = prop.initializer.head.text + '...';
+              }
+            }
+          }
+        }
+
+        if (type === 'emit') {
+          const emoji = this.getEmitEmoji(subtype);
+          const label = message ? `${emoji} ${this.truncate(message, 25)}` : `${emoji} ${subtype}`;
+          const nodeId = createNode(label);
+          addEdge(currentPrev, nodeId);
+          return nodeId;
+        } else if (type === 'ask') {
+          const emoji = this.getAskEmoji(subtype);
+          const label = message ? `${emoji} ${this.truncate(message, 20)}` : `${emoji} ${subtype}`;
+          const nodeId = createNode(label, 'diamond');
+          addEdge(currentPrev, nodeId);
+          return nodeId;
+        }
+      }
+
+      // If statement
+      if (ts.isIfStatement(node)) {
+        // Create condition node
+        let conditionText = node.expression.getText(sourceFile);
+        conditionText = this.truncate(conditionText, 20);
+        const condNode = createNode(`❓ ${conditionText}`, 'diamond');
+        addEdge(currentPrev, condNode);
+
+        // Process then branch
+        let thenEnd = condNode;
+        ts.forEachChild(node.thenStatement, (child) => {
+          thenEnd = processNode(child, thenEnd);
+        });
+
+        // Process else branch
+        let elseEnd = condNode;
+        if (node.elseStatement) {
+          ts.forEachChild(node.elseStatement, (child) => {
+            elseEnd = processNode(child, elseEnd);
+          });
+          addEdge(condNode, elseEnd, 'No');
+        }
+
+        addEdge(condNode, thenEnd, 'Yes');
+
+        // Create merge point if both branches exist
+        if (node.elseStatement && thenEnd !== condNode && elseEnd !== condNode) {
+          const mergeNode = createNode('🔄 Continue');
+          addEdge(thenEnd, mergeNode);
+          addEdge(elseEnd, mergeNode);
+          return mergeNode;
+        }
+
+        return thenEnd;
+      }
+
+      // Return statement
+      if (ts.isReturnStatement(node)) {
+        const returnText = node.expression ? node.expression.getText(sourceFile) : '';
+        const isSuccess = !returnText.includes('cancel') && !returnText.includes('error') && !returnText.includes('fail');
+        const emoji = isSuccess ? '✅' : '❌';
+        const label = isSuccess ? 'Success' : 'Exit';
+        const nodeId = createNode(`${emoji} ${label}`, 'stadium');
+        addEdge(currentPrev, nodeId);
+        if (isSuccess) successNode = nodeId;
+        return nodeId;
+      }
+
+      // Await expression (function calls)
+      if (ts.isAwaitExpression(node)) {
+        const callText = node.expression.getText(sourceFile);
+        // Check for MCP or Photon calls
+        const mcpMatch = callText.match(/this\.mcp\(['"](\w+)['"]\)\.(\w+)/);
+        const photonMatch = callText.match(/this\.photon\(['"](\w+)['"]\)\.(\w+)/);
+
+        if (mcpMatch) {
+          const nodeId = createNode(`🔌 ${mcpMatch[1]}.${mcpMatch[2]}`);
+          addEdge(currentPrev, nodeId);
+          return nodeId;
+        } else if (photonMatch) {
+          const nodeId = createNode(`📦 ${photonMatch[1]}.${photonMatch[2]}`);
+          addEdge(currentPrev, nodeId);
+          return nodeId;
+        }
+      }
+
+      // Try statement
+      if (ts.isTryStatement(node)) {
+        const tryNode = createNode('🔧 Try');
+        addEdge(currentPrev, tryNode);
+
+        let tryEnd = tryNode;
+        ts.forEachChild(node.tryBlock, (child) => {
+          tryEnd = processNode(child, tryEnd);
+        });
+
+        if (node.catchClause) {
+          const catchNode = createNode('⚠️ Catch', 'diamond');
+          addEdge(tryNode, catchNode, 'Error');
+
+          let catchEnd = catchNode;
+          ts.forEachChild(node.catchClause.block, (child) => {
+            catchEnd = processNode(child, catchEnd);
+          });
+        }
+
+        return tryEnd;
+      }
+
+      // Switch statement
+      if (ts.isSwitchStatement(node)) {
+        const switchText = this.truncate(node.expression.getText(sourceFile), 15);
+        const switchNode = createNode(`📋 ${switchText}`, 'diamond');
+        addEdge(currentPrev, switchNode);
+
+        const caseEnds: string[] = [];
+        for (const clause of node.caseBlock.clauses) {
+          if (ts.isCaseClause(clause)) {
+            const caseLabel = this.truncate(clause.expression.getText(sourceFile), 10);
+            let caseEnd = switchNode;
+            for (const stmt of clause.statements) {
+              caseEnd = processNode(stmt, caseEnd);
+            }
+            if (caseEnd !== switchNode) {
+              addEdge(switchNode, caseEnd, caseLabel);
+              caseEnds.push(caseEnd);
+            }
+          }
+        }
+
+        if (caseEnds.length > 1) {
+          const mergeNode = createNode('🔄 Continue');
+          caseEnds.forEach(ce => addEdge(ce, mergeNode));
+          return mergeNode;
+        }
+
+        return caseEnds[0] || switchNode;
+      }
+
+      // For of/in loops
+      if (ts.isForOfStatement(node) || ts.isForInStatement(node)) {
+        const loopNode = createNode('🔁 Loop', 'diamond');
+        addEdge(currentPrev, loopNode);
+
+        let bodyEnd = loopNode;
+        ts.forEachChild(node.statement, (child) => {
+          bodyEnd = processNode(child, bodyEnd);
+        });
+
+        addEdge(bodyEnd, loopNode, 'Next');
+        const exitNode = createNode('Done');
+        addEdge(loopNode, exitNode, 'Done');
+        return exitNode;
+      }
+
+      // Recursively process children
+      let lastNode = currentPrev;
+      ts.forEachChild(node, (child) => {
+        lastNode = processNode(child, lastNode);
+      });
+
+      return lastNode;
+    };
+
+    // Find and process the main generator or async function
+    const visit = (node: ts.Node) => {
+      if (ts.isMethodDeclaration(node) || ts.isFunctionDeclaration(node)) {
+        const name = node.name?.getText(sourceFile) || '';
+        // Skip private methods and lifecycle
+        if (!name.startsWith('_') && name !== 'constructor' && name !== 'onInitialize' && name !== 'onShutdown') {
+          if (node.body) {
+            prevNode = processNode(node.body, prevNode);
+          }
+        }
+      }
+      ts.forEachChild(node, visit);
+    };
+
+    visit(sourceFile);
+
+    // Add success node if not already added
+    if (!successNode) {
+      successNode = createNode('✅ Success', 'stadium');
+      addEdge(prevNode, successNode);
+    }
+
+    lines.push('    end');
+
+    // Add all edges
+    lines.push('');
+    lines.push(...edges);
 
     return lines.join('\n');
   }
