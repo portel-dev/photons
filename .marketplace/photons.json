@@ -39,6 +39,37 @@
       ]
     },
     {
+      "name": "data-sync",
+      "version": "1.0.0",
+      "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../data-sync.photon.ts",
+      "hash": "sha256:b2e0c29d6a3551abd0da73e12b29e7cd024e4b11e6417699ab68094707b9eded",
+      "tools": [
+        "exportToJson",
+        "importFromJson",
+        "compare"
+      ]
+    },
+    {
+      "name": "discord",
+      "version": "1.0.0",
+      "description": "Discord - Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../discord.photon.ts",
+      "hash": "sha256:766512fc447df75269027ceb319f400424dbd9befc4e2a60d08cd8f33f7d2e06",
+      "tools": [
+        "send",
+        "embed",
+        "alert",
+        "deployment",
+        "commits",
+        "metrics"
+      ]
+    },
+    {
       "name": "docker",
       "version": "1.0.0",
       "description": "Docker - Container management operations",
@@ -140,6 +171,19 @@
         "addComment",
         "listComments",
         "searchIssues"
+      ]
+    },
+    {
+      "name": "github-pr-notifier",
+      "version": "1.0.0",
+      "description": "GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../github-pr-notifier.photon.ts",
+      "hash": "sha256:29e1964f499bf57adcf244f422f0ca25c9edaf76312be0a1e8250fe8fa7e483b",
+      "tools": [
+        "monitor",
+        "summary"
       ]
     },
     {
@@ -374,6 +418,35 @@
       ]
     },
     {
+      "name": "rss-feed",
+      "version": "1.0.0",
+      "description": "RSS Feed - Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../rss-feed.photon.ts",
+      "hash": "sha256:f5e92c4229481057f998b57cfde387aa24118581c6668768914055d4b07ee2f5",
+      "tools": [
+        "read",
+        "getNew",
+        "search",
+        "readMultiple",
+        "info"
+      ]
+    },
+    {
+      "name": "rss-to-slack",
+      "version": "1.0.0",
+      "description": "RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../rss-to-slack.photon.ts",
+      "hash": "sha256:6a3fba3484c1bd3ab67535297fe37042b964788ae75991af780cb03579c4d98c",
+      "tools": [
+        "monitor",
+        "setup"
+      ]
+    },
+    {
       "name": "slack",
       "version": "1.0.0",
       "description": "Slack - Send messages and manage Slack workspace",
@@ -412,6 +485,29 @@
       ]
     },
     {
+      "name": "telegram",
+      "version": "1.0.0",
+      "description": "Telegram - Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../telegram.photon.ts",
+      "hash": "sha256:016d75b93da5c2976d1976a1334cd7c1503fbac6fa109191a0214f157cb22495",
+      "tools": [
+        "send",
+        "sendPhoto",
+        "sendDocument",
+        "sendLocation",
+        "sendPoll",
+        "alert",
+        "deployment",
+        "getMe",
+        "getChat",
+        "getUpdates",
+        "deleteMessage",
+        "pinMessage"
+      ]
+    },
+    {
       "name": "time",
       "version": "1.0.0",
       "description": "Time - Timezone and time conversion operations",
@@ -443,6 +539,20 @@
         "temperature",
         "color",
         "status"
+      ]
+    },
+    {
+      "name": "uptime-monitor",
+      "version": "1.0.0",
+      "description": "Uptime Monitor Workflow Monitors website availability and sends alerts",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../uptime-monitor.photon.ts",
+      "hash": "sha256:22258435cf0f91d495fd4a3a2b2ea1c7306eba00eae4b2403f3c94e03271ab98",
+      "tools": [
+        "check",
+        "setup",
+        "stats"
       ]
     },
     {

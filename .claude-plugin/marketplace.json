@@ -46,6 +46,42 @@
       }
     },
     {
+      "name": "data-sync",
+      "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "data-sync": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "data-sync"
+          ]
+        }
+      }
+    },
+    {
+      "name": "discord",
+      "description": "Discord - Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "discord": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "discord"
+          ]
+        }
+      }
+    },
+    {
       "name": "docker",
       "description": "Docker - Container management operations",
       "source": "./",
@@ -131,6 +167,24 @@
           "args": [
             "mcp",
             "github-issues"
+          ]
+        }
+      }
+    },
+    {
+      "name": "github-pr-notifier",
+      "description": "GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "github-pr-notifier": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "github-pr-notifier"
           ]
         }
       }
@@ -298,6 +352,42 @@
       }
     },
     {
+      "name": "rss-feed",
+      "description": "RSS Feed - Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "rss-feed": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "rss-feed"
+          ]
+        }
+      }
+    },
+    {
+      "name": "rss-to-slack",
+      "description": "RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "rss-to-slack": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "rss-to-slack"
+          ]
+        }
+      }
+    },
+    {
       "name": "slack",
       "description": "Slack - Send messages and manage Slack workspace",
       "source": "./",
@@ -334,6 +424,24 @@
       }
     },
     {
+      "name": "telegram",
+      "description": "Telegram - Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "telegram": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "telegram"
+          ]
+        }
+      }
+    },
+    {
       "name": "time",
       "description": "Time - Timezone and time conversion operations",
       "source": "./",
@@ -365,6 +473,24 @@
           "args": [
             "mcp",
             "tuya-smart-light"
+          ]
+        }
+      }
+    },
+    {
+      "name": "uptime-monitor",
+      "description": "Uptime Monitor Workflow Monitors website availability and sends alerts",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "uptime-monitor": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "uptime-monitor"
           ]
         }
       }

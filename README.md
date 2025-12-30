@@ -36,11 +36,14 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Code Diagram** | Generate Mermaid diagrams from TypeScript/JavaScript code | 3 | [View →](code-diagram.md) |
+| **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
+| **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
 | **Filesystem** | File and directory operations | 13 | [View →](filesystem.md) |
 | **Git** | Local git repository operations | 11 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
+| **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Google TV Remote** | Control Google TV and Android TV devices | 36 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
@@ -50,14 +53,18 @@ We welcome contributions! Submit pull requests for:
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
 | **Redis** | In-memory data store and cache | 18 | [View →](redis.md) |
+| **RSS Feed** | Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds | 5 | [View →](rss-feed.md) |
+| **Rss To Slack** | RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack | 2 | [View →](rss-to-slack.md) |
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
 | **SQLite Photon MCP** | SQLite database operations | 9 | [View →](sqlite.md) |
+| **Telegram** | Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation | 12 | [View →](telegram.md) |
 | **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
 | **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |
+| **Uptime Monitor** | Uptime Monitor Workflow Monitors website availability and sends alerts | 3 | [View →](uptime-monitor.md) |
 | **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
 
 
-**Total:** 21 photons ready to use
+**Total:** 28 photons ready to use
 
 ---
 
@@ -101,7 +108,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 21 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 28 focused tools at its fingertips.
 
 ---
 
@@ -167,7 +174,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 21 production-ready photons available
+- 📦 28 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
