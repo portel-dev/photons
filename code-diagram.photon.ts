@@ -57,17 +57,18 @@ export default class CodeDiagram {
     type?: DiagramType;
     style?: DiagramStyle;
     name?: string;
-  }): Promise<{ diagram: string; detectedType: string; style: string }> {
+  }): Promise<{ diagram: string; detectedType: string; style: string; isPhoton: boolean }> {
     const { code, type = 'auto', style = 'linear', name = 'Code' } = params;
 
     const detectedType = type === 'auto' ? this.detectType(code) : type;
+    const isPhoton = this.detectPhoton(code);
 
     let diagram: string;
 
     // Structure style works for any type - shows architecture
     if (style === 'structure') {
       diagram = this.generateStructureDiagram(code, name);
-      return { diagram, detectedType, style };
+      return { diagram, detectedType, style, isPhoton };
     }
 
     switch (detectedType) {
@@ -88,7 +89,12 @@ export default class CodeDiagram {
         break;
     }
 
-    return { diagram, detectedType, style };
+    // If it's a Photon, augment with Photon-specific context
+    if (isPhoton && style !== 'structure') {
+      diagram = this.augmentWithPhotonContext(diagram, code, name);
+    }
+
+    return { diagram, detectedType, style, isPhoton };
   }
 
   /**
@@ -102,7 +108,7 @@ export default class CodeDiagram {
     path: string;
     type?: DiagramType;
     style?: DiagramStyle;
-  }): Promise<{ diagram: string; detectedType: string; style: string; name: string }> {
+  }): Promise<{ diagram: string; detectedType: string; style: string; isPhoton: boolean; name: string }> {
     const { path, type = 'auto', style = 'linear' } = params;
 
     const code = await fs.readFile(path, 'utf-8');
@@ -168,8 +174,109 @@ export default class CodeDiagram {
   }
 
   // ============================================
-  // TYPE DETECTION
+  // PHOTON & TYPE DETECTION
   // ============================================
+
+  /**
+   * Detect if code is a Photon based on characteristic patterns
+   */
+  private detectPhoton(code: string): boolean {
+    // Check for Photon JSDoc markers
+    if (/@name\s+\S+/.test(code)) return true;
+    if (/@dependencies\s+\S+/.test(code)) return true;
+
+    // Check for Photon runtime patterns
+    if (/this\.mcp\s*\(/.test(code)) return true;
+    if (/this\.photon\s*\(/.test(code)) return true;
+
+    // Check for workflow yield patterns
+    if (/yield\s*\{\s*(ask|emit)\s*:/.test(code)) return true;
+
+    // Check for .photon.ts filename pattern in @name
+    if (/@name\s+[\w-]+/.test(code)) return true;
+
+    // Check for default export class pattern common in Photons
+    if (/export\s+default\s+class\s+\w+/.test(code) && /async\s+\w+\s*\(/.test(code)) {
+      // Has default export class with async methods - likely a Photon
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Augment any diagram with Photon-specific context
+   */
+  private augmentWithPhotonContext(diagram: string, code: string, name: string): string {
+    const dependencies = this.extractDependencies(code);
+    const mcpCalls = this.extractMcpCalls(code);
+    const photonCalls = this.extractPhotonCalls(code);
+    const yields = this.extractYields(code);
+
+    const contextLines: string[] = [];
+
+    // Add dependencies
+    if (dependencies.length > 0) {
+      contextLines.push('');
+      contextLines.push('    subgraph PHOTON_DEPS["📚 Dependencies"]');
+      contextLines.push('        direction LR');
+      dependencies.forEach((dep, i) => {
+        contextLines.push(`        PDEP${i}[${dep.name}@${dep.version}]`);
+      });
+      contextLines.push('    end');
+    }
+
+    // Add MCP injections
+    if (mcpCalls.length > 0) {
+      const uniqueMcps = [...new Set(mcpCalls.map(c => c.name))];
+      contextLines.push('');
+      contextLines.push('    subgraph PHOTON_MCPS["🔌 MCP Injections"]');
+      contextLines.push('        direction LR');
+      uniqueMcps.forEach((mcp, i) => {
+        contextLines.push(`        PMCP${i}[${mcp}]`);
+      });
+      contextLines.push('    end');
+    }
+
+    // Add Photon injections
+    if (photonCalls.length > 0) {
+      const uniquePhotons = [...new Set(photonCalls.map(c => c.name))];
+      contextLines.push('');
+      contextLines.push('    subgraph PHOTON_PHTS["📦 Photon Calls"]');
+      contextLines.push('        direction LR');
+      uniquePhotons.forEach((photon, i) => {
+        contextLines.push(`        PPHT${i}[${photon}]`);
+      });
+      contextLines.push('    end');
+    }
+
+    // Add yield patterns for workflows
+    if (yields.length > 0) {
+      const askTypes = [...new Set(yields.filter(y => y.type === 'ask').map(y => y.subtype))];
+      const emitTypes = [...new Set(yields.filter(y => y.type === 'emit').map(y => y.subtype))];
+
+      if (askTypes.length > 0 || emitTypes.length > 0) {
+        contextLines.push('');
+        contextLines.push('    subgraph PHOTON_YIELDS["🔄 Yield Patterns"]');
+        contextLines.push('        direction LR');
+        if (askTypes.length > 0) {
+          contextLines.push(`        PASK[❓ ask: ${askTypes.join(', ')}]`);
+        }
+        if (emitTypes.length > 0) {
+          contextLines.push(`        PEMIT[📣 emit: ${emitTypes.join(', ')}]`);
+        }
+        contextLines.push('    end');
+      }
+    }
+
+    if (contextLines.length === 0) {
+      return diagram;
+    }
+
+    // Insert context before the last line or at the end
+    const lines = diagram.split('\n');
+    return [...lines, ...contextLines].join('\n');
+  }
 
   private detectType(code: string): DiagramType {
     // Check for workflow patterns (ask/emit yields)
