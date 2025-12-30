@@ -37,7 +37,7 @@ Generate a Mermaid diagram from code string
 
 - **`type`** (any, optional) - Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls'
 
-- **`style`** (any, optional) - Diagram style: 'linear' (quick overview) | 'branching' (shows if/else/switch)
+- **`style`** (any) - Diagram style: 'linear' (happy path) | 'branching' (control flow) | 'structure' (async/generators/deps)
 
 - **`name`** (any, optional) - Optional name for the diagram
 

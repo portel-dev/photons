@@ -15,7 +15,7 @@ import * as fs from 'fs/promises';
 import ts from 'typescript';
 
 type DiagramType = 'auto' | 'workflow' | 'api' | 'deps' | 'calls';
-type DiagramStyle = 'linear' | 'branching';
+type DiagramStyle = 'linear' | 'branching' | 'structure';
 
 interface YieldStatement {
   type: 'ask' | 'emit';
@@ -49,7 +49,7 @@ export default class CodeDiagram {
    *
    * @param code The TypeScript/JavaScript code to analyze
    * @param type Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls' (default: 'auto')
-   * @param style Diagram style: 'linear' (quick overview) | 'branching' (shows if/else/switch) (default: 'linear')
+   * @param style Diagram style: 'linear' (happy path) | 'branching' (control flow) | 'structure' (async/generators/deps)
    * @param name Optional name for the diagram (default: 'Code')
    */
   async generate(params: {
@@ -63,6 +63,13 @@ export default class CodeDiagram {
     const detectedType = type === 'auto' ? this.detectType(code) : type;
 
     let diagram: string;
+
+    // Structure style works for any type - shows architecture
+    if (style === 'structure') {
+      diagram = this.generateStructureDiagram(code, name);
+      return { diagram, detectedType, style };
+    }
+
     switch (detectedType) {
       case 'workflow':
         diagram = style === 'branching'
@@ -150,6 +157,11 @@ export default class CodeDiagram {
           name: 'branching',
           description: 'Full control flow with if/else/switch branches',
           bestFor: 'Debugging, understanding edge cases, finding all paths',
+        },
+        {
+          name: 'structure',
+          description: 'Architecture showing async/await, generators, dependencies, and injections',
+          bestFor: 'Understanding Photon architecture, runtime dependencies, async patterns',
         },
       ],
     };
@@ -619,6 +631,166 @@ export default class CodeDiagram {
     }
 
     return lines.join('\n');
+  }
+
+  /**
+   * Generate structure diagram showing async/await patterns, generators, dependencies, and injections
+   */
+  private generateStructureDiagram(code: string, name: string): string {
+    const methods = this.extractMethods(code);
+    const dependencies = this.extractDependencies(code);
+    const mcpCalls = this.extractMcpCalls(code);
+    const photonCalls = this.extractPhotonCalls(code);
+    const yields = this.extractYields(code);
+    const lines: string[] = ['flowchart TB'];
+
+    // Central Photon node
+    lines.push(`    PHOTON((📦 ${this.titleCase(name)}))`);
+    lines.push('');
+
+    // Dependencies from @dependencies header
+    if (dependencies.length > 0) {
+      lines.push('    subgraph DEPS["📚 Dependencies"]');
+      lines.push('        direction LR');
+      dependencies.forEach((dep, i) => {
+        lines.push(`        DEP${i}[${dep.name}@${dep.version}]`);
+      });
+      lines.push('    end');
+      lines.push('    DEPS --> PHOTON');
+      lines.push('');
+    }
+
+    // Methods grouped by type
+    const generators = methods.filter(m => m.isGenerator);
+    const asyncMethods = methods.filter(m => m.isAsync && !m.isGenerator);
+    const syncMethods = methods.filter(m => !m.isAsync && !m.isGenerator);
+
+    if (generators.length > 0) {
+      lines.push('    subgraph GENS["🌊 Generators"]');
+      lines.push('        direction TB');
+      generators.forEach((m, i) => {
+        lines.push(`        GEN${i}[async * ${m.name}]`);
+      });
+      lines.push('    end');
+      lines.push('    PHOTON --> GENS');
+      lines.push('');
+    }
+
+    if (asyncMethods.length > 0) {
+      lines.push('    subgraph ASYNC["⚡ Async Methods"]');
+      lines.push('        direction TB');
+      asyncMethods.forEach((m, i) => {
+        lines.push(`        ASYNC${i}[async ${m.name}]`);
+      });
+      lines.push('    end');
+      lines.push('    PHOTON --> ASYNC');
+      lines.push('');
+    }
+
+    if (syncMethods.length > 0) {
+      lines.push('    subgraph SYNC["📋 Sync Methods"]');
+      lines.push('        direction TB');
+      syncMethods.forEach((m, i) => {
+        lines.push(`        SYNC${i}[${m.name}]`);
+      });
+      lines.push('    end');
+      lines.push('    PHOTON --> SYNC');
+      lines.push('');
+    }
+
+    // Runtime injections - MCPs
+    if (mcpCalls.length > 0) {
+      const uniqueMcps = [...new Set(mcpCalls.map(c => c.name))];
+      lines.push('    subgraph MCPS["🔌 MCP Injections"]');
+      lines.push('        direction LR');
+      uniqueMcps.forEach((mcp, i) => {
+        lines.push(`        MCP${i}[${mcp}]`);
+      });
+      lines.push('    end');
+      lines.push('    PHOTON -.->|this.mcp| MCPS');
+      lines.push('');
+    }
+
+    // Runtime injections - Photons
+    if (photonCalls.length > 0) {
+      const uniquePhotons = [...new Set(photonCalls.map(c => c.name))];
+      lines.push('    subgraph PHOTONS["📦 Photon Injections"]');
+      lines.push('        direction LR');
+      uniquePhotons.forEach((photon, i) => {
+        lines.push(`        PHT${i}[${photon}]`);
+      });
+      lines.push('    end');
+      lines.push('    PHOTON -.->|this.photon| PHOTONS');
+      lines.push('');
+    }
+
+    // Yield patterns (for generators)
+    if (yields.length > 0) {
+      const askTypes = [...new Set(yields.filter(y => y.type === 'ask').map(y => y.subtype))];
+      const emitTypes = [...new Set(yields.filter(y => y.type === 'emit').map(y => y.subtype))];
+
+      if (askTypes.length > 0 || emitTypes.length > 0) {
+        lines.push('    subgraph YIELDS["🔄 Yield Patterns"]');
+        lines.push('        direction LR');
+        if (askTypes.length > 0) {
+          lines.push(`        ASK[❓ ask: ${askTypes.join(', ')}]`);
+        }
+        if (emitTypes.length > 0) {
+          lines.push(`        EMIT[📣 emit: ${emitTypes.join(', ')}]`);
+        }
+        lines.push('    end');
+        if (generators.length > 0) {
+          lines.push('    GENS -.->|yield| YIELDS');
+        }
+        lines.push('');
+      }
+    }
+
+    return lines.join('\n');
+  }
+
+  /**
+   * Extract @dependencies from JSDoc header
+   */
+  private extractDependencies(code: string): Array<{ name: string; version: string }> {
+    const deps: Array<{ name: string; version: string }> = [];
+    const match = code.match(/@dependencies\s+([^\n*]+)/);
+    if (match) {
+      const depList = match[1].split(/[,\s]+/).filter(Boolean);
+      for (const dep of depList) {
+        const [name, version = '*'] = dep.split('@');
+        if (name) {
+          deps.push({ name, version });
+        }
+      }
+    }
+    return deps;
+  }
+
+  /**
+   * Extract this.mcp() calls
+   */
+  private extractMcpCalls(code: string): Array<{ name: string; method: string }> {
+    const calls: Array<{ name: string; method: string }> = [];
+    const regex = /this\.mcp\(['"](\w+)['"]\)\.(\w+)/g;
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+      calls.push({ name: match[1], method: match[2] });
+    }
+    return calls;
+  }
+
+  /**
+   * Extract this.photon() calls
+   */
+  private extractPhotonCalls(code: string): Array<{ name: string; method: string }> {
+    const calls: Array<{ name: string; method: string }> = [];
+    const regex = /this\.photon\(['"](\w+)['"]\)\.(\w+)/g;
+    let match;
+    while ((match = regex.exec(code)) !== null) {
+      calls.push({ name: match[1], method: match[2] });
+    }
+    return calls;
   }
 
   // ============================================
