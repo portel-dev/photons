@@ -25,6 +25,20 @@
       ]
     },
     {
+      "name": "code-diagram",
+      "version": "1.0.0",
+      "description": "Code Diagram - Generate Mermaid diagrams from TypeScript/JavaScript code",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../code-diagram.photon.ts",
+      "hash": "sha256:70e97c7583008c548785602182caa9dd12288b27c15d39b05a6d8c4435bd4736",
+      "tools": [
+        "generate",
+        "fromFile",
+        "types"
+      ]
+    },
+    {
       "name": "docker",
       "version": "1.0.0",
       "description": "Docker - Container management operations",
@@ -158,6 +172,7 @@
       "hash": "sha256:33525babd2805c3de3da7ac9d3b60955c7cee7c91da19677e69511c4e3482813",
       "tools": [
         "discover",
+        "connect",
         "disconnect",
         "status",
         "list",
