@@ -228,12 +228,13 @@ export default class GoogleTV {
 
   /**
    * Connect to a Google TV / Android TV device
-   * Uses generator pattern - yields for pairing code input when needed
+   * Uses generator pattern with ask/emit yields:
+   * - emit: status updates during connection
+   * - ask: pairing code input when needed
    *
    * @param ip TV IP address (required for first connection)
    * @param name Optional friendly name for the TV
    * @param pairing_code Pre-provided pairing code (for REST APIs)
-   * @yields {pairing_code} prompt Enter the 6-digit pairing code shown on TV
    * @format table
    */
   async *connect(params: { ip: string; name?: string; pairing_code?: string } | string) {
@@ -249,6 +250,8 @@ export default class GoogleTV {
     }
 
     try {
+      yield { emit: 'status', message: `Connecting to ${ip}...` };
+
       // Try to load existing credentials
       const credentials = await this._loadCredentials();
       const existingCred = credentials.find((c: TVCredentials) => c.ip === ip);
@@ -261,7 +264,7 @@ export default class GoogleTV {
 
       if (existingCred?.cert) {
         options.cert = existingCred.cert;
-        console.error('[google-tv] Using saved credentials');
+        yield { emit: 'status', message: 'Using saved credentials' };
       }
 
       this.remote = new AndroidRemote(ip, options);
@@ -272,6 +275,9 @@ export default class GoogleTV {
 
       // For new pairing, we need to get the code from user
       if (!existingCred?.cert) {
+        yield { emit: 'status', message: 'Starting pairing process...' };
+        yield { emit: 'progress', value: 0.2, message: 'Waiting for TV...' };
+
         // Wait for TV to show the pairing code
         const secretPromise = new Promise<void>((resolve, reject) => {
           const timeout = setTimeout(() => {
@@ -280,7 +286,6 @@ export default class GoogleTV {
 
           this.remote.on('secret', () => {
             clearTimeout(timeout);
-            console.error('[google-tv] 📺 TV is showing a pairing code');
             resolve();
           });
 
@@ -296,17 +301,20 @@ export default class GoogleTV {
         // Wait for TV to show the code
         await secretPromise;
 
-        // YIELD: Get the pairing code from user
-        // Runtime will handle this based on protocol:
+        yield { emit: 'status', message: 'TV is showing a pairing code' };
+        yield { emit: 'progress', value: 0.5, message: 'Awaiting code input...' };
+
+        // ASK: Get the pairing code from user
+        // Runtime handles this based on protocol:
         // - CLI: readline prompt
-        // - MCP: elicitation
-        // - REST: use pre-provided pairing_code param
-        // - Fallback: native OS dialog
+        // - MCP: elicitation dialog
+        // - REST: returns 202 with continuation URL, or uses pre-provided pairing_code
+        // - WebSocket: sends ask message, waits for response
         const code: string = preProvidedCode || (yield {
-          prompt: 'Enter the 6-digit pairing code shown on TV:',
-          type: 'text',
+          ask: 'text',
           id: 'pairing_code',
-          pattern: '^[0-9A-Fa-f]{6}$',
+          message: 'Enter the 6-digit pairing code shown on TV:',
+          pattern: '^[0-9]{6}$',
           required: true,
         });
 
@@ -317,8 +325,8 @@ export default class GoogleTV {
           };
         }
 
-        // Send the code and wait for ready
-        console.error('[google-tv] 🔑 Sending pairing code...');
+        yield { emit: 'status', message: 'Sending pairing code...' };
+        yield { emit: 'progress', value: 0.7, message: 'Verifying...' };
 
         const readyPromise = new Promise<void>((resolve, reject) => {
           const timeout = setTimeout(() => {
@@ -340,7 +348,6 @@ export default class GoogleTV {
         await readyPromise;
 
         // Save credentials
-        console.error('[google-tv] ✅ Paired successfully');
         this.isConnected = true;
         this.isPairing = false;
 
@@ -352,6 +359,9 @@ export default class GoogleTV {
           lastUsed: Date.now(),
         });
 
+        yield { emit: 'progress', value: 1.0, message: 'Complete!' };
+        yield { emit: 'toast', message: 'Connected and paired!', type: 'success' };
+
         return {
           success: true,
           message: 'Connected and paired successfully',
@@ -361,6 +371,8 @@ export default class GoogleTV {
       }
 
       // Has existing credentials - connect and wait for ready
+      yield { emit: 'progress', value: 0.5, message: 'Connecting...' };
+
       const readyPromise = new Promise<void>((resolve, reject) => {
         const timeout = setTimeout(() => {
           reject(new Error('Connection timeout'));
@@ -380,13 +392,15 @@ export default class GoogleTV {
       this.remote.start();
       await readyPromise;
 
-      console.error('[google-tv] ✅ Connected');
       this.isConnected = true;
 
       await this._saveCredentials({
         ...existingCred,
         lastUsed: Date.now(),
       });
+
+      yield { emit: 'progress', value: 1.0, message: 'Complete!' };
+      yield { emit: 'toast', message: 'Connected!', type: 'success' };
 
       return {
         success: true,
