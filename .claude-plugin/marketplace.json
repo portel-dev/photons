@@ -46,6 +46,24 @@
       }
     },
     {
+      "name": "content-creator",
+      "description": "Content Creator Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "content-creator": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "content-creator"
+          ]
+        }
+      }
+    },
+    {
       "name": "data-sync",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
       "source": "./",
@@ -401,6 +419,24 @@
           "args": [
             "mcp",
             "slack"
+          ]
+        }
+      }
+    },
+    {
+      "name": "social-formatter",
+      "description": "Social Media Formatter",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "social-formatter": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "social-formatter"
           ]
         }
       }

@@ -39,6 +39,21 @@
       ]
     },
     {
+      "name": "content-creator",
+      "version": "1.0.0",
+      "description": "Content Creator Photon",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../content-creator.photon.ts",
+      "hash": "sha256:f884e86c9d13d0d96d450ed7a9e935cc308c3809f749b250632c0ee6902dfe9a",
+      "tools": [
+        "research",
+        "generate",
+        "formatContent",
+        "createContent"
+      ]
+    },
+    {
       "name": "data-sync",
       "version": "1.0.0",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
@@ -462,6 +477,21 @@
         "react",
         "upload",
         "search"
+      ]
+    },
+    {
+      "name": "social-formatter",
+      "version": "1.0.0",
+      "description": "Social Media Formatter",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../social-formatter.photon.ts",
+      "hash": "sha256:16dd1c6d39137d673e1b1af6c7dad0e5e4b726a2eee3d8632ab2a195826efcc7",
+      "tools": [
+        "format",
+        "formatSingle",
+        "getPlatforms",
+        "createThread"
       ]
     },
     {

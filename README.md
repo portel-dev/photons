@@ -36,6 +36,7 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Code Diagram** | Generate Mermaid diagrams from TypeScript/JavaScript code | 3 | [View →](code-diagram.md) |
+| **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
 | **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
@@ -56,6 +57,7 @@ We welcome contributions! Submit pull requests for:
 | **RSS Feed** | Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds | 5 | [View →](rss-feed.md) |
 | **Rss To Slack** | RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack | 2 | [View →](rss-to-slack.md) |
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
+| **Social Formatter** | Social Media Formatter | 4 | [View →](social-formatter.md) |
 | **SQLite Photon MCP** | SQLite database operations | 9 | [View →](sqlite.md) |
 | **Telegram** | Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation | 12 | [View →](telegram.md) |
 | **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
@@ -64,7 +66,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
 
 
-**Total:** 28 photons ready to use
+**Total:** 30 photons ready to use
 
 ---
 
@@ -108,7 +110,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 28 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 30 focused tools at its fingertips.
 
 ---
 
@@ -174,7 +176,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 28 production-ready photons available
+- 📦 30 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
