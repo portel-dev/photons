@@ -251,13 +251,15 @@ export default class ContentCreatorPhoton extends PhotonMCP {
     yield { emit: 'status', message: '📚 Phase 1: Research' };
     const researchGen = this.research({ topic, depth: 5 });
     let research: ResearchResult | undefined;
+    let result = await researchGen.next();
 
-    for await (const yielded of researchGen) {
-      if ('emit' in yielded) {
-        yield yielded;
+    while (!result.done) {
+      if ('emit' in result.value) {
+        yield result.value;
       }
+      result = await researchGen.next();
     }
-    research = await researchGen.next().then(r => r.value);
+    research = result.value;
 
     // Show research summary to user
     yield {
@@ -277,62 +279,95 @@ export default class ContentCreatorPhoton extends PhotonMCP {
       throw new Error('Workflow cancelled by user');
     }
 
-    // Step 2: Ask for preferences
-    const style: string = yield {
-      ask: 'select',
-      id: 'style',
-      message: 'What style should the content be?',
-      options: [
-        { value: 'professional', label: 'Professional - formal, authoritative' },
-        { value: 'casual', label: 'Casual - friendly, conversational' },
-        { value: 'technical', label: 'Technical - detailed, expert-focused' },
-      ],
+    // Step 2: Ask for preferences using form elicitation (MCP-aligned)
+    const preferences: { action: string; content?: { style: string; platforms: string[]; length: string } } = yield {
+      ask: 'form',
+      id: 'preferences',
+      message: 'Configure content preferences',
+      schema: {
+        type: 'object',
+        properties: {
+          style: {
+            type: 'string',
+            title: 'Content Style',
+            oneOf: [
+              { const: 'professional', title: 'Professional - formal, authoritative' },
+              { const: 'casual', title: 'Casual - friendly, conversational' },
+              { const: 'technical', title: 'Technical - detailed, expert-focused' },
+            ],
+            default: 'professional',
+          },
+          platforms: {
+            type: 'array',
+            title: 'Target Platforms',
+            items: {
+              anyOf: [
+                { const: 'linkedin', title: 'LinkedIn' },
+                { const: 'twitter', title: 'Twitter/X' },
+                { const: 'threads', title: 'Threads' },
+                { const: 'mastodon', title: 'Mastodon' },
+                { const: 'bluesky', title: 'Bluesky' },
+              ],
+            },
+            default: ['linkedin', 'twitter'],
+          },
+          length: {
+            type: 'string',
+            title: 'Content Length',
+            oneOf: [
+              { const: 'short', title: 'Short (tweet-sized)' },
+              { const: 'medium', title: 'Medium (LinkedIn post)' },
+              { const: 'long', title: 'Long (blog post)' },
+            ],
+            default: 'medium',
+          },
+        },
+        required: ['style', 'platforms'],
+      },
     };
 
-    const platforms: string[] = yield {
-      ask: 'select',
-      id: 'platforms',
-      message: 'Which platforms to target?',
-      multiple: true,
-      options: [
-        { value: 'linkedin', label: 'LinkedIn' },
-        { value: 'twitter', label: 'Twitter/X' },
-        { value: 'threads', label: 'Threads' },
-        { value: 'mastodon', label: 'Mastodon' },
-        { value: 'bluesky', label: 'Bluesky' },
-      ],
-    };
+    if (preferences.action !== 'accept' || !preferences.content) {
+      throw new Error('Workflow cancelled by user');
+    }
+
+    const { style, platforms, length } = preferences.content;
 
     // Step 3: Generate content
     yield { emit: 'status', message: '✍️ Phase 2: Generate' };
     const generateGen = this.generate({
       research: research!,
       style: style as any,
+      length: length as any,
       platforms: Array.isArray(platforms) ? platforms : [platforms],
     });
 
     let generated: GeneratedContent | undefined;
-    for await (const yielded of generateGen) {
-      if ('emit' in yielded || 'ask' in yielded) {
-        const result = yield yielded;
-        if ('ask' in yielded) {
-          generateGen.next(result);
-        }
+    let genResult = await generateGen.next();
+
+    while (!genResult.done) {
+      if ('emit' in genResult.value || 'ask' in genResult.value) {
+        const response = yield genResult.value;
+        genResult = await generateGen.next(response);
+      } else {
+        genResult = await generateGen.next();
       }
     }
-    generated = await generateGen.next().then(r => r.value);
+    generated = genResult.value;
 
     // Step 4: Format for platforms
     yield { emit: 'status', message: '🎨 Phase 3: Format' };
     const formatGen = this.formatContent({ content: generated! });
 
     let formatted: FormattedContent | undefined;
-    for await (const yielded of formatGen) {
-      if ('emit' in yielded) {
-        yield yielded;
+    let fmtResult = await formatGen.next();
+
+    while (!fmtResult.done) {
+      if ('emit' in fmtResult.value) {
+        yield fmtResult.value;
       }
+      fmtResult = await formatGen.next();
     }
-    formatted = await formatGen.next().then(r => r.value);
+    formatted = fmtResult.value;
 
     yield { emit: 'toast', message: 'Content ready for publishing!', type: 'success' };
 

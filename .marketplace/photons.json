@@ -45,7 +45,7 @@
       "author": "Unknown",
       "license": "MIT",
       "source": "../content-creator.photon.ts",
-      "hash": "sha256:f884e86c9d13d0d96d450ed7a9e935cc308c3809f749b250632c0ee6902dfe9a",
+      "hash": "sha256:3d29ec18c2023eec5d0189392f56a86f8a95cda5d1687be71333879be38a2189",
       "tools": [
         "research",
         "generate",
