@@ -410,7 +410,7 @@
       "author": "Unknown",
       "license": "MIT",
       "source": "../preferences.photon.ts",
-      "hash": "sha256:dfcaa18ddf416af929c4c7ec9a71382da0059c5adcaa1d4773a18847cd14168e",
+      "hash": "sha256:d68295f23720cbb510a1dc66eacaae5219bed74e0dcca44bbe33949a72b36f69",
       "tools": [
         "getPreferences",
         "getPreference",

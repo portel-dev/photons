@@ -2,9 +2,9 @@
  * Preferences Photon
  *
  * Demonstrates MCP Apps with UI assets, prompts, and resources.
- * Shows how to use the asset folder convention and EmitUI yield type.
+ * Assets are auto-discovered from the preferences/ folder by convention.
  *
- * Asset folder structure:
+ * Asset folder structure (auto-served):
  *   preferences/
  *     ui/
  *       settings.html     - Main settings form
@@ -15,10 +15,6 @@
  *       defaults.json     - Default configuration
  *
  * @dependencies @portel/photon-core@latest
- * @ui settings ./ui/settings.html
- * @ui theme-preview ./ui/theme-preview.html
- * @prompt welcome ./prompts/welcome.md
- * @resource defaults ./resources/defaults.json
  */
 
 import { PhotonMCP } from '@portel/photon-core';
@@ -175,6 +171,8 @@ export default class PreferencesPhoton extends PhotonMCP {
    * Preview a theme before applying
    *
    * Shows an inline preview of the selected theme.
+   *
+   * @ui theme-preview
    */
   async *previewTheme(params: {
     theme: 'light' | 'dark' | 'system';
