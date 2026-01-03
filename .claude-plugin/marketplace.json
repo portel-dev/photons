@@ -352,6 +352,24 @@
       }
     },
     {
+      "name": "preferences",
+      "description": "Preferences Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "preferences": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "preferences"
+          ]
+        }
+      }
+    },
+    {
       "name": "redis",
       "description": "Redis - In-memory data store and cache",
       "source": "./",

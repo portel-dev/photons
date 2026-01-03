@@ -53,6 +53,7 @@ We welcome contributions! Submit pull requests for:
 | **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
+| **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |
 | **Redis** | In-memory data store and cache | 18 | [View →](redis.md) |
 | **RSS Feed** | Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds | 5 | [View →](rss-feed.md) |
 | **Rss To Slack** | RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack | 2 | [View →](rss-to-slack.md) |
@@ -66,7 +67,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
 
 
-**Total:** 30 photons ready to use
+**Total:** 31 photons ready to use
 
 ---
 
@@ -110,7 +111,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 30 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 31 focused tools at its fingertips.
 
 ---
 
@@ -176,7 +177,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 30 production-ready photons available
+- 📦 31 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

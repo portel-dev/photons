@@ -404,6 +404,24 @@
       ]
     },
     {
+      "name": "preferences",
+      "version": "1.0.0",
+      "description": "Preferences Photon",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../preferences.photon.ts",
+      "hash": "sha256:dfcaa18ddf416af929c4c7ec9a71382da0059c5adcaa1d4773a18847cd14168e",
+      "tools": [
+        "getPreferences",
+        "getPreference",
+        "editSettings",
+        "previewTheme",
+        "resetToDefaults",
+        "importPreferences",
+        "exportPreferences"
+      ]
+    },
+    {
       "name": "redis",
       "version": "1.0.0",
       "description": "Redis - In-memory data store and cache",
