@@ -64,6 +64,24 @@
       }
     },
     {
+      "name": "dashboard",
+      "description": "Dashboard Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "dashboard": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "dashboard"
+          ]
+        }
+      }
+    },
+    {
       "name": "data-sync",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
       "source": "./",

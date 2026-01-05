@@ -37,6 +37,7 @@ We welcome contributions! Submit pull requests for:
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Code Diagram** | Generate Mermaid diagrams from TypeScript/JavaScript code | 3 | [View →](code-diagram.md) |
 | **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
+| **Dashboard** | Dashboard Photon | 5 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
 | **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
@@ -67,7 +68,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
 
 
-**Total:** 31 photons ready to use
+**Total:** 32 photons ready to use
 
 ---
 
@@ -111,7 +112,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 31 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 32 focused tools at its fingertips.
 
 ---
 
@@ -177,7 +178,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 31 production-ready photons available
+- 📦 32 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

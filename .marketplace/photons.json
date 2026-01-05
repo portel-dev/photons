@@ -54,6 +54,22 @@
       ]
     },
     {
+      "name": "dashboard",
+      "version": "1.0.0",
+      "description": "Dashboard Photon",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../dashboard.photon.ts",
+      "hash": "sha256:51ae8ce34e34cdff26e96f7991816c9fe13612ea2d823f2bd2e888dbc6572a2c",
+      "tools": [
+        "getOverview",
+        "getTasks",
+        "getActivity",
+        "addTask",
+        "updateTaskStatus"
+      ]
+    },
+    {
       "name": "data-sync",
       "version": "1.0.0",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
