@@ -280,6 +280,24 @@
       }
     },
     {
+      "name": "kitchen-sink",
+      "description": "Kitchen Sink Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "kitchen-sink": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "kitchen-sink"
+          ]
+        }
+      }
+    },
+    {
       "name": "knowledge-graph",
       "description": "Knowledge Graph - Persistent knowledge graph with entities and relations",
       "source": "./",

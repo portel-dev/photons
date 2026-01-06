@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --link: #60a5fa;
+      --link-hover: #93c5fd;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .header {
+      margin-bottom: 24px;
+    }
+    .count {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .result {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .result-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--link);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .result-title:hover {
+      color: var(--link-hover);
+      text-decoration: underline;
+    }
+    .result-url {
+      font-size: 13px;
+      color: #22c55e;
+      margin-bottom: 8px;
+    }
+    .result-snippet {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .no-results {
+      text-align: center;
+      padding: 48px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="count" id="count"></div>
+  </div>
+  <div class="results" id="results"></div>
+
+  <script>
+    const data = window.__PHOTON_DATA__ || [];
+
+    document.getElementById('count').textContent = `${data.length} result${data.length !== 1 ? 's' : ''} found`;
+
+    if (data.length === 0) {
+      document.getElementById('results').innerHTML = `
+        <div class="no-results">No results found</div>
+      `;
+    } else {
+      document.getElementById('results').innerHTML = data.map(result => `
+        <div class="result">
+          <a class="result-title" href="${result.url}" target="_blank">${result.title}</a>
+          <div class="result-url">${result.url}</div>
+          <div class="result-snippet">${result.snippet}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

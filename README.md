@@ -49,6 +49,7 @@ We welcome contributions! Submit pull requests for:
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Google TV Remote** | Control Google TV and Android TV devices | 36 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
+| **Kitchen Sink** | Kitchen Sink Photon | 24 | [View →](kitchen-sink.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
@@ -68,7 +69,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
 
 
-**Total:** 32 photons ready to use
+**Total:** 33 photons ready to use
 
 ---
 
@@ -112,7 +113,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 32 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 33 focused tools at its fingertips.
 
 ---
 
@@ -178,7 +179,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 32 production-ready photons available
+- 📦 33 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
