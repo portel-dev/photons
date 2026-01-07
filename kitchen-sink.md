@@ -35,7 +35,7 @@ Kitchen Sink Photon
 
 ## 🔧 Tools
 
-This photon provides **24** tools:
+This photon provides **25** tools:
 
 
 ### `basicStringReturn`
@@ -274,6 +274,23 @@ Streams JSON objects  You can stream structured data too - each yield is a compl
 ---
 
 
+### `progressDemo`
+
+Demonstrates progress reporting  Uses `this.emit` to send progress updates during a long-running task.
+
+
+**Parameters:**
+
+
+- **`duration`** (any) - Duration in seconds (default 5)
+
+
+
+
+
+---
+
+
 ### `memoryCounter`
 
 Simple counter with in-memory state  State persists during the server session but resets on restart.
@@ -439,7 +456,7 @@ photon mcp kitchen-sink --config
 This photon automatically installs the following dependencies:
 
 ```
-@portel/photon-core@latest
+@portel/photon-core@file:/Users/arul/Projects/photon-core
 ```
 
 

@@ -5,7 +5,7 @@
  * Use this as a reference for building your own photons.
  *
  * @version 1.0.0
- * @dependencies @portel/photon-core@latest
+ * @dependencies @portel/photon-core@file:/Users/arul/Projects/photon-core
  */
 
 import { PhotonMCP } from '@portel/photon-core';
@@ -237,6 +237,34 @@ export default class KitchenSinkPhoton extends PhotonMCP {
       yield JSON.stringify(event) + '\n';
       await new Promise(resolve => setTimeout(resolve, 300));
     }
+  }
+
+  /**
+   * Demonstrates progress reporting
+   *
+   * Uses `this.emit` to send progress updates during a long-running task.
+   *
+   * @param duration Duration in seconds (default 5)
+   */
+  async progressDemo(params: { duration?: number }): Promise<string> {
+    const duration = params.duration || 5;
+    const steps = 10;
+    const interval = (duration * 1000) / steps;
+
+    this.emit({ emit: 'status', message: 'Starting task...' });
+
+    for (let i = 1; i <= steps; i++) {
+      await new Promise(resolve => setTimeout(resolve, interval));
+      const progress = i / steps;
+      this.emit({
+        emit: 'progress',
+        value: progress,
+        message: `Processing step ${i} of ${steps}`
+      });
+    }
+
+    this.emit({ emit: 'status', message: 'Task completed!' });
+    return `Completed ${steps} steps in ${duration} seconds`;
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
