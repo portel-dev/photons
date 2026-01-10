@@ -4,7 +4,7 @@ GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.4.1
 **Author:** Unknown
 **License:** MIT
 
@@ -112,4 +112,4 @@ No external dependencies required.
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.4.1

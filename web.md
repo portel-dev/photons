@@ -27,13 +27,13 @@ This photon provides **2** tools:
 
 ### `search`
 
-Search the web using DuckDuckGo. * @param query The search query (e.g., "latest typescript features")
+Search the web using DuckDuckGo.
 
 
 **Parameters:**
 
 
-- **`query`** (any) - The search query (e.g., "latest typescript features")
+- **`query`** (any) - The search query
 
 
 
@@ -44,7 +44,7 @@ Search the web using DuckDuckGo. * @param query The search query (e.g., "latest 
 
 ### `read`
 
-Read a webpage and extract its main content as Markdown. Uses Mozilla Readability to remove ads/navbars. * @param url The URL to read
+Read a webpage and extract its main content as Markdown. Uses Mozilla Readability to remove ads/navbars.
 
 
 **Parameters:**

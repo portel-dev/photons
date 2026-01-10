@@ -4,7 +4,7 @@ Preferences Photon
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.4.1
 **Author:** Unknown
 **License:** MIT
 
@@ -165,4 +165,4 @@ This photon automatically installs the following dependencies:
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.4.1

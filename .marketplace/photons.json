@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.0.0",
+  "version": "1.4.1",
   "photons": [
     {
       "name": "aws-s3",
@@ -40,7 +40,7 @@
     },
     {
       "name": "content-creator",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Content Creator Photon",
       "author": "Unknown",
       "license": "MIT",
@@ -55,7 +55,7 @@
     },
     {
       "name": "dashboard",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Dashboard Photon",
       "author": "Unknown",
       "license": "MIT",
@@ -71,7 +71,7 @@
     },
     {
       "name": "data-sync",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
       "author": "Unknown",
       "license": "MIT",
@@ -85,7 +85,7 @@
     },
     {
       "name": "discord",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Discord - Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation",
       "author": "Unknown",
       "license": "MIT",
@@ -206,7 +206,7 @@
     },
     {
       "name": "github-pr-notifier",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack",
       "author": "Unknown",
       "license": "MIT",
@@ -457,7 +457,7 @@
     },
     {
       "name": "preferences",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Preferences Photon",
       "author": "Unknown",
       "license": "MIT",
@@ -504,7 +504,7 @@
     },
     {
       "name": "rss-feed",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "RSS Feed - Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds",
       "author": "Unknown",
       "license": "MIT",
@@ -520,7 +520,7 @@
     },
     {
       "name": "rss-to-slack",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack",
       "author": "Unknown",
       "license": "MIT",
@@ -551,7 +551,7 @@
     },
     {
       "name": "social-formatter",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Social Media Formatter",
       "author": "Unknown",
       "license": "MIT",
@@ -586,7 +586,7 @@
     },
     {
       "name": "telegram",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Telegram - Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation",
       "author": "Unknown",
       "license": "MIT",
@@ -643,7 +643,7 @@
     },
     {
       "name": "uptime-monitor",
-      "version": "1.0.0",
+      "version": "1.4.1",
       "description": "Uptime Monitor Workflow Monitors website availability and sends alerts",
       "author": "Unknown",
       "license": "MIT",
@@ -662,7 +662,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../web.photon.ts",
-      "hash": "sha256:2aa9f0ff052614b1d1e47f482bbfcc2a6f9fd071ba49f67bd78a3946af87f7c8",
+      "hash": "sha256:5c32c0aea557c888d3176888fa53dc0d716493ebb79349fdc8f13e73c4be2d4c",
       "tools": [
         "search",
         "read"

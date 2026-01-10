@@ -4,7 +4,7 @@ Data Sync Workflow Synchronizes data between different sources with progress tra
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 1.4.1
 **Author:** Unknown
 **License:** MIT
 
@@ -135,4 +135,4 @@ No external dependencies required.
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 1.4.1

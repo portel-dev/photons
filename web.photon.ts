@@ -34,12 +34,12 @@ export default class Web {
     }
 
     async onInitialize() {
-        console.error('Web Agent (Search + Read) initialized.');
+        // Silent initialization - ready to use
     }
 
     /**
      * Search the web using DuckDuckGo.
-     * * @param query The search query (e.g., "latest typescript features")
+     * @param query The search query
      * @returns Array of markdown formatted results with links.
      */
     async search(params: { query: string }): Promise<string[]> {
@@ -73,7 +73,7 @@ export default class Web {
     /**
      * Read a webpage and extract its main content as Markdown.
      * Uses Mozilla Readability to remove ads/navbars.
-     * * @param url The URL to read
+     * @param url The URL to read
      * @returns Markdown content with YAML metadata.
      */
     async read(params: { url: string }): Promise<string> {
