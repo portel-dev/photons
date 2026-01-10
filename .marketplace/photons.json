@@ -662,7 +662,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../web.photon.ts",
-      "hash": "sha256:5c32c0aea557c888d3176888fa53dc0d716493ebb79349fdc8f13e73c4be2d4c",
+      "hash": "sha256:48e0a69bbf1ae84a26dc920b1f705cc639b46c8722dab392a1fc5b6830673d75",
       "tools": [
         "search",
         "read"

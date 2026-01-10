@@ -42,14 +42,18 @@ export default class Web {
      * @param query The search query
      * @returns Array of markdown formatted results with links.
      */
-    async search(params: { query: string }): Promise<string[]> {
+    async *search(params: { query: string }): AsyncGenerator<{ emit: string; message: string } | string[], string[], unknown> {
         const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(params.query)}`;
 
         try {
+            yield { emit: 'status', message: '🔍 Searching DuckDuckGo...' };
+            
             const { data } = await axios.get(url, {
                 headers: { 'User-Agent': this.userAgent }
             });
 
+            yield { emit: 'status', message: '📄 Parsing results...' };
+            
             const $ = cheerio.load(data);
             const results: string[] = [];
 
@@ -76,14 +80,18 @@ export default class Web {
      * @param url The URL to read
      * @returns Markdown content with YAML metadata.
      */
-    async read(params: { url: string }): Promise<string> {
+    async *read(params: { url: string }): AsyncGenerator<{ emit: string; message: string } | string, string, unknown> {
         try {
+            yield { emit: 'status', message: `🌐 Fetching ${params.url}...` };
+            
             // 1. Fetch the raw HTML
             const { data: html } = await axios.get(params.url, {
                 headers: { 'User-Agent': this.userAgent },
                 timeout: 10000 // 10s timeout
             });
 
+            yield { emit: 'status', message: '📖 Extracting content...' };
+            
             // 2. Parse HTML with JSDOM
             const dom = new JSDOM(html, { url: params.url });
             
@@ -95,6 +103,8 @@ export default class Web {
                 return `**Error:** Could not parse content from ${params.url}. The page might be empty or Javascript-heavy.`;
             }
 
+            yield { emit: 'status', message: '✏️  Converting to Markdown...' };
+            
             // 4. Convert HTML to Markdown
             const markdownBody = this.turndown.turndown(article.content);
 
