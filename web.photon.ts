@@ -39,8 +39,6 @@ export default class Web {
 
     /**
      * Search the web using DuckDuckGo.
-     * @param query The search query
-     * @returns Array of markdown formatted results with links.
      */
     async *search(params: { query: string }): AsyncGenerator<{ emit: string; message: string } | string[], string[], unknown> {
         const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(params.query)}`;
@@ -77,8 +75,6 @@ export default class Web {
     /**
      * Read a webpage and extract its main content as Markdown.
      * Uses Mozilla Readability to remove ads/navbars.
-     * @param url The URL to read
-     * @returns Markdown content with YAML metadata.
      */
     async *read(params: { url: string }): AsyncGenerator<{ emit: string; message: string } | string, string, unknown> {
         try {

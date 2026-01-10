@@ -30,12 +30,6 @@ This photon provides **2** tools:
 Search the web using DuckDuckGo.
 
 
-**Parameters:**
-
-
-- **`query`** (any) - The search query
-
-
 
 
 
@@ -45,12 +39,6 @@ Search the web using DuckDuckGo.
 ### `read`
 
 Read a webpage and extract its main content as Markdown. Uses Mozilla Readability to remove ads/navbars.
-
-
-**Parameters:**
-
-
-- **`url`** (any) - The URL to read
 
 
 
