@@ -147,7 +147,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:30ee30bc4b15dfebca4f74204a2c40ff9730c18ee09b0af34906d65204554bef",
+      "hash": "sha256:aa41bf4f014d12853704844b15618c403ee4c99170b5748ebacdf562438d402a",
       "tools": [
         "read",
         "write",
@@ -171,7 +171,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git.photon.ts",
-      "hash": "sha256:2c977676371191c8e1d25dce076c7638cf1cd06113e511fa416462625224dbcb",
+      "hash": "sha256:ea2ac8913bfdfee6822174271571309777ec290cd02cdc809d68ce6077aea0c9",
       "tools": [
         "status",
         "log",
@@ -244,7 +244,7 @@
       "author": "Photon",
       "license": "MIT",
       "source": "../google-tv.photon.ts",
-      "hash": "sha256:33525babd2805c3de3da7ac9d3b60955c7cee7c91da19677e69511c4e3482813",
+      "hash": "sha256:9e23f5b8533f2be6aca3aacac3850adadf236a9089827cf52f27732244fd8407",
       "tools": [
         "discover",
         "connect",
@@ -348,7 +348,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../knowledge-graph.photon.ts",
-      "hash": "sha256:b2619d1ea9df7a7df0787bdff85ee7312e6ec87f4ff3bac3c24c25497c78cf77",
+      "hash": "sha256:285f6db374bee8a0315c68cd351dcd5c374c52867b8ea0fe5b54a734a3d38eba",
       "tools": [
         "entities",
         "relations",
@@ -480,7 +480,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../redis.photon.ts",
-      "hash": "sha256:95303b67e243b8966aea186a729cd274e448a108647f0f361c2f75edd9df5ab3",
+      "hash": "sha256:db861285ebf754e7bedd26fcf17e4a62fdf774354e0b6cbb877eb2f24b5a71f5",
       "tools": [
         "get",
         "set",
@@ -614,7 +614,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../time.photon.ts",
-      "hash": "sha256:cf64eeee44b9e11a3c02240fcd56225035b723b3c915b5c01584dfc42b582922",
+      "hash": "sha256:950f763b18510d9a26160845c3881295eadd7d4756a02d9fe22a235b78b4fe0f",
       "tools": [
         "getCurrentTime",
         "convertTime",

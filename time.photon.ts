@@ -28,8 +28,7 @@ export default class Time {
   }
 
   async onInitialize() {
-    console.error('[time] ✅ Initialized');
-    console.error(`[time] Local timezone: ${this.localTimezone}`);
+    // Photon ready
   }
 
   /**

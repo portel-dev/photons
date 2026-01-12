@@ -33,8 +33,7 @@ export default class Git {
   }
 
   async onInitialize() {
-    console.error('[git] ✅ Initialized');
-    console.error(`[git] Default repo path: ${this.defaultRepoPath}`);
+    // Photon ready
   }
 
   /**

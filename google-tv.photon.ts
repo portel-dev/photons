@@ -139,14 +139,11 @@ export default class GoogleTV {
     // Dynamically import androidtv-remote
     try {
       const module = await import('androidtv-remote');
-      // Module exports: { AndroidRemote, RemoteDirection, RemoteKeyCode, default }
       AndroidRemote = module.AndroidRemote;
       RemoteKeyCode = module.RemoteKeyCode;
       RemoteDirection = module.RemoteDirection;
-      console.error('[google-tv] ✅ Initialized');
-      console.error(`[google-tv] Credentials file: ${this.credentialsFile}`);
-    } catch (error: any) {
-      console.error(`[google-tv] ⚠️ Failed to load androidtv-remote: ${error.message}`);
+    } catch {
+      // androidtv-remote not available
     }
   }
 
@@ -197,8 +194,8 @@ export default class GoogleTV {
         }
       });
 
-      socket.on('error', (err) => {
-        console.error(`[google-tv] Discovery error: ${err.message}`);
+      socket.on('error', () => {
+        // Discovery error - handled silently
       });
 
       socket.bind(0, () => {
@@ -1085,39 +1082,33 @@ export default class GoogleTV {
     if (!this.remote) return;
 
     this.remote.on('secret', () => {
-      console.error('[google-tv] 🔑 TV is showing pairing code');
       this.isPairing = true;
     });
 
     this.remote.on('powered', (powered: boolean) => {
-      console.error(`[google-tv] Power state: ${powered ? 'ON' : 'OFF'}`);
       this.isPoweredOn = powered;
     });
 
     this.remote.on('volume', (volume: { level: number; maximum: number; muted: boolean }) => {
-      console.error(`[google-tv] Volume: ${volume.level}/${volume.maximum}, Muted: ${volume.muted}`);
       this.currentVolume = Math.round((volume.level / volume.maximum) * 100);
       this.currentMaxVolume = volume.maximum;
       this.isMuted = volume.muted;
     });
 
     this.remote.on('current_app', (app: string) => {
-      console.error(`[google-tv] Current app: ${app}`);
       this.currentApp = app;
     });
 
     this.remote.on('ready', () => {
-      console.error('[google-tv] ✅ Connection ready');
       this.isConnected = true;
       this.isPairing = false;
     });
 
-    this.remote.on('error', (error: Error) => {
-      console.error(`[google-tv] ❌ Error: ${error.message}`);
+    this.remote.on('error', () => {
+      // Error handled silently
     });
 
     this.remote.on('close', () => {
-      console.error('[google-tv] Connection closed');
       this.isConnected = false;
     });
   }
@@ -1163,8 +1154,8 @@ export default class GoogleTV {
         const directionValues = { SHORT: 0, START_LONG: 1, END_LONG: 2 };
         await this.remote.sendKey(keyCode, directionValues[direction]);
       }
-    } catch (error: any) {
-      console.error(`[google-tv] Key send error: ${error.message}`);
+    } catch {
+      // Key send error - ignored
     }
   }
 

@@ -59,15 +59,9 @@ export default class KnowledgeGraph {
     if (existsSync(this.storagePath)) {
       const data = await fs.readFile(this.storagePath, 'utf-8');
       this.graph = JSON.parse(data);
-      console.error(
-        `[knowledge-graph] ✅ Loaded ${this.graph.entities.length} entities, ${this.graph.relations.length} relations`
-      );
     } else {
       await this.saveGraph();
-      console.error('[knowledge-graph] ✅ Initialized with empty knowledge graph');
     }
-
-    console.error(`[knowledge-graph] Storage: ${this.storagePath}`);
   }
 
   /**
@@ -497,7 +491,6 @@ export default class KnowledgeGraph {
 
   async onShutdown() {
     await this.saveGraph();
-    console.error('[knowledge-graph] ✅ Knowledge graph saved');
   }
 
   // Private helper

@@ -47,38 +47,17 @@ export default class Redis {
 
     this.client = createClient(options);
 
-    // Error handling
-    this.client.on('error', (err) => {
-      console.error('[redis] Error:', err.message);
-    });
+    // Silent error handler - errors are handled in onInitialize
+    this.client.on('error', () => {});
   }
 
   async onInitialize() {
-    try {
-      await this.client.connect();
-
-      // Test connection
-      await this.client.ping();
-
-      const info = await this.client.info('server');
-      const version = info.match(/redis_version:([^\r\n]+)/)?.[1] || 'unknown';
-
-      console.error('[redis] ✅ Connected to Redis');
-      console.error(`[redis] Version: ${version}`);
-      console.error(`[redis] URL: ${this.url}`);
-    } catch (error: any) {
-      console.error('[redis] ❌ Connection failed:', error.message);
-      throw error;
-    }
+    await this.client.connect();
+    await this.client.ping(); // Test connection
   }
 
   async onShutdown() {
-    try {
-      await this.client.quit();
-      console.error('[redis] Connection closed');
-    } catch (error: any) {
-      console.error('[redis] Error closing connection:', error.message);
-    }
+    await this.client.quit().catch(() => {});
   }
 
   /**

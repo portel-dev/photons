@@ -49,10 +49,7 @@ export default class Filesystem {
   }
 
   async onInitialize() {
-    console.error('[filesystem] ✅ Initialized');
-    console.error(`[filesystem] Working directory: ${this.workdir}`);
-    console.error(`[filesystem] Max file size: ${(this.maxFileSize / 1024 / 1024).toFixed(2)}MB`);
-    console.error(`[filesystem] Hidden files: ${this.allowHidden ? 'allowed' : 'blocked'}`);
+    // Photon ready - beam UI shows status
   }
 
   /**
