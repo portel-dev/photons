@@ -312,7 +312,7 @@
       "author": "Unknown",
       "license": "MIT",
       "source": "../kitchen-sink.photon.ts",
-      "hash": "sha256:7f309f9b36b724f157ffba09afa862cc83cd425fdeaf1462f95cf346f6762e00",
+      "hash": "sha256:3e9d7ab8976df51f2de1c3ee27bb663db925e2aecd2496b37054cc32efca52e0",
       "tools": [
         "basicStringReturn",
         "basicNumberReturn",
@@ -662,7 +662,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../web.photon.ts",
-      "hash": "sha256:a50ccf672dbd45bbfc257eb598ccf2c9eb85faa03185d6ecfcaefa5720149e28",
+      "hash": "sha256:4061f082cae99b0d875f1019c28f1a249df555d2ff9db91239c8db7d8b634a57",
       "tools": [
         "search",
         "read"

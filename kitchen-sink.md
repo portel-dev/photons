@@ -276,7 +276,7 @@ Streams JSON objects  You can stream structured data too - each yield is a compl
 
 ### `progressDemo`
 
-Demonstrates progress reporting  Uses `this.emit` to send progress updates during a long-running task.
+Demonstrates progress reporting using io helper  Uses async generator with `io.emit.*` to send progress updates.
 
 
 **Parameters:**
@@ -453,11 +453,7 @@ photon mcp kitchen-sink --config
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
-```
-@portel/photon-core@file:/Users/arul/Projects/photon-core
-```
+No external dependencies required.
 
 
 ## 📄 License

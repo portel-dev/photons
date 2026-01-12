@@ -5,10 +5,9 @@
  * Use this as a reference for building your own photons.
  *
  * @version 1.0.0
- * @dependencies @portel/photon-core@file:/Users/arul/Projects/photon-core
  */
 
-import { PhotonMCP } from '@portel/photon-core';
+import { PhotonMCP, io } from '@portel/photon-core';
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -240,30 +239,25 @@ export default class KitchenSinkPhoton extends PhotonMCP {
   }
 
   /**
-   * Demonstrates progress reporting
+   * Demonstrates progress reporting using io helper
    *
-   * Uses `this.emit` to send progress updates during a long-running task.
+   * Uses async generator with `io.emit.*` to send progress updates.
    *
    * @param duration Duration in seconds (default 5)
    */
-  async progressDemo(params: { duration?: number }): Promise<string> {
+  async *progressDemo(params: { duration?: number }): AsyncGenerator<any, string> {
     const duration = params.duration || 5;
     const steps = 10;
     const interval = (duration * 1000) / steps;
 
-    this.emit({ emit: 'status', message: 'Starting task...' });
+    yield io.emit.status('Starting task...');
 
     for (let i = 1; i <= steps; i++) {
       await new Promise(resolve => setTimeout(resolve, interval));
-      const progress = i / steps;
-      this.emit({
-        emit: 'progress',
-        value: progress,
-        message: `Processing step ${i} of ${steps}`
-      });
+      yield io.emit.progress(i / steps, `Processing step ${i} of ${steps}`);
     }
 
-    this.emit({ emit: 'status', message: 'Task completed!' });
+    yield io.emit.status('Task completed!');
     return `Completed ${steps} steps in ${duration} seconds`;
   }
 

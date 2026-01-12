@@ -17,6 +17,7 @@ import TurndownService from 'turndown';
 import { Readability } from '@mozilla/readability';
 import { JSDOM } from 'jsdom';
 import * as yaml from 'js-yaml';
+import { io } from '@portel/photon-core';
 
 export default class Web {
     private turndown: TurndownService;
@@ -40,18 +41,18 @@ export default class Web {
     /**
      * Search the web using DuckDuckGo.
      */
-    async *search(params: { query: string }): AsyncGenerator<{ emit: string; message: string } | string[], string[], unknown> {
+    async *search(params: { query: string }): AsyncGenerator<any, string[]> {
         const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(params.query)}`;
 
         try {
-            yield { emit: 'status', message: '🔍 Searching DuckDuckGo...' };
-            
+            yield io.emit.status('Searching DuckDuckGo...');
+
             const { data } = await axios.get(url, {
                 headers: { 'User-Agent': this.userAgent }
             });
 
-            yield { emit: 'status', message: '📄 Parsing results...' };
-            
+            yield io.emit.status('Parsing results...');
+
             const $ = cheerio.load(data);
             const results: string[] = [];
 
@@ -76,21 +77,21 @@ export default class Web {
      * Read a webpage and extract its main content as Markdown.
      * Uses Mozilla Readability to remove ads/navbars.
      */
-    async *read(params: { url: string }): AsyncGenerator<{ emit: string; message: string } | string, string, unknown> {
+    async *read(params: { url: string }): AsyncGenerator<any, string> {
         try {
-            yield { emit: 'status', message: `🌐 Fetching ${params.url}...` };
-            
+            yield io.emit.status(`Fetching ${params.url}...`);
+
             // 1. Fetch the raw HTML
             const { data: html } = await axios.get(params.url, {
                 headers: { 'User-Agent': this.userAgent },
                 timeout: 10000 // 10s timeout
             });
 
-            yield { emit: 'status', message: '📖 Extracting content...' };
-            
+            yield io.emit.status('Extracting content...');
+
             // 2. Parse HTML with JSDOM
             const dom = new JSDOM(html, { url: params.url });
-            
+
             // 3. Extract main content with Readability
             const reader = new Readability(dom.window.document);
             const article = reader.parse();
@@ -99,8 +100,8 @@ export default class Web {
                 return `**Error:** Could not parse content from ${params.url}. The page might be empty or Javascript-heavy.`;
             }
 
-            yield { emit: 'status', message: '✏️  Converting to Markdown...' };
-            
+            yield io.emit.status('Converting to Markdown...');
+
             // 4. Convert HTML to Markdown
             const markdownBody = this.turndown.turndown(article.content);
 
