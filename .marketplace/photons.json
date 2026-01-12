@@ -370,7 +370,7 @@
       "author": "Photon (based on pokemote by mithileshchellappan)",
       "license": "MIT",
       "source": "../lg-remote.photon.ts",
-      "hash": "sha256:a78131f6e650aa9a3dac147801f37e635e1f20259183b432d7435a8257c49f18",
+      "hash": "sha256:a8148a86844c964c27f645005cf6324b82023a2f81ea76ec7689cfe0883e38e1",
       "tools": [
         "discover",
         "connect",
@@ -628,7 +628,7 @@
       "author": "Photon",
       "license": "MIT",
       "source": "../tuya-smart-light.photon.ts",
-      "hash": "sha256:5f43d45a3b8bd78cd9774a83d3ddf9244a3975118d69baabc752aac4cff2b53a",
+      "hash": "sha256:75c6b1e500b0329005fca9b9fdd650a442de377c4429ac557759707022596589",
       "tools": [
         "setup",
         "list",

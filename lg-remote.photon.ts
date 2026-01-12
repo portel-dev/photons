@@ -192,9 +192,6 @@ export default class LGRemote {
   }
 
   async onInitialize() {
-    console.error('[lg-remote] ✅ Initialized');
-    console.error(`[lg-remote] Credentials file: ${this.credentialsFile}`);
-
     // Start background discovery (non-blocking in MCP, but we track it for CLI)
     this.initPromise = this._autoDiscoverAndConnect();
   }
@@ -302,11 +299,9 @@ export default class LGRemote {
             (b.lastUsed || 0) - (a.lastUsed || 0)
           );
           targetIP = sorted[0].ip;
-          console.error(`[lg-remote] Using most recent TV: ${targetIP}`);
         } else if (this.defaultTV) {
           // Use auto-discovered default TV
           targetIP = this.defaultTV.ip;
-          console.error(`[lg-remote] Using auto-discovered TV: ${targetIP}`);
         } else {
           return {
             success: false,
@@ -323,8 +318,6 @@ export default class LGRemote {
       const port = secure ? 3001 : 3000;
       const protocol = secure ? 'wss' : 'ws';
       const url = `${protocol}://${targetIP}:${port}`;
-
-      console.error(`[lg-remote] Connecting to ${url} (secure: ${secure})`);
 
       // Close existing connection if any
       if (this.ws) {
@@ -380,9 +373,6 @@ export default class LGRemote {
           } else {
             // Start PIN pairing process
             this._sendRegister();
-
-            console.error('[lg-remote] 📺 TV will show a 6-digit PIN...');
-            console.error('[lg-remote] ℹ️  Call pair({ pin: "XXXXXX" }) with the PIN to complete pairing');
 
             // Wait for PIN prompt
             (this as any)._pairingResolve = resolve;
@@ -464,8 +454,6 @@ export default class LGRemote {
     // If PIN provided, submit it
     if (params?.pin) {
       const pinRequestId = `pin_${Date.now()}_${Math.random()}`;
-
-      console.error('[lg-remote] 🔑 Submitting PIN...');
 
       // Use the _request method to properly handle errors
       return new Promise<any>((resolve) => {
@@ -580,7 +568,6 @@ export default class LGRemote {
     try {
       // Re-discover if requested
       if (params?.refresh) {
-        console.error('[lg-remote] 🔍 Refreshing TV list...');
         await this.discover({ timeout: 5 });
       }
 
@@ -1234,8 +1221,6 @@ export default class LGRemote {
       payload,
     };
 
-    console.error(`[lg-remote] Sending registration${clientKey ? ' with saved client-key' : ' (new pairing)'}`);
-
     if (this.ws) {
       this.ws.send(JSON.stringify(message));
     }
@@ -1245,15 +1230,8 @@ export default class LGRemote {
     try {
       const message: TVMessage = JSON.parse(data);
 
-      // Debug logging
-      console.error(`[lg-remote] TV message: ${message.type}${message.id ? ` (${message.id})` : ''}`);
-      console.error(`[lg-remote] Full message: ${JSON.stringify(message)}`);
-
       // Handle PIN pairing flow
       if (message.type === 'response' && message.payload?.pairingType === 'PIN' && (this as any)._pairingResolve) {
-        console.error('[lg-remote] 🔑 PIN is displayed on TV');
-        console.error('[lg-remote] ℹ️  Call pair({ pin: "XXXXXX" }) with the 6-digit PIN to complete pairing');
-
         // Resolve connect() - user needs to call pair() with PIN
         (this as any)._pairingResolve({
           success: true,
@@ -1274,7 +1252,6 @@ export default class LGRemote {
         if (message.payload?.['client-key']) {
           this.currentClientKey = message.payload['client-key'];
         }
-        console.error(`[lg-remote] Registration confirmed, client-key: ${this.currentClientKey ? 'present' : 'missing'}`);
 
         // If we're in PIN pairing flow, save and resolve
         if ((this as any)._pairingResolve && this.currentClientKey) {
@@ -1309,7 +1286,6 @@ export default class LGRemote {
       // Handle errors
       if (message.type === 'error' && message.id) {
         const errorMsg = message.error || message.payload?.error || 'Unknown error';
-        console.error(`[lg-remote] TV error: ${errorMsg}`);
         const pending = this.pendingRequests.get(message.id);
         if (pending) {
           clearTimeout(pending.timeout);
@@ -1336,16 +1312,11 @@ export default class LGRemote {
 
     // Auto-reconnect if disconnected
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      console.error('[lg-remote] Connection lost, attempting to reconnect...');
-
       try {
         // Try to reconnect using saved credentials or discovered TV
         const reconnectResult = await this.connect();
 
-        if (reconnectResult.success) {
-          console.error('[lg-remote] Reconnected successfully');
-          // Connection restored, continue with request below
-        } else {
+        if (!reconnectResult.success) {
           return {
             success: false,
             error: 'TV connection lost. Please reconnect using: photon cli lg-remote connect --ip <tv-ip>',
@@ -1373,8 +1344,6 @@ export default class LGRemote {
       uri,
       payload: payload || {},
     };
-
-    console.error(`[lg-remote] Sending request: ${uri}, payload: ${JSON.stringify(payload)}`);
 
     // Fire-and-forget mode: send command and return immediately
     if (fireAndForget) {
@@ -1439,10 +1408,8 @@ export default class LGRemote {
       } else if (result.success && result.data?.wifiInfo?.macAddress) {
         return result.data.wifiInfo.macAddress;
       }
-      console.error('[lg-remote] ⚠️  Could not retrieve MAC address from TV');
       return undefined;
     } catch (error) {
-      console.error('[lg-remote] ⚠️  Failed to fetch MAC address');
       return undefined;
     }
   }
@@ -1455,8 +1422,6 @@ export default class LGRemote {
     this.discoveryInProgress = true;
 
     try {
-      console.error('[lg-remote] 🔍 Starting auto-discovery...');
-
       // Run discovery with short timeout (3 seconds)
       const result = await this.discover({ timeout: 3 });
 
@@ -1464,28 +1429,16 @@ export default class LGRemote {
         this.discoveredTVs = result.devices;
         this.defaultTV = result.devices[0];
 
-        console.error(`[lg-remote] ✅ Found ${result.count} TV(s)`);
-        console.error(`[lg-remote] 📺 Default TV: ${this.defaultTV.name || this.defaultTV.ip}`);
-
         // Try to auto-connect to the default TV if it has saved credentials
         const credentials = await this._loadCredentials();
         const savedCred = credentials.find((c: TVCredentials) => c.ip === this.defaultTV!.ip);
 
         if (savedCred) {
-          console.error('[lg-remote] 🔗 Auto-connecting to default TV...');
-          const connectResult = await this.connect({ ip: this.defaultTV.ip });
-
-          if (connectResult.success) {
-            console.error('[lg-remote] ✅ Auto-connected successfully');
-          }
-        } else {
-          console.error('[lg-remote] ℹ️  Default TV not paired. Call connect() to pair.');
+          await this.connect({ ip: this.defaultTV.ip });
         }
-      } else {
-        console.error('[lg-remote] ⚠️  No TVs found on network');
       }
     } catch (error: any) {
-      console.error(`[lg-remote] ⚠️  Auto-discovery error: ${error.message}`);
+      // Auto-discovery failed silently
     } finally {
       this.discoveryInProgress = false;
     }

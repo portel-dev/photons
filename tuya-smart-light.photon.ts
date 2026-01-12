@@ -95,12 +95,8 @@ export default class TuyaSmartLight {
     try {
       TuyAPI = (await import('tuyapi')).default;
     } catch (error: any) {
-      console.error('[tuya] Failed to load tuyapi:', error.message);
       throw new Error('tuyapi not installed. Run: npm install tuyapi');
     }
-
-    console.error('[tuya] ✅ Initialized');
-    console.error(`[tuya] Devices file: ${this.devicesFile}`);
 
     // Start background device discovery and sync
     this.initPromise = this._autoDiscoverAndSync();
@@ -128,10 +124,7 @@ export default class TuyaSmartLight {
       region: params.region || 'us',
     };
 
-    console.error('[tuya] 💾 Saving credentials...');
     await this._saveData();
-
-    console.error('[tuya] 🔄 Syncing devices from Tuya Cloud...');
     const result = await this._fetchAndMergeDevices();
 
     if (result.success) {
@@ -154,7 +147,6 @@ export default class TuyaSmartLight {
     await this._ensureReady();
 
     if (params?.refresh && this.credentials) {
-      console.error('[tuya] 🔄 Refreshing devices...');
       await this._fetchAndMergeDevices();
     }
 
@@ -406,13 +398,10 @@ export default class TuyaSmartLight {
       await this._loadData();
 
       if (this.credentials) {
-        console.error('[tuya] 🔄 Auto-syncing devices...');
         await this._fetchAndMergeDevices();
-      } else {
-        console.error('[tuya] ⚠️  No credentials configured. Run setup() to configure Tuya Cloud.');
       }
     } catch (error: any) {
-      console.error(`[tuya] Auto-sync error: ${error.message}`);
+      // Auto-sync failed silently
     }
   }
 
@@ -446,11 +435,8 @@ export default class TuyaSmartLight {
         this.credentials.region
       );
 
-      console.error(`[tuya] ✓ Found ${cloudDevices.length} devices from cloud`);
-
       // Scan local network
       const localDevices = await this._scanLocalNetwork();
-      console.error(`[tuya] ✓ Found ${localDevices.size} devices on local network`);
 
       // Merge cloud and local data
       this.devices = cloudDevices.map((d: any) => {
@@ -623,8 +609,6 @@ export default class TuyaSmartLight {
 
       this.credentials = stored.credentials;
       this.devices = stored.devices || [];
-
-      console.error(`[tuya] Loaded ${this.devices.length} devices from storage`);
     } catch (error) {
       // File doesn't exist or is invalid, start fresh
       this.devices = [];
@@ -752,14 +736,11 @@ export default class TuyaSmartLight {
       const data = await response.json();
 
       if (data.success && data.result && data.result.access_token) {
-        console.error('[tuya] ✓ Got access token');
         return data.result.access_token;
       } else {
-        console.error('[tuya] ✗ Token error:', data.msg || 'Unknown error');
         return null;
       }
     } catch (error: any) {
-      console.error('[tuya] ✗ Token request failed:', error.message);
       return null;
     }
   }
@@ -789,14 +770,11 @@ export default class TuyaSmartLight {
       const data = await response.json();
 
       if (data.success && data.result && data.result.list) {
-        console.error(`[tuya] ✓ Found ${data.result.list.length} devices`);
         return data.result.list;
       } else {
-        console.error('[tuya] ✗ Devices error:', data.msg || 'Unknown error');
         return [];
       }
     } catch (error: any) {
-      console.error('[tuya] ✗ Devices request failed:', error.message);
       return [];
     }
   }
