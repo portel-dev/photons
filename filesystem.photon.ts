@@ -33,7 +33,7 @@ export default class Filesystem {
   private allowHidden: boolean;
 
   constructor(
-    workdir: string = process.cwd(),
+    workdir: string = path.join(homedir(), '.photon'),
     maxFileSize: number = 10485760, // 10MB
     allowHidden: boolean = true
   ) {

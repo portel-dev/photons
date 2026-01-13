@@ -16,7 +16,7 @@ File and directory operations
 - **`FILESYSTEM_WORKDIR`** [OPTIONAL]
   - Type: string
   - Description: Working directory base path (default: ~/Documents)
-  - Default: `process.cwd()`
+  - Default: `path.join(homedir(), '.photon')`
 
 - **`FILESYSTEM_MAXFILESIZE`** [OPTIONAL]
   - Type: number
