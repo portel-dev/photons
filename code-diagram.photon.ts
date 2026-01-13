@@ -51,13 +51,14 @@ export default class CodeDiagram {
    * @param type Diagram type {@choice auto,workflow,api,deps,calls} {@default auto}
    * @param style Diagram style {@choice linear,branching,structure} {@default linear}
    * @param name Optional name for the diagram {@default Code}
+   * @format markdown
    */
   async generate(params: {
     code: string;
     type?: DiagramType;
     style?: DiagramStyle;
     name?: string;
-  }): Promise<{ diagram: string; detectedType: string; style: string; isPhoton: boolean }> {
+  }): Promise<string> {
     const { code, type = 'auto', style = 'linear', name = 'Code' } = params;
 
     const detectedType = type === 'auto' ? this.detectType(code) : type;
@@ -68,33 +69,38 @@ export default class CodeDiagram {
     // Structure style works for any type - shows architecture
     if (style === 'structure') {
       diagram = this.generateStructureDiagram(code, name);
-      return { diagram, detectedType, style, isPhoton };
+    } else {
+      switch (detectedType) {
+        case 'workflow':
+          diagram = style === 'branching'
+            ? this.generateBranchingWorkflowDiagram(code, name)
+            : this.generateWorkflowDiagram(code, name);
+          break;
+        case 'deps':
+          diagram = this.generateDepsDiagram(code, name);
+          break;
+        case 'calls':
+          diagram = this.generateCallsDiagram(code, name);
+          break;
+        case 'api':
+        default:
+          diagram = this.generateApiDiagram(code, name);
+          break;
+      }
+
+      // If it's a Photon, augment with Photon-specific context
+      if (isPhoton) {
+        diagram = this.augmentWithPhotonContext(diagram, code, name);
+      }
     }
 
-    switch (detectedType) {
-      case 'workflow':
-        diagram = style === 'branching'
-          ? this.generateBranchingWorkflowDiagram(code, name)
-          : this.generateWorkflowDiagram(code, name);
-        break;
-      case 'deps':
-        diagram = this.generateDepsDiagram(code, name);
-        break;
-      case 'calls':
-        diagram = this.generateCallsDiagram(code, name);
-        break;
-      case 'api':
-      default:
-        diagram = this.generateApiDiagram(code, name);
-        break;
-    }
+    // Return markdown with embedded mermaid
+    const photonBadge = isPhoton ? ' · Photon' : '';
+    return `**${this.titleCase(name)}** — ${detectedType} diagram (${style})${photonBadge}
 
-    // If it's a Photon, augment with Photon-specific context
-    if (isPhoton && style !== 'structure') {
-      diagram = this.augmentWithPhotonContext(diagram, code, name);
-    }
-
-    return { diagram, detectedType, style, isPhoton };
+\`\`\`mermaid
+${diagram}
+\`\`\``;
   }
 
   /**
@@ -103,19 +109,19 @@ export default class CodeDiagram {
    * @param path Path to the TypeScript/JavaScript file
    * @param type Diagram type {@choice auto,workflow,api,deps,calls} {@default auto}
    * @param style Diagram style {@choice linear,branching,structure} {@default linear}
+   * @format markdown
    */
   async fromFile(params: {
     path: string;
     type?: DiagramType;
     style?: DiagramStyle;
-  }): Promise<{ diagram: string; detectedType: string; style: string; isPhoton: boolean; name: string }> {
+  }): Promise<string> {
     const { path, type = 'auto', style = 'linear' } = params;
 
     const code = await fs.readFile(path, 'utf-8');
     const name = this.extractName(path, code);
 
-    const result = await this.generate({ code, type, style, name });
-    return { ...result, name };
+    return this.generate({ code, type, style, name });
   }
 
   /**

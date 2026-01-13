@@ -202,7 +202,7 @@ Export knowledge graph in various formats
 **Parameters:**
 
 
-- **`format`** (any) - Export format (e.g., `json`)
+- **`format`** (any) [choice: json,mermaid] - Export format {@default mermaid}
 
 - **`path`** (any) - Optional file path to save the export (e.g., `~/exports/graph.json`)
 

@@ -31,7 +31,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../code-diagram.photon.ts",
-      "hash": "sha256:e131f0ce266a72f400384cd2f40cf0ac1c2575791edf93941b8f2c581129881b",
+      "hash": "sha256:efa1bd10d9a035c76c6316677d95aa32cb7ebe0aa0e71b94a4827fdc81cb2169",
       "tools": [
         "generate",
         "fromFile",
@@ -348,7 +348,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../knowledge-graph.photon.ts",
-      "hash": "sha256:285f6db374bee8a0315c68cd351dcd5c374c52867b8ea0fe5b54a734a3d38eba",
+      "hash": "sha256:756308be7ce2c18d0a7d132591d3e7396834e1a3e41d146d1b6f20772d81eb0f",
       "tools": [
         "entities",
         "relations",

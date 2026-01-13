@@ -401,49 +401,44 @@ export default class KnowledgeGraph {
 
   /**
    * Export knowledge graph in various formats
-   * @param format Export format {@example json}
+   * @param format Export format {@choice json,mermaid} {@default mermaid}
    * @param path Optional file path to save the export {@example ~/exports/graph.json}
+   * @format markdown
    */
-  async export(params: { format: 'json' | 'mermaid'; path?: string }) {
-    try {
-      let data: string;
+  async export(params: { format?: 'json' | 'mermaid'; path?: string }): Promise<string> {
+    const format = params.format || 'mermaid';
 
-      if (params.format === 'json') {
-        data = JSON.stringify(this.graph, null, 2);
-      } else if (params.format === 'mermaid') {
-        data = this.generateMermaid();
-      } else {
-        return {
-          success: false,
-          error: `Unsupported format: ${params.format}. Use 'json' or 'mermaid'.`,
-        };
-      }
-
-      // If path provided, save to file
-      if (params.path) {
-        const resolvedPath = params.path.startsWith('~')
-          ? path.join(os.homedir(), params.path.slice(1))
-          : path.resolve(params.path);
-
-        await fs.writeFile(resolvedPath, data, 'utf-8');
-
-        return {
-          success: true,
-          format: params.format,
-          path: resolvedPath,
-          saved: true,
-        };
-      }
-
-      // Otherwise return data to AI
-      return {
-        success: true,
-        format: params.format,
-        data,
-      };
-    } catch (error: any) {
-      return { success: false, error: error.message };
+    let data: string;
+    if (format === 'json') {
+      data = JSON.stringify(this.graph, null, 2);
+    } else {
+      data = this.generateMermaid();
     }
+
+    // If path provided, save to file
+    if (params.path) {
+      const resolvedPath = params.path.startsWith('~')
+        ? path.join(os.homedir(), params.path.slice(1))
+        : path.resolve(params.path);
+
+      await fs.writeFile(resolvedPath, data, 'utf-8');
+      return `Exported ${format} to \`${resolvedPath}\``;
+    }
+
+    // Return appropriate format
+    if (format === 'json') {
+      return `\`\`\`json
+${data}
+\`\`\``;
+    }
+
+    const entityCount = this.graph.entities.length;
+    const relationCount = this.graph.relations.length;
+    return `**Knowledge Graph** — ${entityCount} entities, ${relationCount} relations
+
+\`\`\`mermaid
+${data}
+\`\`\``;
   }
 
   // Private helper to generate Mermaid diagram
