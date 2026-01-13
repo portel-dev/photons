@@ -48,9 +48,9 @@ export default class CodeDiagram {
    * Generate a Mermaid diagram from code string
    *
    * @param code The TypeScript/JavaScript code to analyze
-   * @param type Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls' (default: 'auto')
-   * @param style Diagram style: 'linear' (happy path) | 'branching' (control flow) | 'structure' (async/generators/deps)
-   * @param name Optional name for the diagram (default: 'Code')
+   * @param type Diagram type {@choice auto,workflow,api,deps,calls} {@default auto}
+   * @param style Diagram style {@choice linear,branching,structure} {@default linear}
+   * @param name Optional name for the diagram {@default Code}
    */
   async generate(params: {
     code: string;
@@ -101,8 +101,8 @@ export default class CodeDiagram {
    * Generate a Mermaid diagram from a file
    *
    * @param path Path to the TypeScript/JavaScript file
-   * @param type Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls' (default: 'auto')
-   * @param style Diagram style: 'linear' | 'branching' (default: 'linear')
+   * @param type Diagram type {@choice auto,workflow,api,deps,calls} {@default auto}
+   * @param style Diagram style {@choice linear,branching,structure} {@default linear}
    */
   async fromFile(params: {
     path: string;

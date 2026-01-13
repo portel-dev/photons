@@ -35,11 +35,11 @@ Generate a Mermaid diagram from code string
 
 - **`code`** (any) - The TypeScript/JavaScript code to analyze
 
-- **`type`** (any, optional) - Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls'
+- **`type`** (any) [choice: auto,workflow,api,deps,calls] - Diagram type {@default auto}
 
-- **`style`** (any) - Diagram style: 'linear' (happy path) | 'branching' (control flow) | 'structure' (async/generators/deps)
+- **`style`** (any) [choice: linear,branching,structure] - Diagram style {@default linear}
 
-- **`name`** (any, optional) - Optional name for the diagram
+- **`name`** (any) - Optional name for the diagram {@default Code}
 
 
 
@@ -58,9 +58,9 @@ Generate a Mermaid diagram from a file
 
 - **`path`** (any) - Path to the TypeScript/JavaScript file
 
-- **`type`** (any, optional) - Diagram type: 'auto' | 'workflow' | 'api' | 'deps' | 'calls'
+- **`type`** (any) [choice: auto,workflow,api,deps,calls] - Diagram type {@default auto}
 
-- **`style`** (any, optional) - Diagram style: 'linear' | 'branching'
+- **`style`** (any) [choice: linear,branching,structure] - Diagram style {@default linear}
 
 
 
