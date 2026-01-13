@@ -16,7 +16,7 @@ File and directory operations
 - **`FILESYSTEM_WORKDIR`** [OPTIONAL]
   - Type: string
   - Description: Working directory base path (default: ~/Documents)
-  - Default: `path.join(homedir(), 'Documents')`
+  - Default: `process.cwd()`
 
 - **`FILESYSTEM_MAXFILESIZE`** [OPTIONAL]
   - Type: number
@@ -26,7 +26,7 @@ File and directory operations
 - **`FILESYSTEM_ALLOWHIDDEN`** [OPTIONAL]
   - Type: boolean
   - Description: Allow access to hidden files/directories (default: false)
-  
+  - Default: `true`
 
 
 
