@@ -410,9 +410,15 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../math.photon.ts",
-      "hash": "sha256:54cbf9ca37fd03cbf9106468ff281bdbffc0f2ddc0efe8870957eac194aab621",
+      "hash": "sha256:c69c28105808ba7bb03ca16379ea7eb6eaba31a6ef966834b05bdc7cb705d6fe",
       "tools": [
-        "calculate"
+        "calculate",
+        "testBasicArithmetic",
+        "testSqrt",
+        "testPower",
+        "testAbs",
+        "testMean",
+        "testComplexExpression"
       ]
     },
     {

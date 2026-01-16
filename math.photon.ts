@@ -81,4 +81,60 @@ export default class Math {
       throw new Error('Failed to calculate expression: ' + (e as Error).message);
     }
   }
+
+  // ========== TEST METHODS ==========
+
+  /** Test basic arithmetic operations */
+  async testBasicArithmetic() {
+    const result = await this.calculate({ expression: '2 + 2' });
+    if (result.result !== 4) {
+      throw new Error(`Expected 4, got ${result.result}`);
+    }
+    return { passed: true, message: 'Basic arithmetic works' };
+  }
+
+  /** Test sqrt function */
+  async testSqrt() {
+    const result = await this.calculate({ expression: 'sqrt(16)' });
+    if (result.result !== 4) {
+      throw new Error(`Expected 4, got ${result.result}`);
+    }
+    return { passed: true, message: 'sqrt() works' };
+  }
+
+  /** Test power operations */
+  async testPower() {
+    const result = await this.calculate({ expression: 'pow(2, 3)' });
+    if (result.result !== 8) {
+      throw new Error(`Expected 8, got ${result.result}`);
+    }
+    return { passed: true, message: 'pow() works' };
+  }
+
+  /** Test abs function */
+  async testAbs() {
+    const result = await this.calculate({ expression: 'abs(-5)' });
+    if (result.result !== 5) {
+      throw new Error(`Expected 5, got ${result.result}`);
+    }
+    return { passed: true, message: 'abs() works' };
+  }
+
+  /** Test mean function */
+  async testMean() {
+    const result = await this.calculate({ expression: 'mean([1, 2, 3, 4, 5])' });
+    if (result.result !== 3) {
+      throw new Error(`Expected 3, got ${result.result}`);
+    }
+    return { passed: true, message: 'mean() works' };
+  }
+
+  /** Test complex expression */
+  async testComplexExpression() {
+    const result = await this.calculate({ expression: 'sqrt(16) + pow(2, 3) - abs(-2)' });
+    if (result.result !== 10) {
+      throw new Error(`Expected 10 (4 + 8 - 2), got ${result.result}`);
+    }
+    return { passed: true, message: 'Complex expressions work' };
+  }
 }

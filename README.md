@@ -52,7 +52,7 @@ We welcome contributions! Submit pull requests for:
 | **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
-| **Math Photon MCP** | Advanced math expression evaluator | 1 | [View →](math.md) |
+| **Math Photon MCP** | Advanced math expression evaluator | 7 | [View →](math.md) |
 | **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
 | **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |

@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **1** tools:
+This photon provides **7** tools:
 
 
 ### `calculate`
@@ -34,6 +34,72 @@ Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, l
 
 
 - **`expression`** (any) - The math expression to calculate
+
+
+
+
+
+---
+
+
+### `testBasicArithmetic`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testSqrt`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testPower`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testAbs`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testMean`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testComplexExpression`
+
+No description available
 
 
 
