@@ -322,4 +322,63 @@ export default class Time {
       };
     }
   }
+
+  // ========== TESTS ==========
+
+  /** Test getting current time */
+  async testNow() {
+    const result = await this.now();
+    if (!result.success) throw new Error(result.error);
+    if (!result.timezone) throw new Error('Missing timezone');
+    if (!result.datetime) throw new Error('Missing datetime');
+    if (!result.timestamp) throw new Error('Missing timestamp');
+    return { passed: true };
+  }
+
+  /** Test getting time in specific timezone */
+  async testNowWithTimezone() {
+    const result = await this.now({ timezone: 'America/New_York' });
+    if (!result.success) throw new Error(result.error);
+    if (result.timezone !== 'America/New_York') throw new Error('Wrong timezone');
+    return { passed: true };
+  }
+
+  /** Test invalid timezone */
+  async testNowInvalidTimezone() {
+    const result = await this.now({ timezone: 'Invalid/Timezone' });
+    if (result.success) throw new Error('Should have failed');
+    if (!result.error?.includes('Invalid timezone')) throw new Error('Wrong error message');
+    return { passed: true };
+  }
+
+  /** Test timezone listing */
+  async testTimezones() {
+    const result = await this.timezones();
+    if (!result.success) throw new Error(result.error);
+    if (!result.regions?.includes('America')) throw new Error('Missing America region');
+    if (!result.timezones?.America?.length) throw new Error('Missing America timezones');
+    return { passed: true };
+  }
+
+  /** Test timezone filtering by region */
+  async testTimezonesRegion() {
+    const result = await this.timezones({ region: 'Europe' });
+    if (!result.success) throw new Error(result.error);
+    if (result.region !== 'Europe') throw new Error('Wrong region');
+    if (!result.timezones?.includes('Europe/London')) throw new Error('Missing London');
+    return { passed: true };
+  }
+
+  /** Test time conversion */
+  async testConvert() {
+    const result = await this.convert({
+      source_timezone: 'America/New_York',
+      time: '12:00',
+      target_timezone: 'Europe/London',
+    });
+    if (!result.success) throw new Error(result.error);
+    if (!result.source?.timezone) throw new Error('Missing source timezone');
+    if (!result.target?.timezone) throw new Error('Missing target timezone');
+    return { passed: true };
+  }
 }

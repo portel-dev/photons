@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **2** tools:
+This photon provides **5** tools:
 
 
 ### `search`
@@ -39,6 +39,39 @@ Search the web using DuckDuckGo.
 ### `read`
 
 Read a webpage and extract its main content as Markdown. Uses Mozilla Readability to remove ads/navbars.
+
+
+
+
+
+---
+
+
+### `testSearch`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testRead`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testReadInvalidUrl`
+
+No description available
 
 
 

@@ -437,4 +437,52 @@ export default class Git {
       throw new Error(`Not a git repository: ${repoPath}`);
     }
   }
+
+  // ========== TESTS ==========
+
+  /** Test git status */
+  async testStatus() {
+    const result = await this.status();
+    if (!result.success) throw new Error(result.error);
+    if (!result.branch) throw new Error('Missing branch');
+    return { passed: true };
+  }
+
+  /** Test git log */
+  async testLog() {
+    const result = await this.log({ limit: 5 });
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.commits)) throw new Error('Commits should be array');
+    return { passed: true };
+  }
+
+  /** Test git diff */
+  async testDiff() {
+    const result = await this.diff();
+    if (!result.success) throw new Error(result.error);
+    // diff can be empty string, that's ok
+    if (typeof result.diff !== 'string') throw new Error('Diff should be string');
+    return { passed: true };
+  }
+
+  /** Test git branches */
+  async testBranches() {
+    const result = await this.branches();
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.branches)) throw new Error('Branches should be array');
+    if (!result.current) throw new Error('Missing current branch');
+    return { passed: true };
+  }
+
+  /** Test git show */
+  async testShow() {
+    const logResult = await this.log({ limit: 1 });
+    if (!logResult.success || !logResult.commits?.length) {
+      return { skipped: true, reason: 'No commits in repo' };
+    }
+    const result = await this.show({ ref: logResult.commits[0].hash });
+    if (!result.success) throw new Error(result.error);
+    if (!result.commit) throw new Error('Missing commit info');
+    return { passed: true };
+  }
 }

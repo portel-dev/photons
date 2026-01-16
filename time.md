@@ -29,7 +29,7 @@ Timezone and time conversion operations
 
 ## 🔧 Tools
 
-This photon provides **3** tools:
+This photon provides **9** tools:
 
 
 ### `now`
@@ -81,6 +81,72 @@ List common IANA timezones by region
 
 
 - **`region`** (any) - Filter by region (e.g., `America`)
+
+
+
+
+
+---
+
+
+### `testNow`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testNowWithTimezone`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testNowInvalidTimezone`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testTimezones`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testTimezonesRegion`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testConvert`
+
+No description available
 
 
 

@@ -272,4 +272,71 @@ export default class SQLite {
       console.error('[sqlite] Database connection closed');
     }
   }
+
+  // ========== TESTS ==========
+
+  private testDbPath = `/tmp/photon-test-${Date.now()}.db`;
+  private testTable = `test_${Date.now()}`;
+
+  /** Setup: open test database */
+  async testBeforeAll() {
+    await this.open({ path: this.testDbPath });
+    await this.execute({
+      sql: `CREATE TABLE IF NOT EXISTS ${this.testTable} (id INTEGER PRIMARY KEY, name TEXT, value INTEGER)`
+    });
+  }
+
+  /** Teardown: close and cleanup */
+  async testAfterAll() {
+    if (this.db) {
+      try { this.db.close(); this.db = null; } catch {}
+    }
+    try {
+      const fs = await import('fs/promises');
+      await fs.unlink(this.testDbPath);
+    } catch {}
+  }
+
+  /** Test database is open */
+  async testOpen() {
+    if (!this.db) return { skipped: true, reason: 'Database not open' };
+    return { passed: true };
+  }
+
+  /** Test list tables */
+  async testTables() {
+    if (!this.db) return { skipped: true, reason: 'Database not open' };
+    const result = await this.tables();
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.tables)) throw new Error('Tables should be array');
+    return { passed: true };
+  }
+
+  /** Test insert and query */
+  async testInsertQuery() {
+    if (!this.db) return { skipped: true, reason: 'Database not open' };
+    const insertResult = await this.execute({
+      sql: `INSERT INTO ${this.testTable} (name, value) VALUES (?, ?)`,
+      params: ['test', 42]
+    });
+    if (!insertResult.success) throw new Error(insertResult.error);
+
+    const queryResult = await this.query({
+      sql: `SELECT * FROM ${this.testTable} WHERE name = ?`,
+      params: ['test']
+    });
+    if (!queryResult.success) throw new Error(queryResult.error);
+    if (queryResult.rows.length === 0) throw new Error('Row not found');
+    if (queryResult.rows[0].value !== 42) throw new Error('Wrong value');
+    return { passed: true };
+  }
+
+  /** Test schema */
+  async testSchema() {
+    if (!this.db) return { skipped: true, reason: 'Database not open' };
+    const result = await this.schema({ table: this.testTable });
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.columns)) throw new Error('Columns should be array');
+    return { passed: true };
+  }
 }

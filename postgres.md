@@ -60,7 +60,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **7** tools:
+This photon provides **11** tools:
 
 
 ### `query`
@@ -178,6 +178,50 @@ Execute a SQL INSERT statement
 ### `stats`
 
 Get database statistics
+
+
+
+
+
+---
+
+
+### `testQuery`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testQueryWithParams`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testTables`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testStats`
+
+No description available
 
 
 

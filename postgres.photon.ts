@@ -376,4 +376,48 @@ export default class PostgreSQL {
       };
     }
   }
+
+  // ========== TESTS ==========
+
+  /** Check if Postgres is connected */
+  private isConnected(): boolean {
+    return this.pool !== undefined;
+  }
+
+  /** Test simple query */
+  async testQuery() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Postgres not connected' };
+    const result = await this.query({ sql: 'SELECT 1 as test' });
+    if (!result.success) throw new Error(result.error);
+    if (!result.rows || result.rows.length === 0) throw new Error('No rows returned');
+    if (result.rows[0].test !== 1) throw new Error('Wrong value');
+    return { passed: true };
+  }
+
+  /** Test parameterized query */
+  async testQueryWithParams() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Postgres not connected' };
+    const result = await this.query({ sql: 'SELECT $1::int + $2::int as sum', params: [2, 3] });
+    if (!result.success) throw new Error(result.error);
+    if (result.rows[0].sum !== 5) throw new Error('Wrong calculation');
+    return { passed: true };
+  }
+
+  /** Test list tables */
+  async testTables() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Postgres not connected' };
+    const result = await this.tables();
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.tables)) throw new Error('Tables should be array');
+    return { passed: true };
+  }
+
+  /** Test database stats */
+  async testStats() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Postgres not connected' };
+    const result = await this.stats();
+    if (!result.success) throw new Error(result.error);
+    if (!result.stats?.database) throw new Error('Missing database name');
+    return { passed: true };
+  }
 }

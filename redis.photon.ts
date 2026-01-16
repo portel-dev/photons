@@ -589,4 +589,72 @@ export default class Redis {
       };
     }
   }
+
+  // ========== TESTS ==========
+
+  private testKey = `photon-test-${Date.now()}`;
+
+  /** Check if Redis is connected */
+  private isConnected(): boolean {
+    return this.client.isReady;
+  }
+
+  /** Teardown: cleanup test data */
+  async testAfterAll() {
+    if (this.isConnected()) {
+      try { await this.del({ key: this.testKey }); } catch {}
+    }
+  }
+
+  /** Test ping */
+  async testPing() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
+    const result = await this.ping();
+    if (!result.success) throw new Error(result.error);
+    if (result.response !== 'PONG') throw new Error('Invalid ping response');
+    return { passed: true };
+  }
+
+  /** Test set and get */
+  async testSetGet() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
+    const setResult = await this.set({ key: this.testKey, value: 'test-value' });
+    if (!setResult.success) throw new Error(setResult.error);
+    const getResult = await this.get({ key: this.testKey });
+    if (!getResult.success) throw new Error(getResult.error);
+    if (getResult.value !== 'test-value') throw new Error('Value mismatch');
+    return { passed: true };
+  }
+
+  /** Test delete */
+  async testDel() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
+    await this.set({ key: this.testKey, value: 'to-delete' });
+    const result = await this.del({ key: this.testKey });
+    if (!result.success) throw new Error(result.error);
+    const getResult = await this.get({ key: this.testKey });
+    if (getResult.success) throw new Error('Key should be deleted');
+    return { passed: true };
+  }
+
+  /** Test exists */
+  async testExists() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
+    await this.set({ key: this.testKey, value: 'exists-test' });
+    const result = await this.exists({ key: this.testKey });
+    if (!result.success) throw new Error(result.error);
+    if (!result.exists) throw new Error('Key should exist');
+    return { passed: true };
+  }
+
+  /** Test TTL */
+  async testSetWithTtl() {
+    if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
+    const result = await this.set({ key: this.testKey, value: 'ttl-test', ttl: 60 });
+    if (!result.success) throw new Error(result.error);
+    const ttlResult = await this.ttl({ key: this.testKey });
+    if (!ttlResult.success) throw new Error(ttlResult.error);
+    if (ttlResult.ttl === undefined || ttlResult.ttl <= 0) throw new Error('TTL should be positive');
+    return { passed: true };
+  }
 }

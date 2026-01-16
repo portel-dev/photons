@@ -25,7 +25,7 @@ SQLite database operations
 
 ## 🔧 Tools
 
-This photon provides **9** tools:
+This photon provides **15** tools:
 
 
 ### `open`
@@ -169,6 +169,72 @@ Create a backup of the database
 
 
 - **`destination`** (any) - Path to backup file
+
+
+
+
+
+---
+
+
+### `testBeforeAll`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testAfterAll`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testOpen`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testTables`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testInsertQuery`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testSchema`
+
+No description available
 
 
 

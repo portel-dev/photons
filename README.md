@@ -42,8 +42,8 @@ We welcome contributions! Submit pull requests for:
 | **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
-| **Filesystem** | File and directory operations | 13 | [View →](filesystem.md) |
-| **Git** | Local git repository operations | 11 | [View →](git.md) |
+| **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
+| **Git** | Local git repository operations | 16 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
@@ -53,20 +53,20 @@ We welcome contributions! Submit pull requests for:
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 8 | [View →](math.md) |
-| **MongoDB** | NoSQL database operations | 13 | [View →](mongodb.md) |
-| **PostgreSQL** | Database operations for PostgreSQL | 7 | [View →](postgres.md) |
+| **MongoDB** | NoSQL database operations | 18 | [View →](mongodb.md) |
+| **PostgreSQL** | Database operations for PostgreSQL | 11 | [View →](postgres.md) |
 | **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |
-| **Redis** | In-memory data store and cache | 18 | [View →](redis.md) |
+| **Redis** | In-memory data store and cache | 24 | [View →](redis.md) |
 | **RSS Feed** | Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds | 5 | [View →](rss-feed.md) |
 | **Rss To Slack** | RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack | 2 | [View →](rss-to-slack.md) |
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
 | **Social Formatter** | Social Media Formatter | 4 | [View →](social-formatter.md) |
-| **SQLite Photon MCP** | SQLite database operations | 9 | [View →](sqlite.md) |
+| **SQLite Photon MCP** | SQLite database operations | 15 | [View →](sqlite.md) |
 | **Telegram** | Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation | 12 | [View →](telegram.md) |
-| **Time** | Timezone and time conversion operations | 3 | [View →](time.md) |
+| **Time** | Timezone and time conversion operations | 9 | [View →](time.md) |
 | **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |
 | **Uptime Monitor** | Uptime Monitor Workflow Monitors website availability and sends alerts | 3 | [View →](uptime-monitor.md) |
-| **Web** | Web Agent Photon (Search + Read) | 2 | [View →](web.md) |
+| **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
 **Total:** 33 photons ready to use

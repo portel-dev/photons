@@ -41,7 +41,7 @@ File and directory operations
 
 ## 🔧 Tools
 
-This photon provides **13** tools:
+This photon provides **23** tools:
 
 
 ### `read`
@@ -273,6 +273,116 @@ Search for files matching a pattern
 ### `workdir`
 
 Get current working directory
+
+
+
+
+
+---
+
+
+### `testBeforeAll`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testAfterAll`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testRead`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testWrite`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testExists`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testInfo`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testList`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testCopy`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testMkdir`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testGetWorkdir`
+
+No description available
 
 
 

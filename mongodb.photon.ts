@@ -435,4 +435,72 @@ export default class MongoDB {
 
     return doc;
   }
+
+  // ========== TESTS ==========
+
+  private testCollection = `photon_test_${Date.now()}`;
+
+  /** Check if MongoDB is connected */
+  private isConnected(): boolean {
+    return this.db !== undefined;
+  }
+
+  /** Teardown: cleanup test collection */
+  async testAfterAll() {
+    if (this.isConnected()) {
+      try { await this.drop({ collection: this.testCollection }); } catch {}
+    }
+  }
+
+  /** Test list collections */
+  async testCollections() {
+    if (!this.isConnected()) return { skipped: true, reason: 'MongoDB not connected' };
+    const result = await this.collections();
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.collections)) throw new Error('Collections should be array');
+    return { passed: true };
+  }
+
+  /** Test insert and find */
+  async testInsertFind() {
+    if (!this.isConnected()) return { skipped: true, reason: 'MongoDB not connected' };
+    const insertResult = await this.insertOne({
+      collection: this.testCollection,
+      document: { name: 'Test', value: 42 }
+    });
+    if (!insertResult.success) throw new Error(insertResult.error);
+
+    const findResult = await this.find({
+      collection: this.testCollection,
+      filter: { name: 'Test' }
+    });
+    if (!findResult.success) throw new Error(findResult.error);
+    if (findResult.count === 0) throw new Error('Document not found');
+    if (findResult.documents[0].value !== 42) throw new Error('Wrong value');
+    return { passed: true };
+  }
+
+  /** Test count */
+  async testCount() {
+    if (!this.isConnected()) return { skipped: true, reason: 'MongoDB not connected' };
+    const result = await this.count({ collection: this.testCollection });
+    if (!result.success) throw new Error(result.error);
+    if (typeof result.count !== 'number') throw new Error('Count should be number');
+    return { passed: true };
+  }
+
+  /** Test delete */
+  async testDelete() {
+    if (!this.isConnected()) return { skipped: true, reason: 'MongoDB not connected' };
+    await this.insertOne({
+      collection: this.testCollection,
+      document: { toDelete: true }
+    });
+    const result = await this.deleteOne({
+      collection: this.testCollection,
+      filter: { toDelete: true }
+    });
+    if (!result.success) throw new Error(result.error);
+    return { passed: true };
+  }
 }

@@ -41,7 +41,7 @@ In-memory data store and cache
 
 ## 🔧 Tools
 
-This photon provides **18** tools:
+This photon provides **24** tools:
 
 
 ### `get`
@@ -356,6 +356,72 @@ Get all fields and values in hash
 ### `flush`
 
 Flush all data from current database
+
+
+
+
+
+---
+
+
+### `testAfterAll`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testPing`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testSetGet`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testDel`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testExists`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testSetWithTtl`
+
+No description available
 
 
 

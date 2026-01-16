@@ -526,4 +526,93 @@ export default class Filesystem {
 
     return new RegExp(`^${regexPattern}$`, 'i');
   }
+
+  // ========== TESTS ==========
+
+  private testFileName = `.photon-test-${Date.now()}.txt`;
+  private testDirName = `.photon-test-dir-${Date.now()}`;
+
+  /** Setup: create test file */
+  async testBeforeAll() {
+    await this.write({ path: this.testFileName, content: 'Test content' });
+  }
+
+  /** Teardown: cleanup test files */
+  async testAfterAll() {
+    try { await this.remove({ path: this.testFileName }); } catch {}
+    try { await this.remove({ path: this.testFileName + '.copy' }); } catch {}
+    try { await this.rmdir({ path: this.testDirName, recursive: true }); } catch {}
+  }
+
+  /** Test reading a file */
+  async testRead() {
+    const result = await this.read({ path: this.testFileName });
+    if (!result.success) throw new Error(result.error);
+    if (result.content !== 'Test content') throw new Error('Wrong content');
+    return { passed: true };
+  }
+
+  /** Test writing a file */
+  async testWrite() {
+    const result = await this.write({ path: this.testFileName, content: 'Updated content' });
+    if (!result.success) throw new Error(result.error);
+    const readResult = await this.read({ path: this.testFileName });
+    if (readResult.content !== 'Updated content') throw new Error('Content not updated');
+    // Restore original content
+    await this.write({ path: this.testFileName, content: 'Test content' });
+    return { passed: true };
+  }
+
+  /** Test file exists */
+  async testExists() {
+    const result = await this.exists({ path: this.testFileName });
+    if (!result.success) throw new Error(result.error);
+    if (!result.exists) throw new Error('File should exist');
+    return { passed: true };
+  }
+
+  /** Test file info */
+  async testInfo() {
+    const result = await this.info({ path: this.testFileName });
+    if (!result.success) throw new Error(result.error);
+    if (result.type !== 'file') throw new Error('Should be file');
+    if (!result.size) throw new Error('Missing size');
+    return { passed: true };
+  }
+
+  /** Test list directory */
+  async testList() {
+    const result = await this.list();
+    if (!result.success) throw new Error(result.error);
+    if (!Array.isArray(result.files)) throw new Error('Files should be array');
+    return { passed: true };
+  }
+
+  /** Test copy file */
+  async testCopy() {
+    const result = await this.copy({
+      source: this.testFileName,
+      destination: this.testFileName + '.copy'
+    });
+    if (!result.success) throw new Error(result.error);
+    const exists = await this.exists({ path: this.testFileName + '.copy' });
+    if (!exists.exists) throw new Error('Copy should exist');
+    return { passed: true };
+  }
+
+  /** Test mkdir */
+  async testMkdir() {
+    const result = await this.mkdir({ path: this.testDirName });
+    if (!result.success) throw new Error(result.error);
+    const exists = await this.exists({ path: this.testDirName });
+    if (!exists.exists) throw new Error('Directory should exist');
+    return { passed: true };
+  }
+
+  /** Test getWorkdir */
+  async testGetWorkdir() {
+    // workdir property exists
+    if (!this.workdir) throw new Error('Missing workdir');
+    return { passed: true };
+  }
 }

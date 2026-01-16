@@ -148,7 +148,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:b3c72358b2c7bbcec248cb0f5765124229f280c9590914c376a8a40ea9f84fef",
+      "hash": "sha256:805a1dd650780faf24ca09b2b2c5e609407a537b72f71a47021cb2fbea00f867",
       "tools": [
         "read",
         "write",
@@ -162,7 +162,17 @@
         "info",
         "exists",
         "search",
-        "workdir"
+        "workdir",
+        "testBeforeAll",
+        "testAfterAll",
+        "testRead",
+        "testWrite",
+        "testExists",
+        "testInfo",
+        "testList",
+        "testCopy",
+        "testMkdir",
+        "testGetWorkdir"
       ]
     },
     {
@@ -172,7 +182,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git.photon.ts",
-      "hash": "sha256:ea2ac8913bfdfee6822174271571309777ec290cd02cdc809d68ce6077aea0c9",
+      "hash": "sha256:38a523c3e47eaddb7c12dc8f5bc44d179b7e42f41e633eae4ed095e6f4a3f95c",
       "tools": [
         "status",
         "log",
@@ -184,7 +194,12 @@
         "add",
         "commit",
         "push",
-        "pull"
+        "pull",
+        "testStatus",
+        "testLog",
+        "testDiff",
+        "testBranches",
+        "testShow"
       ]
     },
     {
@@ -429,7 +444,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../mongodb.photon.ts",
-      "hash": "sha256:2d447f717db4588465608e414a90dd043c37960f24ccf87f7263564e9aea21b2",
+      "hash": "sha256:bc2636e9459d810193e5560fa2dc4d8ac7d3a59665ee684f51b4eae2d19507ba",
       "tools": [
         "find",
         "findOne",
@@ -443,7 +458,12 @@
         "count",
         "collections",
         "index",
-        "distinct"
+        "distinct",
+        "testAfterAll",
+        "testCollections",
+        "testInsertFind",
+        "testCount",
+        "testDelete"
       ]
     },
     {
@@ -453,7 +473,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:de003be5300d0be65df5d50778bb652b62568579d5c9b209cf31e00b70526915",
+      "hash": "sha256:9e9bce19b63f4900cf92c1bdc40e4da1ee3dc5a085c27a437fae7c3f930990fa",
       "tools": [
         "query",
         "transaction",
@@ -461,7 +481,11 @@
         "describe",
         "indexes",
         "insert",
-        "stats"
+        "stats",
+        "testQuery",
+        "testQueryWithParams",
+        "testTables",
+        "testStats"
       ]
     },
     {
@@ -489,7 +513,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../redis.photon.ts",
-      "hash": "sha256:db861285ebf754e7bedd26fcf17e4a62fdf774354e0b6cbb877eb2f24b5a71f5",
+      "hash": "sha256:38f5635833e540115a7cc7a356f24b54ac22694bf1b6a347efef0d5ee98326a3",
       "tools": [
         "get",
         "set",
@@ -508,7 +532,13 @@
         "hget",
         "hset",
         "hgetall",
-        "flush"
+        "flush",
+        "testAfterAll",
+        "testPing",
+        "testSetGet",
+        "testDel",
+        "testExists",
+        "testSetWithTtl"
       ]
     },
     {
@@ -580,7 +610,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:454b1baaf0c611f87c6c432bac9b1f2a16ea05ae14a1ed943c7770ff9f493ac8",
+      "hash": "sha256:8abc844086dad06072197e6c0af6222fea42b40381b76de08f14268ed95c84fc",
       "tools": [
         "open",
         "query",
@@ -590,7 +620,13 @@
         "listTables",
         "schema",
         "close",
-        "backup"
+        "backup",
+        "testBeforeAll",
+        "testAfterAll",
+        "testOpen",
+        "testTables",
+        "testInsertQuery",
+        "testSchema"
       ]
     },
     {
@@ -623,11 +659,17 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../time.photon.ts",
-      "hash": "sha256:344cdf5e7ba6e86f360f18937373e11c3bac57c6b30d0fab1c9f01c3eb8f8b92",
+      "hash": "sha256:f073133732b51adc2d538d7eb82e999477a84b30afa007185890fd96150deda3",
       "tools": [
         "now",
         "convert",
-        "timezones"
+        "timezones",
+        "testNow",
+        "testNowWithTimezone",
+        "testNowInvalidTimezone",
+        "testTimezones",
+        "testTimezonesRegion",
+        "testConvert"
       ]
     },
     {
@@ -671,10 +713,13 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../web.photon.ts",
-      "hash": "sha256:4061f082cae99b0d875f1019c28f1a249df555d2ff9db91239c8db7d8b634a57",
+      "hash": "sha256:9507dc79ae689770a8a05850a7e6c5aa32be93d1e50f095cf953f670f26245a2",
       "tools": [
         "search",
-        "read"
+        "read",
+        "testSearch",
+        "testRead",
+        "testReadInvalidUrl"
       ]
     }
   ]

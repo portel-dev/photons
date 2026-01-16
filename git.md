@@ -29,7 +29,7 @@ Local git repository operations
 
 ## 🔧 Tools
 
-This photon provides **11** tools:
+This photon provides **16** tools:
 
 
 ### `status`
@@ -245,6 +245,61 @@ Pull changes from remote repository
 - **`remote`** (any, optional) [max: 200] - Remote name (e.g., `origin`)
 
 - **`branch`** (any, optional) [max: 200] - Branch name (e.g., `main`)
+
+
+
+
+
+---
+
+
+### `testStatus`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testLog`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testDiff`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testBranches`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testShow`
+
+No description available
 
 
 

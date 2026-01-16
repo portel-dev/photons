@@ -122,4 +122,47 @@ export default class Web {
             return `**Read Error:** ${error.message}`;
         }
     }
+
+    // ========== TESTS ==========
+
+    /** Helper to consume async generator */
+    private async consumeGenerator<T>(gen: AsyncGenerator<any, T>): Promise<T> {
+        let result;
+        while (true) {
+            const { value, done } = await gen.next();
+            if (done) {
+                result = value;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /** Test search functionality */
+    async testSearch() {
+        const gen = this.search({ query: 'typescript' });
+        const results = await this.consumeGenerator(gen);
+        if (!Array.isArray(results)) throw new Error('Expected array');
+        if (results.length === 0) throw new Error('No results');
+        if (results[0] === '*No results found.*') throw new Error('Search failed');
+        return { passed: true };
+    }
+
+    /** Test read functionality */
+    async testRead() {
+        const gen = this.read({ url: 'https://example.com' });
+        const result = await this.consumeGenerator(gen);
+        if (typeof result !== 'string') throw new Error('Expected string');
+        if (result.includes('**Error:**')) throw new Error(result);
+        if (!result.includes('Example Domain')) throw new Error('Missing expected content');
+        return { passed: true };
+    }
+
+    /** Test read with invalid URL */
+    async testReadInvalidUrl() {
+        const gen = this.read({ url: 'https://this-domain-does-not-exist-12345.com' });
+        const result = await this.consumeGenerator(gen);
+        if (!result.includes('**Read Error:**')) throw new Error('Should have failed');
+        return { passed: true };
+    }
 }

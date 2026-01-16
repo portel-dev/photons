@@ -35,7 +35,7 @@ NoSQL database operations
 
 ## 🔧 Tools
 
-This photon provides **13** tools:
+This photon provides **18** tools:
 
 
 ### `find`
@@ -283,6 +283,61 @@ Get distinct values for a field
 - **`field`** (any) [min: 1, max: 200] - Field name to get distinct values from (e.g., `country`)
 
 - **`filter`** (any) - Optional query filter (e.g., `{"status":"active"}`)
+
+
+
+
+
+---
+
+
+### `testAfterAll`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testCollections`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testInsertFind`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testCount`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testDelete`
+
+No description available
 
 
 
