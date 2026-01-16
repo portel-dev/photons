@@ -328,7 +328,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:0991d8edb50fe813c0e3b4c08f7114f41664c04ddd126d59b29384c6c2afd614",
+      "hash": "sha256:fe13d46b7c386419fd3c49e9e0bd77877a15469cfb3c800c4da8b8a26e317897",
       "tools": [
         "listBoards",
         "createBoard",
@@ -341,6 +341,9 @@
         "updateTask",
         "deleteTask",
         "searchTasks",
+        "addComment",
+        "getComments",
+        "getTask",
         "getBoard",
         "addColumn",
         "removeColumn",

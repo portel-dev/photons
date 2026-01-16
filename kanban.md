@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **16** tools:
+This photon provides **19** tools:
 
 
 ### `listBoards`
@@ -156,6 +156,45 @@ Delete a task
 ### `searchTasks`
 
 Search tasks across all boards or within a specific board  Find tasks by keyword in title, description, or context.
+
+
+
+
+
+---
+
+
+### `addComment`
+
+Add a comment to a task  Use comments for instructions, updates, questions, and conversation. Both humans and AI can add comments to track progress and communicate.
+
+
+
+
+**Example:**
+
+```typescript
+addComment({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
+```
+
+
+---
+
+
+### `getComments`
+
+Get comments for a task  Retrieve all comments/conversation for a specific task.
+
+
+
+
+
+---
+
+
+### `getTask`
+
+Get a task with all its details including comments  Returns the full task object with comments for context.
 
 
 

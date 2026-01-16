@@ -30,6 +30,13 @@ const PHOTONS_DIR = process.env.PHOTONS_DIR || '/Users/arul/Projects/photons';
 // TYPES
 // ════════════════════════════════════════════════════════════════════════════════
 
+interface Comment {
+  id: string;
+  author: 'human' | 'ai';
+  content: string;
+  createdAt: string;
+}
+
 interface Task {
   id: string;
   title: string;
@@ -40,6 +47,7 @@ interface Task {
   labels?: string[];
   context?: string; // For AI memory - store reasoning, notes, links
   links?: string[]; // Related files, URLs, or references
+  comments?: Comment[]; // Instructions, updates, and conversation
   createdAt: string;
   updatedAt: string;
   createdBy?: string;
@@ -465,6 +473,83 @@ export default class KanbanPhoton extends PhotonMCP {
     }
 
     return results;
+  }
+
+  /**
+   * Add a comment to a task
+   *
+   * Use comments for instructions, updates, questions, and conversation.
+   * Both humans and AI can add comments to track progress and communicate.
+   *
+   * @example addComment({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
+   * @example addComment({ id: 'abc123', content: 'Implemented JWT with refresh tokens', author: 'ai' })
+   */
+  async addComment(params: {
+    board?: string;
+    id: string;
+    content: string;
+    author?: 'human' | 'ai';
+  }): Promise<Comment> {
+    const board = await this.loadBoard(params.board);
+    const task = board.tasks.find((t) => t.id === params.id);
+
+    if (!task) {
+      throw new Error(`Task not found: ${params.id}`);
+    }
+
+    const comment: Comment = {
+      id: this.generateId(),
+      author: params.author || 'ai',
+      content: params.content,
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!task.comments) {
+      task.comments = [];
+    }
+    task.comments.push(comment);
+    task.updatedAt = new Date().toISOString();
+
+    await this.saveBoard(board);
+    return comment;
+  }
+
+  /**
+   * Get comments for a task
+   *
+   * Retrieve all comments/conversation for a specific task.
+   */
+  async getComments(params: {
+    board?: string;
+    id: string;
+  }): Promise<Comment[]> {
+    const board = await this.loadBoard(params.board);
+    const task = board.tasks.find((t) => t.id === params.id);
+
+    if (!task) {
+      throw new Error(`Task not found: ${params.id}`);
+    }
+
+    return task.comments || [];
+  }
+
+  /**
+   * Get a task with all its details including comments
+   *
+   * Returns the full task object with comments for context.
+   */
+  async getTask(params: {
+    board?: string;
+    id: string;
+  }): Promise<Task> {
+    const board = await this.loadBoard(params.board);
+    const task = board.tasks.find((t) => t.id === params.id);
+
+    if (!task) {
+      throw new Error(`Task not found: ${params.id}`);
+    }
+
+    return task;
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
