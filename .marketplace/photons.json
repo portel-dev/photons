@@ -651,6 +651,35 @@
       ]
     },
     {
+      "name": "team-dashboard",
+      "version": "1.0.0",
+      "description": "Team Dashboard Photon",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../team-dashboard.photon.ts",
+      "hash": "sha256:31fb30be56fe5a9e96328dd4fa2811c344888c3fde090c18354e2d79595d8a14",
+      "tools": [
+        "main",
+        "getDashboardData",
+        "getDebugPaths",
+        "getKanbanStats",
+        "getRecentCommits",
+        "checkServices",
+        "getGitHubStats",
+        "getTodaysFocus",
+        "getSummary",
+        "getConfig",
+        "updateConfig",
+        "addService",
+        "removeService",
+        "setGitRepo",
+        "setTeamName",
+        "addGitHubRepo",
+        "removeGitHubRepo",
+        "listGitHubRepos"
+      ]
+    },
+    {
       "name": "telegram",
       "version": "1.4.1",
       "description": "Telegram - Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation",

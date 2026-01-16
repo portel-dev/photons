@@ -1,0 +1,14 @@
+{
+  "refreshInterval": 60,
+  "gitRepoPath": "/Users/arul/Projects/photon",
+  "services": [
+    { "name": "GitHub", "url": "https://github.com" },
+    { "name": "Google", "url": "https://google.com" }
+  ],
+  "githubRepos": [
+    { "owner": "anthropics", "repo": "claude-code" },
+    { "owner": "anthropics", "repo": "anthropic-cookbook" }
+  ],
+  "showWeather": false,
+  "teamName": "Team Dashboard"
+}
