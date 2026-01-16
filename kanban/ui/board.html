@@ -32,21 +32,29 @@
       padding: 0;
     }
 
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
-      min-height: 100vh;
-      padding: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
     }
 
     .header h1 {
@@ -81,19 +89,21 @@
 
     .board {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       overflow-x: auto;
-      padding-bottom: 16px;
-      min-height: calc(100vh - 120px);
+      flex: 1;
+      min-height: 0;
     }
 
     .column {
-      flex: 0 0 280px;
+      flex: 1 1 240px;
+      min-width: 240px;
+      max-width: 320px;
       background: var(--bg-secondary);
       border-radius: 12px;
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - 140px);
+      overflow: hidden;
     }
 
     .column-header {
