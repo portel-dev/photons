@@ -63,6 +63,7 @@ We welcome contributions! Submit pull requests for:
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
 | **Social Formatter** | Social Media Formatter | 4 | [View →](social-formatter.md) |
 | **SQLite Photon MCP** | SQLite database operations | 15 | [View →](sqlite.md) |
+| **Team Dashboard** | Team Dashboard Photon | 18 | [View →](team-dashboard.md) |
 | **Telegram** | Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation | 12 | [View →](telegram.md) |
 | **Time** | Timezone and time conversion operations | 9 | [View →](time.md) |
 | **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |
@@ -70,7 +71,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 34 photons ready to use
+**Total:** 35 photons ready to use
 
 ---
 
@@ -114,7 +115,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 34 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 35 focused tools at its fingertips.
 
 ---
 
@@ -180,7 +181,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 34 production-ready photons available
+- 📦 35 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

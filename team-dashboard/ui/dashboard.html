@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --border: #2a2a3a;
+      --text-primary: #ffffff;
+      --text-secondary: #8888aa;
+      --text-muted: #555566;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+      padding: 24px;
+      gap: 24px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      font-size: 32px;
+    }
+
+    .team-name {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .time-display {
+      text-align: right;
+    }
+
+    .current-time {
+      font-size: 36px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .current-date {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .refresh-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .refresh-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Main Grid - 3 columns */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto 1fr;
+      gap: 20px;
+      overflow: hidden;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Focus Card - Prominent */
+    .focus-card {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .focus-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .focus-icon {
+      font-size: 48px;
+      opacity: 0.8;
+    }
+
+    .focus-details {
+      flex: 1;
+    }
+
+    .focus-task {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .focus-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .focus-empty {
+      font-size: 20px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .priority-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .priority-high { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+    .priority-medium { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .priority-low { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+
+    /* GitHub Card */
+    .github-card {
+      grid-row: span 2;
+    }
+
+    .github-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .github-totals {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .github-total {
+      flex: 1;
+      text-align: center;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .github-total-value {
+      font-size: 36px;
+      font-weight: 700;
+    }
+
+    .github-total-value.issues { color: var(--warning); }
+    .github-total-value.prs { color: var(--info); }
+
+    .github-total-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .repo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .repo-icon {
+      font-size: 20px;
+      opacity: 0.7;
+    }
+
+    .repo-name {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .repo-counts {
+      display: flex;
+      gap: 12px;
+    }
+
+    .repo-count {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .repo-count.issues { color: var(--warning); }
+    .repo-count.prs { color: var(--info); }
+
+    /* Kanban Stats */
+    .kanban-card {
+      grid-column: span 2;
+    }
+
+    .kanban-stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-box.backlog .stat-value { color: var(--text-muted); }
+    .stat-box.todo .stat-value { color: var(--info); }
+    .stat-box.progress .stat-value { color: var(--warning); }
+    .stat-box.review .stat-value { color: #a855f7; }
+    .stat-box.done .stat-value { color: var(--success); }
+
+    /* Progress Bar */
+    .progress-section {
+      margin-top: 16px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .progress-segment {
+      height: 100%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-segment.done { background: var(--success); }
+    .progress-segment.review { background: #a855f7; }
+    .progress-segment.progress { background: var(--warning); }
+    .progress-segment.todo { background: var(--info); }
+    .progress-segment.backlog { background: var(--text-muted); }
+
+    /* Services Card */
+    .services-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .service-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .service-status {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .service-status.up {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .service-status.down {
+      background: var(--danger);
+      box-shadow: 0 0 8px var(--danger);
+      animation: blink 1s infinite;
+    }
+
+    .service-status.unknown {
+      background: var(--text-muted);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .service-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .service-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .service-url {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .service-response {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Commits Card */
+    .commits-card {
+      grid-column: span 2;
+    }
+
+    .commits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .commit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .commit-hash {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-glow);
+      padding: 4px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .commit-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .commit-message {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .commit-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Assignees */
+    .assignees-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .assignees-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .assignee-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .assignee-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .assignee-avatar.ai {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+    }
+
+    .assignee-avatar.human {
+      background: linear-gradient(135deg, #22c55e, #3b82f6);
+    }
+
+    .assignee-name {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .assignee-count {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Empty State */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      opacity: 0.5;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <header class="header">
+      <div class="header-left">
+        <span class="logo">📺</span>
+        <h1 class="team-name" id="teamName">Team Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <div class="refresh-indicator">
+          <span class="refresh-dot"></span>
+          <span>Auto-refresh</span>
+        </div>
+        <div class="time-display">
+          <div class="current-time" id="currentTime">--:--:--</div>
+          <div class="current-date" id="currentDate">Loading...</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <!-- Row 1: Focus + GitHub -->
+      <div class="card focus-card">
+        <div class="card-header">
+          <span class="card-title">Today's Focus</span>
+        </div>
+        <div class="focus-content" id="focusContent">
+          <div class="focus-empty">No tasks in progress</div>
+        </div>
+      </div>
+
+      <div class="card github-card">
+        <div class="card-header">
+          <span class="card-title">GitHub</span>
+        </div>
+        <div id="githubContent">
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div>No repos configured</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: Kanban + Services (services spans 2 rows) -->
+      <div class="card kanban-card">
+        <div class="card-header">
+          <span class="card-title">Kanban Progress</span>
+          <span class="card-badge" id="totalTasks" style="background: var(--accent-glow); color: var(--accent);">0 tasks</span>
+        </div>
+        <div class="kanban-stats" id="kanbanStats">
+          <div class="stat-box backlog">
+            <div class="stat-label">Backlog</div>
+            <div class="stat-value" id="statBacklog">0</div>
+          </div>
+          <div class="stat-box todo">
+            <div class="stat-label">Todo</div>
+            <div class="stat-value" id="statTodo">0</div>
+          </div>
+          <div class="stat-box progress">
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value" id="statProgress">0</div>
+          </div>
+          <div class="stat-box review">
+            <div class="stat-label">Review</div>
+            <div class="stat-value" id="statReview">0</div>
+          </div>
+          <div class="stat-box done">
+            <div class="stat-label">Done</div>
+            <div class="stat-value" id="statDone">0</div>
+          </div>
+        </div>
+        <div class="progress-section">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-segment done" style="width: 0%"></div>
+            <div class="progress-segment review" style="width: 0%"></div>
+            <div class="progress-segment progress" style="width: 0%"></div>
+            <div class="progress-segment todo" style="width: 0%"></div>
+            <div class="progress-segment backlog" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="assignees-section" id="assigneesSection">
+          <div class="card-title" style="margin-bottom: 12px;">Team Workload</div>
+          <div class="assignees-grid" id="assigneesGrid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Services</span>
+        </div>
+        <div class="services-list" id="servicesList">
+          <div class="empty-state">
+            <div class="empty-icon">🌐</div>
+            <div>No services configured</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Recent Commits -->
+      <div class="card commits-card">
+        <div class="card-header">
+          <span class="card-title">Recent Commits</span>
+          <span class="card-badge" id="commitCount" style="background: rgba(34, 197, 94, 0.2); color: var(--success);">0 commits</span>
+        </div>
+        <div class="commits-list" id="commitsList">
+          <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <div>No recent commits</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Time display
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Render dashboard
+    function renderDashboard(data) {
+      // Focus task
+      const focusContent = document.getElementById('focusContent');
+      if (data.focus) {
+        const priorityClass = 'priority-' + (data.focus.priority || 'medium');
+        focusContent.innerHTML = `
+          <div class="focus-icon">🎯</div>
+          <div class="focus-details">
+            <div class="focus-task">${escapeHtml(data.focus.task)}</div>
+            <div class="focus-meta">
+              ${data.focus.assignee ? `<span>👤 ${escapeHtml(data.focus.assignee)}</span>` : ''}
+              <span class="priority-badge ${priorityClass}">${data.focus.priority}</span>
+            </div>
+          </div>
+        `;
+      } else {
+        focusContent.innerHTML = '<div class="focus-empty">No tasks in progress</div>';
+      }
+
+      // GitHub stats
+      const githubContent = document.getElementById('githubContent');
+      if (data.github && data.github.repos.length > 0) {
+        const reposHtml = data.github.repos.map(r => `
+          <div class="repo-item">
+            <span class="repo-icon">📦</span>
+            <span class="repo-name">${escapeHtml(r.name)}</span>
+            <div class="repo-counts">
+              <span class="repo-count issues" title="Open Issues">⚠️ ${r.openIssues >= 0 ? r.openIssues : '?'}</span>
+              <span class="repo-count prs" title="Open PRs">🔀 ${r.openPRs >= 0 ? r.openPRs : '?'}</span>
+            </div>
+          </div>
+        `).join('');
+
+        githubContent.innerHTML = `
+          <div class="github-stats">
+            <div class="github-totals">
+              <div class="github-total">
+                <div class="github-total-value issues">${data.github.totalIssues}</div>
+                <div class="github-total-label">Issues</div>
+              </div>
+              <div class="github-total">
+                <div class="github-total-value prs">${data.github.totalPRs}</div>
+                <div class="github-total-label">PRs</div>
+              </div>
+            </div>
+            ${reposHtml}
+          </div>
+        `;
+      } else {
+        githubContent.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <div>No repos configured</div>
+          </div>
+        `;
+      }
+
+      // Kanban stats
+      if (data.kanban) {
+        const k = data.kanban;
+        document.getElementById('totalTasks').textContent = `${k.total} tasks`;
+        document.getElementById('statBacklog').textContent = k.byColumn['Backlog'] || 0;
+        document.getElementById('statTodo').textContent = k.byColumn['Todo'] || 0;
+        document.getElementById('statProgress').textContent = k.byColumn['In Progress'] || 0;
+        document.getElementById('statReview').textContent = k.byColumn['Review'] || 0;
+        document.getElementById('statDone').textContent = k.byColumn['Done'] || 0;
+
+        // Progress bar
+        const total = k.total || 1;
+        const done = (k.byColumn['Done'] || 0) / total * 100;
+        const review = (k.byColumn['Review'] || 0) / total * 100;
+        const progress = (k.byColumn['In Progress'] || 0) / total * 100;
+        const todo = (k.byColumn['Todo'] || 0) / total * 100;
+        const backlog = (k.byColumn['Backlog'] || 0) / total * 100;
+
+        const segments = document.querySelectorAll('.progress-segment');
+        segments[0].style.width = done + '%';
+        segments[1].style.width = review + '%';
+        segments[2].style.width = progress + '%';
+        segments[3].style.width = todo + '%';
+        segments[4].style.width = backlog + '%';
+
+        // Assignees
+        const grid = document.getElementById('assigneesGrid');
+        grid.innerHTML = '';
+        Object.entries(k.byAssignee).forEach(([name, count]) => {
+          const isAI = name.toLowerCase() === 'ai';
+          const initials = isAI ? '🤖' : name.substring(0, 2).toUpperCase();
+          grid.innerHTML += `
+            <div class="assignee-chip">
+              <div class="assignee-avatar ${isAI ? 'ai' : 'human'}">${initials}</div>
+              <span class="assignee-name">${escapeHtml(name)}</span>
+              <span class="assignee-count">${count}</span>
+            </div>
+          `;
+        });
+      }
+
+      // Services
+      const servicesList = document.getElementById('servicesList');
+      if (data.services && data.services.length > 0) {
+        servicesList.innerHTML = data.services.map(s => `
+          <div class="service-item">
+            <div class="service-status ${s.status}"></div>
+            <div class="service-info">
+              <div class="service-name">${escapeHtml(s.name)}</div>
+              <div class="service-url">${escapeHtml(s.url)}</div>
+            </div>
+            ${s.responseTime ? `<div class="service-response">${s.responseTime}ms</div>` : ''}
+          </div>
+        `).join('');
+      }
+
+      // Commits
+      const commitsList = document.getElementById('commitsList');
+      if (data.recentCommits && data.recentCommits.length > 0) {
+        document.getElementById('commitCount').textContent = `${data.recentCommits.length} commits`;
+        commitsList.innerHTML = data.recentCommits.slice(0, 6).map(c => `
+          <div class="commit-item">
+            <span class="commit-hash">${c.hash}</span>
+            <div class="commit-info">
+              <div class="commit-message">${escapeHtml(c.message)}</div>
+              <div class="commit-meta">
+                <span>${escapeHtml(c.author)}</span>
+                <span>${c.relativeTime}</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load data
+    async function loadData() {
+      try {
+        const data = await window.photon.invoke('getDashboardData', {});
+        renderDashboard(data);
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+      }
+    }
+
+    // Initial load and auto-refresh
+    loadData();
+    setInterval(loadData, 60000); // Refresh every 60 seconds
+  </script>
+</body>
+</html>

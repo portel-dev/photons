@@ -532,6 +532,24 @@
       }
     },
     {
+      "name": "team-dashboard",
+      "description": "Team Dashboard Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "team-dashboard": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "team-dashboard"
+          ]
+        }
+      }
+    },
+    {
       "name": "telegram",
       "description": "Telegram - Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation",
       "source": "./",
