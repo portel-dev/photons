@@ -322,6 +322,29 @@
       ]
     },
     {
+      "name": "kanban",
+      "version": "1.0.0",
+      "description": "Kanban Board Photon",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../kanban.photon.ts",
+      "hash": "sha256:97cc69078f76269a49f4ced6d59dd3abba064e51ba9fc465b12d89bf91130005",
+      "tools": [
+        "main",
+        "getTasks",
+        "getMyTasks",
+        "createTask",
+        "moveTask",
+        "updateTask",
+        "deleteTask",
+        "getBoard",
+        "addColumn",
+        "removeColumn",
+        "clearCompleted",
+        "getStats"
+      ]
+    },
+    {
       "name": "kitchen-sink",
       "version": "1.0.0",
       "description": "Kitchen Sink Photon",

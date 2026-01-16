@@ -280,6 +280,24 @@
       }
     },
     {
+      "name": "kanban",
+      "description": "Kanban Board Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "kanban": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "kanban"
+          ]
+        }
+      }
+    },
+    {
       "name": "kitchen-sink",
       "description": "Kitchen Sink Photon",
       "source": "./",
