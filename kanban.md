@@ -4,7 +4,7 @@ Kanban Board Photon
 
 ## 📋 Overview
 
-**Version:** 1.0.0
+**Version:** 2.0.0
 **Author:** Portel
 **License:** MIT
 
@@ -22,7 +22,46 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **12** tools:
+This photon provides **16** tools:
+
+
+### `listBoards`
+
+List all boards  See all available boards with task counts. Use this to find existing project boards or check if a board exists.
+
+
+
+
+
+---
+
+
+### `createBoard`
+
+Create a new board  Create a board for a new project or conversation. Board names should be descriptive (e.g., "photon-project", "auth-feature", "session-abc123").
+
+
+
+
+**Example:**
+
+```typescript
+createBoard({ name: 'my-project' })
+```
+
+
+---
+
+
+### `deleteBoard`
+
+Delete a board  Permanently remove a board and all its tasks. Use with caution!
+
+
+
+
+
+---
 
 
 ### `main`
@@ -46,7 +85,7 @@ Get all tasks, optionally filtered  Use this to understand the current state of 
 **Example:**
 
 ```typescript
-getTasks({ assignee: 'ai' }) - Get tasks assigned to AI
+getTasks({ board: 'my-project', assignee: 'ai' })
 ```
 
 
@@ -66,10 +105,16 @@ Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on.
 
 ### `createTask`
 
-Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Set assignee to 'ai' for AI tasks or 'human' for human tasks.
+Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory.
 
 
 
+
+**Example:**
+
+```typescript
+createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
+```
 
 
 ---
@@ -88,7 +133,7 @@ Move a task to a different column  Update the status of a task by moving it betw
 
 ### `updateTask`
 
-Update a task's details  Modify task title, description, priority, assignee, or labels.
+Update a task's details  Modify task title, description, priority, assignee, labels, or context.
 
 
 
@@ -100,6 +145,17 @@ Update a task's details  Modify task title, description, priority, assignee, or 
 ### `deleteTask`
 
 Delete a task
+
+
+
+
+
+---
+
+
+### `searchTasks`
+
+Search tasks across all boards or within a specific board  Find tasks by keyword in title, description, or context.
 
 
 
@@ -214,4 +270,4 @@ This photon automatically installs the following dependencies:
 
 ## 📄 License
 
-MIT • Version 1.0.0
+MIT • Version 2.0.0

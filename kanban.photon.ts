@@ -1,16 +1,17 @@
 /**
  * Kanban Board Photon
  *
- * A shared workspace for humans and AI. Visual task management where both
- * humans (via BEAM UI) and AI (via MCP methods) can create, update, and
- * move tasks. Perfect for project planning, issue tracking, and human-AI
- * collaboration.
+ * Multi-tenant task management for humans and AI. Each project/conversation
+ * can have its own board. Perfect for:
+ * - Project planning and task tracking
+ * - AI working memory across sessions
+ * - Human-AI collaboration on shared tasks
  *
- * @version 1.0.0
+ * @version 2.0.0
  * @author Portel
  * @license MIT
  * @dependencies @portel/photon-core@latest
- * @tags kanban, tasks, collaboration, project-management
+ * @tags kanban, tasks, collaboration, project-management, memory
  * @icon 📋
  */
 
@@ -22,6 +23,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// BEAM compiles photons to a cache directory, so we need the source location
+const PHOTONS_DIR = process.env.PHOTONS_DIR || '/Users/arul/Projects/photons';
+
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ════════════════════════════════════════════════════════════════════════════════
@@ -32,104 +36,195 @@ interface Task {
   description?: string;
   column: string;
   priority: 'low' | 'medium' | 'high';
-  assignee?: string; // 'human', 'ai', or custom name
+  assignee?: string;
   labels?: string[];
+  context?: string; // For AI memory - store reasoning, notes, links
+  links?: string[]; // Related files, URLs, or references
   createdAt: string;
   updatedAt: string;
   createdBy?: string;
 }
 
 interface Board {
+  name: string;
   columns: string[];
   tasks: Task[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface BoardMeta {
+  name: string;
+  taskCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // ════════════════════════════════════════════════════════════════════════════════
 // DEFAULT DATA
 // ════════════════════════════════════════════════════════════════════════════════
 
-const DEFAULT_BOARD: Board = {
-  columns: ['Backlog', 'Todo', 'In Progress', 'Review', 'Done'],
-  tasks: [
-    {
-      id: '1',
-      title: 'Set up project structure',
-      description: 'Initialize the repository and configure build tools',
-      column: 'Done',
-      priority: 'high',
-      assignee: 'human',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      createdBy: 'human',
-    },
-    {
-      id: '2',
-      title: 'Implement core features',
-      description: 'Build the main functionality',
-      column: 'In Progress',
-      priority: 'high',
-      assignee: 'ai',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      createdBy: 'human',
-    },
-    {
-      id: '3',
-      title: 'Write documentation',
-      description: 'Create README and API docs',
-      column: 'Todo',
-      priority: 'medium',
-      assignee: 'ai',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      createdBy: 'human',
-    },
-    {
-      id: '4',
-      title: 'Add unit tests',
-      column: 'Backlog',
-      priority: 'medium',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    },
-  ],
-};
+const DEFAULT_COLUMNS = ['Backlog', 'Todo', 'In Progress', 'Review', 'Done'];
+
+function createEmptyBoard(name: string): Board {
+  return {
+    name,
+    columns: [...DEFAULT_COLUMNS],
+    tasks: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+}
 
 // ════════════════════════════════════════════════════════════════════════════════
 // KANBAN PHOTON
 // ════════════════════════════════════════════════════════════════════════════════
 
 export default class KanbanPhoton extends PhotonMCP {
-  private dataPath: string;
-  private board: Board | null = null;
+  private boardsDir: string;
+  private boardCache: Map<string, Board> = new Map();
 
   constructor() {
     super();
-    this.dataPath = path.join(__dirname, 'kanban', 'data.json');
+    this.boardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
   }
 
-  private async loadBoard(): Promise<Board> {
-    if (this.board) return this.board;
+  private getBoardPath(name: string): string {
+    // Sanitize board name for filesystem
+    const safeName = name.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return path.join(this.boardsDir, `${safeName}.json`);
+  }
+
+  private async loadBoard(name: string = 'default'): Promise<Board> {
+    // Check cache first
+    if (this.boardCache.has(name)) {
+      return this.boardCache.get(name)!;
+    }
+
+    const boardPath = this.getBoardPath(name);
 
     try {
-      const data = await fs.readFile(this.dataPath, 'utf-8');
-      this.board = JSON.parse(data);
+      const data = await fs.readFile(boardPath, 'utf-8');
+      const board = JSON.parse(data) as Board;
+      board.name = name; // Ensure name matches
+      this.boardCache.set(name, board);
+      return board;
     } catch {
-      this.board = { ...DEFAULT_BOARD };
-      await this.saveBoard();
+      // Board doesn't exist - create it
+      const board = createEmptyBoard(name);
+      await this.saveBoard(board);
+      this.boardCache.set(name, board);
+      return board;
     }
-    return this.board!;
   }
 
-  private async saveBoard(): Promise<void> {
-    if (!this.board) return;
-    const dir = path.dirname(this.dataPath);
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(this.dataPath, JSON.stringify(this.board, null, 2));
+  private async saveBoard(board: Board): Promise<void> {
+    board.updatedAt = new Date().toISOString();
+    await fs.mkdir(this.boardsDir, { recursive: true });
+    const boardPath = this.getBoardPath(board.name);
+    await fs.writeFile(boardPath, JSON.stringify(board, null, 2));
+    this.boardCache.set(board.name, board);
   }
 
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // BOARD MANAGEMENT
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * List all boards
+   *
+   * See all available boards with task counts. Use this to find existing
+   * project boards or check if a board exists.
+   */
+  async listBoards(): Promise<BoardMeta[]> {
+    await fs.mkdir(this.boardsDir, { recursive: true });
+
+    try {
+      const files = await fs.readdir(this.boardsDir);
+      const boards: BoardMeta[] = [];
+
+      for (const file of files) {
+        if (!file.endsWith('.json')) continue;
+
+        const boardPath = path.join(this.boardsDir, file);
+        try {
+          const data = await fs.readFile(boardPath, 'utf-8');
+          const board = JSON.parse(data) as Board;
+          boards.push({
+            name: board.name,
+            taskCount: board.tasks.length,
+            createdAt: board.createdAt,
+            updatedAt: board.updatedAt,
+          });
+        } catch {
+          // Skip invalid files
+        }
+      }
+
+      return boards.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Create a new board
+   *
+   * Create a board for a new project or conversation. Board names should be
+   * descriptive (e.g., "photon-project", "auth-feature", "session-abc123").
+   *
+   * @example createBoard({ name: 'my-project' })
+   * @example createBoard({ name: 'my-project', columns: ['Todo', 'Doing', 'Done'] })
+   */
+  async createBoard(params: {
+    name: string;
+    columns?: string[];
+  }): Promise<Board> {
+    const boardPath = this.getBoardPath(params.name);
+
+    // Check if board already exists
+    try {
+      await fs.access(boardPath);
+      throw new Error(`Board already exists: ${params.name}`);
+    } catch (e: any) {
+      if (e.code !== 'ENOENT') throw e;
+    }
+
+    const board: Board = {
+      name: params.name,
+      columns: params.columns || [...DEFAULT_COLUMNS],
+      tasks: [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    await this.saveBoard(board);
+    return board;
+  }
+
+  /**
+   * Delete a board
+   *
+   * Permanently remove a board and all its tasks. Use with caution!
+   */
+  async deleteBoard(params: { name: string }): Promise<{ success: boolean; message: string }> {
+    if (params.name === 'default') {
+      throw new Error('Cannot delete the default board');
+    }
+
+    const boardPath = this.getBoardPath(params.name);
+
+    try {
+      await fs.unlink(boardPath);
+      this.boardCache.delete(params.name);
+      return { success: true, message: `Deleted board: ${params.name}` };
+    } catch {
+      throw new Error(`Board not found: ${params.name}`);
+    }
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -144,12 +239,12 @@ export default class KanbanPhoton extends PhotonMCP {
    *
    * @ui board
    */
-  async main(): Promise<Board> {
-    return this.loadBoard();
+  async main(params?: { board?: string }): Promise<Board> {
+    return this.loadBoard(params?.board || 'default');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // TASK METHODS (for AI)
+  // TASK METHODS
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
@@ -158,15 +253,17 @@ export default class KanbanPhoton extends PhotonMCP {
    * Use this to understand the current state of the project, find tasks
    * assigned to you, or check what needs attention.
    *
-   * @example getTasks({ assignee: 'ai' }) - Get tasks assigned to AI
-   * @example getTasks({ column: 'Todo' }) - Get tasks in Todo column
+   * @example getTasks({ board: 'my-project', assignee: 'ai' })
+   * @example getTasks({ column: 'Todo' })
    */
   async getTasks(params: {
+    board?: string;
     column?: string;
     assignee?: string;
     priority?: 'low' | 'medium' | 'high';
+    label?: string;
   }): Promise<Task[]> {
-    const board = await this.loadBoard();
+    const board = await this.loadBoard(params.board);
     let tasks = [...board.tasks];
 
     if (params.column) {
@@ -178,6 +275,9 @@ export default class KanbanPhoton extends PhotonMCP {
     if (params.priority) {
       tasks = tasks.filter((t) => t.priority === params.priority);
     }
+    if (params.label) {
+      tasks = tasks.filter((t) => t.labels?.includes(params.label!));
+    }
 
     return tasks;
   }
@@ -187,8 +287,8 @@ export default class KanbanPhoton extends PhotonMCP {
    *
    * Quickly see what tasks are waiting for AI to work on.
    */
-  async getMyTasks(): Promise<Task[]> {
-    const board = await this.loadBoard();
+  async getMyTasks(params?: { board?: string }): Promise<Task[]> {
+    const board = await this.loadBoard(params?.board);
     return board.tasks.filter(
       (t) => t.assignee?.toLowerCase() === 'ai' && t.column !== 'Done'
     );
@@ -198,19 +298,23 @@ export default class KanbanPhoton extends PhotonMCP {
    * Create a new task
    *
    * Add a task to the board. By default, tasks go to 'Backlog' column.
-   * Set assignee to 'ai' for AI tasks or 'human' for human tasks.
+   * Use 'context' to store AI reasoning or notes for memory.
    *
-   * @example createTask({ title: 'Fix bug in login', priority: 'high', assignee: 'ai' })
+   * @example createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
+   * @example createTask({ title: 'Research auth', context: 'User wants JWT with refresh tokens', links: ['/src/auth/'] })
    */
   async createTask(params: {
+    board?: string;
     title: string;
     description?: string;
     column?: string;
     priority?: 'low' | 'medium' | 'high';
     assignee?: string;
     labels?: string[];
+    context?: string;
+    links?: string[];
   }): Promise<Task> {
-    const board = await this.loadBoard();
+    const board = await this.loadBoard(params.board);
 
     const task: Task = {
       id: this.generateId(),
@@ -220,6 +324,8 @@ export default class KanbanPhoton extends PhotonMCP {
       priority: params.priority || 'medium',
       assignee: params.assignee,
       labels: params.labels,
+      context: params.context,
+      links: params.links,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       createdBy: 'ai',
@@ -231,7 +337,7 @@ export default class KanbanPhoton extends PhotonMCP {
     }
 
     board.tasks.push(task);
-    await this.saveBoard();
+    await this.saveBoard(board);
 
     return task;
   }
@@ -242,10 +348,10 @@ export default class KanbanPhoton extends PhotonMCP {
    * Update the status of a task by moving it between columns.
    * Common flow: Backlog → Todo → In Progress → Review → Done
    *
-   * @example moveTask({ id: 'abc123', column: 'In Progress' })
+   * @example moveTask({ board: 'my-project', id: 'abc123', column: 'In Progress' })
    */
-  async moveTask(params: { id: string; column: string }): Promise<Task> {
-    const board = await this.loadBoard();
+  async moveTask(params: { board?: string; id: string; column: string }): Promise<Task> {
+    const board = await this.loadBoard(params.board);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -259,7 +365,7 @@ export default class KanbanPhoton extends PhotonMCP {
 
     task.column = params.column;
     task.updatedAt = new Date().toISOString();
-    await this.saveBoard();
+    await this.saveBoard(board);
 
     return task;
   }
@@ -267,17 +373,20 @@ export default class KanbanPhoton extends PhotonMCP {
   /**
    * Update a task's details
    *
-   * Modify task title, description, priority, assignee, or labels.
+   * Modify task title, description, priority, assignee, labels, or context.
    */
   async updateTask(params: {
+    board?: string;
     id: string;
     title?: string;
     description?: string;
     priority?: 'low' | 'medium' | 'high';
     assignee?: string;
     labels?: string[];
+    context?: string;
+    links?: string[];
   }): Promise<Task> {
-    const board = await this.loadBoard();
+    const board = await this.loadBoard(params.board);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -289,17 +398,19 @@ export default class KanbanPhoton extends PhotonMCP {
     if (params.priority !== undefined) task.priority = params.priority;
     if (params.assignee !== undefined) task.assignee = params.assignee;
     if (params.labels !== undefined) task.labels = params.labels;
+    if (params.context !== undefined) task.context = params.context;
+    if (params.links !== undefined) task.links = params.links;
     task.updatedAt = new Date().toISOString();
 
-    await this.saveBoard();
+    await this.saveBoard(board);
     return task;
   }
 
   /**
    * Delete a task
    */
-  async deleteTask(params: { id: string }): Promise<{ success: boolean; message: string }> {
-    const board = await this.loadBoard();
+  async deleteTask(params: { board?: string; id: string }): Promise<{ success: boolean; message: string }> {
+    const board = await this.loadBoard(params.board);
     const index = board.tasks.findIndex((t) => t.id === params.id);
 
     if (index === -1) {
@@ -307,9 +418,53 @@ export default class KanbanPhoton extends PhotonMCP {
     }
 
     const [removed] = board.tasks.splice(index, 1);
-    await this.saveBoard();
+    await this.saveBoard(board);
 
     return { success: true, message: `Deleted task: ${removed.title}` };
+  }
+
+  /**
+   * Search tasks across all boards or within a specific board
+   *
+   * Find tasks by keyword in title, description, or context.
+   */
+  async searchTasks(params: {
+    query: string;
+    board?: string;
+  }): Promise<Array<Task & { board: string }>> {
+    const query = params.query.toLowerCase();
+    const results: Array<Task & { board: string }> = [];
+
+    if (params.board) {
+      // Search specific board
+      const board = await this.loadBoard(params.board);
+      for (const task of board.tasks) {
+        if (
+          task.title.toLowerCase().includes(query) ||
+          task.description?.toLowerCase().includes(query) ||
+          task.context?.toLowerCase().includes(query)
+        ) {
+          results.push({ ...task, board: board.name });
+        }
+      }
+    } else {
+      // Search all boards
+      const boards = await this.listBoards();
+      for (const meta of boards) {
+        const board = await this.loadBoard(meta.name);
+        for (const task of board.tasks) {
+          if (
+            task.title.toLowerCase().includes(query) ||
+            task.description?.toLowerCase().includes(query) ||
+            task.context?.toLowerCase().includes(query)
+          ) {
+            results.push({ ...task, board: board.name });
+          }
+        }
+      }
+    }
+
+    return results;
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -321,15 +476,15 @@ export default class KanbanPhoton extends PhotonMCP {
    *
    * Returns all columns and tasks. Useful for AI to understand the full context.
    */
-  async getBoard(): Promise<Board> {
-    return this.loadBoard();
+  async getBoard(params?: { board?: string }): Promise<Board> {
+    return this.loadBoard(params?.board);
   }
 
   /**
    * Add a new column to the board
    */
-  async addColumn(params: { name: string; position?: number }): Promise<string[]> {
-    const board = await this.loadBoard();
+  async addColumn(params: { board?: string; name: string; position?: number }): Promise<string[]> {
+    const board = await this.loadBoard(params.board);
 
     if (board.columns.includes(params.name)) {
       throw new Error(`Column already exists: ${params.name}`);
@@ -347,15 +502,15 @@ export default class KanbanPhoton extends PhotonMCP {
       }
     }
 
-    await this.saveBoard();
+    await this.saveBoard(board);
     return board.columns;
   }
 
   /**
    * Remove a column (moves tasks to Backlog)
    */
-  async removeColumn(params: { name: string }): Promise<string[]> {
-    const board = await this.loadBoard();
+  async removeColumn(params: { board?: string; name: string }): Promise<string[]> {
+    const board = await this.loadBoard(params.board);
 
     if (['Backlog', 'Done'].includes(params.name)) {
       throw new Error(`Cannot remove ${params.name} column`);
@@ -374,7 +529,7 @@ export default class KanbanPhoton extends PhotonMCP {
     });
 
     board.columns.splice(index, 1);
-    await this.saveBoard();
+    await this.saveBoard(board);
 
     return board.columns;
   }
@@ -382,26 +537,27 @@ export default class KanbanPhoton extends PhotonMCP {
   /**
    * Clear completed tasks (archive them)
    */
-  async clearCompleted(): Promise<{ removed: number }> {
-    const board = await this.loadBoard();
+  async clearCompleted(params?: { board?: string }): Promise<{ removed: number }> {
+    const board = await this.loadBoard(params?.board);
     const before = board.tasks.length;
     board.tasks = board.tasks.filter((t) => t.column !== 'Done');
     const removed = before - board.tasks.length;
 
-    await this.saveBoard();
+    await this.saveBoard(board);
     return { removed };
   }
 
   /**
    * Get board statistics
    */
-  async getStats(): Promise<{
+  async getStats(params?: { board?: string }): Promise<{
+    board: string;
     total: number;
     byColumn: Record<string, number>;
     byPriority: Record<string, number>;
     byAssignee: Record<string, number>;
   }> {
-    const board = await this.loadBoard();
+    const board = await this.loadBoard(params?.board);
     const byColumn: Record<string, number> = {};
     const byPriority: Record<string, number> = { low: 0, medium: 0, high: 0 };
     const byAssignee: Record<string, number> = {};
@@ -417,6 +573,7 @@ export default class KanbanPhoton extends PhotonMCP {
     });
 
     return {
+      board: board.name,
       total: board.tasks.length,
       byColumn,
       byPriority,
