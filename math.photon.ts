@@ -137,4 +137,14 @@ export default class Math {
     }
     return { passed: true, message: 'Complex expressions work' };
   }
+
+  /** Test that requires external service (example of skip) */
+  async testExternalService() {
+    // Skip if no external service configured
+    if (!process.env.MATH_EXTERNAL_API) {
+      return { skipped: true, reason: 'MATH_EXTERNAL_API not configured' };
+    }
+    // Would test external service here...
+    return { passed: true };
+  }
 }

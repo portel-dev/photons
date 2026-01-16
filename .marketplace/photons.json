@@ -410,7 +410,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../math.photon.ts",
-      "hash": "sha256:c69c28105808ba7bb03ca16379ea7eb6eaba31a6ef966834b05bdc7cb705d6fe",
+      "hash": "sha256:3483976c636de7ad88824c4695a0492364c2961e363f237ae9f5259ab2d26f4d",
       "tools": [
         "calculate",
         "testBasicArithmetic",
@@ -418,7 +418,8 @@
         "testPower",
         "testAbs",
         "testMean",
-        "testComplexExpression"
+        "testComplexExpression",
+        "testExternalService"
       ]
     },
     {

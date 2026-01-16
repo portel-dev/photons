@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **7** tools:
+This photon provides **8** tools:
 
 
 ### `calculate`
@@ -98,6 +98,17 @@ No description available
 
 
 ### `testComplexExpression`
+
+No description available
+
+
+
+
+
+---
+
+
+### `testExternalService`
 
 No description available
 
