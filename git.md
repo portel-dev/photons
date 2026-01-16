@@ -29,7 +29,7 @@ Local git repository operations
 
 ## 🔧 Tools
 
-This photon provides **16** tools:
+This photon provides **15** tools:
 
 
 ### `status`
@@ -287,17 +287,6 @@ No description available
 
 
 ### `testBranches`
-
-No description available
-
-
-
-
-
----
-
-
-### `testShow`
 
 No description available
 

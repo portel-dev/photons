@@ -41,7 +41,7 @@ In-memory data store and cache
 
 ## 🔧 Tools
 
-This photon provides **24** tools:
+This photon provides **23** tools:
 
 
 ### `get`
@@ -365,17 +365,6 @@ Flush all data from current database
 
 
 ### `testAfterAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testPing`
 
 No description available
 

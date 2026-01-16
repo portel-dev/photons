@@ -182,7 +182,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git.photon.ts",
-      "hash": "sha256:38a523c3e47eaddb7c12dc8f5bc44d179b7e42f41e633eae4ed095e6f4a3f95c",
+      "hash": "sha256:947c4456dd7593f6f4e268969d20dcea74984b2ee3e44ba50a1f58dd3fdb4d40",
       "tools": [
         "status",
         "log",
@@ -198,8 +198,7 @@
         "testStatus",
         "testLog",
         "testDiff",
-        "testBranches",
-        "testShow"
+        "testBranches"
       ]
     },
     {
@@ -513,7 +512,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../redis.photon.ts",
-      "hash": "sha256:38f5635833e540115a7cc7a356f24b54ac22694bf1b6a347efef0d5ee98326a3",
+      "hash": "sha256:0e1e953d0b494c7717990ed5a430ca39474d8573b2391f01c1254b331dfaeffe",
       "tools": [
         "get",
         "set",
@@ -534,7 +533,6 @@
         "hgetall",
         "flush",
         "testAfterAll",
-        "testPing",
         "testSetGet",
         "testDel",
         "testExists",
@@ -610,7 +608,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:8abc844086dad06072197e6c0af6222fea42b40381b76de08f14268ed95c84fc",
+      "hash": "sha256:42904c699b46e8f4988a097b9e1ca19b43a6f411b28fad9c74289b252fd080d9",
       "tools": [
         "open",
         "query",

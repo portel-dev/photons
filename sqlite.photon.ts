@@ -306,7 +306,7 @@ export default class SQLite {
   /** Test list tables */
   async testTables() {
     if (!this.db) return { skipped: true, reason: 'Database not open' };
-    const result = await this.tables();
+    const result = await this.listTables({});
     if (!result.success) throw new Error(result.error);
     if (!Array.isArray(result.tables)) throw new Error('Tables should be array');
     return { passed: true };

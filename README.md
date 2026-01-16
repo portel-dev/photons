@@ -43,7 +43,7 @@ We welcome contributions! Submit pull requests for:
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
 | **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
-| **Git** | Local git repository operations | 16 | [View →](git.md) |
+| **Git** | Local git repository operations | 15 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
@@ -56,7 +56,7 @@ We welcome contributions! Submit pull requests for:
 | **MongoDB** | NoSQL database operations | 18 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 11 | [View →](postgres.md) |
 | **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |
-| **Redis** | In-memory data store and cache | 24 | [View →](redis.md) |
+| **Redis** | In-memory data store and cache | 23 | [View →](redis.md) |
 | **RSS Feed** | Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds | 5 | [View →](rss-feed.md) |
 | **Rss To Slack** | RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack | 2 | [View →](rss-to-slack.md) |
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |

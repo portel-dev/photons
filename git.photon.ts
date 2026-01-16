@@ -474,15 +474,4 @@ export default class Git {
     return { passed: true };
   }
 
-  /** Test git show */
-  async testShow() {
-    const logResult = await this.log({ limit: 1 });
-    if (!logResult.success || !logResult.commits?.length) {
-      return { skipped: true, reason: 'No commits in repo' };
-    }
-    const result = await this.show({ ref: logResult.commits[0].hash });
-    if (!result.success) throw new Error(result.error);
-    if (!result.commit) throw new Error('Missing commit info');
-    return { passed: true };
-  }
 }

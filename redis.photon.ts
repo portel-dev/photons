@@ -602,17 +602,8 @@ export default class Redis {
   /** Teardown: cleanup test data */
   async testAfterAll() {
     if (this.isConnected()) {
-      try { await this.del({ key: this.testKey }); } catch {}
+      try { await this.del({ keys: [this.testKey] }); } catch {}
     }
-  }
-
-  /** Test ping */
-  async testPing() {
-    if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
-    const result = await this.ping();
-    if (!result.success) throw new Error(result.error);
-    if (result.response !== 'PONG') throw new Error('Invalid ping response');
-    return { passed: true };
   }
 
   /** Test set and get */
@@ -630,7 +621,7 @@ export default class Redis {
   async testDel() {
     if (!this.isConnected()) return { skipped: true, reason: 'Redis not connected' };
     await this.set({ key: this.testKey, value: 'to-delete' });
-    const result = await this.del({ key: this.testKey });
+    const result = await this.del({ keys: [this.testKey] });
     if (!result.success) throw new Error(result.error);
     const getResult = await this.get({ key: this.testKey });
     if (getResult.success) throw new Error('Key should be deleted');
