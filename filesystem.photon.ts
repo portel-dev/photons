@@ -56,19 +56,36 @@ export default class Filesystem {
    * Read file contents
    * @param path File path (relative to workdir or absolute)
    * @param encoding File encoding (default: utf-8)
-   * @format markdown
    */
-  async read(params: { path: string; encoding?: string }): Promise<string> {
-    const filePath = this.resolvePath(params.path);
-    this.validatePath(filePath);
+  async read(params: { path: string; encoding?: string }) {
+    try {
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-    const stats = await fs.stat(filePath);
-    if (stats.size > this.maxFileSize) {
-      throw new Error(`File too large: ${stats.size} bytes (max: ${this.maxFileSize} bytes)`);
+      // Check file size
+      const stats = await fs.stat(filePath);
+      if (stats.size > this.maxFileSize) {
+        return {
+          success: false,
+          error: `File too large: ${stats.size} bytes (max: ${this.maxFileSize} bytes)`,
+        };
+      }
+
+      const content = await fs.readFile(filePath, params.encoding || 'utf-8');
+
+      return {
+        success: true,
+        path: filePath,
+        content,
+        size: stats.size,
+        modified: stats.mtime,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
     }
-
-    const content = await fs.readFile(filePath, params.encoding || 'utf-8');
-    return content as string;
   }
 
   /**
@@ -77,18 +94,36 @@ export default class Filesystem {
    * @param content File content
    * @param encoding File encoding (default: utf-8)
    */
-  async write(params: { path: string; content: string; encoding?: string }): Promise<string> {
-    const filePath = this.resolvePath(params.path);
-    this.validatePath(filePath);
+  async write(params: { path: string; content: string; encoding?: string }) {
+    try {
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-    const contentSize = Buffer.byteLength(params.content, params.encoding as BufferEncoding || 'utf-8');
-    if (contentSize > this.maxFileSize) {
-      throw new Error(`Content too large: ${contentSize} bytes (max: ${this.maxFileSize} bytes)`);
+      // Check content size
+      const contentSize = Buffer.byteLength(params.content, params.encoding as BufferEncoding || 'utf-8');
+      if (contentSize > this.maxFileSize) {
+        return {
+          success: false,
+          error: `Content too large: ${contentSize} bytes (max: ${this.maxFileSize} bytes)`,
+        };
+      }
+
+      await fs.writeFile(filePath, params.content, params.encoding || 'utf-8');
+
+      const stats = await fs.stat(filePath);
+
+      return {
+        success: true,
+        path: filePath,
+        size: stats.size,
+        modified: stats.mtime,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
     }
-
-    await fs.writeFile(filePath, params.content, params.encoding || 'utf-8');
-    const stats = await fs.stat(filePath);
-    return `Wrote ${stats.size} bytes to \`${filePath}\``;
   }
 
   /**
@@ -97,30 +132,60 @@ export default class Filesystem {
    * @param content Content to append
    * @param encoding File encoding (default: utf-8)
    */
-  async append(params: { path: string; content: string; encoding?: string }): Promise<string> {
-    const filePath = this.resolvePath(params.path);
-    this.validatePath(filePath);
+  async append(params: { path: string; content: string; encoding?: string }) {
+    try {
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-    await fs.appendFile(filePath, params.content, params.encoding || 'utf-8');
-    const stats = await fs.stat(filePath);
-    return `Appended to \`${filePath}\` (now ${stats.size} bytes)`;
+      await fs.appendFile(filePath, params.content, params.encoding || 'utf-8');
+
+      const stats = await fs.stat(filePath);
+
+      return {
+        success: true,
+        path: filePath,
+        size: stats.size,
+        modified: stats.mtime,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
    * Remove a file
    * @param path File path (relative to workdir or absolute)
    */
-  async remove(params: { path: string }): Promise<string> {
-    const filePath = this.resolvePath(params.path);
-    this.validatePath(filePath);
+  async remove(params: { path: string }) {
+    try {
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-    const stats = await fs.stat(filePath);
-    if (stats.isDirectory()) {
-      throw new Error('Path is a directory. Use rmdir instead.');
+      // Ensure it's a file, not a directory
+      const stats = await fs.stat(filePath);
+      if (stats.isDirectory()) {
+        return {
+          success: false,
+          error: 'Path is a directory. Use rmdir instead.',
+        };
+      }
+
+      await fs.unlink(filePath);
+
+      return {
+        success: true,
+        path: filePath,
+        message: 'File deleted successfully',
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
     }
-
-    await fs.unlink(filePath);
-    return `Deleted \`${filePath}\``;
   }
 
   /**
@@ -128,16 +193,30 @@ export default class Filesystem {
    * @param source Source file path
    * @param destination Destination file path
    */
-  async copy(params: { source: string; destination: string }): Promise<string> {
-    const sourcePath = this.resolvePath(params.source);
-    const destPath = this.resolvePath(params.destination);
+  async copy(params: { source: string; destination: string }) {
+    try {
+      const sourcePath = this.resolvePath(params.source);
+      const destPath = this.resolvePath(params.destination);
 
-    this.validatePath(sourcePath);
-    this.validatePath(destPath);
+      this.validatePath(sourcePath);
+      this.validatePath(destPath);
 
-    await fs.copyFile(sourcePath, destPath);
-    const stats = await fs.stat(destPath);
-    return `Copied \`${sourcePath}\` to \`${destPath}\` (${stats.size} bytes)`;
+      await fs.copyFile(sourcePath, destPath);
+
+      const stats = await fs.stat(destPath);
+
+      return {
+        success: true,
+        source: sourcePath,
+        destination: destPath,
+        size: stats.size,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
@@ -145,29 +224,54 @@ export default class Filesystem {
    * @param source Source file path
    * @param destination Destination file path
    */
-  async move(params: { source: string; destination: string }): Promise<string> {
-    const sourcePath = this.resolvePath(params.source);
-    const destPath = this.resolvePath(params.destination);
+  async move(params: { source: string; destination: string }) {
+    try {
+      const sourcePath = this.resolvePath(params.source);
+      const destPath = this.resolvePath(params.destination);
 
-    this.validatePath(sourcePath);
-    this.validatePath(destPath);
+      this.validatePath(sourcePath);
+      this.validatePath(destPath);
 
-    await fs.rename(sourcePath, destPath);
-    return `Moved \`${sourcePath}\` to \`${destPath}\``;
+      await fs.rename(sourcePath, destPath);
+
+      return {
+        success: true,
+        source: sourcePath,
+        destination: destPath,
+        message: 'File moved successfully',
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
    * List files in a directory
    * @param path Directory path (relative to workdir or absolute, default: current workdir)
    * @param recursive List files recursively (default: false)
-   * @format table
    */
   async list(params?: { path?: string; recursive?: boolean }) {
-    const dirPath = this.resolvePath(params?.path || '.');
-    this.validatePath(dirPath);
+    try {
+      const dirPath = this.resolvePath(params?.path || '.');
+      this.validatePath(dirPath);
 
-    const entries = await this._listDirectory(dirPath, params?.recursive || false);
-    return entries;
+      const entries = await this._listDirectory(dirPath, params?.recursive || false);
+
+      return {
+        success: true,
+        path: dirPath,
+        count: entries.length,
+        files: entries,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
@@ -175,12 +279,24 @@ export default class Filesystem {
    * @param path Directory path (relative to workdir or absolute)
    * @param recursive Create parent directories if needed (default: true)
    */
-  async mkdir(params: { path: string; recursive?: boolean }): Promise<string> {
-    const dirPath = this.resolvePath(params.path);
-    this.validatePath(dirPath);
+  async mkdir(params: { path: string; recursive?: boolean }) {
+    try {
+      const dirPath = this.resolvePath(params.path);
+      this.validatePath(dirPath);
 
-    await fs.mkdir(dirPath, { recursive: params.recursive !== false });
-    return `Created directory \`${dirPath}\``;
+      await fs.mkdir(dirPath, { recursive: params.recursive !== false });
+
+      return {
+        success: true,
+        path: dirPath,
+        message: 'Directory created successfully',
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
@@ -188,73 +304,124 @@ export default class Filesystem {
    * @param path Directory path (relative to workdir or absolute)
    * @param recursive Remove directory and all contents (default: false)
    */
-  async rmdir(params: { path: string; recursive?: boolean }): Promise<string> {
-    const dirPath = this.resolvePath(params.path);
-    this.validatePath(dirPath);
+  async rmdir(params: { path: string; recursive?: boolean }) {
+    try {
+      const dirPath = this.resolvePath(params.path);
+      this.validatePath(dirPath);
 
-    const stats = await fs.stat(dirPath);
-    if (!stats.isDirectory()) {
-      throw new Error('Path is not a directory. Use remove instead.');
+      // Ensure it's a directory
+      const stats = await fs.stat(dirPath);
+      if (!stats.isDirectory()) {
+        return {
+          success: false,
+          error: 'Path is not a directory. Use remove instead.',
+        };
+      }
+
+      await fs.rm(dirPath, { recursive: params.recursive || false });
+
+      return {
+        success: true,
+        path: dirPath,
+        message: 'Directory deleted successfully',
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
     }
-
-    await fs.rm(dirPath, { recursive: params.recursive || false });
-    return `Deleted directory \`${dirPath}\``;
   }
 
   /**
    * Get file or directory information
    * @param path File or directory path
-   * @format markdown
    */
-  async info(params: { path: string }): Promise<string> {
-    const filePath = this.resolvePath(params.path);
-    this.validatePath(filePath);
+  async info(params: { path: string}) {
+    try {
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-    const stats = await fs.stat(filePath);
-    const type = stats.isDirectory() ? 'directory' : 'file';
+      const stats = await fs.stat(filePath);
 
-    return `**${path.basename(filePath)}** (${type})
-
-| Property | Value |
-|----------|-------|
-| Path | \`${filePath}\` |
-| Size | ${stats.size} bytes |
-| Created | ${stats.birthtime.toISOString()} |
-| Modified | ${stats.mtime.toISOString()} |
-| Permissions | ${stats.mode.toString(8).slice(-3)} |`;
+      return {
+        success: true,
+        path: filePath,
+        name: path.basename(filePath),
+        type: stats.isDirectory() ? 'directory' : 'file',
+        size: stats.size,
+        created: stats.birthtime,
+        modified: stats.mtime,
+        accessed: stats.atime,
+        permissions: stats.mode.toString(8).slice(-3),
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
    * Check if file or directory exists
    * @param path File or directory path
    */
-  async exists(params: { path: string }): Promise<string> {
-    const filePath = this.resolvePath(params.path);
-    this.validatePath(filePath);
+  async exists(params: { path: string }) {
+    try {
+      const filePath = this.resolvePath(params.path);
+      this.validatePath(filePath);
 
-    const exists = existsSync(filePath);
-    return exists ? `\`${filePath}\` exists` : `\`${filePath}\` does not exist`;
+      const exists = existsSync(filePath);
+
+      return {
+        success: true,
+        path: filePath,
+        exists,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
    * Search for files matching a pattern
    * @param pattern File name pattern (glob-style: *.txt, **\/*.js)
    * @param path Directory to search (default: workdir)
-   * @format table
    */
   async search(params: { pattern: string; path?: string }) {
-    const searchPath = this.resolvePath(params.path || '.');
-    this.validatePath(searchPath);
+    try {
+      const searchPath = this.resolvePath(params.path || '.');
+      this.validatePath(searchPath);
 
-    const results = await this._searchDirectory(searchPath, params.pattern);
-    return results;
+      const results = await this._searchDirectory(searchPath, params.pattern);
+
+      return {
+        success: true,
+        pattern: params.pattern,
+        path: searchPath,
+        count: results.length,
+        files: results,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   }
 
   /**
    * Get current working directory
    */
-  async workdir(): Promise<string> {
-    return `Working directory: \`${this.workdir}\``;
+  async workdir() {
+    return {
+      success: true,
+      workdir: this.workdir,
+    };
   }
 
   // Private helper methods

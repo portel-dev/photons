@@ -4,8 +4,8 @@ Dashboard Photon
 
 ## 📋 Overview
 
-**Version:** 1.4.1
-**Author:** Unknown
+**Version:** 1.0.0
+**Author:** Portel
 **License:** MIT
 
 ## ⚙️ Configuration
@@ -22,23 +22,12 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **5** tools:
+This photon provides **6** tools:
 
 
-### `getOverview`
+### `overview`
 
-Get dashboard overview with key metrics  Returns metrics that can be displayed in a card grid UI.
-
-
-
-
-
----
-
-
-### `getTasks`
-
-Get all tasks with filtering options  Returns task list for the task board UI.
+Dashboard overview with key metrics  Returns metrics that can be displayed in a card grid UI.
 
 
 
@@ -47,9 +36,9 @@ Get all tasks with filtering options  Returns task list for the task board UI.
 ---
 
 
-### `getActivity`
+### `main`
 
-Get recent activity feed  Returns activity stream for the timeline UI.
+Dashboard main view - Task management
 
 
 
@@ -58,7 +47,18 @@ Get recent activity feed  Returns activity stream for the timeline UI.
 ---
 
 
-### `addTask`
+### `activity`
+
+Recent activity feed  Returns activity stream for the timeline UI.
+
+
+
+
+
+---
+
+
+### `add`
 
 Add a new task
 
@@ -77,7 +77,7 @@ Add a new task
 ---
 
 
-### `updateTaskStatus`
+### `update`
 
 Update task status
 
@@ -88,6 +88,23 @@ Update task status
 - **`id`** (any) - Task ID
 
 - **`status`** (any) - New status
+
+
+
+
+
+---
+
+
+### `delete`
+
+Delete a task
+
+
+**Parameters:**
+
+
+- **`id`** (any) - Task ID to delete
 
 
 
@@ -147,4 +164,4 @@ This photon automatically installs the following dependencies:
 
 ## 📄 License
 
-MIT • Version 1.4.1
+MIT • Version 1.0.0

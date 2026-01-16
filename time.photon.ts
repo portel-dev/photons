@@ -32,10 +32,10 @@ export default class Time {
   }
 
   /**
-   * Get current time in a specific timezone
+   * Current time in a specific timezone
    * @param timezone IANA timezone name {@example America/New_York}
    */
-  async getCurrentTime(params?: { timezone?: string }) {
+  async now(params?: { timezone?: string }) {
     try {
       const timezone = params?.timezone || this.localTimezone;
 
@@ -107,7 +107,7 @@ export default class Time {
    * @param target_timezone {@min 1} {@max 100} Target IANA timezone {@example Europe/London}
    * @param date {@max 20} {@format date} Date in YYYY-MM-DD format (optional, default: today) {@example 2024-03-15}
    */
-  async convertTime(params: {
+  async convert(params: {
     source_timezone: string;
     time: string;
     target_timezone: string;
@@ -231,7 +231,7 @@ export default class Time {
    * List common IANA timezones by region
    * @param region Filter by region {@example America}
    */
-  async listTimezones(params?: { region?: 'America' | 'Europe' | 'Asia' | 'Africa' | 'Pacific' | 'Atlantic' | 'Indian' }) {
+  async timezones(params?: { region?: 'America' | 'Europe' | 'Asia' | 'Africa' | 'Pacific' | 'Atlantic' | 'Indian' }) {
     try {
       // Common IANA timezones
       const timezones: Record<string, string[]> = {

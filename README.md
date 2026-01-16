@@ -37,7 +37,7 @@ We welcome contributions! Submit pull requests for:
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Code Diagram** | Generate Mermaid diagrams from TypeScript/JavaScript code | 3 | [View →](code-diagram.md) |
 | **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
-| **Dashboard** | Dashboard Photon | 5 | [View →](dashboard.md) |
+| **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
 | **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
@@ -47,7 +47,7 @@ We welcome contributions! Submit pull requests for:
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
-| **Google TV Remote** | Control Google TV and Android TV devices | 36 | [View →](google-tv.md) |
+| **Google TV Remote** | Control Google TV and Android TV devices | 37 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
 | **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |

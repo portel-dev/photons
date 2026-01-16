@@ -32,9 +32,9 @@ Timezone and time conversion operations
 This photon provides **3** tools:
 
 
-### `getCurrentTime`
+### `now`
 
-Get current time in a specific timezone
+Current time in a specific timezone
 
 
 **Parameters:**
@@ -49,7 +49,7 @@ Get current time in a specific timezone
 ---
 
 
-### `convertTime`
+### `convert`
 
 Convert time from one timezone to another
 
@@ -72,7 +72,7 @@ Convert time from one timezone to another
 ---
 
 
-### `listTimezones`
+### `timezones`
 
 List common IANA timezones by region
 

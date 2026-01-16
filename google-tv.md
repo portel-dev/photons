@@ -30,7 +30,7 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **36** tools:
+This photon provides **37** tools:
 
 
 ### `discover`
@@ -61,8 +61,6 @@ Connect to a Google TV / Android TV device Uses generator pattern with ask/emit 
 - **`ip`** (any) - TV IP address (required for first connection)
 
 - **`name`** (any) - Optional friendly name for the TV
-
-- **`pairing_code`** (any) - Pre-provided pairing code (for REST APIs)
 
 
 
@@ -493,6 +491,17 @@ Send a number (0-9)
 
 
 - **`number`** (any) - The number to send (0-9)
+
+
+
+
+
+---
+
+
+### `remoteUI`
+
+Show interactive TV remote control UI
 
 
 

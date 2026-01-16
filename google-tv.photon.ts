@@ -231,13 +231,11 @@ export default class GoogleTV {
    *
    * @param ip TV IP address (required for first connection)
    * @param name Optional friendly name for the TV
-   * @param pairing_code Pre-provided pairing code (for REST APIs)
    * @format table
    */
-  async *connect(params: { ip: string; name?: string; pairing_code?: string } | string) {
+  async *connect(params: { ip: string; name?: string } | string) {
     const ip = typeof params === 'string' ? params : params.ip;
     const name = typeof params === 'object' ? params.name : undefined;
-    const preProvidedCode = typeof params === 'object' ? params.pairing_code : undefined;
 
     if (!AndroidRemote) {
       return {
@@ -307,13 +305,13 @@ export default class GoogleTV {
         // - MCP: elicitation dialog
         // - REST: returns 202 with continuation URL, or uses pre-provided pairing_code
         // - WebSocket: sends ask message, waits for response
-        const code: string = preProvidedCode || (yield {
+        const code: string = yield {
           ask: 'text',
           id: 'pairing_code',
           message: 'Enter the 6-digit pairing code shown on TV:',
           pattern: '^[0-9]{6}$',
           required: true,
-        });
+        };
 
         if (!code) {
           return {
@@ -544,7 +542,8 @@ export default class GoogleTV {
   async volume(params?: { level?: number | string } | number | string) {
     const level = typeof params === 'object' ? params?.level : params;
 
-    if (level !== undefined) {
+    // Treat empty string as undefined (get current volume)
+    if (level !== undefined && level !== '') {
       const result = await this._ensureConnected();
       if (!result.success) return result;
 
@@ -1076,6 +1075,290 @@ export default class GoogleTV {
     return { success: true };
   }
 
+  /**
+   * Show interactive TV remote control UI
+   * @format html
+   */
+  async remoteUI() {
+    const photonName = 'google-tv';
+
+    return `
+<style>
+  .tv-remote-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .tv-remote {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    max-width: 320px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+  }
+  .tv-remote-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .tv-remote-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+  .tv-remote-btn {
+    min-width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+    color: #e2e8f0;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tv-remote-btn:hover {
+    background: linear-gradient(180deg, #3d4a5c 0%, #2a3441 100%);
+    transform: translateY(-1px);
+  }
+  .tv-remote-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .tv-remote-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .tv-remote-btn.power {
+    background: linear-gradient(180deg, #c53030 0%, #9b2c2c 100%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+  }
+  .tv-remote-btn.power:hover {
+    background: linear-gradient(180deg, #e53e3e 0%, #c53030 100%);
+  }
+  .tv-remote-btn.select {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #4a5568 0%, #2d3748 100%);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .tv-remote-btn.nav {
+    width: 64px;
+    height: 48px;
+  }
+  .tv-remote-btn.small {
+    min-width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+  .tv-remote-btn.accent {
+    background: linear-gradient(180deg, #3182ce 0%, #2c5282 100%);
+  }
+  .tv-remote-btn.accent:hover {
+    background: linear-gradient(180deg, #4299e1 0%, #3182ce 100%);
+  }
+  .tv-remote-dpad {
+    display: grid;
+    grid-template-columns: 64px 72px 64px;
+    grid-template-rows: 48px 72px 48px;
+    gap: 4px;
+    align-items: center;
+    justify-items: center;
+  }
+  .tv-remote-label {
+    color: #718096;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+  }
+  .tv-remote-numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 56px);
+    gap: 8px;
+  }
+  .tv-remote-divider {
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #4a5568, transparent);
+    margin: 8px 0;
+  }
+  .tv-remote-status {
+    min-width: 200px;
+    max-width: 300px;
+    padding: 16px;
+    background: #1a1a2e;
+    border-radius: 12px;
+    color: #e2e8f0;
+    font-family: monospace;
+    font-size: 12px;
+  }
+  .tv-remote-status h4 {
+    margin: 0 0 12px 0;
+    color: #718096;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .tv-remote-status .status-line {
+    padding: 8px;
+    background: #16213e;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .tv-remote-status .status-line.success {
+    border-left: 3px solid #48bb78;
+  }
+  .tv-remote-status .status-line.error {
+    border-left: 3px solid #f56565;
+  }
+  .tv-remote-status .status-line.pending {
+    border-left: 3px solid #ecc94b;
+  }
+</style>
+<div class="tv-remote-container">
+  <div class="tv-remote">
+    <!-- Power -->
+    <div class="tv-remote-section">
+      <button class="tv-remote-btn power" onclick="sendCmd(this, 'power', {})" title="Power">⏻</button>
+    </div>
+
+    <div class="tv-remote-divider"></div>
+
+    <!-- Navigation -->
+    <div class="tv-remote-section">
+      <div class="tv-remote-dpad">
+        <div></div>
+        <button class="tv-remote-btn nav" onclick="sendCmd(this, 'up', {})" title="Up">▲</button>
+        <div></div>
+        <button class="tv-remote-btn nav" onclick="sendCmd(this, 'left', {})" title="Left">◀</button>
+        <button class="tv-remote-btn select" onclick="sendCmd(this, 'select', {})" title="OK">OK</button>
+        <button class="tv-remote-btn nav" onclick="sendCmd(this, 'right', {})" title="Right">▶</button>
+        <div></div>
+        <button class="tv-remote-btn nav" onclick="sendCmd(this, 'down', {})" title="Down">▼</button>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Back / Home / Menu -->
+    <div class="tv-remote-row">
+      <button class="tv-remote-btn small" onclick="sendCmd(this, 'back', {})" title="Back">↩</button>
+      <button class="tv-remote-btn small accent" onclick="sendCmd(this, 'home', {})" title="Home">⌂</button>
+      <button class="tv-remote-btn small" onclick="sendCmd(this, 'menu', {})" title="Menu">☰</button>
+    </div>
+
+    <div class="tv-remote-divider"></div>
+
+    <!-- Volume & Mute -->
+    <div class="tv-remote-section">
+      <div class="tv-remote-row">
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'volume', {level: '-5'})" title="Volume Down">🔉</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'mute', {})" title="Mute">🔇</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'volume', {level: '+5'})" title="Volume Up">🔊</button>
+      </div>
+      <span class="tv-remote-label">Volume</span>
+    </div>
+
+    <!-- Media Controls -->
+    <div class="tv-remote-section">
+      <div class="tv-remote-row">
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'rewind', {})" title="Rewind">⏪</button>
+        <button class="tv-remote-btn small accent" onclick="sendCmd(this, 'playPause', {})" title="Play/Pause">⏯</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'forward', {})" title="Forward">⏩</button>
+      </div>
+      <div class="tv-remote-row">
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'previous', {})" title="Previous">⏮</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'stop', {})" title="Stop">⏹</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'next', {})" title="Next">⏭</button>
+      </div>
+      <span class="tv-remote-label">Media</span>
+    </div>
+
+    <div class="tv-remote-divider"></div>
+
+    <!-- Number Pad -->
+    <div class="tv-remote-section">
+      <div class="tv-remote-numpad">
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 1})">1</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 2})">2</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 3})">3</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 4})">4</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 5})">5</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 6})">6</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 7})">7</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 8})">8</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 9})">9</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'channelDown', {})">CH-</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'number', {number: 0})">0</button>
+        <button class="tv-remote-btn small" onclick="sendCmd(this, 'channelUp', {})">CH+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Panel -->
+  <div class="tv-remote-status">
+    <h4>Status</h4>
+    <div id="status-output">
+      <div class="status-line">Ready</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function showStatus(message, type) {
+      type = type || 'success';
+      var output = document.getElementById('status-output');
+      var line = document.createElement('div');
+      line.className = 'status-line ' + type;
+      line.textContent = typeof message === 'object' ? JSON.stringify(message) : message;
+      output.insertBefore(line, output.firstChild);
+      // Keep only last 5 messages
+      while (output.children.length > 5) {
+        output.removeChild(output.lastChild);
+      }
+    }
+
+    // Expose sendCmd globally for onclick handlers
+    // Uses MCP-style postMessage bridge (window.mcp.callTool)
+    window.sendCmd = function(btn, method, args) {
+      btn.disabled = true;
+      showStatus(method + '...', 'pending');
+
+      // Use MCP-style API - works in both BEAM and MCP clients
+      window.mcp.callTool(method, args)
+        .then(function(result) {
+          showStatus(result.message || (result.success ? '✓ ' + method : JSON.stringify(result)), 'success');
+        })
+        .catch(function(err) {
+          showStatus('Error: ' + (err.message || err), 'error');
+        })
+        .finally(function() {
+          btn.disabled = false;
+        });
+    };
+  })();
+<\/script>
+`;
+  }
+
   // Private methods
 
   private _setupEventHandlers() {
@@ -1089,10 +1372,14 @@ export default class GoogleTV {
       this.isPoweredOn = powered;
     });
 
-    this.remote.on('volume', (volume: { level: number; maximum: number; muted: boolean }) => {
-      this.currentVolume = Math.round((volume.level / volume.maximum) * 100);
-      this.currentMaxVolume = volume.maximum;
-      this.isMuted = volume.muted;
+    this.remote.on('volume', (volume: any) => {
+      // Handle both library formats: { level, maximum, muted } or { volumeLevel, volumeMax, volumeMuted }
+      const level = volume.level ?? volume.volumeLevel ?? 0;
+      const max = volume.maximum ?? volume.volumeMax ?? 100;
+      const muted = volume.muted ?? volume.volumeMuted ?? false;
+      this.currentVolume = Math.round((level / max) * 100);
+      this.currentMaxVolume = max;
+      this.isMuted = muted;
     });
 
     this.remote.on('current_app', (app: string) => {

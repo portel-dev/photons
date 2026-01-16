@@ -55,18 +55,19 @@
     },
     {
       "name": "dashboard",
-      "version": "1.4.1",
+      "version": "1.0.0",
       "description": "Dashboard Photon",
-      "author": "Unknown",
+      "author": "Portel",
       "license": "MIT",
       "source": "../dashboard.photon.ts",
-      "hash": "sha256:51ae8ce34e34cdff26e96f7991816c9fe13612ea2d823f2bd2e888dbc6572a2c",
+      "hash": "sha256:3ba265a8927ed8e0a4e07eab1976cf6976fb95eb840575fb6259bf0fefb73ed3",
       "tools": [
-        "getOverview",
-        "getTasks",
-        "getActivity",
-        "addTask",
-        "updateTaskStatus"
+        "overview",
+        "main",
+        "activity",
+        "add",
+        "update",
+        "delete"
       ]
     },
     {
@@ -147,7 +148,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:1c08b72710b578e3582523bc36d228c1d52845cba0ccfc1eb0c7727ca5732c5f",
+      "hash": "sha256:b3c72358b2c7bbcec248cb0f5765124229f280c9590914c376a8a40ea9f84fef",
       "tools": [
         "read",
         "write",
@@ -244,7 +245,7 @@
       "author": "Photon",
       "license": "MIT",
       "source": "../google-tv.photon.ts",
-      "hash": "sha256:9e23f5b8533f2be6aca3aacac3850adadf236a9089827cf52f27732244fd8407",
+      "hash": "sha256:79ae756014c3e8784441d824d3068812be5893aabb8291bfabf17452e539984b",
       "tools": [
         "discover",
         "connect",
@@ -281,7 +282,8 @@
         "channelDown",
         "input",
         "button",
-        "number"
+        "number",
+        "remoteUI"
       ]
     },
     {
@@ -614,11 +616,11 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../time.photon.ts",
-      "hash": "sha256:950f763b18510d9a26160845c3881295eadd7d4756a02d9fe22a235b78b4fe0f",
+      "hash": "sha256:344cdf5e7ba6e86f360f18937373e11c3bac57c6b30d0fab1c9f01c3eb8f8b92",
       "tools": [
-        "getCurrentTime",
-        "convertTime",
-        "listTimezones"
+        "now",
+        "convert",
+        "timezones"
       ]
     },
     {
