@@ -127,7 +127,7 @@ export default class TeamDashboardPhoton extends PhotonMCP {
   constructor() {
     super();
     this.configPath = path.join(PHOTONS_DIR, 'team-dashboard', 'config.json');
-    this.kanbanDataPath = path.join(PHOTONS_DIR, 'kanban', 'data.json');
+    this.kanbanDataPath = path.join(PHOTONS_DIR, 'kanban', 'boards', 'default.json');
   }
 
   private async loadConfig(): Promise<DashboardConfig> {
