@@ -6,3 +6,4 @@ node_modules/
 *.db-shm
 *.db-wal
 .marketplace/_templates/
+CLAUDE.md
