@@ -417,6 +417,123 @@
       background: rgba(255, 107, 107, 0.3);
     }
 
+    /* Comments */
+    .comments-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comments-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .comments-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .comments-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+    }
+
+    .comment {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .comment-author {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .comment-author.human {
+      background: rgba(121, 174, 240, 0.2);
+      color: var(--accent);
+    }
+
+    .comment-author.ai {
+      background: rgba(139, 92, 246, 0.2);
+      color: #a78bfa;
+    }
+
+    .comment-time {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .comment-content {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    .comment-input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .comment-input {
+      flex: 1;
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: inherit;
+      resize: none;
+    }
+
+    .comment-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    .comment-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .comment-count::before {
+      content: '💬';
+      font-size: 10px;
+    }
+
+    .no-comments {
+      text-align: center;
+      padding: 16px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
     /* Empty state */
     .empty-column {
       text-align: center;
@@ -507,6 +624,18 @@
           </div>
         </div>
 
+        <!-- Comments Section (only shown when editing) -->
+        <div class="comments-section" id="comments-section" style="display: none;">
+          <div class="comments-header">
+            <span class="comments-title">Comments</span>
+          </div>
+          <div class="comments-list" id="comments-list"></div>
+          <div class="comment-input-row">
+            <textarea class="comment-input" id="comment-input" rows="2" placeholder="Add a comment..."></textarea>
+            <button type="button" class="btn btn-secondary btn-small" onclick="addComment()">Add</button>
+          </div>
+        </div>
+
         <div class="modal-actions">
           <button type="button" class="btn btn-danger" id="delete-btn" style="display: none; margin-right: auto;" onclick="deleteTask()">Delete</button>
           <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
@@ -585,6 +714,11 @@
         ? `<span class="badge badge-assignee ${task.assignee === 'ai' ? 'ai' : ''}">${task.assignee}</span>`
         : '';
 
+      const commentCount = task.comments?.length || 0;
+      const commentBadge = commentCount > 0
+        ? `<span class="comment-count">${commentCount}</span>`
+        : '';
+
       card.innerHTML = `
         <div class="task-title">${escapeHtml(task.title)}</div>
         ${task.description ? `<div class="task-description">${escapeHtml(task.description)}</div>` : ''}
@@ -592,6 +726,7 @@
           <div class="task-badges">
             <span class="badge badge-priority-${task.priority}">${task.priority}</span>
             ${assigneeBadge}
+            ${commentBadge}
           </div>
           <div class="task-actions">
             <button class="task-action" onclick="openEditTask('${task.id}')" title="Edit">&#9998;</button>
@@ -664,6 +799,7 @@
       document.getElementById('task-priority').value = 'medium';
       document.getElementById('task-assignee').value = '';
       document.getElementById('delete-btn').style.display = 'none';
+      document.getElementById('comments-section').style.display = 'none';
       document.getElementById('task-modal').classList.add('visible');
       document.getElementById('task-title').focus();
     }
@@ -680,12 +816,77 @@
       document.getElementById('task-priority').value = task.priority;
       document.getElementById('task-assignee').value = task.assignee || '';
       document.getElementById('delete-btn').style.display = 'block';
+      document.getElementById('comments-section').style.display = 'block';
+      document.getElementById('comment-input').value = '';
+      renderComments(task.comments || []);
       document.getElementById('task-modal').classList.add('visible');
       document.getElementById('task-title').focus();
     }
 
     function closeModal() {
       document.getElementById('task-modal').classList.remove('visible');
+    }
+
+    // Comments
+    function renderComments(comments) {
+      const list = document.getElementById('comments-list');
+      if (comments.length === 0) {
+        list.innerHTML = '<div class="no-comments">No comments yet</div>';
+        return;
+      }
+      list.innerHTML = comments.map(c => `
+        <div class="comment">
+          <div class="comment-header">
+            <span class="comment-author ${c.author}">${c.author}</span>
+            <span class="comment-time">${formatTime(c.createdAt)}</span>
+          </div>
+          <div class="comment-content">${escapeHtml(c.content)}</div>
+        </div>
+      `).join('');
+      list.scrollTop = list.scrollHeight;
+    }
+
+    function formatTime(isoString) {
+      const date = new Date(isoString);
+      const now = new Date();
+      const diff = now - date;
+      if (diff < 60000) return 'just now';
+      if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+      return date.toLocaleDateString();
+    }
+
+    async function addComment() {
+      const taskId = document.getElementById('task-id').value;
+      const content = document.getElementById('comment-input').value.trim();
+      if (!taskId || !content) return;
+
+      const task = board.tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      // Add to local state
+      const comment = {
+        id: Date.now().toString(36),
+        author: 'human',
+        content,
+        createdAt: new Date().toISOString()
+      };
+      if (!task.comments) task.comments = [];
+      task.comments.push(comment);
+
+      // Update UI
+      document.getElementById('comment-input').value = '';
+      renderComments(task.comments);
+      renderBoard();
+
+      // Persist via MCP
+      try {
+        if (window.photon) {
+          await window.photon.invoke('addComment', { id: taskId, content, author: 'human' });
+        }
+      } catch (err) {
+        console.error('Failed to add comment:', err);
+      }
     }
 
     async function saveTask(e) {
