@@ -1,0 +1,60 @@
+{
+  "name": "default",
+  "columns": ["Backlog", "Todo", "In Progress", "Review", "Done"],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Set up project structure",
+      "description": "Initialize the repository and configure build tools",
+      "column": "Done",
+      "priority": "high",
+      "assignee": "human",
+      "createdAt": "2026-01-16T15:20:14.368Z",
+      "updatedAt": "2026-01-16T15:20:14.368Z",
+      "createdBy": "human"
+    },
+    {
+      "id": "2",
+      "title": "Implement core features",
+      "description": "Build the main functionality",
+      "column": "In Progress",
+      "priority": "high",
+      "assignee": "ai",
+      "createdAt": "2026-01-16T15:20:14.368Z",
+      "updatedAt": "2026-01-16T15:20:14.368Z",
+      "createdBy": "human"
+    },
+    {
+      "id": "3",
+      "title": "Write documentation",
+      "description": "Create README and API docs",
+      "column": "Todo",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-16T15:20:14.368Z",
+      "updatedAt": "2026-01-16T15:20:14.368Z",
+      "createdBy": "human"
+    },
+    {
+      "id": "4",
+      "title": "Add unit tests",
+      "column": "Backlog",
+      "priority": "medium",
+      "createdAt": "2026-01-16T15:20:14.368Z",
+      "updatedAt": "2026-01-16T15:20:14.368Z"
+    },
+    {
+      "id": "5",
+      "title": "Test Kanban integration",
+      "description": "Verify all Kanban methods work correctly",
+      "column": "In Progress",
+      "priority": "high",
+      "assignee": "ai",
+      "createdAt": "2026-01-16T15:31:58.887Z",
+      "updatedAt": "2026-01-16T15:32:58.889Z",
+      "createdBy": "ai"
+    }
+  ],
+  "createdAt": "2026-01-16T15:20:14.368Z",
+  "updatedAt": "2026-01-17T00:20:00.000Z"
+}
