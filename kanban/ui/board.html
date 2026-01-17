@@ -676,6 +676,7 @@
     let draggedTask = null;
     let autoMode = false;
     let autoModeInterval = null;
+    let lastBoardUpdatedAt = null; // Track when board was last updated
     const AUTO_MODE_POLL_MS = 3000; // Check for active board every 3 seconds
 
     // Initialize
@@ -741,6 +742,7 @@
     function disableAutoMode() {
       if (!autoMode) return;
       autoMode = false;
+      lastBoardUpdatedAt = null; // Reset timestamp tracking
       if (autoModeInterval) {
         clearInterval(autoModeInterval);
         autoModeInterval = null;
@@ -748,7 +750,7 @@
       updateAutoModeUI();
     }
 
-    // Check for the most recently active board and switch if different
+    // Check for the most recently active board and switch/reload if changed
     async function checkActiveBoard() {
       if (!window.photon || !autoMode) return;
       try {
@@ -761,11 +763,19 @@
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         );
 
-        const activeBoardName = boards[0].name;
-        if (activeBoardName !== currentBoardName) {
-          const activeBoard = await window.photon.invoke('getBoard', { board: activeBoardName });
-          board = activeBoard;
+        const activeBoard = boards[0];
+        const activeBoardName = activeBoard.name;
+        const activeBoardUpdatedAt = activeBoard.updatedAt;
+
+        // Reload if board changed OR if same board was updated
+        const boardChanged = activeBoardName !== currentBoardName;
+        const boardUpdated = activeBoardUpdatedAt !== lastBoardUpdatedAt;
+
+        if (boardChanged || boardUpdated) {
+          const fullBoard = await window.photon.invoke('getBoard', { board: activeBoardName });
+          board = fullBoard;
           currentBoardName = activeBoardName;
+          lastBoardUpdatedAt = activeBoardUpdatedAt;
           renderBoard();
           updateStats();
           updateAutoModeUI();
