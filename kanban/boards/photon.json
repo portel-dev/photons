@@ -1,0 +1,126 @@
+{
+  "name": "photon",
+  "columns": [
+    "Backlog",
+    "In Progress",
+    "Review",
+    "Done"
+  ],
+  "tasks": [
+    {
+      "id": "mkh3ze72r8lop",
+      "title": "Add photon:call-tool handler in BEAM",
+      "description": "Custom UIs using @ui annotation can now invoke methods via window.photon.invoke()",
+      "column": "Done",
+      "priority": "high",
+      "context": "Fixed message type mismatch - platform bridge sends photon:call-tool but BEAM only handled mcp:tool_call. Commit d1a7616",
+      "links": [
+        "src/auto-ui/beam.ts:9666-9707"
+      ],
+      "createdAt": "2026-01-16T16:44:32.030Z",
+      "updatedAt": "2026-01-16T16:44:32.030Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh3ze8w9zs7o",
+      "title": "Add multi-board support to kanban photon",
+      "description": "Support multiple isolated boards per project with board parameter on all methods",
+      "column": "Done",
+      "priority": "high",
+      "context": "Implemented multi-tenancy: boards/ subdirectory, createBoard/listBoards/deleteBoard, searchTasks across boards, context and links fields for AI memory. Commit 9463b8b",
+      "links": [
+        "kanban.photon.ts"
+      ],
+      "createdAt": "2026-01-16T16:44:32.096Z",
+      "updatedAt": "2026-01-16T16:44:32.096Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh3zea9nntuk",
+      "title": "Enhance team-dashboard with GitHub stats and Focus",
+      "description": "Added Today's Focus from kanban, GitHub issues/PRs for multiple repos",
+      "column": "Done",
+      "priority": "medium",
+      "context": "Dashboard now shows: focus task, GitHub stats (issues/PRs), live service status with response times, kanban progress, commits",
+      "links": [
+        "team-dashboard.photon.ts",
+        "team-dashboard/ui/dashboard.html"
+      ],
+      "createdAt": "2026-01-16T16:44:32.145Z",
+      "updatedAt": "2026-01-16T16:44:32.145Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh3zebj840km",
+      "title": "Push photons repo changes to origin",
+      "description": "17 commits ahead of origin/main - push kanban multi-tenancy and dashboard enhancements",
+      "column": "Backlog",
+      "priority": "medium",
+      "createdAt": "2026-01-16T16:44:32.191Z",
+      "updatedAt": "2026-01-16T16:44:32.191Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh5cua2744yx",
+      "title": "Fix tilde expansion in path-resolver",
+      "description": "BEAM --dir=~/path doesn't work because Node.js doesn't expand ~ like shell does",
+      "column": "Done",
+      "priority": "high",
+      "context": "Fixed in photon-core@2.1.2: expandTilde() helper + fixed file: deps to npm versions. Commits ef5274a, 5eab93c in photon-core",
+      "links": [
+        "photon-core/src/path-resolver.ts"
+      ],
+      "createdAt": "2026-01-16T17:22:59.018Z",
+      "updatedAt": "2026-01-16T17:27:27.907Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh6xhkr8t3ky",
+      "title": "App-mode for full-panel display",
+      "description": "Apps (photons with @ui custom templates) should use the entire right panel without Execute/Data tabs",
+      "column": "Done",
+      "priority": "high",
+      "context": "Complete: App-mode hides method-header/tabs, fills viewport with calc(100vh-40px). Fixed iframe CSS selector to target all iframe types (.html-content-iframe, .custom-ui-iframe, iframe). Fixed selection state management. Commits e7a4d96, ebc9f72, 8af8202, 779cf6d",
+      "links": [
+        "src/auto-ui/beam.ts:5150-5154",
+        "src/auto-ui/beam.ts:6603-6606",
+        "src/auto-ui/beam.ts:2932-2962"
+      ],
+      "createdAt": "2026-01-16T18:07:01.947Z",
+      "updatedAt": "2026-01-17T01:10:44.149Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh6xmho4rlbg",
+      "title": "Add comments to kanban tasks",
+      "description": "Task comments for instructions and AI-human conversations",
+      "column": "Done",
+      "priority": "medium",
+      "context": "Added Comment interface with id, author (human/ai), content, createdAt. Added addComment(), getComments(), getTask() methods. Updated board.html with comments UI in task modal.",
+      "links": [
+        "kanban.photon.ts",
+        "kanban/ui/board.html"
+      ],
+      "createdAt": "2026-01-16T18:07:08.316Z",
+      "updatedAt": "2026-01-16T18:07:08.316Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkh6xqzngb7bm",
+      "title": "Fix kanban UI width/height expansion",
+      "description": "Board UI wasn't expanding to fill available space in BEAM iframe",
+      "column": "Done",
+      "priority": "medium",
+      "context": "Fixed CSS: viewport-based heights instead of percentages (calc(100vh - 32px)), flexbox column layout, min-width 200px. Also updated BEAM iframe height to calc(100vh - 280px).",
+      "links": [
+        "kanban/ui/board.html",
+        "src/auto-ui/beam.ts"
+      ],
+      "createdAt": "2026-01-16T18:07:14.147Z",
+      "updatedAt": "2026-01-16T18:07:14.147Z",
+      "createdBy": "ai"
+    }
+  ],
+  "createdAt": "2026-01-16T16:44:16.065Z",
+  "updatedAt": "2026-01-17T01:10:44.149Z"
+}

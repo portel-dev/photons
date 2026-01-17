@@ -1,6 +1,12 @@
 {
   "name": "default",
-  "columns": ["Backlog", "Todo", "In Progress", "Review", "Done"],
+  "columns": [
+    "Backlog",
+    "Todo",
+    "In Progress",
+    "Review",
+    "Done"
+  ],
   "tasks": [
     {
       "id": "1",
@@ -21,8 +27,16 @@
       "priority": "high",
       "assignee": "ai",
       "createdAt": "2026-01-16T15:20:14.368Z",
-      "updatedAt": "2026-01-16T15:20:14.368Z",
-      "createdBy": "human"
+      "updatedAt": "2026-01-17T01:15:28.735Z",
+      "createdBy": "human",
+      "comments": [
+        {
+          "id": "mkhm8foghlfk3",
+          "author": "human",
+          "content": "Great progress",
+          "createdAt": "2026-01-17T01:15:26.944Z"
+        }
+      ]
     },
     {
       "id": "3",
@@ -56,5 +70,5 @@
     }
   ],
   "createdAt": "2026-01-16T15:20:14.368Z",
-  "updatedAt": "2026-01-17T00:20:00.000Z"
+  "updatedAt": "2026-01-17T01:15:28.735Z"
 }
