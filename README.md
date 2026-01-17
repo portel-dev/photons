@@ -49,7 +49,7 @@ We welcome contributions! Submit pull requests for:
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Google TV Remote** | Control Google TV and Android TV devices | 37 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
-| **Kanban** | Kanban Board Photon | 20 | [View →](kanban.md) |
+| **Kanban** | Kanban Board Photon | 23 | [View →](kanban.md) |
 | **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |

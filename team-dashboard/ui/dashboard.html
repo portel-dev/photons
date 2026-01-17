@@ -27,6 +27,19 @@
       --info: #3b82f6;
     }
 
+    /* Light theme - Zinc scale, Linear/Notion inspired */
+    :root.light {
+      --bg-primary: #f4f4f5;
+      --bg-secondary: #fafafa;
+      --bg-card: #ffffff;
+      --border: #d4d4d8;
+      --text-primary: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #a1a1aa;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.12);
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
       background: var(--bg-primary);
@@ -354,10 +367,22 @@
     .progress-segment.backlog { background: var(--text-muted); }
 
     /* Services Card */
+    .services-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .services-card .card-header {
+      flex-shrink: 0;
+    }
+
     .services-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
     }
 
     .service-item {
@@ -423,13 +448,20 @@
     /* Commits Card */
     .commits-card {
       grid-column: span 2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .commits-card .card-header {
+      flex-shrink: 0;
     }
 
     .commits-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 240px;
+      flex: 1;
+      min-height: 0;
       overflow-y: auto;
     }
 
@@ -650,7 +682,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card services-card">
         <div class="card-header">
           <span class="card-title">Services</span>
         </div>
@@ -836,6 +868,18 @@
       div.textContent = text;
       return div.innerHTML;
     }
+
+    // Listen for theme changes from parent BEAM window
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'photon:theme-change') {
+        const { theme } = event.data;
+        if (theme === 'light') {
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.remove('light');
+        }
+      }
+    });
 
     // Load data
     async function loadData() {

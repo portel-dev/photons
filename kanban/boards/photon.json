@@ -143,8 +143,124 @@
       "createdAt": "2026-01-17T01:32:25.964Z",
       "updatedAt": "2026-01-17T01:32:25.964Z",
       "createdBy": "ai"
+    },
+    {
+      "id": "mkhxmugs4a4de",
+      "title": "Add gear icon to app header for settings access",
+      "description": "Apps in BEAM now show a header bar with gear icon to access configuration methods (like setTeamName, addService, etc.)",
+      "column": "Done",
+      "priority": "medium",
+      "labels": [
+        "beam",
+        "ui"
+      ],
+      "createdAt": "2026-01-17T06:34:35.068Z",
+      "updatedAt": "2026-01-17T06:34:35.068Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkhxmytllmtjl",
+      "title": "Kanban board defaults to Auto mode and remembers selection",
+      "description": "Board selection now persists to localStorage. Defaults to Auto mode on first load.",
+      "column": "Done",
+      "priority": "medium",
+      "labels": [
+        "kanban",
+        "ui"
+      ],
+      "createdAt": "2026-01-17T06:34:40.713Z",
+      "updatedAt": "2026-01-17T06:34:40.713Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkhxotirjq8wz",
+      "title": "Filter app settings menu to show only config methods",
+      "description": "Settings gear shows all methods - should only show configuration methods (set*, *Config, add/remove for settings)",
+      "column": "Done",
+      "priority": "high",
+      "labels": [
+        "beam",
+        "ui",
+        "bug"
+      ],
+      "createdAt": "2026-01-17T06:36:07.155Z",
+      "updatedAt": "2026-01-17T06:36:30.248Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkhxqnclo74io",
+      "title": "Fix app settings filter - too restrictive",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-17T06:37:32.469Z",
+      "updatedAt": "2026-01-17T06:37:49.818Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkhxuibpqyh63",
+      "title": "Add global BEAM settings with theme toggle",
+      "description": "Settings modal works but theme change needs to propagate to app iframes (kanban, team-dashboard, etc.)",
+      "column": "In Progress",
+      "priority": "high",
+      "labels": [
+        "beam",
+        "ui"
+      ],
+      "createdAt": "2026-01-17T06:40:32.581Z",
+      "updatedAt": "2026-01-17T06:49:19.669Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkieygp83no52",
+      "title": "BEAM UI Reorganization: Workspace-Centric Design",
+      "description": "Transform BEAM from sidebar-centric to workspace-centric design with flat photon list and dynamic right panel",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-17T14:39:30.572Z",
+      "updatedAt": "2026-01-17T14:44:58.002Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkieygqb281mq",
+      "title": "Smart Rendering System",
+      "description": "iOS-inspired rendering with field analyzers, layout selectors, and component renderers",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-17T14:39:30.611Z",
+      "updatedAt": "2026-01-17T14:45:05.049Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkieygr2ilm43",
+      "title": "Marketplace Redesign",
+      "description": "App Store-like experience with source management and update awareness",
+      "column": "Done",
+      "priority": "medium",
+      "createdAt": "2026-01-17T14:39:30.638Z",
+      "updatedAt": "2026-01-17T14:45:05.172Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkieygs4x7pga",
+      "title": "Additional Keyboard Shortcuts",
+      "description": "Add t, f, [, ], h, gg, G, p shortcuts",
+      "column": "Done",
+      "priority": "low",
+      "createdAt": "2026-01-17T14:39:30.676Z",
+      "updatedAt": "2026-01-17T14:45:05.280Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkieygt7lszlt",
+      "title": "Channel-Based Pub/Sub for Emit",
+      "description": "Extend daemon for cross-process notifications",
+      "column": "Done",
+      "priority": "medium",
+      "createdAt": "2026-01-17T14:39:30.715Z",
+      "updatedAt": "2026-01-17T14:45:05.399Z",
+      "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-17T01:44:02.675Z"
+  "updatedAt": "2026-01-17T14:45:05.399Z"
 }

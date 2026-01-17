@@ -328,7 +328,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:9de6ea1008e6e281e2ac234ef379b9632a623036f29fdf176a567f79fcfaed1f",
+      "hash": "sha256:a6b8d5101d8fcac12c9e7444f29fb634f754b50678cd13ad75a00f10a3666fa5",
       "tools": [
         "listBoards",
         "createBoard",
@@ -349,7 +349,10 @@
         "addColumn",
         "removeColumn",
         "clearCompleted",
-        "getStats"
+        "getStats",
+        "scheduledArchiveOldTasks",
+        "handleGithubIssue",
+        "batchMoveTasks"
       ]
     },
     {

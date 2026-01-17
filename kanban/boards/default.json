@@ -52,10 +52,10 @@
     {
       "id": "4",
       "title": "Add unit tests",
-      "column": "Backlog",
+      "column": "In Progress",
       "priority": "medium",
       "createdAt": "2026-01-16T15:20:14.368Z",
-      "updatedAt": "2026-01-16T15:20:14.368Z"
+      "updatedAt": "2026-01-17T01:49:32.647Z"
     },
     {
       "id": "5",
@@ -67,8 +67,19 @@
       "createdAt": "2026-01-16T15:31:58.887Z",
       "updatedAt": "2026-01-16T15:32:58.889Z",
       "createdBy": "ai"
+    },
+    {
+      "id": "mkhr65pqf14wu",
+      "title": "Test pub/sub integration",
+      "description": "Testing cross-process notifications",
+      "column": "Todo",
+      "priority": "high",
+      "assignee": "ai",
+      "createdAt": "2026-01-17T03:33:38.798Z",
+      "updatedAt": "2026-01-17T03:33:38.798Z",
+      "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T15:20:14.368Z",
-  "updatedAt": "2026-01-17T01:15:28.735Z"
+  "updatedAt": "2026-01-17T03:33:38.798Z"
 }
