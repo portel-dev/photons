@@ -674,6 +674,9 @@
     let board = window.__PHOTON_DATA__ || { columns: [], tasks: [] };
     let currentBoardName = board.name || 'default';
     let draggedTask = null;
+    let autoMode = false;
+    let autoModeInterval = null;
+    const AUTO_MODE_POLL_MS = 3000; // Check for active board every 3 seconds
 
     // Initialize
     document.addEventListener('DOMContentLoaded', async () => {
@@ -688,27 +691,99 @@
       try {
         const boards = await window.photon.invoke('listBoards', {});
         const selector = document.getElementById('board-selector');
-        selector.innerHTML = boards.map(b =>
-          `<option value="${b.name}" ${b.name === currentBoardName ? 'selected' : ''}>${b.name} (${b.taskCount})</option>`
-        ).join('');
+        const autoSelected = autoMode ? 'selected' : '';
+        const autoLabel = autoMode ? `🔄 Auto (${currentBoardName})` : '🔄 Auto';
+        selector.innerHTML =
+          `<option value="__auto__" ${autoSelected}>${autoLabel}</option>` +
+          boards.map(b =>
+            `<option value="${b.name}" ${!autoMode && b.name === currentBoardName ? 'selected' : ''}>${b.name} (${b.taskCount})</option>`
+          ).join('');
       } catch (err) {
         console.error('Failed to load boards:', err);
       }
     }
 
-    // Switch to a different board
-    async function switchBoard(boardName) {
-      if (!window.photon || !boardName || boardName === currentBoardName) return;
+    // Switch to a different board or enable auto mode
+    async function switchBoard(value) {
+      if (!window.photon) return;
+
+      if (value === '__auto__') {
+        enableAutoMode();
+        return;
+      }
+
+      // Disable auto mode if manually selecting a board
+      disableAutoMode();
+
+      if (!value || value === currentBoardName) return;
       try {
-        const newBoard = await window.photon.invoke('getBoard', { board: boardName });
+        const newBoard = await window.photon.invoke('getBoard', { board: value });
         board = newBoard;
-        currentBoardName = boardName;
+        currentBoardName = value;
         renderBoard();
         updateStats();
       } catch (err) {
         console.error('Failed to switch board:', err);
-        // Reset selector to current board
         document.getElementById('board-selector').value = currentBoardName;
+      }
+    }
+
+    // Enable auto mode - follows the most recently active board
+    function enableAutoMode() {
+      if (autoMode) return;
+      autoMode = true;
+      checkActiveBoard(); // Check immediately
+      autoModeInterval = setInterval(checkActiveBoard, AUTO_MODE_POLL_MS);
+      updateAutoModeUI();
+    }
+
+    // Disable auto mode
+    function disableAutoMode() {
+      if (!autoMode) return;
+      autoMode = false;
+      if (autoModeInterval) {
+        clearInterval(autoModeInterval);
+        autoModeInterval = null;
+      }
+      updateAutoModeUI();
+    }
+
+    // Check for the most recently active board and switch if different
+    async function checkActiveBoard() {
+      if (!window.photon || !autoMode) return;
+      try {
+        // Get all boards and find the most recently updated one
+        const boards = await window.photon.invoke('listBoards', {});
+        if (boards.length === 0) return;
+
+        // Sort by updatedAt descending
+        boards.sort((a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+
+        const activeBoardName = boards[0].name;
+        if (activeBoardName !== currentBoardName) {
+          const activeBoard = await window.photon.invoke('getBoard', { board: activeBoardName });
+          board = activeBoard;
+          currentBoardName = activeBoardName;
+          renderBoard();
+          updateStats();
+          updateAutoModeUI();
+        }
+      } catch (err) {
+        console.error('Failed to check active board:', err);
+      }
+    }
+
+    // Update UI to reflect auto mode state
+    function updateAutoModeUI() {
+      const selector = document.getElementById('board-selector');
+      const autoOption = selector.querySelector('option[value="__auto__"]');
+      if (autoOption) {
+        autoOption.textContent = autoMode ? `🔄 Auto (${currentBoardName})` : '🔄 Auto';
+      }
+      if (autoMode) {
+        selector.value = '__auto__';
       }
     }
 

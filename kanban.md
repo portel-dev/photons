@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **19** tools:
+This photon provides **20** tools:
 
 
 ### `listBoards`
@@ -206,6 +206,17 @@ Get a task with all its details including comments  Returns the full task object
 ### `getBoard`
 
 Get the current board state  Returns all columns and tasks. Useful for AI to understand the full context.
+
+
+
+
+
+---
+
+
+### `getActiveBoard`
+
+Get the most recently active board  Returns the board that was most recently updated (by AI or humans). Useful for AI to know which project currently needs attention, and for the UI "Auto" mode to follow activity across boards.
 
 
 
