@@ -102,38 +102,64 @@
       color: var(--text-primary);
     }
 
-    .board-title-container {
-      position: relative;
-    }
-
-    .board-title-btn {
+    .board-header-left {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-      transition: background 0.15s ease;
-    }
-
-    .board-title-btn:hover {
-      background: var(--bg-tertiary);
+      flex-direction: column;
+      gap: 4px;
     }
 
     .board-title {
       font-size: 20px;
       font-weight: 600;
       color: var(--text-primary);
+      margin: 0;
+      padding: 2px 6px;
+      margin-left: -6px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      outline: none;
+      cursor: text;
+      transition: all 0.15s ease;
     }
 
-    .board-title-arrow {
+    .board-title:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .board-title:focus {
+      background: var(--bg-secondary);
+      border-color: var(--accent);
+    }
+
+    .board-switcher {
+      position: relative;
+    }
+
+    .board-switcher-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      margin-left: -6px;
+      border-radius: 4px;
+      font-size: 12px;
       color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .board-switcher-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .board-switcher-btn svg {
       transition: transform 0.15s ease;
     }
 
-    .board-title-btn[aria-expanded="true"] .board-title-arrow {
+    .board-switcher-btn[aria-expanded="true"] svg {
       transform: rotate(180deg);
     }
 
@@ -739,20 +765,23 @@
 </head>
 <body>
   <div class="header">
-    <div class="board-title-container">
-      <button class="board-title-btn" onclick="toggleBoardMenu()">
-        <span class="board-title" id="board-title">Loading...</span>
-        <svg class="board-title-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
-      <div class="board-menu" id="board-menu">
-        <div class="board-menu-header">Switch Board</div>
-        <div class="board-menu-list" id="board-menu-list"></div>
-        <div class="board-menu-divider"></div>
-        <button class="board-menu-item board-menu-new" onclick="showNewBoardModal(); closeBoardMenu();">
-          <span>+ New Board</span>
+    <div class="board-header-left">
+      <h1 class="board-title" id="board-title" contenteditable="true" spellcheck="false" onclick="selectTitle()" onblur="saveTitle()" onkeydown="handleTitleKey(event)">Loading...</h1>
+      <div class="board-switcher">
+        <button class="board-switcher-btn" onclick="toggleBoardMenu()" title="Switch board">
+          <span class="board-switcher-name" id="board-name">default</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </button>
+        <div class="board-menu" id="board-menu">
+          <div class="board-menu-header">Switch Board</div>
+          <div class="board-menu-list" id="board-menu-list"></div>
+          <div class="board-menu-divider"></div>
+          <button class="board-menu-item board-menu-new" onclick="showNewBoardModal(); closeBoardMenu();">
+            <span>+ New Board</span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="search-container">
@@ -978,10 +1007,15 @@
     function updateBoardMenu(boards) {
       const menuList = document.getElementById('board-menu-list');
       const titleEl = document.getElementById('board-title');
+      const nameEl = document.getElementById('board-name');
 
-      // Update title
-      const displayTitle = autoMode ? `🔄 ${currentBoardName}` : currentBoardName;
-      titleEl.textContent = displayTitle;
+      // Update board name indicator
+      const nameDisplay = autoMode ? `🔄 ${currentBoardName}` : currentBoardName;
+      nameEl.textContent = nameDisplay;
+
+      // Update display title from localStorage or use board name
+      const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
+      titleEl.textContent = savedTitle || currentBoardName;
 
       // Build menu items
       let html = `
@@ -1003,10 +1037,45 @@
       menuList.innerHTML = html;
     }
 
+    // Title editing functions
+    function selectTitle() {
+      const titleEl = document.getElementById('board-title');
+      const range = document.createRange();
+      range.selectNodeContents(titleEl);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+
+    function saveTitle() {
+      const titleEl = document.getElementById('board-title');
+      const newTitle = titleEl.textContent.trim();
+      if (newTitle) {
+        localStorage.setItem(`kanban:title:${currentBoardName}`, newTitle);
+      } else {
+        // Reset to board name if empty
+        titleEl.textContent = currentBoardName;
+        localStorage.removeItem(`kanban:title:${currentBoardName}`);
+      }
+    }
+
+    function handleTitleKey(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('board-title').blur();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        // Restore saved title
+        const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
+        document.getElementById('board-title').textContent = savedTitle || currentBoardName;
+        document.getElementById('board-title').blur();
+      }
+    }
+
     // Toggle board menu visibility
     function toggleBoardMenu() {
       const menu = document.getElementById('board-menu');
-      const btn = document.querySelector('.board-title-btn');
+      const btn = document.querySelector('.board-switcher-btn');
       const isVisible = menu.classList.toggle('visible');
       btn.setAttribute('aria-expanded', isVisible);
     }
@@ -1014,9 +1083,9 @@
     // Close board menu
     function closeBoardMenu() {
       const menu = document.getElementById('board-menu');
-      const btn = document.querySelector('.board-title-btn');
+      const btn = document.querySelector('.board-switcher-btn');
       menu.classList.remove('visible');
-      btn.setAttribute('aria-expanded', 'false');
+      btn?.setAttribute('aria-expanded', 'false');
     }
 
     // Switch to a different board or enable auto mode
@@ -1038,10 +1107,9 @@
         board = newBoard;
         currentBoardName = value;
         localStorage.setItem(BOARD_PREF_KEY, value);
-        document.getElementById('board-title').textContent = value;
         renderBoard();
         updateStats();
-        await loadBoardList(); // Update menu active states
+        await loadBoardList(); // Update title and menu
       } catch (err) {
         console.error('Failed to switch board:', err);
         // Refresh to restore correct state
@@ -1107,9 +1175,7 @@
 
     // Update UI to reflect auto mode state
     function updateAutoModeUI() {
-      const titleEl = document.getElementById('board-title');
-      titleEl.textContent = autoMode ? `🔄 ${currentBoardName}` : currentBoardName;
-      // Reload board list to update menu active states
+      // Reload board list to update title and menu
       loadBoardList();
     }
 
@@ -1557,10 +1623,10 @@
     document.addEventListener('click', (e) => {
       // Close board menu when clicking outside
       const boardMenu = document.getElementById('board-menu');
-      const boardTitleBtn = document.querySelector('.board-title-btn');
+      const boardSwitcherBtn = document.querySelector('.board-switcher-btn');
       if (boardMenu.classList.contains('visible') &&
           !boardMenu.contains(e.target) &&
-          !boardTitleBtn.contains(e.target)) {
+          !boardSwitcherBtn.contains(e.target)) {
         closeBoardMenu();
       }
     });
