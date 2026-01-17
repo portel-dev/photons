@@ -347,6 +347,9 @@ export default class KanbanPhoton extends PhotonMCP {
     board.tasks.push(task);
     await this.saveBoard(board);
 
+    // Notify connected UIs of the change
+    this.emit({ emit: 'board-update', board: board.name });
+
     return task;
   }
 
@@ -374,6 +377,9 @@ export default class KanbanPhoton extends PhotonMCP {
     task.column = params.column;
     task.updatedAt = new Date().toISOString();
     await this.saveBoard(board);
+
+    // Notify connected UIs of the change
+    this.emit({ emit: 'board-update', board: board.name });
 
     return task;
   }
@@ -411,6 +417,10 @@ export default class KanbanPhoton extends PhotonMCP {
     task.updatedAt = new Date().toISOString();
 
     await this.saveBoard(board);
+
+    // Notify connected UIs of the change
+    this.emit({ emit: 'board-update', board: board.name });
+
     return task;
   }
 
@@ -427,6 +437,9 @@ export default class KanbanPhoton extends PhotonMCP {
 
     const [removed] = board.tasks.splice(index, 1);
     await this.saveBoard(board);
+
+    // Notify connected UIs of the change
+    this.emit({ emit: 'board-update', board: board.name });
 
     return { success: true, message: `Deleted task: ${removed.title}` };
   }
@@ -511,6 +524,10 @@ export default class KanbanPhoton extends PhotonMCP {
     task.updatedAt = new Date().toISOString();
 
     await this.saveBoard(board);
+
+    // Notify connected UIs of the change
+    this.emit({ emit: 'board-update', board: board.name });
+
     return comment;
   }
 

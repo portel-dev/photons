@@ -328,7 +328,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:b7f3857590a2de2698e5a05800f2f0af07518ddf62accf25bdf831e5331cdd14",
+      "hash": "sha256:9de6ea1008e6e281e2ac234ef379b9632a623036f29fdf176a567f79fcfaed1f",
       "tools": [
         "listBoards",
         "createBoard",

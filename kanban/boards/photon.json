@@ -54,10 +54,10 @@
       "id": "mkh3zebj840km",
       "title": "Push photons repo changes to origin",
       "description": "17 commits ahead of origin/main - push kanban multi-tenancy and dashboard enhancements",
-      "column": "Backlog",
+      "column": "In Progress",
       "priority": "medium",
       "createdAt": "2026-01-16T16:44:32.191Z",
-      "updatedAt": "2026-01-16T16:44:32.191Z",
+      "updatedAt": "2026-01-17T01:44:02.675Z",
       "createdBy": "ai"
     },
     {
@@ -146,5 +146,5 @@
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-17T01:32:25.964Z"
+  "updatedAt": "2026-01-17T01:44:02.675Z"
 }
