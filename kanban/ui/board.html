@@ -104,8 +104,8 @@
 
     .board-header-left {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
+      align-items: center;
+      gap: 12px;
     }
 
     .board-title {
@@ -120,6 +120,10 @@
       outline: none;
       cursor: text;
       transition: all 0.15s ease;
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .board-title:hover {
@@ -129,6 +133,8 @@
     .board-title:focus {
       background: var(--bg-secondary);
       border-color: var(--accent);
+      max-width: none;
+      overflow: visible;
     }
 
     .board-switcher {
@@ -138,12 +144,11 @@
     .board-switcher-btn {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 2px 6px;
-      margin-left: -6px;
+      padding: 4px;
       border-radius: 4px;
       font-size: 12px;
       color: var(--text-muted);
@@ -151,8 +156,8 @@
     }
 
     .board-switcher-btn:hover {
-      background: var(--bg-tertiary);
       color: var(--text-secondary);
+      background: var(--bg-tertiary);
     }
 
     .board-switcher-btn svg {
@@ -770,7 +775,7 @@
       <div class="board-switcher">
         <button class="board-switcher-btn" onclick="toggleBoardMenu()" title="Switch board">
           <span class="board-switcher-name" id="board-name">default</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </button>
