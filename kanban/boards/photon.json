@@ -119,8 +119,22 @@
       "createdAt": "2026-01-16T18:07:14.147Z",
       "updatedAt": "2026-01-16T18:07:14.147Z",
       "createdBy": "ai"
+    },
+    {
+      "id": "mkhmhlvijlug4",
+      "title": "Add board selector to kanban UI",
+      "description": "Dropdown to switch between boards without reloading the app",
+      "column": "Done",
+      "priority": "high",
+      "context": "Added board selector dropdown in header. All invoke calls now pass currentBoardName. Lists boards with task count. Commit 3fae224 in photons repo.",
+      "links": [
+        "kanban/ui/board.html"
+      ],
+      "createdAt": "2026-01-17T01:22:34.878Z",
+      "updatedAt": "2026-01-17T01:22:34.878Z",
+      "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-17T01:10:44.149Z"
+  "updatedAt": "2026-01-17T01:22:34.878Z"
 }

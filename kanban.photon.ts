@@ -566,6 +566,29 @@ export default class KanbanPhoton extends PhotonMCP {
   }
 
   /**
+   * Get the most recently active board
+   *
+   * Returns the board that was most recently updated (by AI or humans).
+   * Useful for AI to know which project currently needs attention,
+   * and for the UI "Auto" mode to follow activity across boards.
+   *
+   * @example const active = await getActiveBoard();
+   */
+  async getActiveBoard(): Promise<Board> {
+    const boards = await this.listBoards();
+    if (boards.length === 0) {
+      return this.loadBoard('default');
+    }
+
+    // Sort by updatedAt descending, get most recent
+    boards.sort((a, b) =>
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+
+    return this.loadBoard(boards[0].name);
+  }
+
+  /**
    * Add a new column to the board
    */
   async addColumn(params: { board?: string; name: string; position?: number }): Promise<string[]> {
