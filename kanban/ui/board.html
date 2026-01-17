@@ -102,47 +102,120 @@
       color: var(--text-primary);
     }
 
-    .board-selector {
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-left: 12px;
+    .board-title-container {
+      position: relative;
     }
 
-    .board-selector:hover {
-      border-color: var(--accent);
-    }
-
-    .board-selector:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .new-board-btn {
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      width: 32px;
-      height: 32px;
-      font-size: 18px;
-      font-weight: 500;
-      cursor: pointer;
+    .board-title-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
+      gap: 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s ease;
     }
 
-    .new-board-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: white;
+    .board-title-btn:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .board-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .board-title-arrow {
+      color: var(--text-muted);
+      transition: transform 0.15s ease;
+    }
+
+    .board-title-btn[aria-expanded="true"] .board-title-arrow {
+      transform: rotate(180deg);
+    }
+
+    .board-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      min-width: 220px;
+      z-index: 100;
+      display: none;
+      overflow: hidden;
+    }
+
+    .board-menu.visible {
+      display: block;
+    }
+
+    .board-menu-header {
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .board-menu-list {
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .board-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 12px;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.1s ease;
+    }
+
+    .board-menu-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .board-menu-item.active {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+
+    .board-menu-item .task-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .board-menu-item.active .task-count {
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    .board-menu-divider {
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .board-menu-new {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .board-menu-auto {
+      font-style: italic;
     }
 
     .search-container {
@@ -666,12 +739,21 @@
 </head>
 <body>
   <div class="header">
-    <h1>Kanban Board</h1>
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <select id="board-selector" class="board-selector" onchange="switchBoard(this.value)">
-        <option value="">Loading...</option>
-      </select>
-      <button class="new-board-btn" onclick="showNewBoardModal()" title="Create new board">+</button>
+    <div class="board-title-container">
+      <button class="board-title-btn" onclick="toggleBoardMenu()">
+        <span class="board-title" id="board-title">Loading...</span>
+        <svg class="board-title-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="board-menu" id="board-menu">
+        <div class="board-menu-header">Switch Board</div>
+        <div class="board-menu-list" id="board-menu-list"></div>
+        <div class="board-menu-divider"></div>
+        <button class="board-menu-item board-menu-new" onclick="showNewBoardModal(); closeBoardMenu();">
+          <span>+ New Board</span>
+        </button>
+      </div>
     </div>
     <div class="search-container">
       <input type="text" class="search-input" id="search-input" placeholder="Search tasks..." oninput="filterTasks(this.value)">
@@ -820,14 +902,8 @@
           enableAutoMode();
         }
 
-        // Populate selector with correct selection
-        const selector = document.getElementById('board-selector');
-        const autoLabel = autoMode ? `🔄 Auto (${currentBoardName})` : '🔄 Auto';
-        selector.innerHTML =
-          `<option value="__auto__" ${autoMode ? 'selected' : ''}>${autoLabel}</option>` +
-          boards.map(b =>
-            `<option value="${b.name}" ${!autoMode && b.name === currentBoardName ? 'selected' : ''}>${b.name} (${b.taskCount})</option>`
-          ).join('');
+        // Populate board menu
+        updateBoardMenu(boards);
       } catch (err) {
         console.error('Failed to load boards:', err);
       }
@@ -887,22 +963,60 @@
       }
     }
 
-    // Load available boards and populate selector
+    // Load available boards and populate menu
     async function loadBoardList() {
       if (!window.photon) return;
       try {
         const boards = await window.photon.invoke('listBoards', {});
-        const selector = document.getElementById('board-selector');
-        const autoSelected = autoMode ? 'selected' : '';
-        const autoLabel = autoMode ? `🔄 Auto (${currentBoardName})` : '🔄 Auto';
-        selector.innerHTML =
-          `<option value="__auto__" ${autoSelected}>${autoLabel}</option>` +
-          boards.map(b =>
-            `<option value="${b.name}" ${!autoMode && b.name === currentBoardName ? 'selected' : ''}>${b.name} (${b.taskCount})</option>`
-          ).join('');
+        updateBoardMenu(boards);
       } catch (err) {
         console.error('Failed to load boards:', err);
       }
+    }
+
+    // Update board menu with list of boards
+    function updateBoardMenu(boards) {
+      const menuList = document.getElementById('board-menu-list');
+      const titleEl = document.getElementById('board-title');
+
+      // Update title
+      const displayTitle = autoMode ? `🔄 ${currentBoardName}` : currentBoardName;
+      titleEl.textContent = displayTitle;
+
+      // Build menu items
+      let html = `
+        <button class="board-menu-item board-menu-auto ${autoMode ? 'active' : ''}" onclick="switchBoard('__auto__'); closeBoardMenu();">
+          <span>🔄 Auto${autoMode ? ` (${currentBoardName})` : ''}</span>
+        </button>
+      `;
+
+      boards.forEach(b => {
+        const isActive = !autoMode && b.name === currentBoardName;
+        html += `
+          <button class="board-menu-item ${isActive ? 'active' : ''}" onclick="switchBoard('${b.name}'); closeBoardMenu();">
+            <span>${b.name}</span>
+            <span class="task-count">${b.taskCount}</span>
+          </button>
+        `;
+      });
+
+      menuList.innerHTML = html;
+    }
+
+    // Toggle board menu visibility
+    function toggleBoardMenu() {
+      const menu = document.getElementById('board-menu');
+      const btn = document.querySelector('.board-title-btn');
+      const isVisible = menu.classList.toggle('visible');
+      btn.setAttribute('aria-expanded', isVisible);
+    }
+
+    // Close board menu
+    function closeBoardMenu() {
+      const menu = document.getElementById('board-menu');
+      const btn = document.querySelector('.board-title-btn');
+      menu.classList.remove('visible');
+      btn.setAttribute('aria-expanded', 'false');
     }
 
     // Switch to a different board or enable auto mode
@@ -924,11 +1038,14 @@
         board = newBoard;
         currentBoardName = value;
         localStorage.setItem(BOARD_PREF_KEY, value);
+        document.getElementById('board-title').textContent = value;
         renderBoard();
         updateStats();
+        await loadBoardList(); // Update menu active states
       } catch (err) {
         console.error('Failed to switch board:', err);
-        document.getElementById('board-selector').value = currentBoardName;
+        // Refresh to restore correct state
+        await loadBoardList();
       }
     }
 
@@ -990,14 +1107,10 @@
 
     // Update UI to reflect auto mode state
     function updateAutoModeUI() {
-      const selector = document.getElementById('board-selector');
-      const autoOption = selector.querySelector('option[value="__auto__"]');
-      if (autoOption) {
-        autoOption.textContent = autoMode ? `🔄 Auto (${currentBoardName})` : '🔄 Auto';
-      }
-      if (autoMode) {
-        selector.value = '__auto__';
-      }
+      const titleEl = document.getElementById('board-title');
+      titleEl.textContent = autoMode ? `🔄 ${currentBoardName}` : currentBoardName;
+      // Reload board list to update menu active states
+      loadBoardList();
     }
 
     // Render the entire board
@@ -1429,6 +1542,7 @@
         } else {
           closeModal();
           closeNewBoardModal();
+          closeBoardMenu();
         }
       }
 
@@ -1439,7 +1553,18 @@
       }
     });
 
-    // Click outside to close modals
+    // Click outside to close menus/modals
+    document.addEventListener('click', (e) => {
+      // Close board menu when clicking outside
+      const boardMenu = document.getElementById('board-menu');
+      const boardTitleBtn = document.querySelector('.board-title-btn');
+      if (boardMenu.classList.contains('visible') &&
+          !boardMenu.contains(e.target) &&
+          !boardTitleBtn.contains(e.target)) {
+        closeBoardMenu();
+      }
+    });
+
     document.getElementById('task-modal').addEventListener('click', (e) => {
       if (e.target.id === 'task-modal') {
         closeModal();
