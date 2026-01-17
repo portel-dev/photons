@@ -26,6 +26,20 @@
       --column-done: #10b981;
     }
 
+    /* Light theme - Zinc scale, Linear/Notion inspired */
+    :root.light {
+      --bg-primary: #f4f4f5;
+      --bg-secondary: #fafafa;
+      --bg-tertiary: #e4e4e7;
+      --bg-card: #ffffff;
+      --text-primary: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #a1a1aa;
+      --border-color: #d4d4d8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -107,6 +121,73 @@
     .board-selector:focus {
       outline: none;
       border-color: var(--accent);
+    }
+
+    .new-board-btn {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .new-board-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .search-container {
+      position: relative;
+      flex: 1;
+      max-width: 250px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 28px 6px 12px;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .search-clear:hover {
+      color: var(--text-primary);
+    }
+
+    .task-card.hidden {
+      display: none !important;
     }
 
     .board {
@@ -586,9 +667,16 @@
 <body>
   <div class="header">
     <h1>Kanban Board</h1>
-    <select id="board-selector" class="board-selector" onchange="switchBoard(this.value)">
-      <option value="">Loading...</option>
-    </select>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <select id="board-selector" class="board-selector" onchange="switchBoard(this.value)">
+        <option value="">Loading...</option>
+      </select>
+      <button class="new-board-btn" onclick="showNewBoardModal()" title="Create new board">+</button>
+    </div>
+    <div class="search-container">
+      <input type="text" class="search-input" id="search-input" placeholder="Search tasks..." oninput="filterTasks(this.value)">
+      <span class="search-clear" id="search-clear" onclick="clearSearch()" style="display: none;">&times;</span>
+    </div>
     <div class="stats">
       <div class="stat">
         <span>Total:</span>
@@ -669,6 +757,27 @@
     </div>
   </div>
 
+  <!-- New Board Modal -->
+  <div class="modal-overlay" id="new-board-modal">
+    <div class="modal" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Board</h2>
+        <button class="modal-close" onclick="closeNewBoardModal()">&times;</button>
+      </div>
+      <form id="new-board-form" onsubmit="createNewBoard(event)">
+        <div class="form-group">
+          <label class="form-label" for="new-board-name">Board Name *</label>
+          <input type="text" class="form-input" id="new-board-name" required placeholder="e.g., my-project" pattern="[a-zA-Z0-9-_]+" title="Only letters, numbers, hyphens and underscores allowed">
+          <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">Only letters, numbers, hyphens and underscores</small>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeNewBoardModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Board</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     // Board state
     let board = window.__PHOTON_DATA__ || { columns: [], tasks: [] };
@@ -678,16 +787,65 @@
     let autoModeInterval = null;
     let lastBoardUpdatedAt = null; // Track when board was last updated
     const AUTO_MODE_POLL_MS = 10000; // Check for active board every 10 seconds (real-time updates via push)
+    const BOARD_PREF_KEY = 'kanban:selectedBoard'; // localStorage key for remembering board selection
 
     // Initialize
     document.addEventListener('DOMContentLoaded', async () => {
       renderBoard();
       updateStats();
-      await loadBoardList();
+      await loadBoardListAndRestore();
     });
 
-    // Listen for board-update notifications from BEAM
+    // Load boards and restore saved preference (or default to Auto)
+    async function loadBoardListAndRestore() {
+      if (!window.photon) return;
+      try {
+        const boards = await window.photon.invoke('listBoards', {});
+        const savedBoard = localStorage.getItem(BOARD_PREF_KEY);
+        const useAutoMode = !savedBoard || savedBoard === '__auto__';
+
+        // Restore saved board or enable auto mode
+        if (useAutoMode) {
+          enableAutoMode();
+        } else if (boards.some(b => b.name === savedBoard)) {
+          // Saved board exists, load it
+          const newBoard = await window.photon.invoke('getBoard', { board: savedBoard });
+          board = newBoard;
+          currentBoardName = savedBoard;
+          renderBoard();
+          updateStats();
+        } else {
+          // Saved board no longer exists, fall back to auto mode
+          localStorage.removeItem(BOARD_PREF_KEY);
+          enableAutoMode();
+        }
+
+        // Populate selector with correct selection
+        const selector = document.getElementById('board-selector');
+        const autoLabel = autoMode ? `🔄 Auto (${currentBoardName})` : '🔄 Auto';
+        selector.innerHTML =
+          `<option value="__auto__" ${autoMode ? 'selected' : ''}>${autoLabel}</option>` +
+          boards.map(b =>
+            `<option value="${b.name}" ${!autoMode && b.name === currentBoardName ? 'selected' : ''}>${b.name} (${b.taskCount})</option>`
+          ).join('');
+      } catch (err) {
+        console.error('Failed to load boards:', err);
+      }
+    }
+
+    // Listen for messages from BEAM (theme changes, board updates)
     window.addEventListener('message', async (event) => {
+      // Handle theme change from BEAM settings
+      if (event.data?.type === 'photon:theme-change') {
+        const { theme } = event.data;
+        if (theme === 'light') {
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.remove('light');
+        }
+        return;
+      }
+
       if (event.data?.type === 'photon:board-update') {
         const { photon, board: updatedBoard } = event.data;
         // Only refresh if we're showing a kanban board
@@ -753,6 +911,7 @@
 
       if (value === '__auto__') {
         enableAutoMode();
+        localStorage.setItem(BOARD_PREF_KEY, '__auto__');
         return;
       }
 
@@ -764,6 +923,7 @@
         const newBoard = await window.photon.invoke('getBoard', { board: value });
         board = newBoard;
         currentBoardName = value;
+        localStorage.setItem(BOARD_PREF_KEY, value);
         renderBoard();
         updateStats();
       } catch (err) {
@@ -849,6 +1009,11 @@
         const columnEl = createColumn(column);
         boardEl.appendChild(columnEl);
       });
+
+      // Reapply search filter if active
+      if (currentSearchQuery) {
+        filterTasks(currentSearchQuery);
+      }
     }
 
     // Create a column element
@@ -1009,6 +1174,73 @@
 
     function closeModal() {
       document.getElementById('task-modal').classList.remove('visible');
+    }
+
+    // New Board Modal
+    function showNewBoardModal() {
+      document.getElementById('new-board-name').value = '';
+      document.getElementById('new-board-modal').classList.add('visible');
+      document.getElementById('new-board-name').focus();
+    }
+
+    function closeNewBoardModal() {
+      document.getElementById('new-board-modal').classList.remove('visible');
+    }
+
+    async function createNewBoard(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-board-name').value.trim();
+      if (!name) return;
+
+      if (!window.photon) {
+        alert('Photon connection not available');
+        return;
+      }
+
+      try {
+        await window.photon.invoke('createBoard', { name });
+        closeNewBoardModal();
+
+        // Refresh board list and switch to new board
+        await loadBoardList();
+        await switchBoard(name);
+      } catch (err) {
+        alert('Failed to create board: ' + err.message);
+      }
+    }
+
+    // Search/Filter tasks
+    let currentSearchQuery = '';
+
+    function filterTasks(query) {
+      currentSearchQuery = query.toLowerCase().trim();
+      const clearBtn = document.getElementById('search-clear');
+      clearBtn.style.display = currentSearchQuery ? 'block' : 'none';
+
+      const cards = document.querySelectorAll('.task-card');
+      cards.forEach(card => {
+        if (!currentSearchQuery) {
+          card.classList.remove('hidden');
+          return;
+        }
+
+        const title = card.querySelector('.task-title')?.textContent?.toLowerCase() || '';
+        const description = card.querySelector('.task-description')?.textContent?.toLowerCase() || '';
+        const labels = Array.from(card.querySelectorAll('.label')).map(l => l.textContent.toLowerCase()).join(' ');
+        const assignee = card.querySelector('.assignee')?.textContent?.toLowerCase() || '';
+
+        const matches = title.includes(currentSearchQuery) ||
+                       description.includes(currentSearchQuery) ||
+                       labels.includes(currentSearchQuery) ||
+                       assignee.includes(currentSearchQuery);
+
+        card.classList.toggle('hidden', !matches);
+      });
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      filterTasks('');
     }
 
     // Comments
@@ -1187,15 +1419,36 @@
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
+      const searchInput = document.getElementById('search-input');
+      const isInInput = document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA';
+
       if (e.key === 'Escape') {
+        if (document.activeElement === searchInput) {
+          clearSearch();
+          searchInput.blur();
+        } else {
+          closeModal();
+          closeNewBoardModal();
+        }
+      }
+
+      // / or Cmd+K to focus search (when not in an input)
+      if (!isInInput && (e.key === '/' || (e.metaKey && e.key === 'k'))) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    // Click outside to close modals
+    document.getElementById('task-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'task-modal') {
         closeModal();
       }
     });
 
-    // Click outside to close modal
-    document.getElementById('task-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'task-modal') {
-        closeModal();
+    document.getElementById('new-board-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'new-board-modal') {
+        closeNewBoardModal();
       }
     });
   </script>
