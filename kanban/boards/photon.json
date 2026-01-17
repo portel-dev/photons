@@ -133,8 +133,18 @@
       "createdAt": "2026-01-17T01:22:34.878Z",
       "updatedAt": "2026-01-17T01:22:34.878Z",
       "createdBy": "ai"
+    },
+    {
+      "id": "mkhmu9yku0p3b",
+      "title": "Board selector and Auto mode for kanban UI",
+      "description": "Added dropdown to switch boards and Auto mode that follows most recently active board",
+      "column": "Done",
+      "priority": "medium",
+      "createdAt": "2026-01-17T01:32:25.964Z",
+      "updatedAt": "2026-01-17T01:32:25.964Z",
+      "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-17T01:22:34.878Z"
+  "updatedAt": "2026-01-17T01:32:25.964Z"
 }
