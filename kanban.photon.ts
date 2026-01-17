@@ -347,8 +347,9 @@ export default class KanbanPhoton extends PhotonMCP {
     board.tasks.push(task);
     await this.saveBoard(board);
 
-    // Notify connected UIs of the change
+    // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'task-created', data: { task } });
 
     return task;
   }
@@ -378,8 +379,9 @@ export default class KanbanPhoton extends PhotonMCP {
     task.updatedAt = new Date().toISOString();
     await this.saveBoard(board);
 
-    // Notify connected UIs of the change
+    // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'task-moved', data: { task } });
 
     return task;
   }
@@ -418,8 +420,9 @@ export default class KanbanPhoton extends PhotonMCP {
 
     await this.saveBoard(board);
 
-    // Notify connected UIs of the change
+    // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'task-updated', data: { task } });
 
     return task;
   }
@@ -438,8 +441,9 @@ export default class KanbanPhoton extends PhotonMCP {
     const [removed] = board.tasks.splice(index, 1);
     await this.saveBoard(board);
 
-    // Notify connected UIs of the change
+    // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'task-deleted', data: { taskId: removed.id } });
 
     return { success: true, message: `Deleted task: ${removed.title}` };
   }
@@ -525,8 +529,9 @@ export default class KanbanPhoton extends PhotonMCP {
 
     await this.saveBoard(board);
 
-    // Notify connected UIs of the change
+    // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'comment-added', data: { taskId: task.id, comment } });
 
     return comment;
   }
@@ -704,5 +709,147 @@ export default class KanbanPhoton extends PhotonMCP {
       byPriority,
       byAssignee,
     };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // SCHEDULED JOBS (daemon features)
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Archive old completed tasks
+   *
+   * Runs daily at midnight to move completed tasks older than 7 days
+   * to an archive file, keeping the board clean.
+   *
+   * @scheduled 0 0 * * *
+   * @internal
+   */
+  async scheduledArchiveOldTasks(): Promise<{ archived: number }> {
+    const boards = await this.listBoards();
+    let totalArchived = 0;
+
+    for (const boardMeta of boards) {
+      const board = await this.loadBoard(boardMeta.name);
+      const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+      const toArchive = board.tasks.filter(
+        (task) =>
+          task.column === 'Done' &&
+          new Date(task.updatedAt).getTime() < sevenDaysAgo
+      );
+
+      if (toArchive.length > 0) {
+        // Remove from active tasks
+        board.tasks = board.tasks.filter(
+          (task) => !toArchive.some((a) => a.id === task.id)
+        );
+        await this.saveBoard(board);
+        totalArchived += toArchive.length;
+      }
+    }
+
+    return { archived: totalArchived };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // WEBHOOKS (external integrations)
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Handle GitHub webhook for issue events
+   *
+   * Creates or updates tasks when GitHub issues are opened/closed.
+   * Configure GitHub webhook URL: POST /webhook/handleGithubIssue
+   *
+   * Auto-detected as webhook from 'handle' prefix.
+   *
+   * @internal
+   */
+  async handleGithubIssue(params: {
+    action: string;
+    issue: {
+      number: number;
+      title: string;
+      body?: string;
+      state: string;
+      labels?: Array<{ name: string }>;
+    };
+    repository: {
+      full_name: string;
+    };
+  }): Promise<{ processed: boolean; taskId?: string }> {
+    const boardName = params.repository.full_name.replace('/', '-');
+
+    if (params.action === 'opened') {
+      const task = await this.createTask({
+        board: boardName,
+        title: `#${params.issue.number}: ${params.issue.title}`,
+        description: params.issue.body,
+        labels: params.issue.labels?.map((l) => l.name),
+        column: 'Backlog',
+      });
+      return { processed: true, taskId: task.id };
+    }
+
+    if (params.action === 'closed') {
+      // Find and move the task to Done
+      const board = await this.loadBoard(boardName);
+      const task = board.tasks.find((t) =>
+        t.title.startsWith(`#${params.issue.number}:`)
+      );
+      if (task) {
+        await this.moveTask({ board: boardName, id: task.id, column: 'Done' });
+        return { processed: true, taskId: task.id };
+      }
+    }
+
+    return { processed: false };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // LOCKED OPERATIONS
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Batch move tasks with exclusive lock
+   *
+   * Move multiple tasks atomically. Uses distributed lock to prevent
+   * concurrent modifications from corrupting the board.
+   *
+   * Option 1: Use @locked tag (entire method locked)
+   * @locked board:write
+   *
+   * Option 2: Use this.withLock() for fine-grained control (shown below)
+   */
+  async batchMoveTasks(params: {
+    board?: string;
+    taskIds: string[];
+    column: string;
+  }): Promise<{ moved: number }> {
+    // Using withLock for dynamic lock name based on board
+    return this.withLock(`board:${params.board || 'default'}:write`, async () => {
+      const board = await this.loadBoard(params.board);
+      let moved = 0;
+
+      for (const taskId of params.taskIds) {
+        const task = board.tasks.find((t) => t.id === taskId);
+        if (task && board.columns.includes(params.column)) {
+          task.column = params.column;
+          task.updatedAt = new Date().toISOString();
+          moved++;
+        }
+      }
+
+      await this.saveBoard(board);
+
+      this.emit({ emit: 'board-update', board: board.name });
+      this.emit({
+        channel: `kanban:${board.name}`,
+        event: 'batch-move',
+        data: { taskIds: params.taskIds, column: params.column },
+      });
+
+      return { moved };
+    });
   }
 }

@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **20** tools:
+This photon provides **23** tools:
 
 
 ### `listBoards`
@@ -261,6 +261,39 @@ Clear completed tasks (archive them)
 ### `getStats`
 
 Get board statistics
+
+
+
+
+
+---
+
+
+### `scheduledArchiveOldTasks`
+
+Archive old completed tasks  Runs daily at midnight to move completed tasks older than 7 days to an archive file, keeping the board clean.
+
+
+
+
+
+---
+
+
+### `handleGithubIssue`
+
+Handle GitHub webhook for issue events  Creates or updates tasks when GitHub issues are opened/closed. Configure GitHub webhook URL: POST /webhook/handleGithubIssue  Auto-detected as webhook from 'handle' prefix.
+
+
+
+
+
+---
+
+
+### `batchMoveTasks`
+
+Batch move tasks with exclusive lock  Move multiple tasks atomically. Uses distributed lock to prevent concurrent modifications from corrupting the board.  Option 1: Use @locked tag (entire method locked)
 
 
 

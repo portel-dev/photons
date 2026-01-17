@@ -144,13 +144,12 @@
     .board-switcher-btn {
       display: flex;
       align-items: center;
-      gap: 3px;
+      justify-content: center;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px;
       border-radius: 4px;
-      font-size: 12px;
       color: var(--text-muted);
       transition: all 0.15s ease;
     }
@@ -158,14 +157,6 @@
     .board-switcher-btn:hover {
       color: var(--text-secondary);
       background: var(--bg-tertiary);
-    }
-
-    .board-switcher-btn svg {
-      transition: transform 0.15s ease;
-    }
-
-    .board-switcher-btn[aria-expanded="true"] svg {
-      transform: rotate(180deg);
     }
 
     .board-menu {
@@ -774,9 +765,11 @@
       <h1 class="board-title" id="board-title" contenteditable="true" spellcheck="false" onclick="selectTitle()" onblur="saveTitle()" onkeydown="handleTitleKey(event)">Loading...</h1>
       <div class="board-switcher">
         <button class="board-switcher-btn" onclick="toggleBoardMenu()" title="Switch board">
-          <span class="board-switcher-name" id="board-name">default</span>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="6 9 12 15 18 9"></polyline>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
           </svg>
         </button>
         <div class="board-menu" id="board-menu">
@@ -1012,11 +1005,6 @@
     function updateBoardMenu(boards) {
       const menuList = document.getElementById('board-menu-list');
       const titleEl = document.getElementById('board-title');
-      const nameEl = document.getElementById('board-name');
-
-      // Update board name indicator
-      const nameDisplay = autoMode ? `🔄 ${currentBoardName}` : currentBoardName;
-      nameEl.textContent = nameDisplay;
 
       // Update display title from localStorage or use board name
       const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
