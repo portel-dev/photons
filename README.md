@@ -39,6 +39,7 @@ We welcome contributions! Submit pull requests for:
 | **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
 | **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
+| **Demo Photon** | Comprehensive feature demonstration | 21 | [View →](demo.md) |
 | **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
@@ -71,7 +72,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 35 photons ready to use
+**Total:** 36 photons ready to use
 
 ---
 
@@ -115,7 +116,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 35 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 36 focused tools at its fingertips.
 
 ---
 
@@ -181,7 +182,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 35 production-ready photons available
+- 📦 36 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

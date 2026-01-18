@@ -85,6 +85,38 @@
       ]
     },
     {
+      "name": "demo",
+      "version": "1.0.0",
+      "description": "Demo Photon - Comprehensive feature demonstration",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../demo.photon.ts",
+      "hash": "sha256:cbccda43fb421221445eddbf0bd99252d06197bdb25eadb6224750bc0f09b38c",
+      "tools": [
+        "getString",
+        "getNumber",
+        "getBoolean",
+        "getObject",
+        "getArray",
+        "echo",
+        "add",
+        "greet",
+        "setLogLevel",
+        "showProgress",
+        "showSpinner",
+        "askName",
+        "confirmAction",
+        "selectOption",
+        "multiStepForm",
+        "counter",
+        "todos",
+        "getUsers",
+        "getDocs",
+        "getTree",
+        "getConfig"
+      ]
+    },
+    {
       "name": "discord",
       "version": "1.4.1",
       "description": "Discord - Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation",
