@@ -375,6 +375,7 @@
       padding: 12px;
       cursor: grab;
       transition: all 0.15s ease;
+      position: relative;
     }
 
     .task-card:hover {
@@ -392,35 +393,217 @@
       transform: rotate(3deg);
     }
 
+    .task-badges {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+      justify-content: flex-end;
+    }
+
     .task-title {
       font-size: 14px;
       font-weight: 500;
-      margin-bottom: 8px;
       line-height: 1.4;
+      margin-bottom: 8px;
     }
 
     .task-description {
       font-size: 12px;
       color: var(--text-secondary);
-      margin-bottom: 10px;
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      line-height: 1.6;
+    }
+
+    .task-description:not(:empty) {
+      margin-bottom: 8px;
+    }
+
+    /* Progress rows for checkbox groups */
+    .task-progress {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .progress-row {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+      padding: 8px 8px 6px 8px;
+      border-radius: 6px;
+      line-height: 1.4;
       overflow: hidden;
     }
 
-    .task-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+    .progress-row .progress-count {
+      font-weight: 600;
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
     }
 
-    .task-badges {
+    .progress-row .progress-count.complete {
+      color: var(--column-done);
+    }
+
+    .progress-row .progress-label {
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .progress-row .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+    }
+
+    .progress-row .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    .progress-row .progress-bar-fill.complete {
+      background: var(--column-done);
+    }
+
+    /* Markdown rendered content */
+    .task-description h1, .task-description h2, .task-description h3 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 8px 0 4px 0;
+    }
+
+    .task-description h1:first-child, .task-description h2:first-child, .task-description h3:first-child {
+      margin-top: 0;
+    }
+
+    .task-description ul, .task-description ol {
+      margin: 4px 0;
+      padding-left: 16px;
+    }
+
+    .task-description li {
+      margin: 2px 0;
+    }
+
+    .task-description code {
+      background: var(--bg-tertiary);
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    .task-description pre {
+      background: var(--bg-tertiary);
+      padding: 8px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 6px 0;
+    }
+
+    .task-description pre code {
+      padding: 0;
+      background: none;
+    }
+
+    .task-description strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .task-description a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .task-description a:hover {
+      text-decoration: underline;
+    }
+
+    /* Interactive checkboxes - checklist style with good spacing */
+    .task-description .md-checkbox-item {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 6px;
+      margin: 2px -6px;
+      border-radius: 4px;
+      transition: background 0.1s ease;
+    }
+
+    .task-description .md-checkbox-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .task-description .md-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      border: 2px solid var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1px;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .task-description .md-checkbox:hover {
+      border-color: var(--accent);
+    }
+
+    .task-description .md-checkbox:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .task-description .md-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .task-description .md-checkbox-label {
+      cursor: pointer;
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .task-description .md-checkbox-label.checked {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* Regular list items */
+    .task-description .md-list-item {
+      padding: 2px 0;
+      padding-left: 4px;
+    }
+
+    .task-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
     }
 
     .badge {
@@ -473,6 +656,15 @@
 
     .task-action.delete:hover {
       color: var(--priority-high);
+    }
+
+    /* Hide footer when empty and no hover */
+    .task-footer:empty {
+      display: none;
+    }
+
+    .task-footer {
+      min-height: 20px;
     }
 
     /* Modal */
@@ -757,6 +949,136 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #444;
     }
+
+    /* Detail View Modal */
+    .detail-modal {
+      max-width: 640px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-title-row {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .detail-title {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0;
+      word-wrap: break-word;
+    }
+
+    .detail-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .detail-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px 0;
+    }
+
+    .detail-description {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    .detail-description code {
+      word-break: break-word;
+    }
+
+    .detail-description:empty::before {
+      content: 'No description';
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Detail view checkbox styling - larger for readability */
+    .detail-description .md-checkbox-item {
+      padding: 8px 8px;
+      margin: 4px -8px;
+    }
+
+    .detail-description .md-checkbox-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .detail-description .md-checkbox {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+    }
+
+    .detail-description .md-checkbox-label {
+      font-size: 14px;
+    }
+
+    .detail-description h1, .detail-description h2, .detail-description h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 16px 0 8px 0;
+    }
+
+    .detail-description h1:first-child, .detail-description h2:first-child, .detail-description h3:first-child {
+      margin-top: 0;
+    }
+
+    .detail-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .detail-column-select {
+      padding: 6px 10px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .detail-column-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Make card clickable */
+    .task-card {
+      cursor: pointer;
+    }
+
+    .task-card .task-actions {
+      position: relative;
+      z-index: 1;
+    }
   </style>
 </head>
 <body>
@@ -884,6 +1206,34 @@
           <button type="submit" class="btn btn-primary">Create Board</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Detail View Modal -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal detail-modal">
+      <div class="detail-header">
+        <div class="detail-title-row">
+          <h2 class="detail-title" id="detail-title"></h2>
+          <div class="detail-meta">
+            <span class="badge" id="detail-priority"></span>
+            <span class="badge badge-assignee" id="detail-assignee" style="display: none;"></span>
+            <span class="comment-count" id="detail-comments" style="display: none;"></span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeDetailView()">&times;</button>
+      </div>
+      <div class="detail-body">
+        <div class="detail-description task-description" id="detail-description"></div>
+      </div>
+      <div class="detail-footer">
+        <select class="detail-column-select" id="detail-column" onchange="moveTaskFromDetail()">
+        </select>
+        <div class="detail-actions">
+          <button class="btn btn-secondary" onclick="openEditFromDetail()">Edit</button>
+          <button class="btn btn-danger" onclick="deleteFromDetail()">Delete</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1221,6 +1571,134 @@
       return columnEl;
     }
 
+    // Parse checkbox groups from description for compact card view
+    function parseCheckboxGroups(text) {
+      if (!text) return [];
+
+      const groups = [];
+      const lines = text.split('\n');
+      let currentGroup = null;
+
+      for (const line of lines) {
+        // Check for header (## or ###) - starts a new group
+        const headerMatch = line.match(/^#{1,3}\s+(.+)$/);
+        if (headerMatch) {
+          if (currentGroup && currentGroup.total > 0) {
+            groups.push(currentGroup);
+          }
+          currentGroup = { label: headerMatch[1].trim(), checked: 0, total: 0 };
+          continue;
+        }
+
+        // Check for checkbox
+        const checkboxMatch = line.match(/^(\s*)- \[([ xX])\]/);
+        if (checkboxMatch) {
+          // If no current group, create a default one
+          if (!currentGroup) {
+            currentGroup = { label: 'Tasks', checked: 0, total: 0 };
+          }
+          currentGroup.total++;
+          if (checkboxMatch[2].toLowerCase() === 'x') {
+            currentGroup.checked++;
+          }
+        }
+      }
+
+      // Push the last group
+      if (currentGroup && currentGroup.total > 0) {
+        groups.push(currentGroup);
+      }
+
+      return groups;
+    }
+
+    // Simple markdown renderer with interactive checkboxes
+    function renderMarkdown(text, taskId) {
+      if (!text) return '';
+
+      let html = escapeHtml(text);
+
+      // Convert checkboxes: - [ ] and - [x]
+      // We'll use a unique index for each checkbox to track them
+      let checkboxIndex = 0;
+      html = html.replace(/^(\s*)- \[([ xX])\] (.*)$/gm, (match, indent, checked, label) => {
+        const isChecked = checked.toLowerCase() === 'x';
+        const idx = checkboxIndex++;
+        return `<div class="md-checkbox-item"><input type="checkbox" class="md-checkbox" data-task-id="${taskId}" data-checkbox-idx="${idx}" ${isChecked ? 'checked' : ''} onclick="handleCheckboxToggle(event, '${taskId}', ${idx})"><span class="md-checkbox-label ${isChecked ? 'checked' : ''}">${label}</span></div>`;
+      });
+
+      // Convert regular list items: - item (not checkboxes)
+      html = html.replace(/^- (?!\[)(.*)$/gm, '<div class="md-list-item">• $1</div>');
+
+      // Headers (## and ###)
+      html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+
+      // Bold **text** or __text__
+      html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+
+      // Italic *text* or _text_
+      html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+      // Inline code `code`
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // Links [text](url)
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" onclick="event.stopPropagation()">$1</a>');
+
+      // Line breaks - but not after block elements
+      html = html.replace(/(<\/div>|<\/h[123]>)\n/g, '$1');
+      html = html.replace(/\n/g, '<br>');
+
+      return html;
+    }
+
+    // Handle checkbox toggle - update task description
+    async function handleCheckboxToggle(event, taskId, checkboxIdx) {
+      event.stopPropagation(); // Prevent card drag
+
+      const task = board.tasks.find(t => t.id === taskId);
+      if (!task || !task.description) return;
+
+      // Find and toggle the checkbox in the raw description
+      let idx = 0;
+      const newDescription = task.description.replace(/^(\s*)- \[([ xX])\] (.*)$/gm, (match, indent, checked, label) => {
+        if (idx === checkboxIdx) {
+          idx++;
+          const newChecked = checked === ' ' ? 'x' : ' ';
+          return `${indent}- [${newChecked}] ${label}`;
+        }
+        idx++;
+        return match;
+      });
+
+      // Update local state
+      task.description = newDescription;
+
+      // Update the label styling immediately
+      const checkbox = event.target;
+      const label = checkbox.nextElementSibling;
+      if (label) {
+        label.classList.toggle('checked', checkbox.checked);
+      }
+
+      // Persist via MCP
+      try {
+        if (window.photon) {
+          await window.photon.invoke('updateTask', {
+            board: currentBoardName,
+            id: taskId,
+            description: newDescription
+          });
+        }
+      } catch (err) {
+        console.error('Failed to update task checkbox:', err);
+      }
+    }
+
     // Create a task card element
     function createTaskCard(task) {
       const card = document.createElement('div');
@@ -1231,6 +1709,15 @@
       card.ondragstart = (e) => handleDragStart(e, task);
       card.ondragend = handleDragEnd;
 
+      // Click to open detail view
+      card.onclick = (e) => {
+        // Don't open detail view if clicking on action buttons
+        if (e.target.closest('.task-actions')) return;
+        openDetailView(task.id);
+      };
+
+      const priorityBadge = `<span class="badge badge-priority-${task.priority}">${task.priority}</span>`;
+
       const assigneeBadge = task.assignee
         ? `<span class="badge badge-assignee ${task.assignee === 'ai' ? 'ai' : ''}">${task.assignee}</span>`
         : '';
@@ -1240,18 +1727,39 @@
         ? `<span class="comment-count">${commentCount}</span>`
         : '';
 
+      // Parse checkbox groups for compact progress view
+      const checkboxGroups = parseCheckboxGroups(task.description);
+      let progressHtml = '';
+
+      if (checkboxGroups.length > 0) {
+        const progressRows = checkboxGroups.map(group => {
+          const percent = group.total > 0 ? Math.round((group.checked / group.total) * 100) : 0;
+          const isComplete = group.checked === group.total;
+          return `
+            <div class="progress-row">
+              <span class="progress-count ${isComplete ? 'complete' : ''}">${group.checked}/${group.total}</span>
+              <span class="progress-label">${escapeHtml(group.label)}</span>
+              <div class="progress-bar">
+                <div class="progress-bar-fill ${isComplete ? 'complete' : ''}" style="width: ${percent}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        progressHtml = `<div class="task-progress">${progressRows}</div>`;
+      }
+
       card.innerHTML = `
+        <div class="task-badges">
+          ${priorityBadge}
+          ${assigneeBadge}
+          ${commentBadge}
+        </div>
         <div class="task-title">${escapeHtml(task.title)}</div>
-        ${task.description ? `<div class="task-description">${escapeHtml(task.description)}</div>` : ''}
-        <div class="task-meta">
-          <div class="task-badges">
-            <span class="badge badge-priority-${task.priority}">${task.priority}</span>
-            ${assigneeBadge}
-            ${commentBadge}
-          </div>
+        ${progressHtml}
+        <div class="task-footer">
           <div class="task-actions">
-            <button class="task-action" onclick="openEditTask('${task.id}')" title="Edit">&#9998;</button>
-            <button class="task-action delete" onclick="confirmDelete('${task.id}')" title="Delete">&times;</button>
+            <button class="task-action" onclick="event.stopPropagation(); openEditTask('${task.id}')" title="Edit">&#9998;</button>
+            <button class="task-action delete" onclick="event.stopPropagation(); confirmDelete('${task.id}')" title="Delete">&times;</button>
           </div>
         </div>
       `;
@@ -1346,6 +1854,87 @@
 
     function closeModal() {
       document.getElementById('task-modal').classList.remove('visible');
+    }
+
+    // Detail View Modal
+    let currentDetailTaskId = null;
+
+    function openDetailView(taskId) {
+      const task = board.tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      currentDetailTaskId = taskId;
+
+      // Set title
+      document.getElementById('detail-title').textContent = task.title;
+
+      // Set priority badge
+      const priorityEl = document.getElementById('detail-priority');
+      priorityEl.textContent = task.priority;
+      priorityEl.className = `badge badge-priority-${task.priority}`;
+
+      // Set assignee badge
+      const assigneeEl = document.getElementById('detail-assignee');
+      if (task.assignee) {
+        assigneeEl.textContent = task.assignee;
+        assigneeEl.className = `badge badge-assignee ${task.assignee === 'ai' ? 'ai' : ''}`;
+        assigneeEl.style.display = '';
+      } else {
+        assigneeEl.style.display = 'none';
+      }
+
+      // Set comment count
+      const commentsEl = document.getElementById('detail-comments');
+      const commentCount = task.comments?.length || 0;
+      if (commentCount > 0) {
+        commentsEl.textContent = commentCount;
+        commentsEl.style.display = '';
+      } else {
+        commentsEl.style.display = 'none';
+      }
+
+      // Render description with interactive checkboxes
+      document.getElementById('detail-description').innerHTML = renderMarkdown(task.description || '', taskId);
+
+      // Populate column select
+      const columnSelect = document.getElementById('detail-column');
+      columnSelect.innerHTML = board.columns.map(col =>
+        `<option value="${col}" ${col === task.column ? 'selected' : ''}>${col}</option>`
+      ).join('');
+
+      document.getElementById('detail-modal').classList.add('visible');
+    }
+
+    function closeDetailView() {
+      document.getElementById('detail-modal').classList.remove('visible');
+      currentDetailTaskId = null;
+    }
+
+    async function moveTaskFromDetail() {
+      if (!currentDetailTaskId) return;
+      const newColumn = document.getElementById('detail-column').value;
+
+      try {
+        await window.photon.invoke('moveTask', { id: currentDetailTaskId, column: newColumn });
+        // Update local state
+        const task = board.tasks.find(t => t.id === currentDetailTaskId);
+        if (task) task.column = newColumn;
+        renderBoard();
+      } catch (err) {
+        console.error('Failed to move task:', err);
+      }
+    }
+
+    function openEditFromDetail() {
+      if (!currentDetailTaskId) return;
+      closeDetailView();
+      openEditTask(currentDetailTaskId);
+    }
+
+    function deleteFromDetail() {
+      if (!currentDetailTaskId) return;
+      closeDetailView();
+      confirmDelete(currentDetailTaskId);
     }
 
     // New Board Modal
