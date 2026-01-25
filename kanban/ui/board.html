@@ -1248,6 +1248,21 @@
     </div>
   </div>
 
+  <!-- Confirm Delete Modal -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="modal" style="max-width: 360px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Delete Task</h2>
+        <button class="modal-close" onclick="closeConfirmModal()">&times;</button>
+      </div>
+      <p style="color: var(--text-secondary); margin: 0 0 20px 0;">Are you sure you want to delete this task? This action cannot be undone.</p>
+      <div class="modal-actions" style="justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Detail View Modal -->
   <div class="modal-overlay" id="detail-modal">
     <div class="modal detail-modal">
@@ -2293,17 +2308,29 @@
       }
     }
 
+    // Confirmation modal state
+    let pendingDeleteTaskId = null;
+
     function confirmDelete(taskId) {
-      if (confirm('Delete this task?')) {
-        deleteTaskById(taskId);
-      }
+      pendingDeleteTaskId = taskId;
+      document.getElementById('confirm-modal').classList.add('visible');
+      document.getElementById('confirm-delete-btn').onclick = async () => {
+        closeConfirmModal();
+        await deleteTaskById(pendingDeleteTaskId);
+        pendingDeleteTaskId = null;
+      };
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal').classList.remove('visible');
+      pendingDeleteTaskId = null;
     }
 
     async function deleteTask() {
       const id = document.getElementById('task-id').value;
       if (!id) return;
       closeModal();
-      await deleteTaskById(id);
+      confirmDelete(id);
     }
 
     async function deleteTaskById(id) {
