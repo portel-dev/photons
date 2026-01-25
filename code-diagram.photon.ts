@@ -1,5 +1,5 @@
 /**
- * Code Diagram - Generate Mermaid diagrams from TypeScript/JavaScript code
+ * Generate a Mermaid diagram from a file
  *
  * Visualize any code as flowcharts, API surfaces, dependency graphs, or call graphs.
  * Works on raw code strings or files - no AI required, pure static analysis.
