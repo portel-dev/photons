@@ -35,7 +35,7 @@ We welcome contributions! Submit pull requests for:
 | Photon | Focus | Tools | Details |
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
-| **Code Diagram** | Generate Mermaid diagrams from TypeScript/JavaScript code | 3 | [View →](code-diagram.md) |
+| **Code Diagram** | Generate a Mermaid diagram from a file | 3 | [View →](code-diagram.md) |
 | **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
 | **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
@@ -50,7 +50,7 @@ We welcome contributions! Submit pull requests for:
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Google TV Remote** | Control Google TV and Android TV devices | 37 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
-| **Kanban** | Kanban Board Photon | 23 | [View →](kanban.md) |
+| **Kanban** | Kanban Board Photon | 26 | [View →](kanban.md) |
 | **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |

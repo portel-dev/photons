@@ -388,6 +388,11 @@
       cursor: grabbing;
     }
 
+    .task-card.drop-above {
+      border-top: 3px solid var(--accent);
+      margin-top: -3px;
+    }
+
     .task-card.drag-preview {
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
       transform: rotate(3deg);
@@ -1768,6 +1773,8 @@
     }
 
     // Drag and Drop
+    let dropTargetId = null; // Track which card to insert before
+
     function handleDragStart(e, task) {
       draggedTask = task;
       e.target.classList.add('dragging');
@@ -1780,42 +1787,111 @@
       document.querySelectorAll('.column-tasks').forEach(el => {
         el.classList.remove('drag-over');
       });
+      document.querySelectorAll('.task-card').forEach(el => {
+        el.classList.remove('drop-above');
+      });
       draggedTask = null;
+      dropTargetId = null;
     }
 
     function handleDragOver(e) {
       e.preventDefault();
       e.currentTarget.classList.add('drag-over');
+
+      // Find which card we're hovering over for insert position
+      const cards = e.currentTarget.querySelectorAll('.task-card:not(.dragging)');
+      let foundTarget = false;
+
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+
+        if (e.clientY < midY && !foundTarget) {
+          card.classList.add('drop-above');
+          dropTargetId = card.dataset.taskId;
+          foundTarget = true;
+        } else {
+          card.classList.remove('drop-above');
+        }
+      });
+
+      if (!foundTarget) {
+        dropTargetId = null; // Drop at end
+      }
     }
 
     function handleDragLeave(e) {
-      e.currentTarget.classList.remove('drag-over');
+      // Only remove if leaving the container, not entering a child
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        e.currentTarget.classList.remove('drag-over');
+        e.currentTarget.querySelectorAll('.task-card').forEach(el => {
+          el.classList.remove('drop-above');
+        });
+      }
     }
 
     async function handleDrop(e, columnName) {
       e.preventDefault();
       e.currentTarget.classList.remove('drag-over');
+      e.currentTarget.querySelectorAll('.task-card').forEach(el => {
+        el.classList.remove('drop-above');
+      });
 
-      if (!draggedTask || draggedTask.column === columnName) return;
+      if (!draggedTask) return;
+
+      // Skip if dropping on itself in same position
+      if (draggedTask.column === columnName && dropTargetId === draggedTask.id) return;
+
+      // Store old state for rollback
+      const oldIndex = board.tasks.findIndex(t => t.id === draggedTask.id);
+      const oldColumn = draggedTask.column;
+      const oldTasks = [...board.tasks];
 
       // Update local state immediately for responsiveness
-      const oldColumn = draggedTask.column;
+      board.tasks.splice(oldIndex, 1);
       draggedTask.column = columnName;
+
+      if (dropTargetId) {
+        const beforeIndex = board.tasks.findIndex(t => t.id === dropTargetId);
+        if (beforeIndex !== -1) {
+          board.tasks.splice(beforeIndex, 0, draggedTask);
+        } else {
+          board.tasks.push(draggedTask);
+        }
+      } else {
+        // Insert at end of column - find last task in this column
+        let insertIndex = board.tasks.length;
+        for (let i = board.tasks.length - 1; i >= 0; i--) {
+          if (board.tasks[i].column === columnName) {
+            insertIndex = i + 1;
+            break;
+          }
+        }
+        board.tasks.splice(insertIndex, 0, draggedTask);
+      }
+
       renderBoard();
       updateStats();
 
       // Call MCP method to persist
       try {
         if (window.photon) {
-          await window.photon.invoke('moveTask', { board: currentBoardName, id: draggedTask.id, column: columnName });
+          await window.photon.invoke('reorderTask', {
+            board: currentBoardName,
+            id: draggedTask.id,
+            column: columnName,
+            beforeId: dropTargetId || undefined
+          });
         }
       } catch (err) {
-        console.error('Failed to move task:', err);
+        console.error('Failed to reorder task:', err);
         // Revert on error
-        draggedTask.column = oldColumn;
+        board.tasks = oldTasks;
         renderBoard();
         updateStats();
       }
+
+      dropTargetId = null;
     }
 
     // Modal functions

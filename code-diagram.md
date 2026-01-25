@@ -1,6 +1,6 @@
 # Code Diagram
 
-Generate Mermaid diagrams from TypeScript/JavaScript code
+Generate a Mermaid diagram from a file
 
 ## 📋 Overview
 

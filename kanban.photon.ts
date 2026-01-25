@@ -13,12 +13,14 @@
  * @dependencies @portel/photon-core@latest
  * @tags kanban, tasks, collaboration, project-management, memory
  * @icon 📋
+ * @stateful
  */
 
 import { PhotonMCP } from '@portel/photon-core';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,6 +57,7 @@ interface Task {
 
 interface Board {
   name: string;
+  projectRoot?: string; // Linked project folder path
   columns: string[];
   tasks: Task[];
   createdAt: string;
@@ -63,6 +66,7 @@ interface Board {
 
 interface BoardMeta {
   name: string;
+  projectRoot?: string;
   taskCount: number;
   createdAt: string;
   updatedAt: string;
@@ -91,10 +95,15 @@ function createEmptyBoard(name: string): Board {
 export default class KanbanPhoton extends PhotonMCP {
   private boardsDir: string;
   private boardCache: Map<string, Board> = new Map();
+  private projectsRoot: string;
 
-  constructor() {
+  /**
+   * @param projectsRoot Root folder containing project folders (e.g., ~/Projects)
+   */
+  constructor(projectsRoot?: string) {
     super();
     this.boardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
+    this.projectsRoot = projectsRoot || process.env.PROJECTS_ROOT || path.join(process.env.HOME || '', 'Projects');
   }
 
   private getBoardPath(name: string): string {
@@ -138,9 +147,173 @@ export default class KanbanPhoton extends PhotonMCP {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
   }
 
+  /**
+   * Install Claude Code hooks in a project folder
+   */
+  private async installHooks(projectRoot: string): Promise<void> {
+    const claudeDir = path.join(projectRoot, '.claude');
+    const hooksDir = path.join(claudeDir, 'hooks');
+
+    // Create directories
+    await fs.mkdir(hooksDir, { recursive: true });
+
+    // User prompt submit hook - logs user messages
+    const userPromptHook = `#!/usr/bin/env node
+/**
+ * Claude Code UserPromptSubmit Hook - Message Logger
+ * Logs user messages for reference and compaction-proof history.
+ */
+
+import * as fs from 'fs/promises';
+import * as path from 'path';
+
+const LOG_FILE = path.join(process.cwd(), '.claude', 'user-prompts.log');
+
+let input = '';
+process.stdin.setEncoding('utf8');
+for await (const chunk of process.stdin) {
+  input += chunk;
+}
+
+try {
+  const data = JSON.parse(input);
+  const prompt = data.prompt?.trim();
+
+  if (prompt && prompt.length >= 10 && !prompt.startsWith('/')) {
+    const entry = JSON.stringify({
+      timestamp: new Date().toISOString(),
+      prompt: prompt
+    }) + '\\n';
+
+    await fs.mkdir(path.dirname(LOG_FILE), { recursive: true });
+    await fs.appendFile(LOG_FILE, entry);
+  }
+} catch {}
+
+process.exit(0);
+`;
+
+    // Stop hook - checks for pending tasks
+    const boardName = path.basename(projectRoot);
+    const stopHook = `#!/usr/bin/env node
+/**
+ * Claude Code Stop Hook - Kanban Task Enforcement
+ * Blocks stopping if there are incomplete tasks or unchecked items.
+ */
+
+import { execSync } from 'child_process';
+
+const BOARD = '${boardName}';
+
+function hasUncheckedItems(text) {
+  if (!text) return false;
+  return /^[\\s]*[-*]\\s*\\[\\s*\\]/m.test(text);
+}
+
+function countCheckboxes(text) {
+  if (!text) return { checked: 0, unchecked: 0 };
+  const unchecked = (text.match(/^[\\s]*[-*]\\s*\\[\\s*\\]/gm) || []).length;
+  const checked = (text.match(/^[\\s]*[-*]\\s*\\[[xX]\\]/gm) || []).length;
+  return { checked, unchecked };
+}
+
+try {
+  const result = execSync(\`photon cli kanban getMyTasks --board \${BOARD} --json\`, {
+    encoding: 'utf-8',
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
+
+  const tasks = JSON.parse(result.trim());
+
+  if (Array.isArray(tasks) && tasks.length > 0) {
+    const pendingDetails = [];
+
+    for (const task of tasks) {
+      const counts = countCheckboxes(task.description);
+      if (counts.unchecked > 0) {
+        pendingDetails.push(\`"\${task.title}": \${counts.unchecked} unchecked items\`);
+      } else if (counts.checked === 0 && counts.unchecked === 0) {
+        pendingDetails.push(\`"\${task.title}": needs completion\`);
+      }
+    }
+
+    if (pendingDetails.length > 0) {
+      console.log(JSON.stringify({
+        decision: 'block',
+        reason: \`Incomplete tasks on board "\${BOARD}":\\n\${pendingDetails.join('\\n')}\\n\\nComplete all checkbox items or move tasks to Done.\`
+      }));
+    }
+  }
+} catch {}
+
+process.exit(0);
+`;
+
+    // Write hooks
+    await fs.writeFile(path.join(hooksDir, 'user-prompt-submit'), userPromptHook);
+    await fs.writeFile(path.join(hooksDir, 'stop'), stopHook);
+
+    // Make executable
+    await fs.chmod(path.join(hooksDir, 'user-prompt-submit'), 0o755);
+    await fs.chmod(path.join(hooksDir, 'stop'), 0o755);
+
+    // Create/update settings.json
+    const settingsPath = path.join(claudeDir, 'settings.json');
+    let settings: any = { hooks: {} };
+
+    try {
+      const existing = await fs.readFile(settingsPath, 'utf-8');
+      settings = JSON.parse(existing);
+      if (!settings.hooks) settings.hooks = {};
+    } catch {}
+
+    settings.hooks.UserPromptSubmit = [{
+      matcher: '',
+      hooks: [{ type: 'command', command: '.claude/hooks/user-prompt-submit' }]
+    }];
+    settings.hooks.Stop = [{
+      matcher: '',
+      hooks: [{ type: 'command', command: '.claude/hooks/stop' }]
+    }];
+
+    await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2));
+  }
+
   // ══════════════════════════════════════════════════════════════════════════════
   // BOARD MANAGEMENT
   // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * List available project folders
+   *
+   * Shows folders in the configured projects root that can be linked to boards.
+   * Use this when creating a new board to see available projects.
+   *
+   * @example listProjectFolders()
+   */
+  async listProjectFolders(): Promise<Array<{ name: string; path: string; hasBoard: boolean }>> {
+    const folders: Array<{ name: string; path: string; hasBoard: boolean }> = [];
+
+    try {
+      const entries = await fs.readdir(this.projectsRoot, { withFileTypes: true });
+      const existingBoards = await this.listBoards();
+      const boardNames = new Set(existingBoards.map(b => b.name));
+
+      for (const entry of entries) {
+        if (entry.isDirectory() && !entry.name.startsWith('.')) {
+          folders.push({
+            name: entry.name,
+            path: path.join(this.projectsRoot, entry.name),
+            hasBoard: boardNames.has(entry.name),
+          });
+        }
+      }
+
+      return folders.sort((a, b) => a.name.localeCompare(b.name));
+    } catch {
+      return [];
+    }
+  }
 
   /**
    * List all boards
@@ -164,6 +337,7 @@ export default class KanbanPhoton extends PhotonMCP {
           const board = JSON.parse(data) as Board;
           boards.push({
             name: board.name,
+            projectRoot: board.projectRoot,
             taskCount: board.tasks.length,
             createdAt: board.createdAt,
             updatedAt: board.updatedAt,
@@ -182,28 +356,59 @@ export default class KanbanPhoton extends PhotonMCP {
   /**
    * Create a new board
    *
-   * Create a board for a new project or conversation. Board names should be
-   * descriptive (e.g., "photon-project", "auth-feature", "session-abc123").
+   * Create a board linked to a project folder. If no folder specified,
+   * use listProjectFolders() to see available options.
    *
-   * @example createBoard({ name: 'my-project' })
-   * @example createBoard({ name: 'my-project', columns: ['Todo', 'Doing', 'Done'] })
+   * When a folder is provided:
+   * - Board name = folder name
+   * - Claude Code hooks are auto-installed in the project
+   * - Board is linked to the project for task tracking
+   *
+   * @example createBoard({ folder: 'my-project' })
+   * @example createBoard({ folder: 'my-project', columns: ['Todo', 'Doing', 'Done'] })
+   * @example createBoard({ folder: 'new-project', createFolder: true })
    */
   async createBoard(params: {
-    name: string;
+    name?: string;
+    folder?: string;
+    createFolder?: boolean;
     columns?: string[];
   }): Promise<Board> {
-    const boardPath = this.getBoardPath(params.name);
+    // Determine board name and project root
+    let boardName: string;
+    let projectRoot: string | undefined;
+
+    if (params.folder) {
+      boardName = params.folder;
+      projectRoot = path.join(this.projectsRoot, params.folder);
+
+      // Check if folder exists or should be created
+      if (!existsSync(projectRoot)) {
+        if (params.createFolder) {
+          await fs.mkdir(projectRoot, { recursive: true });
+        } else {
+          throw new Error(`Folder not found: ${params.folder}. Use createFolder: true to create it.`);
+        }
+      }
+    } else if (params.name) {
+      boardName = params.name;
+    } else {
+      throw new Error('Either name or folder must be provided');
+    }
+
+    const boardPath = this.getBoardPath(boardName);
 
     // Check if board already exists
     try {
       await fs.access(boardPath);
-      throw new Error(`Board already exists: ${params.name}`);
+      throw new Error(`Board already exists: ${boardName}`);
     } catch (e: any) {
       if (e.code !== 'ENOENT') throw e;
     }
 
     const board: Board = {
-      name: params.name,
+      name: boardName,
+      projectRoot: projectRoot,
       columns: params.columns || [...DEFAULT_COLUMNS],
       tasks: [],
       createdAt: new Date().toISOString(),
@@ -211,7 +416,39 @@ export default class KanbanPhoton extends PhotonMCP {
     };
 
     await this.saveBoard(board);
+
+    // Auto-install hooks if linked to a project folder
+    if (projectRoot) {
+      await this.installHooks(projectRoot);
+    }
+
     return board;
+  }
+
+  /**
+   * Link an existing board to a project folder
+   *
+   * Use this to link a board that was created without a folder,
+   * or to regenerate hooks for an existing project.
+   *
+   * @example linkProject({ board: 'photon', folder: 'photon' })
+   */
+  async linkProject(params: {
+    board: string;
+    folder: string;
+  }): Promise<{ success: boolean; projectRoot: string }> {
+    const board = await this.loadBoard(params.board);
+    const projectRoot = path.join(this.projectsRoot, params.folder);
+
+    if (!existsSync(projectRoot)) {
+      throw new Error(`Folder not found: ${params.folder}`);
+    }
+
+    board.projectRoot = projectRoot;
+    await this.saveBoard(board);
+    await this.installHooks(projectRoot);
+
+    return { success: true, projectRoot };
   }
 
   /**
@@ -351,6 +588,11 @@ export default class KanbanPhoton extends PhotonMCP {
     this.emit({ emit: 'board-update', board: board.name });
     this.emit({ channel: `kanban:${board.name}`, event: 'task-created', data: { task } });
 
+    // Notify Claude Code if task is assigned to AI
+    if (task.assignee === 'ai') {
+      this.emit({ emit: 'status', type: 'info', message: `New task assigned: ${task.title} [${board.name}]` });
+    }
+
     return task;
   }
 
@@ -382,6 +624,69 @@ export default class KanbanPhoton extends PhotonMCP {
     // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
     this.emit({ channel: `kanban:${board.name}`, event: 'task-moved', data: { task } });
+
+    return task;
+  }
+
+  /**
+   * Reorder a task within or across columns
+   *
+   * Move a task to a specific position. Use `beforeId` to place before another task,
+   * or omit to place at the end of the column. Array order = display order.
+   *
+   * @example reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
+   * @example reorderTask({ id: 'abc', column: 'Done' }) // Move to end of Done
+   */
+  async reorderTask(params: {
+    board?: string;
+    id: string;
+    column: string;
+    beforeId?: string;
+  }): Promise<Task> {
+    const board = await this.loadBoard(params.board);
+    const taskIndex = board.tasks.findIndex((t) => t.id === params.id);
+
+    if (taskIndex === -1) {
+      throw new Error(`Task not found: ${params.id}`);
+    }
+
+    // Validate column exists
+    if (!board.columns.includes(params.column)) {
+      throw new Error(`Invalid column: ${params.column}. Available: ${board.columns.join(', ')}`);
+    }
+
+    // Remove task from current position
+    const [task] = board.tasks.splice(taskIndex, 1);
+    task.column = params.column;
+    task.updatedAt = new Date().toISOString();
+
+    // Find insert position
+    if (params.beforeId) {
+      const beforeIndex = board.tasks.findIndex((t) => t.id === params.beforeId);
+      if (beforeIndex === -1) {
+        // beforeId not found, append to end
+        board.tasks.push(task);
+      } else {
+        board.tasks.splice(beforeIndex, 0, task);
+      }
+    } else {
+      // No beforeId - append to end of the column
+      // Find the last task in this column and insert after it
+      let insertIndex = board.tasks.length;
+      for (let i = board.tasks.length - 1; i >= 0; i--) {
+        if (board.tasks[i].column === params.column) {
+          insertIndex = i + 1;
+          break;
+        }
+      }
+      board.tasks.splice(insertIndex, 0, task);
+    }
+
+    await this.saveBoard(board);
+
+    // Notify connected UIs
+    this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'task-reordered', data: { task } });
 
     return task;
   }
@@ -853,3 +1158,4 @@ export default class KanbanPhoton extends PhotonMCP {
     });
   }
 }
+// test Sat 24 Jan 2026 22:58:03 +08
