@@ -631,6 +631,26 @@
       color: var(--text-muted);
     }
 
+    /* Checkbox update animation */
+    .task-description .md-checkbox.checkbox-updated {
+      animation: checkboxPulse 0.5s ease;
+    }
+
+    @keyframes checkboxPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(121, 174, 240, 0.6); }
+      50% { transform: scale(1.2); box-shadow: 0 0 0 8px rgba(121, 174, 240, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(121, 174, 240, 0); }
+    }
+
+    /* Progress bar animation */
+    .progress-row .progress-bar-fill {
+      transition: width 0.3s ease-out;
+    }
+
+    .progress-row .progress-count {
+      transition: color 0.3s ease;
+    }
+
     /* Regular list items */
     .task-description .md-list-item {
       padding: 2px 0;
@@ -1389,9 +1409,75 @@
         renderBoard();
         updateStats();
         await loadBoardList();
+
+        // Update detail modal if it's open
+        if (currentDetailTaskId) {
+          updateDetailModal(currentDetailTaskId);
+        }
       } catch (err) {
         console.error('Failed to refresh board:', err);
       }
+    }
+
+    // Update the detail modal content without closing it
+    function updateDetailModal(taskId) {
+      const task = board.tasks.find(t => t.id === taskId);
+      if (!task) {
+        closeDetailView();
+        return;
+      }
+
+      // Update title
+      document.getElementById('detail-title').textContent = task.title;
+
+      // Update priority badge
+      const priorityEl = document.getElementById('detail-priority');
+      priorityEl.textContent = task.priority;
+      priorityEl.className = `badge badge-priority-${task.priority}`;
+
+      // Update assignee badge
+      const assigneeEl = document.getElementById('detail-assignee');
+      if (task.assignee) {
+        assigneeEl.textContent = task.assignee;
+        assigneeEl.className = `badge badge-assignee ${task.assignee === 'ai' ? 'ai' : ''}`;
+        assigneeEl.style.display = '';
+      } else {
+        assigneeEl.style.display = 'none';
+      }
+
+      // Update comment count
+      const commentsEl = document.getElementById('detail-comments');
+      const commentCount = task.comments?.length || 0;
+      if (commentCount > 0) {
+        commentsEl.textContent = commentCount;
+        commentsEl.style.display = '';
+      } else {
+        commentsEl.style.display = 'none';
+      }
+
+      // Update description with animated checkbox transitions
+      const descContainer = document.getElementById('detail-description');
+      const newHtml = renderMarkdown(task.description || '', taskId);
+
+      // Animate checkbox changes
+      const oldCheckboxes = descContainer.querySelectorAll('.md-checkbox');
+      const oldStates = new Map();
+      oldCheckboxes.forEach((cb, idx) => oldStates.set(idx, cb.checked));
+
+      descContainer.innerHTML = newHtml;
+
+      // Apply animation to changed checkboxes
+      const newCheckboxes = descContainer.querySelectorAll('.md-checkbox');
+      newCheckboxes.forEach((cb, idx) => {
+        if (oldStates.has(idx) && oldStates.get(idx) !== cb.checked) {
+          cb.classList.add('checkbox-updated');
+          setTimeout(() => cb.classList.remove('checkbox-updated'), 500);
+        }
+      });
+
+      // Update column select
+      const columnSelect = document.getElementById('detail-column');
+      columnSelect.value = task.column;
     }
 
     // Load available boards and populate menu
