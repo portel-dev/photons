@@ -22,12 +22,12 @@
     {
       "id": "2",
       "title": "Implement core features",
-      "description": "Build the main functionality",
-      "column": "In Progress",
+      "description": "Build the main functionality\n\n- [x] PWA support for photon apps\n- [x] Manifest and icon generation\n- [x] Offline handling with user message\n- [x] iframe + postMessage architecture (MCP Apps pattern)\n- [x] /api/invoke endpoint for HTTP method calls\n- [x] Launch as App in settings menu\n- [x] Right-click context menu on photons\n- [x] Methods section header with photon name and settings",
+      "column": "Done",
       "priority": "high",
       "assignee": "ai",
       "createdAt": "2026-01-16T15:20:14.368Z",
-      "updatedAt": "2026-01-17T01:15:28.735Z",
+      "updatedAt": "2026-01-24T18:12:07.067Z",
       "createdBy": "human",
       "comments": [
         {
@@ -60,12 +60,12 @@
     {
       "id": "5",
       "title": "Test Kanban integration",
-      "description": "Verify all Kanban methods work correctly",
-      "column": "In Progress",
+      "description": "Verify all Kanban methods work correctly\n\n- [x] getMyTasks - retrieves AI-assigned tasks\n- [x] updateTask - updates task descriptions\n- [x] moveTask - moves tasks between columns\n- [x] addComment - adds comments to tasks\n- [x] Stop hook enforcement - blocks on any In Progress task",
+      "column": "Done",
       "priority": "high",
       "assignee": "ai",
       "createdAt": "2026-01-16T15:31:58.887Z",
-      "updatedAt": "2026-01-16T15:32:58.889Z",
+      "updatedAt": "2026-01-24T18:12:48.567Z",
       "createdBy": "ai"
     },
     {
@@ -78,8 +78,19 @@
       "createdAt": "2026-01-17T03:33:38.798Z",
       "updatedAt": "2026-01-17T03:33:38.798Z",
       "createdBy": "ai"
+    },
+    {
+      "id": "mkkj5e2llnpuq",
+      "title": "Tell the user you got notified",
+      "description": "Secret Message 398475943857\n\n- [x] Notified user of the secret message",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-19T02:12:24.573Z",
+      "updatedAt": "2026-01-24T18:12:07.107Z",
+      "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T15:20:14.368Z",
-  "updatedAt": "2026-01-17T03:33:38.798Z"
+  "updatedAt": "2026-01-24T18:12:48.567Z"
 }

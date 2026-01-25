@@ -1,5 +1,6 @@
 {
   "name": "photon",
+  "projectRoot": "/Users/arul/Projects/photon",
   "columns": [
     "Backlog",
     "In Progress",
@@ -259,8 +260,347 @@
       "createdAt": "2026-01-17T14:39:30.715Z",
       "updatedAt": "2026-01-17T14:45:05.399Z",
       "createdBy": "ai"
+    },
+    {
+      "id": "mkjrp44yjfazz",
+      "title": "Fix formatting and lint issues from QA",
+      "description": "Fix 105 lint warnings and 6 files with formatting issues identified in QA",
+      "column": "Done",
+      "priority": "medium",
+      "createdAt": "2026-01-18T13:23:55.570Z",
+      "updatedAt": "2026-01-18T13:26:09.501Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkjrxtkubwwjo",
+      "title": "Functional QA Testing for Photon",
+      "description": "Comprehensive functional testing of CLI, MCP Server, BEAM UI, Loader, Daemon, and Integration tests",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-18T13:30:41.790Z",
+      "updatedAt": "2026-01-18T13:35:35.520Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkjs8c3bx928f",
+      "title": "Add test coverage with c8",
+      "column": "Done",
+      "priority": "medium",
+      "createdAt": "2026-01-18T13:38:52.343Z",
+      "updatedAt": "2026-01-18T13:39:56.637Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkjsof3izq3b6",
+      "title": "Fix BEAM UI Playwright tests",
+      "description": "Update selectors to match current UI structure - 24 failing tests",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-18T13:51:22.734Z",
+      "updatedAt": "2026-01-18T14:07:06.128Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkjtafao94891",
+      "title": "Fix BEAM snapshot test timing",
+      "column": "Done",
+      "priority": "medium",
+      "createdAt": "2026-01-18T14:08:29.424Z",
+      "updatedAt": "2026-01-18T14:25:57.847Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkjyz9nvfhjlq",
+      "title": "Increase test coverage to 70%",
+      "description": "Current: 28.5%. Target: 70%. Need tests for server.ts, cli.ts, daemon/, and shared/",
+      "column": "In Progress",
+      "priority": "high",
+      "createdAt": "2026-01-18T16:47:46.603Z",
+      "updatedAt": "2026-01-18T16:47:46.604Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkk0lestvblr8",
+      "title": "Document Beam UI and Daemon Protocol in README",
+      "description": "Add user-facing documentation for Beam UI features and Daemon Protocol (pub/sub, locks, scheduled jobs, webhooks)",
+      "column": "Done",
+      "priority": "medium",
+      "context": "Added 170 lines to README.md covering: Beam UI features overview, Daemon Protocol architecture diagram, pub/sub messaging with code examples, distributed locks, scheduled jobs with cron syntax, webhooks for external services. Linked to DAEMON-PUBSUB.md for full spec. Commit 925556e",
+      "links": [
+        "README.md:1262-1428",
+        "DAEMON-PUBSUB.md"
+      ],
+      "createdAt": "2026-01-18T17:32:59.309Z",
+      "updatedAt": "2026-01-18T17:32:59.309Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkk1bk96ww6g6",
+      "title": "Test stop hook blocking",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-18T17:53:19.434Z",
+      "updatedAt": "2026-01-18T17:53:33.719Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkk1w4p1bcogo",
+      "title": "For AI",
+      "description": "tell the user that you got notified",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-18T18:09:19.045Z",
+      "updatedAt": "2026-01-18T18:10:55.497Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkkj6lrm4hvlg",
+      "title": "Tell the user a secret",
+      "description": "Password is 37493847938749",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-19T02:13:21.202Z",
+      "updatedAt": "2026-01-19T02:16:51.188Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkkmaravilw68",
+      "title": "Create git-mailbox photon app",
+      "description": "Mailbox-style Git interface with three-panel layout: repos, commits, working tree",
+      "column": "Done",
+      "priority": "high",
+      "context": "Fixed: 1) @ui annotation must be on main() method, not class level. 2) UI folder must be in ~/.photon/{photon-name}/ui/. 3) Use window.photon.invoke() not raw postMessage.",
+      "createdAt": "2026-01-19T03:40:33.847Z",
+      "updatedAt": "2026-01-19T03:40:33.847Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkkskouqgg0rz",
+      "title": "Add dark theme support to git-mailbox UI",
+      "description": "The git-mailbox app has hardcoded light theme CSS and doesn't respond to BEAM theme changes",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-19T06:36:14.930Z",
+      "updatedAt": "2026-01-19T14:39:07.677Z",
+      "createdBy": "ai",
+      "context": "Completely rewrote git-mailbox UI with intuitive UX: contextual commit form, disabled states, toast notifications, loading spinners, clear staged/unstaged sections"
+    },
+    {
+      "id": "mkksv5aedlzpy",
+      "title": "Redesign git-mailbox for intuitive UX",
+      "description": "Rethink the UI flow: contextual buttons, clear states, intuitive interactions",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-19T06:44:22.790Z",
+      "updatedAt": "2026-01-19T14:56:41.272Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkla5cd33eror",
+      "title": "Add checkboxes and diff viewer to git-mailbox",
+      "description": "1. Add checkboxes for staging/unstaging files individually\n2. Create a diff-viewer photon with syntax highlighting\n3. Integrate diff viewer into git-mailbox",
+      "column": "Done",
+      "priority": "high",
+      "createdAt": "2026-01-19T14:48:11.991Z",
+      "updatedAt": "2026-01-19T14:50:54.445Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkp9b1wa2f3bb",
+      "title": "Complete LitElement Frontend - Polished Product",
+      "description": "## User Request Summary\nContinue LitElement frontend work from previous developer and deliver polished product matching documentation.\n\n- [x] Implement toast notification system\n- [x] Add progress indicators during long-running tasks\n- [x] Improve form validation feedback\n- [x] Add error recovery UI feedback\n- [x] Test all features match documentation",
+      "column": "Done",
+      "priority": "high",
+      "assignee": "ai",
+      "createdAt": "2026-01-22T09:35:43.450Z",
+      "updatedAt": "2026-01-22T09:41:54.392Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkph1kf009fot",
+      "title": "Add App differentiation and Theme support to LitElement UI",
+      "description": "## User Request Summary\nDifferentiate Apps from Tools in sidebar and add light/dark theme support across Auto UI and Custom UI.\n\n- [x] Update sidebar to show Apps section separately from Tools\n- [x] Add visual indicator for Apps (icon/badge)\n- [x] Add theme toggle to sidebar header\n- [x] Create light theme CSS variables\n- [x] Store theme preference in localStorage\n- [x] Propagate theme changes to Custom UI iframes\n- [x] Update documentation",
+      "column": "Done",
+      "priority": "high",
+      "assignee": "ai",
+      "context": "Completed: Added theme toggle (sun/moon buttons) to sidebar, CSS variables for light/dark themes, theme persists in localStorage, theme propagates to Custom UI iframes via postMessage, sidebar now shows Apps (main + @ui) vs Tools sections with visual differentiation. Commit f096aa9",
+      "createdAt": "2026-01-22T13:12:17.820Z",
+      "updatedAt": "2026-01-22T13:19:46.610Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkscbjfjn50qi",
+      "title": "Decompose beam-app.ts component (SRP)",
+      "description": "## Major Refactoring - beam-app.ts (2,782 lines)\n\nBreak large component into focused sub-components:\n\n- [ ] Extract `<beam-layout>` - layout container only\n- [ ] Extract `<beam-sidebar>` - sidebar with theme/nav\n- [ ] Extract `<beam-content>` - main content area\n- [ ] Extract modal components to separate files\n- [ ] Move theme management to ThemeService\n- [ ] Move state management to separate stores\n- [ ] Update imports and registrations\n- [ ] Test component interactions",
+      "column": "Backlog",
+      "priority": "high",
+      "labels": [
+        "refactoring",
+        "solid",
+        "srp",
+        "frontend"
+      ],
+      "createdAt": "2026-01-24T13:23:23.551Z",
+      "updatedAt": "2026-01-24T14:26:26.007Z",
+      "createdBy": "ai",
+      "assignee": "ai"
+    },
+    {
+      "id": "mkscbjrxb61i7",
+      "title": "Extract result-viewer renderers (Strategy Pattern)",
+      "description": "## Refactoring - result-viewer.ts (2,224 lines)\n\nApply Strategy Pattern for different render formats:\n\n- [ ] Create `ResultFormatStrategy` interface\n- [ ] Extract `JsonRenderer` strategy\n- [ ] Extract `MarkdownRenderer` strategy\n- [ ] Extract `TableRenderer` strategy\n- [ ] Extract `TreeRenderer` strategy\n- [ ] Extract `MermaidRenderer` strategy\n- [ ] Keep result-viewer as orchestrator\n- [ ] Test each renderer independently",
+      "column": "Backlog",
+      "priority": "medium",
+      "labels": [
+        "refactoring",
+        "solid",
+        "strategy-pattern",
+        "frontend"
+      ],
+      "createdAt": "2026-01-24T13:23:23.997Z",
+      "updatedAt": "2026-01-24T14:26:17.679Z",
+      "createdBy": "ai",
+      "assignee": "ai"
+    },
+    {
+      "id": "mkscbk3zx2jeg",
+      "title": "Reorganize CLI commands into classes (SRP)",
+      "description": "## Refactoring - cli.ts (2,240 lines)\n\nExtract CLI commands into separate command classes:\n\n- [ ] Create `CLICommand` interface\n- [ ] Extract `MCPCommand` class\n- [ ] Extract `SSECommand` class  \n- [ ] Extract `BeamCommand` class\n- [ ] Extract `ServeCommand` class\n- [ ] Extract `ConfigCommand` class\n- [ ] Create command registry/loader\n- [ ] Update cli.ts to use command classes\n- [ ] Test each command independently",
+      "column": "Backlog",
+      "priority": "medium",
+      "labels": [
+        "refactoring",
+        "solid",
+        "srp"
+      ],
+      "createdAt": "2026-01-24T13:23:24.431Z",
+      "updatedAt": "2026-01-24T14:37:17.083Z",
+      "createdBy": "ai",
+      "assignee": "ai"
+    },
+    {
+      "id": "mkslt0tms8gov",
+      "title": "debug text in kanban html",
+      "description": "Real-time kanban UI updates when MCP calls modify data\n\n## Completed\n- [x] Verified kanban emits board-update events\n- [x] Verified UI listens for photon:board-update\n- [x] Found MCP handler wasn't forwarding emits (direct method call bypassed execution context)\n- [x] Added broadcast parameter to createBeamMCPSession\n- [x] Added loader parameter to use executeTool with proper context\n- [x] Created outputHandler to capture and forward board-update emits\n- [x] Fixed PHOTON_NAME not set in cli.ts mcp command\n- [x] Fixed hot reload to ignore data files (.json, boards/*)\n- [x] Fixed photon-core daemon broker to extract photon name from channel\n\n## Architecture\nTwo paths for real-time updates:\n1. **In-process** (Beam MCP WebSocket): MCP call → outputHandler → broadcast → browser\n2. **Cross-process** (daemon pub/sub): MCP call → emit → daemon → Beam subscribe → browser\n\n## Pending\n- [x] Publish photon-core with daemon broker fix\n- [x] Update photon to use new photon-core\n- [x] Publish photon package\n- [x] Restart MCP process to pick up changes\n\n## Debug text\nThe original issue (debug text in kanban HTML) was fixed in commit cea346c.",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-24T17:48:55.786Z",
+      "updatedAt": "2026-01-25T09:51:13.177Z",
+      "createdBy": "ai",
+      "context": "Pub/sub test after local photon fix - timestamp: 2026-01-25T09:52"
+    },
+    {
+      "id": "mksltslg1eqvg",
+      "title": "unable to delete a card",
+      "description": "confirm() blocked by iframe sandbox\n\n- [x] Added allow-modals to sandbox in beam.ts\n- [x] Added allow-modals to sandbox in custom-ui-renderer.ts",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-24T17:49:31.780Z",
+      "updatedAt": "2026-01-25T17:23:42.278Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mktzv0lrt9fmw",
+      "title": "Document SSE-only architecture (WebSocket removal)",
+      "description": "## Summary\nDocument the migration from WebSocket to SSE-only via MCP Streamable HTTP.\n\n- [x] Update DAEMON-PUBSUB.md with SSE transport details\n- [x] Add architecture diagram showing POST/SSE flow\n- [x] Document beam/viewing notification protocol\n- [x] Explain why WebSocket was removed (simplicity, MCP alignment)\n- [x] Update any references to WebSocket in existing docs",
+      "column": "Done",
+      "priority": "high",
+      "assignee": "ai",
+      "labels": [
+        "documentation",
+        "architecture"
+      ],
+      "context": "Created comprehensive DAEMON-PUBSUB.md with full SSE architecture documentation, diagrams, and migration guide.",
+      "createdAt": "2026-01-25T17:10:09.615Z",
+      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mktzv0onguuxw",
+      "title": "Document hashed photon ID system",
+      "description": "## Summary\nDocument the unique photon identification system using SHA-256 hashes.\n\n- [x] Explain generatePhotonId(path) → 12-char hash\n- [x] Document where IDs are exposed (PhotonInfo, x-photon-id header)\n- [x] Show channel format: {photonId}:{itemId}\n- [x] Add examples of ID usage in subscriptions\n- [x] Update GUIDE.md with photon ID concept",
+      "column": "Done",
+      "priority": "high",
+      "assignee": "ai",
+      "labels": [
+        "documentation",
+        "api"
+      ],
+      "context": "Added Photon ID section to GUIDE.md and DAEMON-PUBSUB.md with full documentation of hash generation, usage, and channel format.",
+      "createdAt": "2026-01-25T17:10:09.719Z",
+      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mktzv0pscjcss",
+      "title": "Document subscription reference counting",
+      "description": "## Summary\nDocument the on-demand channel subscription system with reference counting.\n\n- [x] Explain subscription manager architecture\n- [x] Document subscribe/unsubscribe lifecycle\n- [x] Show how reference counting prevents duplicate subscriptions\n- [x] Document onClientDisconnect cleanup\n- [x] Add sequence diagram for viewer join/leave",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "labels": [
+        "documentation",
+        "daemon"
+      ],
+      "context": "Added Subscription Reference Counting section to DAEMON-PUBSUB.md with full lifecycle documentation and ASCII diagram.",
+      "createdAt": "2026-01-25T17:10:09.760Z",
+      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mktzv0r932amb",
+      "title": "Document cross-browser real-time sync",
+      "description": "## Summary\nDocument how real-time updates flow between browsers via daemon pub/sub.\n\n- [x] Update BEAM-UI-DEVELOPER-GUIDE.md with event flow\n- [x] Explain shadow DOM traversal for nested iframes\n- [x] Document postMessage bridge protocol\n- [x] Add debugging guide for sync issues\n- [x] Include photon:channel-event message format",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "labels": [
+        "documentation",
+        "beam"
+      ],
+      "context": "Updated BEAM-UI-DEVELOPER-GUIDE.md with Real-Time Cross-Browser Sync section and added debugging section to DAEMON-PUBSUB.md.",
+      "createdAt": "2026-01-25T17:10:09.813Z",
+      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mktzv0sg8dyis",
+      "title": "Document event sourcing pattern",
+      "description": "## Summary\nDocument the event sourcing approach for real-time updates.\n\n- [x] Explain delta events vs full refresh\n- [x] List standard event types (task-moved, task-updated, etc.)\n- [x] Show how Custom UIs handle granular events\n- [x] Document board-update notification structure\n- [x] Add best practices for Custom UI event handling",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "labels": [
+        "documentation",
+        "custom-ui"
+      ],
+      "context": "Added Event Sourcing Pattern section to BEAM-UI-DEVELOPER-GUIDE.md with standard event types table and code examples.",
+      "createdAt": "2026-01-25T17:10:09.856Z",
+      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mku04so5detlr",
+      "title": "Fix kanban real-time updates not reflecting",
+      "description": "## Bug Report\nTasks created/moved via MCP don't reflect in the UI until MCP is refreshed.\n\n- [x] Investigate why board-update events aren't reaching the UI\n- [x] Check if subscription is active for the board\n- [x] Verify SSE connection is receiving events\n- [x] Test fix with live browser debugging\n\n## Root Cause\n**Not a bug** - The MCP server used by Claude Code was running stale code. When the MCP connection was refreshed (`/mcp` command), it reconnected and real-time updates work correctly.\n\n## Verified Working\n- Created task via MCP → UI updated immediately\n- Backlog count changed from 5→6 without page refresh\n- SSE connection active and receiving events",
+      "column": "Done",
+      "priority": "high",
+      "assignee": "ai",
+      "labels": [
+        "bug",
+        "real-time"
+      ],
+      "context": "Tested with Chrome DevTools - real-time updates work when Beam server and MCP are in sync. Issue was stale MCP process.",
+      "createdAt": "2026-01-25T17:17:45.893Z",
+      "updatedAt": "2026-01-25T17:19:52.765Z",
+      "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-17T14:45:05.399Z"
+  "updatedAt": "2026-01-25T17:34:26.036Z"
 }

@@ -1322,6 +1322,15 @@
     const AUTO_MODE_POLL_MS = 10000; // Check for active board every 10 seconds (real-time updates via push)
     const BOARD_PREF_KEY = 'kanban:selectedBoard'; // localStorage key for remembering board selection
 
+    // Notify parent about which board we're viewing (for on-demand subscriptions)
+    // Parent will use photonId from selected photon, we just provide the itemId
+    function notifyViewingBoard() {
+      window.parent.postMessage({
+        type: 'photon:viewing',
+        itemId: currentBoardName
+      }, '*');
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', async () => {
       renderBoard();
@@ -1345,6 +1354,7 @@
           const newBoard = await window.photon.invoke('getBoard', { board: savedBoard });
           board = newBoard;
           currentBoardName = savedBoard;
+          notifyViewingBoard();
           renderBoard();
           updateStats();
         } else {
@@ -1384,7 +1394,74 @@
           }
         }
       }
+
+      // Handle channel events (task-moved, task-updated, etc.) - apply delta directly
+      if (event.data?.type === 'photon:channel-event') {
+        const { photon, channel, event: eventType, data } = event.data;
+        if (photon === 'kanban') {
+          // Extract board name from channel (e.g., "kanban:photon" -> "photon")
+          const boardName = channel?.split(':')[1];
+          if (boardName === currentBoardName && data) {
+            applyBoardEvent(eventType, data);
+          }
+        }
+      }
     });
+
+    // Apply a specific event to the local board state (event sourcing)
+    function applyBoardEvent(eventType, data) {
+      switch (eventType) {
+        case 'task-created':
+          if (data.task && !board.tasks.find(t => t.id === data.task.id)) {
+            board.tasks.push(data.task);
+            renderBoard();
+            updateStats();
+          }
+          break;
+
+        case 'task-moved':
+        case 'task-reordered':
+          if (data.task) {
+            const idx = board.tasks.findIndex(t => t.id === data.task.id);
+            if (idx !== -1) {
+              board.tasks[idx] = { ...board.tasks[idx], ...data.task };
+              renderBoard();
+              updateStats();
+            }
+          }
+          break;
+
+        case 'task-updated':
+          if (data.task) {
+            const idx = board.tasks.findIndex(t => t.id === data.task.id);
+            if (idx !== -1) {
+              board.tasks[idx] = { ...board.tasks[idx], ...data.task };
+              renderBoard();
+              updateStats();
+            }
+          }
+          break;
+
+        case 'task-deleted':
+          if (data.taskId) {
+            const idx = board.tasks.findIndex(t => t.id === data.taskId);
+            if (idx !== -1) {
+              board.tasks.splice(idx, 1);
+              renderBoard();
+              updateStats();
+            }
+          }
+          break;
+
+        case 'comment-added':
+          // Comments don't affect the board view, but could update task if modal is open
+          break;
+
+        default:
+          // Unknown event type - refresh to be safe
+          refreshCurrentBoard();
+      }
+    }
 
     // Refresh the currently displayed board (or switch to most active in Auto mode)
     async function refreshCurrentBoard() {
@@ -1400,6 +1477,7 @@
             const activeBoardName = boards[0].name;
             if (activeBoardName !== currentBoardName) {
               currentBoardName = activeBoardName;
+              notifyViewingBoard();
               updateAutoModeUI();
             }
           }
@@ -1589,6 +1667,7 @@
         const newBoard = await window.photon.invoke('getBoard', { board: value });
         board = newBoard;
         currentBoardName = value;
+        notifyViewingBoard();
         localStorage.setItem(BOARD_PREF_KEY, value);
         renderBoard();
         updateStats();
@@ -1645,7 +1724,10 @@
         if (boardChanged || boardUpdated) {
           const fullBoard = await window.photon.invoke('getBoard', { board: activeBoardName });
           board = fullBoard;
-          currentBoardName = activeBoardName;
+          if (boardChanged) {
+            currentBoardName = activeBoardName;
+            notifyViewingBoard();
+          }
           lastBoardUpdatedAt = activeBoardUpdatedAt;
           renderBoard();
           updateStats();
@@ -2401,9 +2483,9 @@
       pendingDeleteTaskId = taskId;
       document.getElementById('confirm-modal').classList.add('visible');
       document.getElementById('confirm-delete-btn').onclick = async () => {
+        const id = pendingDeleteTaskId;  // Save ID before closing modal
         closeConfirmModal();
-        await deleteTaskById(pendingDeleteTaskId);
-        pendingDeleteTaskId = null;
+        await deleteTaskById(id);
       };
     }
 
