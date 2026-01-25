@@ -374,7 +374,7 @@
       border-radius: 8px;
       padding: 12px;
       cursor: grab;
-      transition: all 0.15s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.15s ease, opacity 0.15s ease;
       position: relative;
     }
 
@@ -384,18 +384,52 @@
     }
 
     .task-card.dragging {
-      opacity: 0.5;
+      opacity: 0.4;
+      transform: scale(0.98);
       cursor: grabbing;
+      box-shadow: none;
     }
 
-    .task-card.drop-above {
-      border-top: 3px solid var(--accent);
-      margin-top: -3px;
+    .task-card.drop-above::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: dropIndicator 0.2s ease;
+    }
+
+    @keyframes dropIndicator {
+      from { transform: scaleX(0); opacity: 0; }
+      to { transform: scaleX(1); opacity: 1; }
     }
 
     .task-card.drag-preview {
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
       transform: rotate(3deg);
+    }
+
+    /* FLIP animation for card movement */
+    .task-card.flip-animate {
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    /* Card settling animation after drop */
+    .task-card.just-dropped {
+      animation: cardSettle 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardSettle {
+      0% { transform: scale(1.02); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+      100% { transform: scale(1); box-shadow: none; }
+    }
+
+    /* Cards shifting to make room */
+    .task-card.shifting {
+      transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
     }
 
     .task-badges {
@@ -1842,10 +1876,18 @@
       // Skip if dropping on itself in same position
       if (draggedTask.column === columnName && dropTargetId === draggedTask.id) return;
 
+      // FLIP Animation Step 1: Record FIRST positions
+      const cardPositions = new Map();
+      document.querySelectorAll('.task-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        cardPositions.set(card.dataset.taskId, { top: rect.top, left: rect.left });
+      });
+
       // Store old state for rollback
       const oldIndex = board.tasks.findIndex(t => t.id === draggedTask.id);
       const oldColumn = draggedTask.column;
       const oldTasks = [...board.tasks];
+      const movedTaskId = draggedTask.id;
 
       // Update local state immediately for responsiveness
       board.tasks.splice(oldIndex, 1);
@@ -1870,15 +1912,55 @@
         board.tasks.splice(insertIndex, 0, draggedTask);
       }
 
+      // FLIP Animation Step 2: Render new DOM (LAST position)
       renderBoard();
       updateStats();
+
+      // FLIP Animation Step 3: INVERT - calculate deltas and apply inverse transform
+      document.querySelectorAll('.task-card').forEach(card => {
+        const taskId = card.dataset.taskId;
+        const oldPos = cardPositions.get(taskId);
+        if (oldPos) {
+          const newRect = card.getBoundingClientRect();
+          const deltaX = oldPos.left - newRect.left;
+          const deltaY = oldPos.top - newRect.top;
+
+          if (deltaX !== 0 || deltaY !== 0) {
+            // Apply inverse transform (card appears at old position)
+            card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            card.style.transition = 'none';
+
+            // FLIP Animation Step 4: PLAY - remove transform to animate
+            requestAnimationFrame(() => {
+              card.classList.add('flip-animate');
+              card.style.transform = '';
+              card.style.transition = '';
+
+              // Cleanup after animation
+              card.addEventListener('transitionend', function cleanup() {
+                card.classList.remove('flip-animate');
+                card.removeEventListener('transitionend', cleanup);
+              }, { once: true });
+            });
+          }
+        }
+      });
+
+      // Add settle animation to dropped card
+      const droppedCard = document.querySelector(`[data-task-id="${movedTaskId}"]`);
+      if (droppedCard) {
+        droppedCard.classList.add('just-dropped');
+        droppedCard.addEventListener('animationend', () => {
+          droppedCard.classList.remove('just-dropped');
+        }, { once: true });
+      }
 
       // Call MCP method to persist
       try {
         if (window.photon) {
           await window.photon.invoke('reorderTask', {
             board: currentBoardName,
-            id: draggedTask.id,
+            id: movedTaskId,
             column: columnName,
             beforeId: dropTargetId || undefined
           });
