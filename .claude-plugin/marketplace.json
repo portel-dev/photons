@@ -29,7 +29,7 @@
     },
     {
       "name": "code-diagram",
-      "description": "Code Diagram - Generate Mermaid diagrams from TypeScript/JavaScript code",
+      "description": "Generate a Mermaid diagram from a file",
       "source": "./",
       "strict": false,
       "hooks": [

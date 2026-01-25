@@ -22,21 +22,23 @@
         "buckets",
         "bucket",
         "removeBucket"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "code-diagram",
       "version": "1.0.0",
-      "description": "Code Diagram - Generate Mermaid diagrams from TypeScript/JavaScript code",
+      "description": "Generate a Mermaid diagram from a file",
       "author": "Portel",
       "license": "MIT",
       "source": "../code-diagram.photon.ts",
-      "hash": "sha256:efa1bd10d9a035c76c6316677d95aa32cb7ebe0aa0e71b94a4827fdc81cb2169",
+      "hash": "sha256:19c8da8fd525728bc3b319185aa7cc46dc620b5422f2d6626312647943e7eea5",
       "tools": [
         "generate",
         "fromFile",
         "types"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "content-creator",
@@ -51,7 +53,8 @@
         "generate",
         "formatContent",
         "createContent"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "dashboard",
@@ -68,6 +71,11 @@
         "add",
         "update",
         "delete"
+      ],
+      "assets": [
+        "dashboard/ui/activity.html",
+        "dashboard/ui/overview.html",
+        "dashboard/ui/tasks.html"
       ]
     },
     {
@@ -82,7 +90,8 @@
         "exportToJson",
         "importFromJson",
         "compare"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "demo",
@@ -114,7 +123,8 @@
         "getDocs",
         "getTree",
         "getConfig"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "discord",
@@ -131,7 +141,8 @@
         "deployment",
         "commits",
         "metrics"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "docker",
@@ -152,7 +163,8 @@
         "pull",
         "removeImage",
         "stats"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "email",
@@ -171,7 +183,8 @@
         "markRead",
         "remove",
         "move"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "filesystem",
@@ -205,7 +218,8 @@
         "testCopy",
         "testMkdir",
         "testGetWorkdir"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "git",
@@ -231,7 +245,8 @@
         "testLog",
         "testDiff",
         "testBranches"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "github-issues",
@@ -249,7 +264,8 @@
         "addComment",
         "listComments",
         "searchIssues"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "github-pr-notifier",
@@ -262,7 +278,8 @@
       "tools": [
         "monitor",
         "summary"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "google-calendar",
@@ -282,7 +299,8 @@
         "freeBusy",
         "search",
         "upcoming"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "google-tv",
@@ -330,7 +348,8 @@
         "button",
         "number",
         "remoteUI"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "jira",
@@ -351,7 +370,8 @@
         "comments",
         "projects",
         "project"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "kanban",
@@ -360,16 +380,19 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:a6b8d5101d8fcac12c9e7444f29fb634f754b50678cd13ad75a00f10a3666fa5",
+      "hash": "sha256:a2ad5af3b8c8aaed90c73d32f1d7a3f75d69857692bba6e8c6f43a0158912044",
       "tools": [
+        "listProjectFolders",
         "listBoards",
         "createBoard",
+        "linkProject",
         "deleteBoard",
         "main",
         "getTasks",
         "getMyTasks",
         "createTask",
         "moveTask",
+        "reorderTask",
         "updateTask",
         "deleteTask",
         "searchTasks",
@@ -385,6 +408,13 @@
         "scheduledArchiveOldTasks",
         "handleGithubIssue",
         "batchMoveTasks"
+      ],
+      "assets": [
+        "kanban/boards/default.json",
+        "kanban/boards/photon.json",
+        "kanban/boards/test-columns.json",
+        "kanban/data.json",
+        "kanban/ui/board.html"
       ]
     },
     {
@@ -421,6 +451,11 @@
         "errorHandlingDemo",
         "errorValidation",
         "showConfig"
+      ],
+      "assets": [
+        "kitchen-sink/ui/dashboard.html",
+        "kitchen-sink/ui/search-results.html",
+        "kitchen-sink/ui/users.html"
       ]
     },
     {
@@ -443,7 +478,8 @@
         "nodes",
         "clear",
         "export"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "lg-remote",
@@ -481,7 +517,8 @@
         "button",
         "systemInfo",
         "softwareInfo"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "math",
@@ -500,7 +537,8 @@
         "testMean",
         "testComplexExpression",
         "testExternalService"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "mongodb",
@@ -529,7 +567,8 @@
         "testInsertFind",
         "testCount",
         "testDelete"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "postgres",
@@ -551,7 +590,8 @@
         "testQueryWithParams",
         "testTables",
         "testStats"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "preferences",
@@ -569,6 +609,13 @@
         "resetToDefaults",
         "importPreferences",
         "exportPreferences"
+      ],
+      "assets": [
+        "preferences/.DS_Store",
+        "preferences/prompts/welcome.md",
+        "preferences/resources/defaults.json",
+        "preferences/ui/settings.html",
+        "preferences/ui/theme-preview.html"
       ]
     },
     {
@@ -603,7 +650,8 @@
         "testDel",
         "testExists",
         "testSetWithTtl"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "rss-feed",
@@ -619,7 +667,8 @@
         "search",
         "readMultiple",
         "info"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "rss-to-slack",
@@ -632,7 +681,8 @@
       "tools": [
         "monitor",
         "setup"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "slack",
@@ -650,7 +700,8 @@
         "react",
         "upload",
         "search"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "social-formatter",
@@ -665,7 +716,8 @@
         "formatSingle",
         "getPlatforms",
         "createThread"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "sqlite",
@@ -691,7 +743,8 @@
         "testTables",
         "testInsertQuery",
         "testSchema"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "team-dashboard",
@@ -720,6 +773,10 @@
         "addGitHubRepo",
         "removeGitHubRepo",
         "listGitHubRepos"
+      ],
+      "assets": [
+        "team-dashboard/config.json",
+        "team-dashboard/ui/dashboard.html"
       ]
     },
     {
@@ -743,7 +800,8 @@
         "getUpdates",
         "deleteMessage",
         "pinMessage"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "time",
@@ -763,7 +821,8 @@
         "testTimezones",
         "testTimezonesRegion",
         "testConvert"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "tuya-smart-light",
@@ -783,7 +842,8 @@
         "temperature",
         "color",
         "status"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "uptime-monitor",
@@ -797,7 +857,8 @@
         "check",
         "setup",
         "stats"
-      ]
+      ],
+      "assets": []
     },
     {
       "name": "web",
@@ -813,7 +874,8 @@
         "testSearch",
         "testRead",
         "testReadInvalidUrl"
-      ]
+      ],
+      "assets": []
     }
   ]
 }

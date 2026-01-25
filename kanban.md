@@ -13,16 +13,30 @@ Kanban Board Photon
 ### Environment Variables
 
 
+- **`KANBAN_PHOTON_PROJECTSROOT`** [OPTIONAL]
+  - Type: string
+  - Description: No description available
+  
 
 
-No configuration required.
 
 
 
 
 ## 🔧 Tools
 
-This photon provides **23** tools:
+This photon provides **26** tools:
+
+
+### `listProjectFolders`
+
+List available project folders  Shows folders in the configured projects root that can be linked to boards. Use this when creating a new board to see available projects.
+
+
+
+
+
+---
 
 
 ### `listBoards`
@@ -38,7 +52,7 @@ List all boards  See all available boards with task counts. Use this to find exi
 
 ### `createBoard`
 
-Create a new board  Create a board for a new project or conversation. Board names should be descriptive (e.g., "photon-project", "auth-feature", "session-abc123").
+Create a new board  Create a board linked to a project folder. If no folder specified, use listProjectFolders() to see available options.  When a folder is provided: - Board name = folder name - Claude Code hooks are auto-installed in the project - Board is linked to the project for task tracking
 
 
 
@@ -46,8 +60,19 @@ Create a new board  Create a board for a new project or conversation. Board name
 **Example:**
 
 ```typescript
-createBoard({ name: 'my-project' })
+createBoard({ folder: 'my-project' })
 ```
+
+
+---
+
+
+### `linkProject`
+
+Link an existing board to a project folder  Use this to link a board that was created without a folder, or to regenerate hooks for an existing project.
+
+
+
 
 
 ---
@@ -126,6 +151,23 @@ Move a task to a different column  Update the status of a task by moving it betw
 
 
 
+
+
+---
+
+
+### `reorderTask`
+
+Reorder a task within or across columns  Move a task to a specific position. Use `beforeId` to place before another task, or omit to place at the end of the column. Array order = display order.
+
+
+
+
+**Example:**
+
+```typescript
+reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
+```
 
 
 ---
