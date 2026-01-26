@@ -94,8 +94,6 @@ function createEmptyBoard(name: string): Board {
 
 export default class KanbanPhoton extends PhotonMCP {
   private boardsDir: string;
-  private boardCache: Map<string, Board> = new Map();
-  private boardMtimes: Map<string, number> = new Map(); // Track file modification times
   private projectsRoot: string;
 
   /**
@@ -116,23 +114,10 @@ export default class KanbanPhoton extends PhotonMCP {
   private async loadBoard(name: string = 'default'): Promise<Board> {
     const boardPath = this.getBoardPath(name);
 
-    // Check if file has been modified since we cached it
     try {
-      const stat = await fs.stat(boardPath);
-      const mtime = stat.mtimeMs;
-      const cachedMtime = this.boardMtimes.get(name);
-
-      // Use cache only if mtime matches (file hasn't changed)
-      if (this.boardCache.has(name) && cachedMtime === mtime) {
-        return this.boardCache.get(name)!;
-      }
-
-      // File exists and either not cached or modified - reload
       const data = await fs.readFile(boardPath, 'utf-8');
       const board = JSON.parse(data) as Board;
-      board.name = name; // Ensure name matches
-      this.boardCache.set(name, board);
-      this.boardMtimes.set(name, mtime);
+      board.name = name;
       return board;
     } catch {
       // Board doesn't exist - create it
@@ -145,12 +130,74 @@ export default class KanbanPhoton extends PhotonMCP {
   private async saveBoard(board: Board): Promise<void> {
     board.updatedAt = new Date().toISOString();
     await fs.mkdir(this.boardsDir, { recursive: true });
+
+    // Auto-archive: keep only last 50 in Done
+    const doneTasks = board.tasks.filter(t => t.column === 'Done');
+    if (doneTasks.length > 50) {
+      // Sort by updatedAt desc, archive oldest
+      doneTasks.sort((a, b) =>
+        new Date(b.updatedAt || b.createdAt).getTime() -
+        new Date(a.updatedAt || a.createdAt).getTime()
+      );
+      const toArchive = doneTasks.slice(50);
+      await this.archiveTasks(board.name, toArchive);
+
+      // Remove archived tasks from board
+      const archiveIds = new Set(toArchive.map(t => t.id));
+      board.tasks = board.tasks.filter(t => !archiveIds.has(t.id));
+    }
+
     const boardPath = this.getBoardPath(board.name);
     await fs.writeFile(boardPath, JSON.stringify(board, null, 2));
-    // Update cache with new data and mtime
-    const stat = await fs.stat(boardPath);
-    this.boardCache.set(board.name, board);
-    this.boardMtimes.set(board.name, stat.mtimeMs);
+  }
+
+  private getArchivePath(boardName: string): string {
+    const safeName = boardName.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return path.join(this.boardsDir, `${safeName}.archive.jsonl`);
+  }
+
+  private async archiveTasks(boardName: string, tasks: Task[]): Promise<void> {
+    if (tasks.length === 0) return;
+
+    const archivePath = this.getArchivePath(boardName);
+    const timestamp = new Date().toISOString();
+
+    // Append each task as a JSON line with archive metadata
+    const lines = tasks.map(task =>
+      JSON.stringify({ ...task, archivedAt: timestamp })
+    ).join('\n') + '\n';
+
+    await fs.appendFile(archivePath, lines);
+
+    // Rotate: remove entries older than 30 days
+    await this.rotateArchive(boardName);
+  }
+
+  private async rotateArchive(boardName: string): Promise<void> {
+    const archivePath = this.getArchivePath(boardName);
+    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+
+    try {
+      const content = await fs.readFile(archivePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(Boolean);
+
+      // Keep only entries from last 30 days
+      const kept = lines.filter(line => {
+        try {
+          const entry = JSON.parse(line);
+          const archivedAt = new Date(entry.archivedAt).getTime();
+          return archivedAt > thirtyDaysAgo;
+        } catch {
+          return false;
+        }
+      });
+
+      if (kept.length < lines.length) {
+        await fs.writeFile(archivePath, kept.join('\n') + (kept.length ? '\n' : ''));
+      }
+    } catch {
+      // Archive doesn't exist yet, nothing to rotate
+    }
   }
 
   private generateId(): string {
@@ -475,7 +522,6 @@ process.exit(0);
 
     try {
       await fs.unlink(boardPath);
-      this.boardCache.delete(params.name);
       return { success: true, message: `Deleted board: ${params.name}` };
     } catch {
       throw new Error(`Board not found: ${params.name}`);
