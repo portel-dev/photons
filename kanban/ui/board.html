@@ -1493,6 +1493,107 @@
       position: relative;
       z-index: 1;
     }
+
+    /* ===== Mobile Responsive Styles ===== */
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+        height: calc(100vh - 24px);
+      }
+
+      .header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .board-header-left {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .board-title {
+        max-width: 180px;
+        font-size: 18px;
+      }
+
+      .search-container {
+        order: 3;
+        width: 100%;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .stats {
+        flex-wrap: wrap;
+        gap: 8px 16px;
+      }
+
+      .column {
+        min-width: 280px;
+      }
+
+      .task-card {
+        padding: 10px;
+      }
+
+      .task-actions button {
+        min-width: 28px;
+        min-height: 28px;
+      }
+
+      /* Make settings button touch-friendly */
+      .settings-btn,
+      .add-task-btn,
+      .board-switcher-btn {
+        min-width: 44px;
+        min-height: 44px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+        height: calc(100vh - 16px);
+      }
+
+      .header {
+        gap: 8px;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+      }
+
+      .board-title {
+        max-width: 140px;
+        font-size: 16px;
+      }
+
+      .stats {
+        font-size: 12px;
+        gap: 6px 12px;
+      }
+
+      .stat {
+        gap: 4px;
+      }
+
+      .column-header h2 {
+        font-size: 13px;
+      }
+
+      .column {
+        min-width: 260px;
+      }
+
+      .task-title {
+        font-size: 13px;
+      }
+
+      .task-context {
+        font-size: 11px;
+      }
+    }
   </style>
 </head>
 <body>
