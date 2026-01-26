@@ -140,7 +140,7 @@ export default class KanbanPhoton extends PhotonMCP {
         new Date(a.updatedAt || a.createdAt).getTime()
       );
       const toArchive = doneTasks.slice(50);
-      await this.archiveTasks(board.name, toArchive);
+      await this._archiveTasks(board.name, toArchive);
 
       // Remove archived tasks from board
       const archiveIds = new Set(toArchive.map(t => t.id));
@@ -156,7 +156,7 @@ export default class KanbanPhoton extends PhotonMCP {
     return path.join(this.boardsDir, `${safeName}.archive.jsonl`);
   }
 
-  private async archiveTasks(boardName: string, tasks: Task[]): Promise<void> {
+  private async _archiveTasks(boardName: string, tasks: Task[]): Promise<void> {
     if (tasks.length === 0) return;
 
     const archivePath = this.getArchivePath(boardName);
@@ -170,10 +170,10 @@ export default class KanbanPhoton extends PhotonMCP {
     await fs.appendFile(archivePath, lines);
 
     // Rotate: remove entries older than 30 days
-    await this.rotateArchive(boardName);
+    await this._rotateArchive(boardName);
   }
 
-  private async rotateArchive(boardName: string): Promise<void> {
+  private async _rotateArchive(boardName: string): Promise<void> {
     const archivePath = this.getArchivePath(boardName);
     const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
 
