@@ -1097,6 +1097,39 @@
       background: rgba(255, 107, 107, 0.3);
     }
 
+    /* Automation Section */
+    .automation-section {
+      margin-top: 16px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .automation-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .automation-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .automation-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .form-label-small {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
     /* Comments */
     .comments-section {
       margin-top: 16px;
@@ -1554,6 +1587,40 @@
           </div>
         </div>
 
+        <!-- Automation Settings (only for Backlog cards) -->
+        <div class="automation-section" id="automation-section" style="display: none;">
+          <div class="automation-header">
+            <span class="automation-title">⚡ Automation</span>
+            <span class="automation-hint">Only applies when card is in Backlog</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label form-label-small" for="task-auto-pull">Auto-Pull</label>
+              <select class="form-select" id="task-auto-pull">
+                <option value="">Never</option>
+                <option value="1">When In Progress &lt; 1</option>
+                <option value="2">When In Progress &lt; 2</option>
+                <option value="3">When In Progress &lt; 3 (Recommended)</option>
+                <option value="5">When In Progress &lt; 5</option>
+                <option value="10">When In Progress &lt; 10</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label form-label-small" for="task-auto-release">Auto-Release</label>
+              <select class="form-select" id="task-auto-release">
+                <option value="">Never</option>
+                <option value="15">Every 15 minutes</option>
+                <option value="30">Every 30 minutes</option>
+                <option value="60">Every hour</option>
+                <option value="120">Every 2 hours</option>
+                <option value="240">Every 4 hours</option>
+                <option value="1440">Every day</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <!-- Comments Section (only shown when editing) -->
         <div class="comments-section" id="comments-section" style="display: none;">
           <div class="comments-header">
@@ -1617,17 +1684,15 @@
             <div class="settings-label">WIP Limit</div>
             <div class="settings-hint">Max cards in progress</div>
           </div>
-          <input type="number" class="settings-input" id="settings-wip-limit" min="1" max="20" value="3">
+          <input type="number" class="settings-input" id="settings-wip-limit" min="1" max="20" value="10">
         </div>
       </div>
       <div class="settings-section">
-        <h3>Auto-Pull</h3>
-        <div class="settings-row">
-          <div>
-            <div class="settings-label">Enable Auto-Pull</div>
-            <div class="settings-hint">Pull from Todo when under WIP</div>
-          </div>
-          <div class="settings-toggle" id="settings-auto-pull" onclick="toggleSetting('auto-pull')"></div>
+        <h3>Automation</h3>
+        <div class="settings-info">
+          <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 12px 0;">
+            ⚡ Auto-pull is now <strong>card-specific</strong>. Edit a Backlog card to set its auto-pull threshold.
+          </p>
         </div>
         <div class="settings-row">
           <div>
@@ -2700,6 +2765,13 @@
       document.getElementById('task-assignee').value = '';
       document.getElementById('delete-btn').style.display = 'none';
       document.getElementById('comments-section').style.display = 'none';
+
+      // Show automation section only for Backlog
+      const isBacklog = column === 'Backlog';
+      document.getElementById('automation-section').style.display = isBacklog ? 'block' : 'none';
+      document.getElementById('task-auto-pull').value = '';
+      document.getElementById('task-auto-release').value = '';
+
       document.getElementById('task-modal').classList.add('visible');
       document.getElementById('task-title').focus();
     }
@@ -2719,6 +2791,13 @@
       document.getElementById('comments-section').style.display = 'block';
       document.getElementById('comment-input').value = '';
       renderComments(task.comments || []);
+
+      // Show automation section only for Backlog cards
+      const isBacklog = task.column === 'Backlog';
+      document.getElementById('automation-section').style.display = isBacklog ? 'block' : 'none';
+      document.getElementById('task-auto-pull').value = task.autoPullThreshold || '';
+      document.getElementById('task-auto-release').value = task.autoReleaseMinutes || '';
+
       document.getElementById('task-modal').classList.add('visible');
       document.getElementById('task-title').focus();
     }
@@ -2941,7 +3020,6 @@
       // Populate current values
       document.getElementById('settings-wip-limit').value = wipLimit;
       document.getElementById('settings-wip-enabled').classList.toggle('active', wipEnabled);
-      document.getElementById('settings-auto-pull').classList.toggle('active', autoPullEnabled);
       document.getElementById('settings-morning-pull').value = morningPullCount;
       document.getElementById('settings-stale-days').value = staleTaskDays;
       document.getElementById('settings-modal').classList.add('visible');
@@ -2963,15 +3041,13 @@
       }
 
       const newWipEnabled = document.getElementById('settings-wip-enabled').classList.contains('active');
-      const newWipLimit = parseInt(document.getElementById('settings-wip-limit').value) || 3;
-      const newAutoPull = document.getElementById('settings-auto-pull').classList.contains('active');
+      const newWipLimit = parseInt(document.getElementById('settings-wip-limit').value) || 10;
       const newMorningPull = parseInt(document.getElementById('settings-morning-pull').value) || 3;
       const newStaleDays = parseInt(document.getElementById('settings-stale-days').value) || 7;
 
       try {
         await window.photon.invoke('configure', {
           wipLimit: newWipLimit,
-          autoPullEnabled: newAutoPull,
           morningPullCount: newMorningPull,
           staleTaskDays: newStaleDays
         });
@@ -2979,7 +3055,6 @@
         // Update local state
         wipEnabled = newWipEnabled;
         wipLimit = newWipLimit;
-        autoPullEnabled = newAutoPull;
         morningPullCount = newMorningPull;
         staleTaskDays = newStaleDays;
 
@@ -3096,10 +3171,16 @@
       const priority = document.getElementById('task-priority').value;
       const assignee = document.getElementById('task-assignee').value;
 
+      // Automation fields (only for Backlog)
+      const autoPullValue = document.getElementById('task-auto-pull').value;
+      const autoReleaseValue = document.getElementById('task-auto-release').value;
+      const autoPullThreshold = autoPullValue ? parseInt(autoPullValue) : undefined;
+      const autoReleaseMinutes = autoReleaseValue ? parseInt(autoReleaseValue) : undefined;
+
       if (!title) return;
 
       // Keep form data in case of error
-      const formData = { id, column, title, description, priority, assignee };
+      const formData = { id, column, title, description, priority, assignee, autoPullThreshold, autoReleaseMinutes };
 
       closeModal();
 
@@ -3112,6 +3193,8 @@
             task.description = description;
             task.priority = priority;
             task.assignee = assignee || undefined;
+            task.autoPullThreshold = autoPullThreshold;
+            task.autoReleaseMinutes = autoReleaseMinutes;
           }
 
           if (window.photon) {
@@ -3121,7 +3204,9 @@
               title,
               description: description || undefined,
               priority,
-              assignee: assignee || undefined
+              assignee: assignee || undefined,
+              autoPullThreshold,
+              autoReleaseMinutes
             });
           }
         } else {
@@ -3133,6 +3218,8 @@
             column,
             priority,
             assignee: assignee || undefined,
+            autoPullThreshold,
+            autoReleaseMinutes,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             createdBy: 'human'
@@ -3146,7 +3233,9 @@
               description: description || undefined,
               column,
               priority,
-              assignee: assignee || undefined
+              assignee: assignee || undefined,
+              autoPullThreshold,
+              autoReleaseMinutes
             });
           }
         }
@@ -3165,6 +3254,8 @@
         document.getElementById('task-description').value = formData.description;
         document.getElementById('task-priority').value = formData.priority;
         document.getElementById('task-assignee').value = formData.assignee;
+        document.getElementById('task-auto-pull').value = formData.autoPullThreshold || '';
+        document.getElementById('task-auto-release').value = formData.autoReleaseMinutes || '';
         document.getElementById('task-modal').classList.add('visible');
       }
     }

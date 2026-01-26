@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **33** tools:
+This photon provides **34** tools:
 
 
 ### `configure`
@@ -166,7 +166,7 @@ Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on. 
 
 ### `createTask`
 
-Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory. Use 'blockedBy' to specify dependencies (task IDs that must complete first).
+Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory. Use 'blockedBy' to specify dependencies (task IDs that must complete first). Use 'autoPullThreshold' to auto-pull when In Progress < N. Use 'autoReleaseMinutes' to auto-release after N minutes.
 
 
 
@@ -217,7 +217,7 @@ reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
 
 ### `updateTask`
 
-Update a task's details  Modify task title, description, priority, assignee, labels, context, or dependencies.
+Update a task's details  Modify task title, description, priority, assignee, labels, context, dependencies, or automation settings.
 
 
 
@@ -395,6 +395,17 @@ Archive old completed tasks  Runs daily at midnight to move completed tasks olde
 ### `scheduledMorningPull`
 
 Morning standup prep  Runs every weekday at 8am to pull tasks from Backlog → Todo. Helps teams prepare for the day with fresh tasks ready to work on.
+
+
+
+
+
+---
+
+
+### `scheduledAutoRelease`
+
+Time-based auto-release for cards with autoReleaseMinutes set  Checks every 5 minutes for Backlog cards that have an auto-release interval configured. If the interval has passed since lastReleaseAttempt, the card is moved to In Progress (respecting WIP limit).
 
 
 
