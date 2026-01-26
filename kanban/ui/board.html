@@ -1444,16 +1444,10 @@
 
         case 'task-moved':
         case 'task-reordered':
-          if (data.task) {
-            const idx = board.tasks.findIndex(t => t.id === data.task.id);
-            if (idx !== -1) {
-              board.tasks[idx] = { ...board.tasks[idx], ...data.task };
-              renderBoard();
-              updateStats();
-              // Add highlight animation to moved card
-              highlightCard(data.task.id, 'just-updated');
-            }
-          }
+          // Reorder events need full refresh to get correct array order
+          // (event only contains task data, not position info)
+          await refreshCurrentBoard();
+          highlightCard(data.task?.id, 'just-updated');
           break;
 
         case 'task-updated':
