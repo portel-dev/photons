@@ -1507,13 +1507,19 @@
       }
 
       .board-header-left {
-        flex: 1;
+        flex: 1 1 100%;
         min-width: 0;
       }
 
       .board-title {
-        max-width: 180px;
+        max-width: none;
         font-size: 18px;
+        flex: 1;
+      }
+
+      .stats {
+        order: 2;
+        flex: 1 1 100%;
       }
 
       .search-container {
