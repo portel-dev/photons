@@ -730,6 +730,102 @@
       color: #a78bfa;
     }
 
+    .badge-blocked {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .wip-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-left: 4px;
+    }
+
+    .wip-count.at-limit {
+      color: var(--priority-medium);
+    }
+
+    .wip-count.over-limit {
+      color: var(--priority-high);
+    }
+
+    /* Blocked task card styling */
+    .task-card.blocked {
+      opacity: 0.7;
+    }
+
+    .task-card.blocked::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      border: 1px dashed rgba(239, 68, 68, 0.4);
+      border-radius: inherit;
+    }
+
+    /* Dependency info in detail view */
+    .detail-dependencies {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .detail-dependencies h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .dependency-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .dependency-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .dependency-status {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+
+    .dependency-status.done {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--column-done);
+    }
+
+    .dependency-status.pending {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .dependency-title {
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .dependency-column {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
     .task-actions {
       display: flex;
       gap: 4px;
@@ -1425,10 +1521,15 @@
           <div class="detail-meta">
             <span class="badge" id="detail-priority"></span>
             <span class="badge badge-assignee" id="detail-assignee" style="display: none;"></span>
+            <span class="badge badge-blocked" id="detail-blocked" style="display: none;">🔒 Blocked</span>
             <span class="comment-count" id="detail-comments" style="display: none;"></span>
           </div>
         </div>
         <button class="modal-close" onclick="closeDetailView()">&times;</button>
+      </div>
+      <div class="detail-dependencies" id="detail-dependencies" style="display: none;">
+        <h4>Waiting for</h4>
+        <div class="dependency-list" id="dependency-list"></div>
       </div>
       <div class="detail-body">
         <div class="detail-description task-description" id="detail-description"></div>
@@ -1493,6 +1594,10 @@
     const AUTO_MODE_POLL_MS = 10000; // Check for active board every 10 seconds (real-time updates via push)
     const BOARD_PREF_KEY = 'kanban:selectedBoard'; // localStorage key for remembering board selection
 
+    // WIP state (fetched from getStats)
+    let wipLimit = 3; // Default WIP limit
+    let wipEnabled = false;
+
     // Notify parent about which board we're viewing (for on-demand subscriptions)
     // Parent will use photonId from selected photon, we just provide the itemId
     function notifyViewingBoard() {
@@ -1507,6 +1612,7 @@
       renderBoard();
       updateStats();
       await loadBoardListAndRestore();
+      await fetchWipConfig();
     });
 
     // Load boards and restore saved preference (or default to Auto)
@@ -1856,6 +1962,7 @@
         renderBoard();
         updateStats();
         await loadBoardList(); // Update title and menu
+        await fetchWipConfig(); // Fetch WIP settings for new board
       } catch (err) {
         console.error('Failed to switch board:', err);
         // Refresh to restore correct state
@@ -1911,6 +2018,7 @@
           if (boardChanged) {
             currentBoardName = activeBoardName;
             notifyViewingBoard();
+            fetchWipConfig(); // Fetch WIP settings for new board
           }
           lastBoardUpdatedAt = activeBoardUpdatedAt;
           renderBoard();
@@ -1952,12 +2060,20 @@
       columnEl.className = 'column';
       columnEl.dataset.column = columnName;
 
+      // WIP indicator for In Progress column
+      let wipHtml = '';
+      if (columnName === 'In Progress' && wipEnabled) {
+        const wipClass = tasks.length >= wipLimit ? (tasks.length > wipLimit ? 'over-limit' : 'at-limit') : '';
+        wipHtml = `<span class="wip-count ${wipClass}">(${tasks.length}/${wipLimit})</span>`;
+      }
+
       columnEl.innerHTML = `
         <div class="column-header">
           <div class="column-title">
             <span class="column-dot"></span>
             ${columnName}
             <span class="column-count">${tasks.length}</span>
+            ${wipHtml}
           </div>
           <button class="add-task-btn" onclick="openAddTask('${columnName}')" title="Add task">+</button>
         </div>
@@ -2139,7 +2255,8 @@
     function createTaskCard(task) {
       const card = document.createElement('div');
       const warmthClass = getWarmthClass(task.updatedAt);
-      card.className = 'task-card' + (warmthClass ? ' ' + warmthClass : '');
+      const isBlocked = task.blockedBy && task.blockedBy.length > 0 && hasUnresolvedDependencies(task);
+      card.className = 'task-card' + (warmthClass ? ' ' + warmthClass : '') + (isBlocked ? ' blocked' : '');
       card.draggable = true;
       card.dataset.taskId = task.id;
 
@@ -2157,6 +2274,10 @@
 
       const assigneeBadge = task.assignee
         ? `<span class="badge badge-assignee ${task.assignee === 'ai' ? 'ai' : ''}">${task.assignee}</span>`
+        : '';
+
+      const blockedBadge = isBlocked
+        ? `<span class="badge badge-blocked">🔒</span>`
         : '';
 
       const commentCount = task.comments?.length || 0;
@@ -2189,6 +2310,7 @@
         <div class="task-badges">
           ${priorityBadge}
           ${assigneeBadge}
+          ${blockedBadge}
           ${commentBadge}
         </div>
         <div class="task-title">${escapeHtml(task.title)}</div>
@@ -2202,6 +2324,15 @@
       `;
 
       return card;
+    }
+
+    // Check if task has unresolved dependencies (blocking tasks not in Done)
+    function hasUnresolvedDependencies(task) {
+      if (!task.blockedBy || task.blockedBy.length === 0) return false;
+      return task.blockedBy.some(blockerId => {
+        const blocker = board.tasks.find(t => t.id === blockerId);
+        return blocker && blocker.column !== 'Done';
+      });
     }
 
     // Drag and Drop
@@ -2445,6 +2576,32 @@
         commentsEl.style.display = '';
       } else {
         commentsEl.style.display = 'none';
+      }
+
+      // Set blocked badge
+      const blockedEl = document.getElementById('detail-blocked');
+      const isBlocked = hasUnresolvedDependencies(task);
+      blockedEl.style.display = isBlocked ? '' : 'none';
+
+      // Render dependencies
+      const depsEl = document.getElementById('detail-dependencies');
+      const depsListEl = document.getElementById('dependency-list');
+      if (task.blockedBy && task.blockedBy.length > 0) {
+        depsEl.style.display = '';
+        depsListEl.innerHTML = task.blockedBy.map(blockerId => {
+          const blocker = board.tasks.find(t => t.id === blockerId);
+          if (!blocker) return '';
+          const isDone = blocker.column === 'Done';
+          return `
+            <div class="dependency-item">
+              <span class="dependency-status ${isDone ? 'done' : 'pending'}">${isDone ? '✓' : '○'}</span>
+              <span class="dependency-title">${escapeHtml(blocker.title)}</span>
+              <span class="dependency-column">${blocker.column}</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        depsEl.style.display = 'none';
       }
 
       // Render description with interactive checkboxes
@@ -2816,6 +2973,23 @@
       document.getElementById('stat-total').textContent = board.tasks.length;
       document.getElementById('stat-progress').textContent = board.tasks.filter(t => t.column === 'In Progress').length;
       document.getElementById('stat-ai').textContent = board.tasks.filter(t => t.assignee === 'ai').length;
+    }
+
+    // Fetch WIP config from getStats
+    async function fetchWipConfig() {
+      if (!window.photon) return;
+      try {
+        const stats = await window.photon.invoke('getStats', { board: currentBoardName });
+        if (stats && stats.wip) {
+          wipLimit = stats.wip.limit || 3;
+          wipEnabled = stats.wip.enabled !== false;
+          // Re-render to show WIP indicators
+          renderBoard();
+        }
+      } catch (err) {
+        // getStats may not be available, use defaults
+        console.log('WIP config not available:', err.message);
+      }
     }
 
     // Utility
