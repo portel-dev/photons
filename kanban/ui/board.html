@@ -1821,6 +1821,10 @@
         const { photon, board: updatedBoard } = event.data;
         // Only refresh if we're showing a kanban board
         if (photon === 'kanban') {
+          // Skip if we have a pending move operation (our own event echoing back)
+          if (pendingMoveOperation) {
+            return;
+          }
           // In auto mode, always refresh (might need to switch boards)
           // Otherwise, only refresh if it's the current board
           if (autoMode || updatedBoard === currentBoardName) {
@@ -1857,10 +1861,17 @@
 
         case 'task-moved':
         case 'task-reordered':
-          // Reorder events need full refresh to get correct array order
-          // (event only contains task data, not position info)
-          await refreshCurrentBoard();
-          highlightCard(data.task?.id, 'just-updated');
+          // Skip refresh if this task was just moved locally (prevents race condition)
+          const taskId = data.task?.id;
+          const movedTime = recentlyMovedTasks.get(taskId);
+          if (movedTime && Date.now() - movedTime < 1500) {
+            // This is our own event echoing back - just highlight, don't refresh
+            highlightCard(taskId, 'just-updated');
+          } else {
+            // External change - full refresh needed
+            await refreshCurrentBoard();
+            highlightCard(taskId, 'just-updated');
+          }
           break;
 
         case 'task-updated':
@@ -2495,6 +2506,8 @@
 
     // Drag and Drop
     let dropTargetId = null; // Track which card to insert before
+    const recentlyMovedTasks = new Map(); // taskId -> timestamp (to skip redundant refreshes)
+    let pendingMoveOperation = false; // True while a move is being persisted
 
     function handleDragStart(e, task) {
       draggedTask = task;
@@ -2643,15 +2656,23 @@
       // Call MCP method to persist
       try {
         if (window.photon) {
+          pendingMoveOperation = true;
           await window.photon.invoke('reorderTask', {
             board: currentBoardName,
             id: movedTaskId,
             column: columnName,
             beforeId: dropTargetId || undefined
           });
+          // Mark as recently moved to skip redundant pub/sub refresh
+          recentlyMovedTasks.set(movedTaskId, Date.now());
+          // Clean up old entries after 2 seconds
+          setTimeout(() => recentlyMovedTasks.delete(movedTaskId), 2000);
+          // Reset pending flag after a brief delay to skip echoed events
+          setTimeout(() => { pendingMoveOperation = false; }, 500);
         }
       } catch (err) {
         console.error('Failed to reorder task:', err);
+        pendingMoveOperation = false;
         // Revert on error
         board.tasks = oldTasks;
         renderBoard();
