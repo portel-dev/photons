@@ -750,6 +750,99 @@
       color: var(--priority-high);
     }
 
+    .settings-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .settings-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+    }
+
+    .settings-modal {
+      max-width: 400px;
+    }
+
+    .settings-section {
+      margin-bottom: 20px;
+    }
+
+    .settings-section h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .settings-label {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .settings-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .settings-input {
+      width: 80px;
+      padding: 6px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .settings-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .settings-toggle.active {
+      background: var(--accent);
+    }
+
+    .settings-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .settings-toggle.active::after {
+      transform: translateX(20px);
+    }
+
     /* Blocked task card styling */
     .task-card.blocked {
       opacity: 0.7;
@@ -1409,6 +1502,12 @@
         <span>AI Tasks:</span>
         <span class="stat-value" id="stat-ai">0</span>
       </div>
+      <button class="settings-btn" onclick="openSettings()" title="Board Settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"></path>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -1494,6 +1593,61 @@
           <button type="submit" class="btn btn-primary">Create Board</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal settings-modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Board Settings</h2>
+        <button class="modal-close" onclick="closeSettings()">&times;</button>
+      </div>
+      <div class="settings-section">
+        <h3>WIP Limits</h3>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">Enable WIP Limit</div>
+            <div class="settings-hint">Limit cards in "In Progress"</div>
+          </div>
+          <div class="settings-toggle" id="settings-wip-enabled" onclick="toggleSetting('wip-enabled')"></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">WIP Limit</div>
+            <div class="settings-hint">Max cards in progress</div>
+          </div>
+          <input type="number" class="settings-input" id="settings-wip-limit" min="1" max="20" value="3">
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Auto-Pull</h3>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">Enable Auto-Pull</div>
+            <div class="settings-hint">Pull from Todo when under WIP</div>
+          </div>
+          <div class="settings-toggle" id="settings-auto-pull" onclick="toggleSetting('auto-pull')"></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">Morning Pull Count</div>
+            <div class="settings-hint">Cards to pull from Backlog daily</div>
+          </div>
+          <input type="number" class="settings-input" id="settings-morning-pull" min="0" max="10" value="3">
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-label">Stale Task Days</div>
+            <div class="settings-hint">Move inactive tasks to Backlog</div>
+          </div>
+          <input type="number" class="settings-input" id="settings-stale-days" min="1" max="30" value="7">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveSettings()">Save</button>
+      </div>
     </div>
   </div>
 
@@ -1594,9 +1748,12 @@
     const AUTO_MODE_POLL_MS = 10000; // Check for active board every 10 seconds (real-time updates via push)
     const BOARD_PREF_KEY = 'kanban:selectedBoard'; // localStorage key for remembering board selection
 
-    // WIP state (fetched from getStats)
-    let wipLimit = 3; // Default WIP limit
+    // WIP and auto-pull state (fetched from getConfig/getStats)
+    let wipLimit = 3;
     let wipEnabled = false;
+    let autoPullEnabled = false;
+    let morningPullCount = 3;
+    let staleTaskDays = 7;
 
     // Notify parent about which board we're viewing (for on-demand subscriptions)
     // Parent will use photonId from selected photon, we just provide the itemId
@@ -2751,6 +2908,60 @@
       }
     }
 
+    // Settings Modal
+    function openSettings() {
+      // Populate current values
+      document.getElementById('settings-wip-limit').value = wipLimit;
+      document.getElementById('settings-wip-enabled').classList.toggle('active', wipEnabled);
+      document.getElementById('settings-auto-pull').classList.toggle('active', autoPullEnabled);
+      document.getElementById('settings-morning-pull').value = morningPullCount;
+      document.getElementById('settings-stale-days').value = staleTaskDays;
+      document.getElementById('settings-modal').classList.add('visible');
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').classList.remove('visible');
+    }
+
+    function toggleSetting(id) {
+      const el = document.getElementById('settings-' + id);
+      el.classList.toggle('active');
+    }
+
+    async function saveSettings() {
+      if (!window.photon) {
+        alert('Photon connection not available');
+        return;
+      }
+
+      const newWipEnabled = document.getElementById('settings-wip-enabled').classList.contains('active');
+      const newWipLimit = parseInt(document.getElementById('settings-wip-limit').value) || 3;
+      const newAutoPull = document.getElementById('settings-auto-pull').classList.contains('active');
+      const newMorningPull = parseInt(document.getElementById('settings-morning-pull').value) || 3;
+      const newStaleDays = parseInt(document.getElementById('settings-stale-days').value) || 7;
+
+      try {
+        await window.photon.invoke('configure', {
+          wipLimit: newWipLimit,
+          autoPullEnabled: newAutoPull,
+          morningPullCount: newMorningPull,
+          staleTaskDays: newStaleDays
+        });
+
+        // Update local state
+        wipEnabled = newWipEnabled;
+        wipLimit = newWipLimit;
+        autoPullEnabled = newAutoPull;
+        morningPullCount = newMorningPull;
+        staleTaskDays = newStaleDays;
+
+        closeSettings();
+        renderBoard(); // Re-render to show WIP indicators
+      } catch (err) {
+        alert('Failed to save settings: ' + err.message);
+      }
+    }
+
     // Search/Filter tasks
     let currentSearchQuery = '';
 
@@ -2976,20 +3187,31 @@
       document.getElementById('stat-ai').textContent = board.tasks.filter(t => t.assignee === 'ai').length;
     }
 
-    // Fetch WIP config from getStats
+    // Fetch WIP and auto-pull config
     async function fetchWipConfig() {
       if (!window.photon) return;
       try {
+        // Get stats for WIP info
         const stats = await window.photon.invoke('getStats', { board: currentBoardName });
         if (stats && stats.wip) {
           wipLimit = stats.wip.limit || 3;
           wipEnabled = stats.wip.enabled !== false;
-          // Re-render to show WIP indicators
-          renderBoard();
         }
+
+        // Get full config for other settings
+        const config = await window.photon.invoke('getConfig', {});
+        if (config) {
+          autoPullEnabled = config.autoPullEnabled || false;
+          morningPullCount = config.morningPullCount || 3;
+          staleTaskDays = config.staleTaskDays || 7;
+          if (config.wipLimit) wipLimit = config.wipLimit;
+        }
+
+        // Re-render to show WIP indicators
+        renderBoard();
       } catch (err) {
-        // getStats may not be available, use defaults
-        console.log('WIP config not available:', err.message);
+        // Config may not be available, use defaults
+        console.log('Config not available:', err.message);
       }
     }
 
@@ -3046,6 +3268,12 @@
     document.getElementById('new-board-modal').addEventListener('click', (e) => {
       if (e.target.id === 'new-board-modal') {
         closeNewBoardModal();
+      }
+    });
+
+    document.getElementById('settings-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'settings-modal') {
+        closeSettings();
       }
     });
   </script>
