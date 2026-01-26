@@ -190,6 +190,24 @@
       }
     },
     {
+      "name": "git-box",
+      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox /\nexport class GitBoxPhoton extends PhotonMCP {\n  private configPath = path.join(os.homedir(), '.photon', 'git-box.json');\n\n  /",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "git-box": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "git-box"
+          ]
+        }
+      }
+    },
+    {
       "name": "git",
       "description": "Git - Local git repository operations",
       "source": "./",

@@ -44,6 +44,11 @@ We welcome contributions! Submit pull requests for:
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
 | **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
+| **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox /
+export class GitBoxPhoton extends PhotonMCP {
+  private configPath = path.join(os.homedir(), '.photon', 'git-box.json');
+
+  / | 57 | [View →](git-box.md) |
 | **Git** | Local git repository operations | 15 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
@@ -72,7 +77,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 36 photons ready to use
+**Total:** 37 photons ready to use
 
 ---
 
@@ -116,7 +121,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 36 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 37 focused tools at its fingertips.
 
 ---
 
@@ -182,7 +187,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 36 production-ready photons available
+- 📦 37 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
