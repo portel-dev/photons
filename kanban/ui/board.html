@@ -453,6 +453,28 @@
       transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
     }
 
+    /* Warmth indicators for recently changed cards */
+    .task-card.changed-hot {
+      border-left: 3px solid #ff6b6b;  /* < 5 min - hot red */
+    }
+    .task-card.changed-warm {
+      border-left: 3px solid #ffa94d;  /* < 30 min - warm orange */
+    }
+    .task-card.changed-cool {
+      border-left: 3px solid #ffe066;  /* < 2 hr - cooling yellow */
+    }
+
+    /* Light theme adjustments for warmth */
+    :root.light .task-card.changed-hot {
+      border-left-color: #e03131;
+    }
+    :root.light .task-card.changed-warm {
+      border-left-color: #f76707;
+    }
+    :root.light .task-card.changed-cool {
+      border-left-color: #f59f00;
+    }
+
     .task-badges {
       display: flex;
       gap: 4px;
@@ -1956,9 +1978,24 @@
     }
 
     // Create a task card element
+    // Calculate warmth level based on how recently the task was updated
+    function getWarmthClass(updatedAt) {
+      if (!updatedAt) return '';
+
+      const now = Date.now();
+      const updated = new Date(updatedAt).getTime();
+      const minutesAgo = (now - updated) / (1000 * 60);
+
+      if (minutesAgo < 5) return 'changed-hot';      // < 5 minutes
+      if (minutesAgo < 30) return 'changed-warm';    // < 30 minutes
+      if (minutesAgo < 120) return 'changed-cool';   // < 2 hours
+      return '';
+    }
+
     function createTaskCard(task) {
       const card = document.createElement('div');
-      card.className = 'task-card';
+      const warmthClass = getWarmthClass(task.updatedAt);
+      card.className = 'task-card' + (warmthClass ? ' ' + warmthClass : '');
       card.draggable = true;
       card.dataset.taskId = task.id;
 
