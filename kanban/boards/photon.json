@@ -9,6 +9,17 @@
   ],
   "tasks": [
     {
+      "id": "mkujku340wy4m",
+      "title": "Moving of cards should go to the top when not specified",
+      "description": "Otherwise its hard to see",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-26T02:22:06.928Z",
+      "updatedAt": "2026-01-26T03:32:22.269Z",
+      "createdBy": "ai"
+    },
+    {
       "id": "mkh3ze72r8lop",
       "title": "Add photon:call-tool handler in BEAM",
       "description": "Custom UIs using @ui annotation can now invoke methods via window.photon.invoke()",
@@ -320,6 +331,31 @@
       "createdBy": "ai"
     },
     {
+      "id": "mkuid8ajl6k09",
+      "title": "How do we have cross app pub sub",
+      "description": "Investigate and come up with a plan the MCP way\n\n## Solution: Daemon Pub/Sub via Unix Socket IPC\n\nThe daemon already supports cross-app pub/sub through its channel subscription system:\n\n### Architecture\n```\nApp A (MCP Client) ──┐\n                     ├──► Daemon (Unix Socket) ──► Pub/Sub Channels\nApp B (Beam UI) ─────┘\n```\n\n### How It Works\n1. **Subscribe**: Apps connect via `subscribeChannel(photonName, channel, handler)`\n2. **Publish**: Apps publish via `publishToChannel(photonName, channel, message)`\n3. **Wildcard**: Supports `prefix:*` patterns (e.g., `kanban:*` matches all kanban events)\n\n### MCP Integration\n- Daemon tools exposed as `beam/daemon/subscribe`, `beam/daemon/publish`\n- SSE transport streams channel messages to connected clients\n- Dev server subscribes to daemon for reload notifications\n\n### Implementation Files\n- `src/daemon/client.ts` - Client functions (subscribe, publish, etc.)\n- `src/daemon/server.ts` - Server handles channel routing\n- `src/daemon/protocol.ts` - Message types\n\n### Hot-Reload Integration (just implemented)\nWhen photon code changes:\n1. Dev server calls `reloadDaemon(photonName, photonPath)`\n2. Daemon reloads code, updates sessions, preserves subscriptions\n3. Publishes `system:{photonName}` event to notify subscribers",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-26T01:48:12.475Z",
+      "updatedAt": "2026-01-26T02:19:49.106Z",
+      "createdBy": "ai",
+      "comments": [
+        {
+          "id": "mkuiyqfy5hg5h",
+          "author": "ai",
+          "content": "Completed investigation. The daemon already has cross-app pub/sub via Unix socket IPC. Also implemented daemon hot-reload (commit 66b447b) which uses this system to notify subscribers when photon code changes.",
+          "createdAt": "2026-01-26T02:04:55.774Z"
+        },
+        {
+          "id": "mkuj85ea5eyyu",
+          "author": "human",
+          "content": "remember, we added a wrapper that adds photon specific prefix (hash of the path) and : to messages",
+          "createdAt": "2026-01-26T02:12:15.058Z"
+        }
+      ]
+    },
+    {
       "id": "mkk0lestvblr8",
       "title": "Document Beam UI and Daemon Protocol in README",
       "description": "Add user-facing documentation for Beam UI features and Daemon Protocol (pub/sub, locks, scheduled jobs, webhooks)",
@@ -505,10 +541,25 @@
       "createdBy": "ai"
     },
     {
+      "id": "mktoneinuoh67",
+      "title": "Hash-based channel IDs for daemon pub/sub",
+      "description": "## Summary\nReplace readable channel names with hash-based IDs for multi-tenant isolation.\n\n## Current\n`kanban:photon` - readable but collides in multi-tenant scenarios\n\n## Proposed\nHash the full identifier string to get unique channel ID:\n- Input: `kanban:/Users/arul/.photon/kanban/boards/photon.json`\n- Output: `a7f3b2c9d1e4` (hash)\n\n## Implementation\n- [ ] Create hash function for channel ID generation\n- [ ] Update PhotonMCP base to compute channel ID from data path\n- [ ] Set channel ID during photon initialization\n- [ ] Update emit() to use hashed channel ID\n- [ ] Update daemon broker to work with opaque IDs\n- [ ] Test multi-tenant isolation (different data dirs → different channels)\n\n## Benefits\n- Multi-tenant safe\n- Same data path = same channel (guaranteed)\n- Different installations = isolated\n- Simple opaque identifier on the wire",
+      "column": "Backlog",
+      "priority": "high",
+      "labels": [
+        "architecture",
+        "daemon",
+        "pub/sub"
+      ],
+      "createdAt": "2026-01-25T11:56:18.623Z",
+      "updatedAt": "2026-01-25T11:56:18.624Z",
+      "createdBy": "ai"
+    },
+    {
       "id": "mktzv0lrt9fmw",
       "title": "Document SSE-only architecture (WebSocket removal)",
       "description": "## Summary\nDocument the migration from WebSocket to SSE-only via MCP Streamable HTTP.\n\n- [x] Update DAEMON-PUBSUB.md with SSE transport details\n- [x] Add architecture diagram showing POST/SSE flow\n- [x] Document beam/viewing notification protocol\n- [x] Explain why WebSocket was removed (simplicity, MCP alignment)\n- [x] Update any references to WebSocket in existing docs",
-      "column": "Done",
+      "column": "Review",
       "priority": "high",
       "assignee": "ai",
       "labels": [
@@ -517,14 +568,14 @@
       ],
       "context": "Created comprehensive DAEMON-PUBSUB.md with full SSE architecture documentation, diagrams, and migration guide.",
       "createdAt": "2026-01-25T17:10:09.615Z",
-      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "updatedAt": "2026-01-26T00:00:14.908Z",
       "createdBy": "ai"
     },
     {
       "id": "mktzv0onguuxw",
       "title": "Document hashed photon ID system",
       "description": "## Summary\nDocument the unique photon identification system using SHA-256 hashes.\n\n- [x] Explain generatePhotonId(path) → 12-char hash\n- [x] Document where IDs are exposed (PhotonInfo, x-photon-id header)\n- [x] Show channel format: {photonId}:{itemId}\n- [x] Add examples of ID usage in subscriptions\n- [x] Update GUIDE.md with photon ID concept",
-      "column": "Done",
+      "column": "Review",
       "priority": "high",
       "assignee": "ai",
       "labels": [
@@ -533,14 +584,14 @@
       ],
       "context": "Added Photon ID section to GUIDE.md and DAEMON-PUBSUB.md with full documentation of hash generation, usage, and channel format.",
       "createdAt": "2026-01-25T17:10:09.719Z",
-      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "updatedAt": "2026-01-26T00:00:14.908Z",
       "createdBy": "ai"
     },
     {
       "id": "mktzv0pscjcss",
       "title": "Document subscription reference counting",
       "description": "## Summary\nDocument the on-demand channel subscription system with reference counting.\n\n- [x] Explain subscription manager architecture\n- [x] Document subscribe/unsubscribe lifecycle\n- [x] Show how reference counting prevents duplicate subscriptions\n- [x] Document onClientDisconnect cleanup\n- [x] Add sequence diagram for viewer join/leave",
-      "column": "Done",
+      "column": "Review",
       "priority": "medium",
       "assignee": "ai",
       "labels": [
@@ -549,14 +600,14 @@
       ],
       "context": "Added Subscription Reference Counting section to DAEMON-PUBSUB.md with full lifecycle documentation and ASCII diagram.",
       "createdAt": "2026-01-25T17:10:09.760Z",
-      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "updatedAt": "2026-01-26T00:00:14.908Z",
       "createdBy": "ai"
     },
     {
       "id": "mktzv0r932amb",
       "title": "Document cross-browser real-time sync",
       "description": "## Summary\nDocument how real-time updates flow between browsers via daemon pub/sub.\n\n- [x] Update BEAM-UI-DEVELOPER-GUIDE.md with event flow\n- [x] Explain shadow DOM traversal for nested iframes\n- [x] Document postMessage bridge protocol\n- [x] Add debugging guide for sync issues\n- [x] Include photon:channel-event message format",
-      "column": "Done",
+      "column": "Review",
       "priority": "medium",
       "assignee": "ai",
       "labels": [
@@ -565,14 +616,14 @@
       ],
       "context": "Updated BEAM-UI-DEVELOPER-GUIDE.md with Real-Time Cross-Browser Sync section and added debugging section to DAEMON-PUBSUB.md.",
       "createdAt": "2026-01-25T17:10:09.813Z",
-      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "updatedAt": "2026-01-26T00:00:14.908Z",
       "createdBy": "ai"
     },
     {
       "id": "mktzv0sg8dyis",
       "title": "Document event sourcing pattern",
       "description": "## Summary\nDocument the event sourcing approach for real-time updates.\n\n- [x] Explain delta events vs full refresh\n- [x] List standard event types (task-moved, task-updated, etc.)\n- [x] Show how Custom UIs handle granular events\n- [x] Document board-update notification structure\n- [x] Add best practices for Custom UI event handling",
-      "column": "Done",
+      "column": "Review",
       "priority": "medium",
       "assignee": "ai",
       "labels": [
@@ -581,7 +632,7 @@
       ],
       "context": "Added Event Sourcing Pattern section to BEAM-UI-DEVELOPER-GUIDE.md with standard event types table and code examples.",
       "createdAt": "2026-01-25T17:10:09.856Z",
-      "updatedAt": "2026-01-25T17:23:51.481Z",
+      "updatedAt": "2026-01-26T00:00:14.908Z",
       "createdBy": "ai"
     },
     {
@@ -597,10 +648,40 @@
       ],
       "context": "Tested with Chrome DevTools - real-time updates work when Beam server and MCP are in sync. Issue was stale MCP process.",
       "createdAt": "2026-01-25T17:17:45.893Z",
-      "updatedAt": "2026-01-25T17:19:52.765Z",
+      "updatedAt": "2026-01-26T00:11:38.429Z",
+      "createdBy": "ai",
+      "comments": [
+        {
+          "id": "mkuex1ktylf28",
+          "author": "ai",
+          "content": "**Additional fix: mtime-based cache invalidation (2026-01-26)**\n\nFound another real-time sync issue: The kanban photon was caching board data without checking file mtime. When Claude Code's MCP modified the JSON file, the Beam server returned stale cached data.\n\n**Fix applied:**\n- Added `boardMtimes` Map to track file modification times\n- `loadBoard()` now checks if file mtime changed before using cache\n- `saveBoard()` updates mtime after write\n\n**Commit:** e30111d in photons repo",
+          "createdAt": "2026-01-26T00:11:38.429Z"
+        }
+      ]
+    },
+    {
+      "id": "mkujcivzpzeyj",
+      "title": "Kanban UI Fixes",
+      "description": "- detail page for card does not render code blocks correctly\n- comments viewing and adding should be part of detail view and not edit view\n- edit fails at times figure out why and fix\n- keep the ui consistent, card places tags on top right",
+      "column": "Backlog",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-26T02:15:39.167Z",
+      "updatedAt": "2026-01-26T02:19:59.547Z",
+      "createdBy": "ai"
+    },
+    {
+      "id": "mkujjlyyt5rj3",
+      "title": "Needs CSS animation to show moves and edits in Kanban",
+      "description": "Otherwise its hard to notice the changes that happen in a blink of an eye",
+      "column": "Done",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-26T02:21:09.754Z",
+      "updatedAt": "2026-01-26T02:29:03.345Z",
       "createdBy": "ai"
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-25T17:34:26.036Z"
+  "updatedAt": "2026-01-26T03:32:22.269Z"
 }
