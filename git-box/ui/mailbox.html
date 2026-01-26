@@ -1,0 +1,3591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git Box</title>
+  <!-- Highlight.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-dark">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light" disabled>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Dark theme (default) */
+    :root {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #242424;
+      --bg-tertiary: #2d2d2d;
+      --bg-selected: #2563eb33;
+      --bg-hover: #333333;
+      --border-color: #404040;
+      --text-primary: #e5e5e5;
+      --text-secondary: #a3a3a3;
+      --text-muted: #737373;
+      --accent: #60a5fa;
+      --accent-hover: #3b82f6;
+      --badge-bg: #4b5563;
+      --badge-text: #ffffff;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #8b5cf6;
+      --btn-bg-from: #3a3a3a;
+      --btn-bg-to: #2a2a2a;
+      --btn-hover-from: #444444;
+      --btn-hover-to: #333333;
+      color-scheme: dark;
+    }
+
+    /* Light theme */
+    :root.light-theme, html.light-theme, :root.light, html.light {
+      --bg-primary: #f5f5f5;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #fafafa;
+      --bg-selected: #d4e5f7;
+      --bg-hover: #e8e8e8;
+      --border-color: #d0d0d0;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --text-muted: #999999;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --badge-bg: #6b7280;
+      --badge-text: #ffffff;
+      --btn-bg-from: #ffffff;
+      --btn-bg-to: #e8e8e8;
+      --btn-hover-from: #f0f0f0;
+      --btn-hover-to: #d8d8d8;
+      color-scheme: light;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13px;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar - Repositories */
+    .sidebar {
+      width: 220px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 0 12px;
+      height: 44px;
+      min-height: 44px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    /* Unified button style */
+    .btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+      color: var(--text-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 28px;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(to bottom, var(--btn-hover-from), var(--btn-hover-to));
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .btn.primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .btn.sm {
+      padding: 4px 8px;
+      font-size: 11px;
+      height: 24px;
+    }
+
+    .sidebar-header button {
+      padding: 6px 12px;
+      font-size: 12px;
+      background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 28px;
+    }
+
+    .sidebar-header button:hover {
+      background: linear-gradient(to bottom, var(--btn-hover-from), var(--btn-hover-to));
+    }
+
+    .repos-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .repo-item {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      height: 48px;
+      min-height: 48px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-color);
+      gap: 8px;
+      box-sizing: border-box;
+    }
+
+    .repo-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .repo-item.selected {
+      background: var(--bg-selected);
+      border-left: 3px solid var(--accent);
+      padding-left: 9px; /* 12px - 3px border */
+    }
+
+    .repo-icon {
+      font-size: 14px;
+    }
+
+    .repo-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .repo-name {
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .repo-branch {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .repo-badge {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      background: var(--warning);
+      color: white;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .repo-badge.clean {
+      background: var(--success);
+    }
+
+    .repo-badge.clean::before {
+      content: "✓";
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      height: 44px;
+      min-height: 44px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      box-sizing: border-box;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .toolbar select {
+      padding: 0 28px 0 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 12px;
+      min-width: 120px;
+      height: 28px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M3 4.5L6 8l3-3.5H3z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    .toolbar select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .toolbar button {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+      color: var(--text-primary);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 28px;
+    }
+
+    .toolbar button:hover:not(:disabled) {
+      background: linear-gradient(to bottom, var(--btn-hover-from), var(--btn-hover-to));
+    }
+
+    .toolbar button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .toolbar button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .toolbar button.primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .toolbar .spacer {
+      flex: 1;
+    }
+
+    .sync-status {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sync-status.ahead {
+      color: var(--success);
+    }
+
+    .sync-status.behind {
+      color: var(--warning);
+    }
+
+    /* Content Panels */
+    .content-panels {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Commits Panel (left) */
+    .commits-panel {
+      width: 380px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Changes/Detail Panel (right) */
+    .changes-panel {
+      flex: 1;
+      background: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Resizable Panel Dividers */
+    .resizer {
+      width: 4px;
+      background: transparent;
+      cursor: col-resize;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+      transition: background 0.15s ease;
+    }
+
+    .resizer:hover,
+    .resizer.active {
+      background: var(--accent);
+    }
+
+    .resizer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -4px;
+      right: -4px;
+    }
+
+    /* Uncommitted changes item in list */
+    .uncommitted-item {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 56px;
+      min-height: 56px;
+      border-bottom: 2px solid var(--border-color);
+      cursor: pointer;
+      gap: 12px;
+      background: var(--bg-tertiary);
+      box-sizing: border-box;
+    }
+
+    .uncommitted-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .uncommitted-item.selected {
+      background: var(--bg-selected);
+      border-left: 3px solid var(--warning);
+      padding-left: 13px; /* 16px - 3px border */
+    }
+
+    .uncommitted-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--warning);
+      flex-shrink: 0;
+    }
+
+    .uncommitted-info {
+      flex: 1;
+    }
+
+    .uncommitted-title {
+      font-weight: 600;
+      color: var(--warning);
+    }
+
+    .uncommitted-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Commit detail styles */
+    .commit-detail {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .commit-detail-message {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .commit-detail-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .commit-detail-meta span {
+      margin-right: 16px;
+    }
+
+    .commit-detail-hash {
+      font-family: monospace;
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .panel-header {
+      padding: 0 16px;
+      height: 44px;
+      min-height: 44px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      background: var(--bg-secondary);
+    }
+
+    .panel-header .count {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+    }
+
+    .file-section {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .file-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-header {
+      padding: 0 16px;
+      height: 36px;
+      min-height: 36px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      background: var(--bg-tertiary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .section-header:hover {
+      background: var(--bg-hover);
+    }
+
+    .section-header .action {
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: none;
+      font-weight: 500;
+    }
+
+    .files-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 32px;
+      min-height: 32px;
+      cursor: pointer;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+
+    .file-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .file-item.selected {
+      background: var(--bg-selected);
+    }
+
+    /* Checkbox styling */
+    .file-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 3px;
+      background: var(--bg-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .file-checkbox:hover {
+      border-color: var(--accent);
+    }
+
+    .file-checkbox.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .file-checkbox.checked::after {
+      content: "✓";
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .file-status-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .file-status-icon.added { background: var(--success); }
+    .file-status-icon.modified { background: var(--warning); }
+    .file-status-icon.deleted { background: var(--danger); }
+    .file-status-icon.renamed { background: var(--info); }
+    .file-status-icon.untracked { background: var(--text-muted); }
+
+    .file-name {
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .file-path {
+      flex: 1;
+      font-size: 11px;
+      color: var(--text-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-left: 4px;
+    }
+
+    .file-diff-btn {
+      padding: 2px 6px;
+      font-size: 10px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      border-radius: 3px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .file-item:hover .file-diff-btn {
+      opacity: 1;
+    }
+
+    .file-diff-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Commit Form */
+    .commit-form {
+      padding: 16px;
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .commit-form.hidden {
+      display: none;
+    }
+
+    .commit-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 12px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      resize: none;
+      box-sizing: border-box;
+    }
+
+    .commit-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .commit-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .commit-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .commit-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .commit-btn {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .commit-btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .commit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .commit-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Stash dropdown */
+    .stash-dropdown {
+      position: relative;
+      display: flex;
+    }
+
+    .stash-dropdown .btn {
+      border-radius: 6px 0 0 6px;
+    }
+
+    .stash-menu-btn {
+      border-radius: 0 6px 6px 0 !important;
+      border-left: none !important;
+      padding: 6px 8px !important;
+      min-width: auto;
+    }
+
+    .stash-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      min-width: 280px;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    .stash-menu-header {
+      padding: 10px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+    }
+
+    .stash-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .stash-empty {
+      padding: 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .stash-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .stash-item:last-child {
+      border-bottom: none;
+    }
+
+    .stash-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .stash-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stash-item-title {
+      font-size: 12px;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .stash-item-date {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .stash-item-actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .stash-item:hover .stash-item-actions {
+      opacity: 1;
+    }
+
+    .stash-item-actions button {
+      padding: 4px 8px;
+      font-size: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .stash-item-actions button:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .stash-item-actions button.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* Commit context menu */
+    .context-menu {
+      position: fixed;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      min-width: 180px;
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .context-menu-item {
+      padding: 10px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .context-menu-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .context-menu-item.danger {
+      color: var(--danger);
+    }
+
+    .context-menu-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 4px 0;
+    }
+
+    .context-menu-item .icon {
+      font-size: 14px;
+      width: 18px;
+      text-align: center;
+    }
+
+    /* Multi-select commits for squash */
+    .commit-item.multi-selected {
+      background: var(--bg-selected);
+      border-left: 3px solid var(--info);
+      padding-left: 13px;
+    }
+
+    .commit-item .select-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 3px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      display: none;
+    }
+
+    .commits-list.select-mode .commit-item .select-checkbox {
+      display: block;
+    }
+
+    .commit-item.multi-selected .select-checkbox {
+      background: var(--info);
+      border-color: var(--info);
+    }
+
+    .commit-item.multi-selected .select-checkbox::after {
+      content: "✓";
+      color: white;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    /* Squash bar */
+    .squash-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--info);
+      color: white;
+      font-size: 12px;
+    }
+
+    .squash-bar button {
+      padding: 6px 12px;
+      background: white;
+      color: var(--info);
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .squash-bar button:hover {
+      background: rgba(255,255,255,0.9);
+    }
+
+    .squash-bar .cancel {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    /* Conflict banner */
+    .conflict-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border-bottom: 1px solid var(--danger);
+      color: var(--danger);
+      font-size: 12px;
+    }
+
+    .conflict-banner-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .conflict-banner-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .conflict-banner button {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .conflict-file {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      background: rgba(239, 68, 68, 0.05);
+      border-bottom: 1px solid var(--border-color);
+      gap: 10px;
+    }
+
+    .conflict-file-path {
+      flex: 1;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    .conflict-file-type {
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 2px 6px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+    }
+
+    .conflict-resolve-btns {
+      display: flex;
+      gap: 4px;
+    }
+
+    .conflict-resolve-btns button {
+      padding: 4px 8px;
+      font-size: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .conflict-resolve-btns button:hover {
+      background: var(--bg-hover);
+    }
+
+    .commits-list {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg-primary);
+    }
+
+    .commit-item {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 56px;
+      min-height: 56px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+
+    .commit-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .commit-item.selected {
+      background: var(--bg-selected);
+    }
+
+    .commit-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .commit-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .commit-message {
+      font-weight: 500;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .commit-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 12px;
+    }
+
+    .commit-hash {
+      font-family: monospace;
+      color: var(--text-secondary);
+    }
+
+    /* Empty States */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      flex: 1;
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+
+    .empty-state-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .empty-state-text {
+      font-size: 12px;
+      max-width: 200px;
+      line-height: 1.5;
+    }
+
+    .empty-state button {
+      margin-top: 16px;
+      padding: 6px 12px;
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .empty-state button:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Clean state */
+    .clean-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .clean-state-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      color: var(--success);
+    }
+
+    .clean-state-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      color: var(--text-muted);
+    }
+
+    .loading::after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 16px;
+    }
+
+    .modal-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .modal-input {
+      width: 100%;
+      height: 36px;
+      padding: 0 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+
+    .modal-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .modal-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .modal-footer button {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+      color: var(--text-primary);
+      cursor: pointer;
+      height: 28px;
+    }
+
+    .modal-footer button:hover {
+      background: linear-gradient(to bottom, var(--btn-hover-from), var(--btn-hover-to));
+    }
+
+    .modal-footer button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .modal-footer button.primary:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Available repo items in modal */
+    .available-repo-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-color);
+      gap: 10px;
+      transition: background 0.15s ease;
+    }
+
+    .available-repo-item:last-child {
+      border-bottom: none;
+    }
+
+    .available-repo-item:hover:not(.disabled) {
+      background: var(--bg-hover);
+    }
+
+    .available-repo-item.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .available-repo-item .repo-icon {
+      font-size: 16px;
+    }
+
+    .available-repo-item .repo-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .available-repo-item .repo-name {
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .available-repo-item .repo-path {
+      font-size: 11px;
+      color: var(--text-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .available-repo-item .added-badge {
+      font-size: 10px;
+      color: var(--success);
+      padding: 2px 6px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 4px;
+    }
+
+    .available-repo-item .add-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .available-repo-item:hover .add-btn {
+      opacity: 1;
+    }
+
+    .available-repo-item .add-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .available-repo-item .init-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .available-repo-item:hover .init-btn {
+      opacity: 1;
+    }
+
+    .available-repo-item .init-btn:hover {
+      background: #16a34a;
+    }
+
+    .available-repo-item .folder-badge {
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 2px 6px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+    }
+
+    .no-repos-message {
+      padding: 20px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      animation: slideUp 0.3s ease;
+    }
+
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(100%); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+
+    /* Hidden utility */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Diff Modal */
+    .diff-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .diff-modal-content {
+      width: 90%;
+      max-width: 1000px;
+      max-height: 85vh;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .diff-modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+    }
+
+    .diff-modal-title {
+      font-weight: 600;
+      font-size: 13px;
+      font-family: 'SF Mono', monospace;
+      flex: 1;
+    }
+
+    .diff-modal-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .diff-tab {
+      padding: 6px 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .diff-tab:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .diff-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .diff-modal-close {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .diff-modal-close:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .diff-modal-body {
+      flex: 1;
+      overflow: auto;
+      padding: 0;
+    }
+
+    /* Diff Stats Bar */
+    .diff-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 16px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 12px;
+    }
+
+    .diff-stat {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .diff-stat-add {
+      color: var(--success);
+    }
+
+    .diff-stat-del {
+      color: var(--danger);
+    }
+
+    /* Diff View */
+    .diff-view {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .diff-line {
+      display: flex;
+      min-height: 20px;
+    }
+
+    .diff-line-num {
+      width: 50px;
+      padding: 0 8px;
+      text-align: right;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      user-select: none;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border-color);
+      font-size: 11px;
+    }
+
+    .diff-line-marker {
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .diff-line-content {
+      flex: 1;
+      padding: 0 12px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .diff-line.add {
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .diff-line.add .diff-line-num {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+    }
+
+    .diff-line.add .diff-line-marker {
+      color: var(--success);
+    }
+
+    .diff-line.add .diff-line-content {
+      color: #4ade80;
+    }
+
+    .diff-line.del {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .diff-line.del .diff-line-num {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+    }
+
+    .diff-line.del .diff-line-marker {
+      color: var(--danger);
+    }
+
+    .diff-line.del .diff-line-content {
+      color: #f87171;
+    }
+
+    .diff-hunk-header {
+      background: rgba(96, 165, 250, 0.1);
+      color: var(--accent);
+      padding: 8px 16px;
+      font-style: italic;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      margin-top: 8px;
+    }
+
+    .diff-hunk-header:first-child {
+      margin-top: 0;
+    }
+
+    .diff-file-header {
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      padding: 8px 16px;
+      font-size: 11px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* File View */
+    .file-view {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .file-line {
+      display: flex;
+      min-height: 20px;
+    }
+
+    .file-line:hover {
+      background: var(--bg-hover);
+    }
+
+    .file-line-num {
+      width: 50px;
+      padding: 0 8px;
+      text-align: right;
+      color: var(--text-muted);
+      background: var(--bg-tertiary);
+      user-select: none;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border-color);
+      font-size: 11px;
+    }
+
+    .file-line-content {
+      flex: 1;
+      padding: 0 12px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* Ensure highlight.js styles apply inside file-line-content */
+    .file-line-content .hljs-keyword,
+    .file-line-content .hljs-selector-tag,
+    .file-line-content .hljs-title,
+    .file-line-content .hljs-section,
+    .file-line-content .hljs-doctag,
+    .file-line-content .hljs-name,
+    .file-line-content .hljs-strong {
+      font-weight: 600;
+    }
+
+    /* Light theme overrides */
+    :root.light-theme .diff-line.add .diff-line-content,
+    html.light-theme .diff-line.add .diff-line-content {
+      color: #15803d;
+    }
+
+    :root.light-theme .diff-line.del .diff-line-content,
+    html.light-theme .diff-line.del .diff-line-content {
+      color: #b91c1c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span>Repositories</span>
+        <button onclick="addRepo()">+ Add</button>
+      </div>
+      <div class="repos-list" id="repos-list">
+        <div class="loading">Loading</div>
+      </div>
+    </div>
+
+    <!-- Sidebar Resizer -->
+    <div class="resizer" id="sidebar-resizer"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Toolbar - Hidden until repo selected -->
+      <div class="toolbar" id="toolbar">
+        <div class="toolbar-group">
+          <select id="branch-select" disabled onchange="switchBranch(this.value)">
+            <option>Select branch</option>
+          </select>
+          <button id="branch-actions-btn" class="btn sm" onclick="showBranchModal()" disabled title="Branch actions">+</button>
+        </div>
+        <div class="toolbar-group">
+          <button id="pull-btn" onclick="pull()" disabled>
+            <span>↓</span> Pull
+          </button>
+          <button id="push-btn" onclick="push()" disabled>
+            <span>↑</span> Push
+          </button>
+        </div>
+        <span class="sync-status" id="sync-status"></span>
+        <span class="spacer"></span>
+        <button id="undo-btn" onclick="undoLast()" disabled title="Undo last git operation">↩ Undo</button>
+        <button id="fetch-btn" onclick="fetchRepo()" disabled>Fetch</button>
+      </div>
+
+      <!-- Content Panels -->
+      <div class="content-panels">
+        <!-- Commit List (left) -->
+        <div class="commits-panel" id="commits-panel">
+          <div class="panel-header">
+            Commits
+            <span class="count" id="commits-count">0</span>
+          </div>
+          <div class="commits-list" id="commits-list">
+            <div class="empty-state" id="no-repo-state">
+              <div class="empty-state-icon">📂</div>
+              <div class="empty-state-title">No repository selected</div>
+              <div class="empty-state-text">Select a repository from the sidebar to view commits</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Commits Panel Resizer -->
+        <div class="resizer" id="commits-resizer"></div>
+
+        <!-- Changes Detail Panel (right) -->
+        <div class="changes-panel" id="changes-panel">
+          <!-- Shown when uncommitted changes selected -->
+          <div id="uncommitted-view" class="hidden">
+            <!-- Conflict banner (shown when conflicts exist) -->
+            <div id="conflict-banner" class="conflict-banner hidden">
+              <div class="conflict-banner-text">
+                <span>⚠️</span>
+                <span id="conflict-operation">Merge</span> in progress with conflicts
+              </div>
+              <div class="conflict-banner-actions">
+                <button class="btn" onclick="continueOperation()">Continue</button>
+                <button class="btn" onclick="abortOperation()" style="background: transparent; border-color: var(--danger); color: var(--danger);">Abort</button>
+              </div>
+            </div>
+            <!-- Conflict files list -->
+            <div id="conflict-files" class="hidden"></div>
+
+            <div class="panel-header">
+              Uncommitted Changes
+              <span class="count" id="changes-count">0</span>
+            </div>
+
+            <!-- Commit/Stash form at TOP -->
+            <div class="commit-form" id="commit-form">
+              <textarea class="commit-input" id="commit-message" rows="2" placeholder="Enter commit message (or stash description)..."></textarea>
+              <div class="commit-actions">
+                <span class="commit-hint" id="commit-hint">0 files staged</span>
+                <div class="commit-buttons">
+                  <div class="stash-dropdown">
+                    <button class="btn" id="stash-btn" onclick="stashChanges()">Stash</button>
+                    <button class="btn stash-menu-btn" id="stash-menu-btn" onclick="toggleStashMenu(event)">▾</button>
+                    <div class="stash-menu hidden" id="stash-menu">
+                      <div class="stash-menu-header">Saved Stashes</div>
+                      <div class="stash-list" id="stash-list">
+                        <div class="stash-empty">No stashes</div>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="commit-btn" id="commit-btn" onclick="commit()" disabled>Commit</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Simplified: Single list with checkboxes -->
+            <div id="changes-content">
+              <div class="file-section">
+                <div class="section-header">
+                  <span>Changes <span id="staged-count"></span></span>
+                  <div style="display: flex; gap: 12px;">
+                    <span class="action" onclick="stageAll(event)">Stage all</span>
+                    <span class="action" onclick="unstageAll(event)">Unstage all</span>
+                  </div>
+                </div>
+                <div class="files-list" id="all-files" style="max-height: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shown when a commit is selected -->
+          <div id="commit-detail-view" class="hidden">
+            <div class="panel-header">
+              Commit Details
+            </div>
+            <div class="commit-detail" id="commit-detail">
+              <div class="commit-detail-message" id="detail-message"></div>
+              <div class="commit-detail-meta" id="detail-meta"></div>
+              <div class="files-list" id="commit-files"></div>
+            </div>
+          </div>
+
+          <!-- Default empty state -->
+          <div id="detail-empty-state" class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div class="empty-state-title">Select an item</div>
+            <div class="empty-state-text">Click on a commit or "Uncommitted Changes" to view details</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diff Modal -->
+  <div id="diff-modal" class="diff-modal hidden" onclick="if(event.target === this) closeDiffModal()">
+    <div class="diff-modal-content">
+      <div class="diff-modal-header">
+        <span class="diff-modal-title" id="diff-title">file.txt</span>
+        <div class="diff-modal-tabs">
+          <button class="diff-tab active" id="tab-diff" onclick="switchDiffTab('diff')">Diff</button>
+          <button class="diff-tab" id="tab-file" onclick="switchDiffTab('file')">Source</button>
+        </div>
+        <button class="diff-modal-close" onclick="closeDiffModal()">×</button>
+      </div>
+      <div class="diff-modal-body" id="diff-content">
+        <!-- Diff content loads here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- Commit Context Menu -->
+  <div id="commit-context-menu" class="context-menu hidden">
+    <div class="context-menu-item" onclick="revertSelectedCommit()">
+      <span class="icon">↩</span> Revert this commit
+    </div>
+    <div class="context-menu-item" onclick="cherryPickCommit()">
+      <span class="icon">🍒</span> Cherry-pick
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item" onclick="amendCommitMessage()">
+      <span class="icon">✏️</span> Edit message
+    </div>
+    <div class="context-menu-item" onclick="startSquashMode()">
+      <span class="icon">📦</span> Squash from here...
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item" onclick="resetToCommit('soft')">
+      <span class="icon">⏪</span> Reset here (soft)
+    </div>
+    <div class="context-menu-item danger" onclick="resetToCommit('hard')">
+      <span class="icon">⚠️</span> Reset here (hard)
+    </div>
+  </div>
+
+  <!-- Branch Modal -->
+  <div id="branch-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Branch Operations</span>
+        <button class="modal-close" onclick="hideBranchModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 16px;">
+          <label class="modal-label">Create New Branch</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="new-branch-name" class="modal-input" placeholder="feature/my-branch" style="flex: 1;">
+            <button class="btn primary" onclick="createBranch()">Create</button>
+          </div>
+          <label style="display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+            <input type="checkbox" id="switch-after-create" checked> Switch to new branch
+          </label>
+        </div>
+        <div class="modal-divider" style="border-top: 1px solid var(--border-color); margin: 16px 0;"></div>
+        <div>
+          <label class="modal-label">Merge Branch</label>
+          <div style="display: flex; gap: 8px;">
+            <select id="merge-branch-select" class="modal-input" style="flex: 1;"></select>
+            <button class="btn" onclick="mergeBranch()">Merge</button>
+          </div>
+        </div>
+        <div class="modal-divider" style="border-top: 1px solid var(--border-color); margin: 16px 0;"></div>
+        <div>
+          <label class="modal-label">Delete Branch</label>
+          <div style="display: flex; gap: 8px;">
+            <select id="delete-branch-select" class="modal-input" style="flex: 1;"></select>
+            <button class="btn danger" onclick="deleteBranch()" style="background: var(--danger); color: white; border-color: var(--danger);">Delete</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="hideBranchModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Squash Modal -->
+  <div id="squash-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Squash Commits</span>
+        <button class="modal-close" onclick="hideSquashModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="squash-info" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;"></div>
+        <label class="modal-label">New Commit Message</label>
+        <textarea id="squash-message" class="modal-input" rows="4" style="height: auto; resize: vertical;" placeholder="Enter message for the squashed commit..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button onclick="hideSquashModal()">Cancel</button>
+        <button class="primary" onclick="executeSquash()">Squash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amend Message Modal -->
+  <div id="amend-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Edit Commit Message</span>
+        <button class="modal-close" onclick="hideAmendModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="amend-info" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;"></div>
+        <label class="modal-label">New Message</label>
+        <textarea id="amend-message" class="modal-input" rows="3" style="height: auto; resize: vertical;"></textarea>
+        <div class="modal-hint" style="margin-top: 8px;">Note: This will rewrite history. Only do this for unpushed commits.</div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="hideAmendModal()">Cancel</button>
+        <button class="primary" onclick="executeAmendMessage()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Repository Modal -->
+    <div class="modal" style="width: 500px;">
+      <div class="modal-header">
+        <span class="modal-title">Add Repository</span>
+        <button class="modal-close" onclick="hideAddRepoModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Available repos from projects folder -->
+        <div id="available-repos-section">
+          <label class="modal-label">Available Repositories</label>
+          <div id="available-repos-list" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 12px;">
+            <div class="loading" style="padding: 16px; font-size: 12px;">Scanning projects folder...</div>
+          </div>
+          <div id="projects-root-hint" class="modal-hint" style="margin-bottom: 16px;"></div>
+        </div>
+
+        <!-- Manual path input -->
+        <details id="manual-path-section" style="margin-top: 8px;">
+          <summary style="cursor: pointer; color: var(--text-secondary); font-size: 12px; padding: 8px 0;">Or enter path manually...</summary>
+          <div style="padding-top: 12px;">
+            <label class="modal-label">Repository Path</label>
+            <input
+              type="text"
+              id="add-repo-input"
+              class="modal-input"
+              placeholder="/path/to/repository"
+              onkeydown="if(event.key==='Enter')submitAddRepo();if(event.key==='Escape')hideAddRepoModal();"
+            >
+            <div class="modal-hint">Enter the full path to a local Git repository</div>
+            <div style="margin-top: 12px; text-align: right;">
+              <button class="btn primary" onclick="submitAddRepo()">Add</button>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="modal-footer">
+        <button onclick="hideAddRepoModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let repos = [];
+    let selectedRepo = null;
+    let commits = [];
+    let workingFiles = { staged: [], unstaged: [], untracked: [] };
+    let branches = [];
+    let currentBranch = null;
+    let selectedView = null; // 'uncommitted' | commit hash | null
+    let stashes = [];
+    let contextMenuCommit = null;
+    let squashBaseCommit = null;
+    let currentConflicts = { conflicts: [], operation: 'none' };
+
+    // Save state to widget state (persisted by host)
+    function saveState() {
+      if (window.photon?.setWidgetState) {
+        window.photon.setWidgetState({
+          selectedRepoPath: selectedRepo?.path || null
+        });
+      }
+    }
+
+    // Listen for state restoration from host
+    window.addEventListener('photon:state-restored', (event) => {
+      const state = event.detail;
+      if (state?.selectedRepoPath && repos.length > 0) {
+        const repo = repos.find(r => r.path === state.selectedRepoPath);
+        if (repo) {
+          selectRepo(repo.path);
+        }
+      }
+    });
+
+    // MCP call helper
+    async function callMCP(method, params = {}) {
+      if (!window.photon) {
+        throw new Error('Photon connection not available');
+      }
+      return window.photon.invoke(method, params);
+    }
+
+    // Toast notifications
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Load repositories
+    async function loadRepos() {
+      try {
+        repos = await callMCP('listRepos');
+        renderRepos();
+
+        // Try to restore selected repo from persisted state
+        if (!selectedRepo && window.photon?.widgetState?.selectedRepoPath) {
+          const savedPath = window.photon.widgetState.selectedRepoPath;
+          const repo = repos.find(r => r.path === savedPath);
+          if (repo) {
+            selectRepo(repo.path);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load repos:', error);
+        showToast('Failed to load repositories', 'error');
+      }
+    }
+
+    function renderRepos() {
+      const container = document.getElementById('repos-list');
+
+      if (repos.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📁</div>
+            <div class="empty-state-title">No repositories</div>
+            <div class="empty-state-text">Add a Git repository to get started</div>
+            <button onclick="addRepo()">+ Add Repository</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = repos.map(repo => `
+        <div class="repo-item ${selectedRepo?.path === repo.path ? 'selected' : ''}"
+             onclick="selectRepo('${repo.path.replace(/'/g, "\\'")}')">
+          <span class="repo-icon">📁</span>
+          <div class="repo-info">
+            <div class="repo-name">${escapeHtml(repo.name)}</div>
+            <div class="repo-branch">${escapeHtml(repo.branch || 'main')}</div>
+          </div>
+          ${repo.badge > 0
+            ? `<span class="repo-badge">${repo.badge}</span>`
+            : `<span class="repo-badge clean"></span>`
+          }
+        </div>
+      `).join('');
+    }
+
+    async function selectRepo(repoPath) {
+      selectedRepo = repos.find(r => r.path === repoPath);
+      selectedView = null;
+      saveState(); // Persist selected repo
+      renderRepos();
+
+      // Enable toolbar
+      document.getElementById('branch-select').disabled = false;
+      document.getElementById('branch-actions-btn').disabled = false;
+      document.getElementById('pull-btn').disabled = false;
+      document.getElementById('push-btn').disabled = false;
+      document.getElementById('fetch-btn').disabled = false;
+      document.getElementById('undo-btn').disabled = false;
+
+      // Load data
+      await Promise.all([
+        loadBranches(),
+        loadWorkingStatus(),
+        loadCommits(),
+        loadStashes()
+      ]);
+
+      // Auto-select uncommitted changes if there are any
+      const totalChanges = (workingFiles.staged?.length || 0) + (workingFiles.unstaged?.length || 0) + (workingFiles.untracked?.length || 0);
+      if (totalChanges > 0) {
+        selectUncommitted();
+      } else {
+        showEmptyDetailView();
+      }
+    }
+
+    async function loadBranches() {
+      if (!selectedRepo) return;
+
+      try {
+        const data = await callMCP('getBranches', { repoPath: selectedRepo.path });
+        branches = data.branches || [];
+        currentBranch = branches.find(b => b.current);
+
+        const select = document.getElementById('branch-select');
+        select.innerHTML = branches
+          .filter(b => !b.name.startsWith('origin/'))
+          .map(b => `<option value="${b.name}" ${b.current ? 'selected' : ''}>${b.name}</option>`)
+          .join('');
+
+        // Update sync status
+        updateSyncStatus();
+      } catch (error) {
+        console.error('Failed to load branches:', error);
+      }
+    }
+
+    function updateSyncStatus() {
+      const statusEl = document.getElementById('sync-status');
+      if (!currentBranch) {
+        statusEl.textContent = '';
+        return;
+      }
+
+      const ahead = currentBranch.ahead || 0;
+      const behind = currentBranch.behind || 0;
+
+      if (ahead > 0 && behind > 0) {
+        statusEl.textContent = `↑${ahead} ↓${behind}`;
+        statusEl.className = 'sync-status';
+      } else if (ahead > 0) {
+        statusEl.textContent = `↑${ahead} ahead`;
+        statusEl.className = 'sync-status ahead';
+      } else if (behind > 0) {
+        statusEl.textContent = `↓${behind} behind`;
+        statusEl.className = 'sync-status behind';
+      } else {
+        statusEl.textContent = '✓ Up to date';
+        statusEl.className = 'sync-status';
+      }
+    }
+
+    async function loadWorkingStatus() {
+      if (!selectedRepo) return;
+
+      try {
+        workingFiles = await callMCP('getStatus', { repoPath: selectedRepo.path });
+        renderChanges();
+        // Also check for conflicts
+        await checkForConflicts();
+      } catch (error) {
+        console.error('Failed to load status:', error);
+      }
+    }
+
+    function renderChanges() {
+      const staged = workingFiles.staged || [];
+      const unstaged = workingFiles.unstaged || [];
+      const untracked = workingFiles.untracked || [];
+
+      // Create a unified list with staging status
+      // Use a Map to track files and their staged status
+      const fileMap = new Map();
+
+      // Add staged files
+      staged.forEach(f => {
+        fileMap.set(f.path, { ...f, isStaged: true });
+      });
+
+      // Add unstaged files (may overlap with staged if both index and work tree have changes)
+      unstaged.forEach(f => {
+        if (!fileMap.has(f.path)) {
+          fileMap.set(f.path, { ...f, isStaged: false });
+        }
+        // If already staged, keep it as staged (user can see the staged changes)
+      });
+
+      // Add untracked files
+      untracked.forEach(f => {
+        if (!fileMap.has(f.path)) {
+          fileMap.set(f.path, { ...f, isStaged: false, status: 'untracked' });
+        }
+      });
+
+      const allFiles = Array.from(fileMap.values());
+      const stagedCount = allFiles.filter(f => f.isStaged).length;
+      const total = allFiles.length;
+
+      // Update counts
+      const changesCountEl = document.getElementById('changes-count');
+      if (changesCountEl) changesCountEl.textContent = total;
+
+      const stagedCountEl = document.getElementById('staged-count');
+      if (stagedCountEl) stagedCountEl.textContent = `(${stagedCount}/${total} staged)`;
+
+      // Update commit hint
+      const commitHint = document.getElementById('commit-hint');
+      if (commitHint) {
+        commitHint.textContent = stagedCount > 0
+          ? `${stagedCount} file${stagedCount > 1 ? 's' : ''} staged`
+          : 'Check files to stage';
+      }
+
+      // Render unified file list
+      const allFilesEl = document.getElementById('all-files');
+      if (allFilesEl) {
+        allFilesEl.innerHTML = allFiles.map(f => renderFileItem(f, f.isStaged)).join('');
+      }
+
+      // Update commit button state
+      updateCommitButton();
+    }
+
+    function renderFileItem(file, isStaged) {
+      const status = file.status || 'modified';
+      const icon = { added: 'A', modified: 'M', deleted: 'D', renamed: 'R', untracked: '?' }[status] || '?';
+      const fileName = file.path.split('/').pop();
+      const dirPath = file.path.includes('/') ? file.path.substring(0, file.path.lastIndexOf('/')) : '';
+
+      return `
+        <div class="file-item">
+          <div class="file-checkbox ${isStaged ? 'checked' : ''}"
+               data-path="${escapeHtml(file.path)}"
+               data-staged="${isStaged}"
+               onclick="event.stopPropagation(); toggleFileStage(this.dataset.path, this.dataset.staged === 'true')"
+               title="${isStaged ? 'Click to unstage' : 'Click to stage'}"></div>
+          <div class="file-status-icon ${status}">${icon}</div>
+          <span class="file-name"
+                data-path="${escapeHtml(file.path)}"
+                data-staged="${isStaged}"
+                onclick="event.stopPropagation(); showDiff(this.dataset.path, this.dataset.staged === 'true')"
+                title="Click to view diff"
+                style="cursor: pointer;">${escapeHtml(fileName)}</span>
+          <span class="file-path">${escapeHtml(dirPath)}</span>
+        </div>
+      `;
+    }
+
+    async function toggleFileStage(filePath, isCurrentlyStaged) {
+      if (isCurrentlyStaged) {
+        await unstageFile(filePath);
+      } else {
+        await stageFile(filePath);
+      }
+    }
+
+    // State for diff modal
+    let currentDiffContext = null;
+
+    async function showDiff(filePath, isStaged) {
+      const modal = document.getElementById('diff-modal');
+      const content = document.getElementById('diff-content');
+      const title = document.getElementById('diff-title');
+
+      // Store context for tab switching
+      currentDiffContext = { type: 'working', filePath, isStaged, commitHash: null };
+
+      title.textContent = filePath;
+      content.innerHTML = '<div class="loading">Loading changes...</div>';
+      modal.classList.remove('hidden');
+      setActiveTab('diff');
+
+      try {
+        const diff = await callMCP('getDiff', {
+          repoPath: selectedRepo.path,
+          filePath: filePath,
+          staged: isStaged
+        });
+        content.innerHTML = renderDiff(diff);
+      } catch (error) {
+        content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load diff: ${escapeHtml(error.message)}</div></div>`;
+      }
+    }
+
+    function renderDiff(diff) {
+      if (!diff || !diff.lines || diff.lines.length === 0) {
+        return '<div class="empty-state"><div class="empty-state-text">No changes to display</div></div>';
+      }
+
+      // Count additions and deletions, track line numbers
+      let additions = 0, deletions = 0;
+      let oldLine = 0, newLine = 0;
+      let inHunk = false;
+
+      const lines = diff.lines.map((line, idx) => {
+        // Skip header lines
+        if (line.startsWith('diff --git') || line.startsWith('index ') ||
+            line.startsWith('---') || line.startsWith('+++')) {
+          return { type: 'header', content: line };
+        }
+
+        // Parse hunk header to get line numbers
+        if (line.startsWith('@@')) {
+          const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/);
+          if (match) {
+            oldLine = parseInt(match[1]);
+            newLine = parseInt(match[2]);
+          }
+          inHunk = true;
+          return { type: 'hunk', content: line };
+        }
+
+        if (!inHunk) return { type: 'header', content: line };
+
+        if (line.startsWith('+')) {
+          additions++;
+          const lineNum = newLine++;
+          return { type: 'add', oldNum: '', newNum: lineNum, content: line.slice(1) };
+        } else if (line.startsWith('-')) {
+          deletions++;
+          const lineNum = oldLine++;
+          return { type: 'del', oldNum: lineNum, newNum: '', content: line.slice(1) };
+        } else {
+          const oNum = oldLine++;
+          const nNum = newLine++;
+          return { type: 'context', oldNum: oNum, newNum: nNum, content: line.slice(1) || '' };
+        }
+      });
+
+      // Build stats bar
+      const stats = `
+        <div class="diff-stats">
+          <span class="diff-stat diff-stat-add">+${additions} additions</span>
+          <span class="diff-stat diff-stat-del">−${deletions} deletions</span>
+        </div>
+      `;
+
+      // Build diff view
+      const diffHtml = lines.map(line => {
+        if (line.type === 'header') {
+          return `<div class="diff-file-header">${escapeHtml(line.content)}</div>`;
+        }
+        if (line.type === 'hunk') {
+          return `<div class="diff-hunk-header">${escapeHtml(line.content)}</div>`;
+        }
+        const marker = line.type === 'add' ? '+' : (line.type === 'del' ? '−' : ' ');
+        return `
+          <div class="diff-line ${line.type}">
+            <span class="diff-line-num">${line.oldNum}</span>
+            <span class="diff-line-num">${line.newNum}</span>
+            <span class="diff-line-marker">${marker}</span>
+            <span class="diff-line-content">${escapeHtml(line.content)}</span>
+          </div>
+        `;
+      }).join('');
+
+      return stats + `<div class="diff-view">${diffHtml}</div>`;
+    }
+
+    function renderFileContent(fileData) {
+      if (!fileData || !fileData.lines) {
+        return '<div class="empty-state"><div class="empty-state-text">Unable to load file</div></div>';
+      }
+
+      // Apply syntax highlighting
+      const lang = fileData.language || 'plaintext';
+      const code = fileData.content || fileData.lines.join('\n');
+
+      let highlightedCode;
+      try {
+        if (hljs.getLanguage(lang)) {
+          highlightedCode = hljs.highlight(code, { language: lang }).value;
+        } else {
+          highlightedCode = hljs.highlightAuto(code).value;
+        }
+      } catch (e) {
+        highlightedCode = escapeHtml(code);
+      }
+
+      // Split highlighted code back into lines for line numbers
+      const highlightedLines = highlightedCode.split('\n');
+
+      const linesHtml = highlightedLines.map((line, idx) => `
+        <div class="file-line">
+          <span class="file-line-num">${idx + 1}</span>
+          <span class="file-line-content">${line || ' '}</span>
+        </div>
+      `).join('');
+
+      return `<div class="file-view">${linesHtml}</div>`;
+    }
+
+    function setActiveTab(tab) {
+      document.getElementById('tab-diff').classList.toggle('active', tab === 'diff');
+      document.getElementById('tab-file').classList.toggle('active', tab === 'file');
+    }
+
+    async function switchDiffTab(tab) {
+      if (!currentDiffContext) return;
+
+      const content = document.getElementById('diff-content');
+      setActiveTab(tab);
+
+      if (tab === 'file') {
+        content.innerHTML = '<div class="loading">Loading file...</div>';
+        try {
+          const fileData = await callMCP('getFileContent', {
+            repoPath: selectedRepo.path,
+            filePath: currentDiffContext.filePath,
+            hash: currentDiffContext.commitHash
+          });
+          content.innerHTML = renderFileContent(fileData);
+        } catch (error) {
+          content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load file: ${escapeHtml(error.message)}</div></div>`;
+        }
+      } else {
+        content.innerHTML = '<div class="loading">Loading changes...</div>';
+        try {
+          let diff;
+          if (currentDiffContext.type === 'commit') {
+            diff = await callMCP('getCommitDiff', {
+              repoPath: selectedRepo.path,
+              hash: currentDiffContext.commitHash,
+              filePath: currentDiffContext.filePath
+            });
+          } else {
+            diff = await callMCP('getDiff', {
+              repoPath: selectedRepo.path,
+              filePath: currentDiffContext.filePath,
+              staged: currentDiffContext.isStaged
+            });
+          }
+          content.innerHTML = renderDiff(diff);
+        } catch (error) {
+          content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load diff: ${escapeHtml(error.message)}</div></div>`;
+        }
+      }
+    }
+
+    function closeDiffModal() {
+      document.getElementById('diff-modal').classList.add('hidden');
+      currentDiffContext = null;
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDiffModal();
+      }
+    });
+
+    async function loadCommits() {
+      if (!selectedRepo) return;
+
+      try {
+        commits = await callMCP('getCommits', { repoPath: selectedRepo.path, limit: 100 });
+        renderCommits();
+      } catch (error) {
+        console.error('Failed to load commits:', error);
+      }
+    }
+
+    function renderCommits() {
+      const container = document.getElementById('commits-list');
+      const totalChanges = (workingFiles.staged?.length || 0) + (workingFiles.unstaged?.length || 0) + (workingFiles.untracked?.length || 0);
+      document.getElementById('commits-count').textContent = commits.length + (totalChanges > 0 ? 1 : 0);
+
+      let html = '';
+
+      // Add uncommitted changes item at top if there are changes
+      if (totalChanges > 0) {
+        html += `
+          <div class="uncommitted-item ${selectedView === 'uncommitted' ? 'selected' : ''}" onclick="selectUncommitted()">
+            <div class="uncommitted-dot"></div>
+            <div class="uncommitted-info">
+              <div class="uncommitted-title">Uncommitted Changes</div>
+              <div class="uncommitted-subtitle">${totalChanges} file${totalChanges > 1 ? 's' : ''} changed</div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (commits.length === 0 && totalChanges === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <div class="empty-state-title">No commits yet</div>
+            <div class="empty-state-text">Make your first commit to start the history</div>
+          </div>
+        `;
+        return;
+      }
+
+      html += commits.map(commit => `
+        <div class="commit-item ${selectedView === commit.hash ? 'selected' : ''}"
+             onclick="selectCommit('${commit.hash}')"
+             oncontextmenu="showCommitContextMenu(event, '${commit.hash}')">
+          <div class="commit-dot"></div>
+          <div class="commit-info">
+            <div class="commit-message">${escapeHtml(commit.subject)}</div>
+            <div class="commit-meta">
+              <span class="commit-hash">${commit.hash.substring(0, 7)}</span>
+              <span>${escapeHtml(commit.author)}</span>
+              <span>${formatDate(commit.date)}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = html;
+    }
+
+    function selectUncommitted() {
+      selectedView = 'uncommitted';
+      renderCommits();
+      showUncommittedView();
+    }
+
+    function showUncommittedView() {
+      document.getElementById('uncommitted-view').classList.remove('hidden');
+      document.getElementById('commit-detail-view').classList.add('hidden');
+      document.getElementById('detail-empty-state').classList.add('hidden');
+      renderChanges();
+    }
+
+    function showCommitDetailView(commit) {
+      document.getElementById('uncommitted-view').classList.add('hidden');
+      document.getElementById('commit-detail-view').classList.remove('hidden');
+      document.getElementById('detail-empty-state').classList.add('hidden');
+
+      document.getElementById('detail-message').textContent = commit.subject;
+      document.getElementById('detail-meta').innerHTML = `
+        <span class="commit-detail-hash">${commit.hash.substring(0, 7)}</span>
+        <span>${escapeHtml(commit.author)}</span>
+        <span>${formatDate(commit.date)}</span>
+      `;
+    }
+
+    function showEmptyDetailView() {
+      document.getElementById('uncommitted-view').classList.add('hidden');
+      document.getElementById('commit-detail-view').classList.add('hidden');
+      document.getElementById('detail-empty-state').classList.remove('hidden');
+    }
+
+    async function selectCommit(hash) {
+      selectedView = hash;
+      renderCommits();
+
+      const commit = commits.find(c => c.hash === hash);
+      if (commit) {
+        showCommitDetailView(commit);
+
+        // Load commit files
+        try {
+          const files = await callMCP('getCommitFiles', { repoPath: selectedRepo.path, hash });
+          document.getElementById('commit-files').innerHTML = files.map(f => {
+            const fileName = f.path.split('/').pop();
+            const dirPath = f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/') + 1) : '';
+            return `
+              <div class="file-item"
+                   data-hash="${escapeHtml(hash)}"
+                   data-path="${escapeHtml(f.path)}"
+                   onclick="showCommitDiff(this.dataset.hash, this.dataset.path)"
+                   style="cursor: pointer;">
+                <div class="file-status-icon ${f.status}">${{ added: 'A', modified: 'M', deleted: 'D', renamed: 'R' }[f.status] || '?'}</div>
+                <span class="file-name">${escapeHtml(fileName)}</span>
+                <span class="file-path">${escapeHtml(dirPath)}</span>
+              </div>
+            `;
+          }).join('');
+        } catch (error) {
+          console.error('Failed to load commit files:', error);
+        }
+      }
+    }
+
+    async function showCommitDiff(commitHash, filePath) {
+      const modal = document.getElementById('diff-modal');
+      const content = document.getElementById('diff-content');
+      const title = document.getElementById('diff-title');
+
+      // Store context for tab switching
+      currentDiffContext = { type: 'commit', filePath, isStaged: false, commitHash };
+
+      title.textContent = filePath;
+      content.innerHTML = '<div class="loading">Loading changes...</div>';
+      modal.classList.remove('hidden');
+      setActiveTab('diff');
+
+      try {
+        const diff = await callMCP('getCommitDiff', {
+          repoPath: selectedRepo.path,
+          hash: commitHash,
+          filePath: filePath
+        });
+        content.innerHTML = renderDiff(diff);
+      } catch (error) {
+        content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load diff: ${escapeHtml(error.message)}</div></div>`;
+      }
+    }
+
+    // Actions
+    async function stageFile(filePath) {
+      if (!selectedRepo) return;
+      try {
+        await callMCP('stageFile', { repoPath: selectedRepo.path, filePath });
+        await loadWorkingStatus();
+        renderCommits();
+        if (selectedView === 'uncommitted') renderChanges();
+      } catch (error) {
+        showToast('Failed to stage file', 'error');
+      }
+    }
+
+    async function unstageFile(filePath) {
+      if (!selectedRepo) return;
+      try {
+        await callMCP('unstageFile', { repoPath: selectedRepo.path, filePath });
+        await loadWorkingStatus();
+        renderCommits();
+        if (selectedView === 'uncommitted') renderChanges();
+      } catch (error) {
+        showToast('Failed to unstage file: ' + (error.message || 'Unknown error'), 'error');
+        console.error('Unstage error:', error);
+      }
+    }
+
+    async function stageAll(event) {
+      if (event) event.stopPropagation();
+      if (!selectedRepo) return;
+      try {
+        await callMCP('stageFile', { repoPath: selectedRepo.path, filePath: '.' });
+        await loadWorkingStatus();
+        renderCommits();
+        if (selectedView === 'uncommitted') renderChanges();
+      } catch (error) {
+        showToast('Failed to stage files', 'error');
+      }
+    }
+
+    async function unstageAll(event) {
+      if (event) event.stopPropagation();
+      if (!selectedRepo) return;
+      const staged = workingFiles.staged || [];
+      if (staged.length === 0) return;
+
+      try {
+        // Unstage all files at once using git reset HEAD
+        for (const file of staged) {
+          await callMCP('unstageFile', { repoPath: selectedRepo.path, filePath: file.path });
+        }
+        await loadWorkingStatus();
+        renderCommits();
+        if (selectedView === 'uncommitted') renderChanges();
+        showToast(`Unstaged ${staged.length} file(s)`, 'success');
+      } catch (error) {
+        showToast('Failed to unstage files', 'error');
+        console.error('Unstage error:', error);
+      }
+    }
+
+    function updateCommitButton() {
+      const messageEl = document.getElementById('commit-message');
+      if (!messageEl) return;
+      const message = messageEl.value.trim();
+      const stagedCount = workingFiles.staged?.length || 0;
+      const btn = document.getElementById('commit-btn');
+      if (btn) btn.disabled = !message || stagedCount === 0;
+    }
+
+    // Listen for message input
+    document.addEventListener('DOMContentLoaded', () => {
+      const msgInput = document.getElementById('commit-message');
+      if (msgInput) msgInput.addEventListener('input', updateCommitButton);
+    });
+
+    async function commit() {
+      if (!selectedRepo) return;
+      const messageEl = document.getElementById('commit-message');
+      const message = messageEl.value.trim();
+
+      if (!message) {
+        showToast('Please enter a commit message', 'error');
+        return;
+      }
+
+      try {
+        await callMCP('commit', { repoPath: selectedRepo.path, message });
+        messageEl.value = '';
+        showToast('Commit successful!', 'success');
+
+        await Promise.all([
+          loadWorkingStatus(),
+          loadCommits(),
+          loadRepos()
+        ]);
+      } catch (error) {
+        showToast('Commit failed: ' + error.message, 'error');
+      }
+    }
+
+    async function pull() {
+      if (!selectedRepo) return;
+      try {
+        document.getElementById('pull-btn').disabled = true;
+        await callMCP('pull', { repoPath: selectedRepo.path });
+        showToast('Pull successful!', 'success');
+        await Promise.all([loadCommits(), loadBranches()]);
+      } catch (error) {
+        showToast('Pull failed: ' + error.message, 'error');
+      } finally {
+        document.getElementById('pull-btn').disabled = false;
+      }
+    }
+
+    async function push() {
+      if (!selectedRepo) return;
+      try {
+        document.getElementById('push-btn').disabled = true;
+        await callMCP('push', { repoPath: selectedRepo.path });
+        showToast('Push successful!', 'success');
+        await loadBranches();
+      } catch (error) {
+        showToast('Push failed: ' + error.message, 'error');
+      } finally {
+        document.getElementById('push-btn').disabled = false;
+      }
+    }
+
+    function addRepo() {
+      showAddRepoModal();
+    }
+
+    async function showAddRepoModal() {
+      const modal = document.getElementById('add-repo-modal');
+      const input = document.getElementById('add-repo-input');
+      const manualSection = document.getElementById('manual-path-section');
+
+      modal.classList.remove('hidden');
+      input.value = '';
+      manualSection.removeAttribute('open');
+
+      // Load available repos
+      await loadAvailableRepos();
+    }
+
+    async function loadAvailableRepos() {
+      const listEl = document.getElementById('available-repos-list');
+      const hintEl = document.getElementById('projects-root-hint');
+
+      listEl.innerHTML = '<div class="loading" style="padding: 16px; font-size: 12px;">Scanning projects folder...</div>';
+
+      try {
+        const data = await callMCP('scanAvailableRepos');
+
+        hintEl.textContent = `Scanning: ${data.projectsRoot}`;
+
+        if (data.error) {
+          listEl.innerHTML = `<div class="no-repos-message">${escapeHtml(data.error)}</div>`;
+          return;
+        }
+
+        if (!data.available || data.available.length === 0) {
+          listEl.innerHTML = '<div class="no-repos-message">No folders found in projects folder</div>';
+          return;
+        }
+
+        listEl.innerHTML = data.available.map(repo => {
+          const icon = repo.isGitRepo ? '📁' : '📂';
+          const isDisabled = repo.alreadyAdded || (!repo.isGitRepo && !repo.canInit);
+          const escapedPath = repo.path.replace(/'/g, "\\'");
+
+          let actionBtn = '';
+          if (repo.alreadyAdded) {
+            actionBtn = '<span class="added-badge">Added</span>';
+          } else if (repo.isGitRepo) {
+            actionBtn = `<button class="add-btn" onclick="event.stopPropagation(); addRepoFromList('${escapedPath}')">+ Add</button>`;
+          } else if (repo.canInit) {
+            actionBtn = `<button class="init-btn" onclick="event.stopPropagation(); initAndAddRepo('${escapedPath}')">Init & Add</button>`;
+          } else {
+            actionBtn = '<span class="folder-badge">Inside repo</span>';
+          }
+
+          return `
+            <div class="available-repo-item ${isDisabled ? 'disabled' : ''}"
+                 data-path="${escapeHtml(repo.path)}"
+                 onclick="${isDisabled ? '' : (repo.isGitRepo ? `addRepoFromList('${escapedPath}')` : `initAndAddRepo('${escapedPath}')`)}">
+              <span class="repo-icon">${icon}</span>
+              <div class="repo-info">
+                <div class="repo-name">${escapeHtml(repo.name)}${!repo.isGitRepo ? ' <span style="color: var(--text-muted); font-weight: normal; font-size: 11px;">(not a repo)</span>' : ''}</div>
+                <div class="repo-path">${escapeHtml(repo.path)}</div>
+              </div>
+              ${actionBtn}
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Failed to scan repos:', error);
+        listEl.innerHTML = '<div class="no-repos-message">Failed to scan for repositories</div>';
+      }
+    }
+
+    async function addRepoFromList(repoPath) {
+      try {
+        const result = await callMCP('addRepo', { repoPath, autoInit: false });
+        if (result.added === false && result.insideRepo) {
+          showToast(result.error, 'error');
+          return;
+        }
+        showToast('Repository added!', 'success');
+        await loadRepos();
+        await loadAvailableRepos();
+      } catch (error) {
+        showToast('Failed to add repository: ' + error.message, 'error');
+      }
+    }
+
+    async function initAndAddRepo(folderPath) {
+      if (!confirm(`Initialize git repository in "${folderPath.split('/').pop()}"?`)) return;
+
+      try {
+        const result = await callMCP('addRepo', { repoPath: folderPath, autoInit: true });
+        if (result.added === false) {
+          showToast(result.error || 'Failed to initialize', 'error');
+          return;
+        }
+        if (result.initialized) {
+          showToast('Repository initialized and added!', 'success');
+        } else {
+          showToast('Repository added!', 'success');
+        }
+        await loadRepos();
+        await loadAvailableRepos();
+      } catch (error) {
+        showToast('Failed to initialize: ' + error.message, 'error');
+      }
+    }
+
+    function hideAddRepoModal() {
+      document.getElementById('add-repo-modal').classList.add('hidden');
+    }
+
+    async function submitAddRepo() {
+      const input = document.getElementById('add-repo-input');
+      const repoPath = input.value.trim();
+      if (!repoPath) {
+        showToast('Please enter a repository path', 'error');
+        return;
+      }
+
+      try {
+        await callMCP('addRepo', { repoPath });
+        showToast('Repository added!', 'success');
+        hideAddRepoModal();
+        await loadRepos();
+      } catch (error) {
+        showToast('Failed to add repository: ' + error.message, 'error');
+      }
+    }
+
+    function toggleSection(section) {
+      // Could implement collapsible sections
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // STASH FUNCTIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function loadStashes() {
+      if (!selectedRepo) return;
+      try {
+        stashes = await callMCP('listStashes', { repoPath: selectedRepo.path });
+        renderStashMenu();
+      } catch (error) {
+        console.error('Failed to load stashes:', error);
+        stashes = [];
+      }
+    }
+
+    function renderStashMenu() {
+      const listEl = document.getElementById('stash-list');
+      if (!listEl) return;
+
+      if (!stashes || stashes.length === 0) {
+        listEl.innerHTML = '<div class="stash-empty">No stashes saved</div>';
+        return;
+      }
+
+      listEl.innerHTML = stashes.map(s => `
+        <div class="stash-item">
+          <div class="stash-item-info">
+            <div class="stash-item-title">${escapeHtml(s.message || 'WIP')}</div>
+            <div class="stash-item-date">${formatDate(s.date)}</div>
+          </div>
+          <div class="stash-item-actions">
+            <button onclick="event.stopPropagation(); applyStash('${escapeHtml(s.ref)}')" title="Apply">Apply</button>
+            <button onclick="event.stopPropagation(); popStash('${escapeHtml(s.ref)}')" title="Pop">Pop</button>
+            <button class="danger" onclick="event.stopPropagation(); dropStash('${escapeHtml(s.ref)}')" title="Drop">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleStashMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('stash-menu');
+      menu.classList.toggle('hidden');
+      if (!menu.classList.contains('hidden')) {
+        loadStashes();
+      }
+    }
+
+    // Close stash menu when clicking elsewhere
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('stash-menu');
+      const btn = document.getElementById('stash-menu-btn');
+      if (menu && !menu.contains(e.target) && e.target !== btn) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    async function stashChanges() {
+      if (!selectedRepo) return;
+      const messageEl = document.getElementById('commit-message');
+      const message = messageEl?.value.trim() || '';
+
+      try {
+        const result = await callMCP('createStash', {
+          repoPath: selectedRepo.path,
+          message: message || undefined,
+          includeUntracked: true
+        });
+
+        if (result.stashed) {
+          showToast('Changes stashed!', 'success');
+          if (messageEl) messageEl.value = '';
+          await Promise.all([loadWorkingStatus(), loadStashes(), loadRepos()]);
+          renderCommits();
+        } else {
+          showToast(result.message || 'Nothing to stash', 'info');
+        }
+      } catch (error) {
+        showToast('Failed to stash: ' + error.message, 'error');
+      }
+    }
+
+    async function applyStash(ref) {
+      if (!selectedRepo) return;
+      try {
+        const result = await callMCP('applyStash', { repoPath: selectedRepo.path, stashRef: ref });
+        if (result.conflicts) {
+          showToast('Applied with conflicts - resolve them', 'warning');
+        } else {
+          showToast('Stash applied!', 'success');
+        }
+        await loadWorkingStatus();
+        renderCommits();
+        document.getElementById('stash-menu')?.classList.add('hidden');
+      } catch (error) {
+        showToast('Failed to apply stash: ' + error.message, 'error');
+      }
+    }
+
+    async function popStash(ref) {
+      if (!selectedRepo) return;
+      try {
+        const result = await callMCP('popStash', { repoPath: selectedRepo.path, stashRef: ref });
+        if (result.conflicts) {
+          showToast('Popped with conflicts - resolve them', 'warning');
+        } else {
+          showToast('Stash popped!', 'success');
+        }
+        await Promise.all([loadWorkingStatus(), loadStashes()]);
+        renderCommits();
+        document.getElementById('stash-menu')?.classList.add('hidden');
+      } catch (error) {
+        showToast('Failed to pop stash: ' + error.message, 'error');
+      }
+    }
+
+    async function dropStash(ref) {
+      if (!selectedRepo) return;
+      if (!confirm('Drop this stash? This cannot be undone.')) return;
+
+      try {
+        await callMCP('dropStash', { repoPath: selectedRepo.path, stashRef: ref });
+        showToast('Stash dropped', 'info');
+        await loadStashes();
+      } catch (error) {
+        showToast('Failed to drop stash: ' + error.message, 'error');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UNDO / REFLOG
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function undoLast() {
+      if (!selectedRepo) return;
+      if (!confirm('Undo the last git operation?')) return;
+
+      try {
+        const result = await callMCP('undoLast', { repoPath: selectedRepo.path });
+        showToast(`Undid: ${result.undone}`, 'success');
+        await Promise.all([loadCommits(), loadWorkingStatus(), loadBranches()]);
+      } catch (error) {
+        showToast('Failed to undo: ' + error.message, 'error');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // COMMIT CONTEXT MENU
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function showCommitContextMenu(event, commitHash) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      contextMenuCommit = commits.find(c => c.hash === commitHash);
+      if (!contextMenuCommit) return;
+
+      const menu = document.getElementById('commit-context-menu');
+      menu.style.left = event.clientX + 'px';
+      menu.style.top = event.clientY + 'px';
+      menu.classList.remove('hidden');
+    }
+
+    // Close context menu on click elsewhere
+    document.addEventListener('click', () => {
+      document.getElementById('commit-context-menu')?.classList.add('hidden');
+    });
+
+    async function revertSelectedCommit() {
+      if (!selectedRepo || !contextMenuCommit) return;
+
+      try {
+        const result = await callMCP('revertCommit', {
+          repoPath: selectedRepo.path,
+          commitHash: contextMenuCommit.hash
+        });
+
+        if (result.conflicts) {
+          showToast('Revert has conflicts - resolve them', 'warning');
+          await checkForConflicts();
+        } else if (result.reverted) {
+          showToast('Commit reverted!', 'success');
+        } else {
+          showToast(result.error || 'Failed to revert', 'error');
+        }
+        await Promise.all([loadCommits(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to revert: ' + error.message, 'error');
+      }
+    }
+
+    async function cherryPickCommit() {
+      if (!selectedRepo || !contextMenuCommit) return;
+
+      try {
+        const result = await callMCP('cherryPick', {
+          repoPath: selectedRepo.path,
+          commits: [contextMenuCommit.hash]
+        });
+
+        if (!result.completed && result.results?.[0]?.error === 'Merge conflict') {
+          showToast('Cherry-pick has conflicts - resolve them', 'warning');
+          await checkForConflicts();
+        } else if (result.completed) {
+          showToast('Commit cherry-picked!', 'success');
+        } else {
+          showToast(result.message || 'Cherry-pick failed', 'error');
+        }
+        await Promise.all([loadCommits(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to cherry-pick: ' + error.message, 'error');
+      }
+    }
+
+    function amendCommitMessage() {
+      if (!contextMenuCommit) return;
+
+      document.getElementById('amend-info').textContent =
+        `Commit: ${contextMenuCommit.hash.slice(0, 7)} - ${contextMenuCommit.subject}`;
+      document.getElementById('amend-message').value = contextMenuCommit.subject;
+      document.getElementById('amend-modal').classList.remove('hidden');
+    }
+
+    function hideAmendModal() {
+      document.getElementById('amend-modal').classList.add('hidden');
+    }
+
+    async function executeAmendMessage() {
+      if (!selectedRepo || !contextMenuCommit) return;
+
+      const newMessage = document.getElementById('amend-message').value.trim();
+      if (!newMessage) {
+        showToast('Please enter a message', 'error');
+        return;
+      }
+
+      try {
+        const result = await callMCP('amendCommitMessage', {
+          repoPath: selectedRepo.path,
+          commitHash: contextMenuCommit.hash,
+          newMessage
+        });
+
+        if (result.amended) {
+          showToast('Message updated!', 'success');
+          hideAmendModal();
+          await loadCommits();
+        } else {
+          showToast(result.error || 'Failed to amend', 'error');
+        }
+      } catch (error) {
+        showToast('Failed to amend: ' + error.message, 'error');
+      }
+    }
+
+    function startSquashMode() {
+      if (!contextMenuCommit) return;
+      squashBaseCommit = contextMenuCommit.hash;
+
+      // Show squash modal
+      const commitsAfter = commits.filter((c, i) =>
+        i < commits.findIndex(x => x.hash === squashBaseCommit)
+      );
+
+      document.getElementById('squash-info').innerHTML =
+        `Squash <strong>${commitsAfter.length}</strong> commit(s) after <code>${squashBaseCommit.slice(0, 7)}</code> into one.`;
+      document.getElementById('squash-message').value = commitsAfter.map(c => c.subject).join('\n');
+      document.getElementById('squash-modal').classList.remove('hidden');
+    }
+
+    function hideSquashModal() {
+      document.getElementById('squash-modal').classList.add('hidden');
+      squashBaseCommit = null;
+    }
+
+    async function executeSquash() {
+      if (!selectedRepo || !squashBaseCommit) return;
+
+      const message = document.getElementById('squash-message').value.trim();
+      if (!message) {
+        showToast('Please enter a commit message', 'error');
+        return;
+      }
+
+      try {
+        const result = await callMCP('squashCommits', {
+          repoPath: selectedRepo.path,
+          baseCommit: squashBaseCommit,
+          message
+        });
+
+        if (result.squashed) {
+          showToast('Commits squashed!', 'success');
+          hideSquashModal();
+          await loadCommits();
+        } else {
+          showToast(result.error || 'Failed to squash', 'error');
+        }
+      } catch (error) {
+        showToast('Failed to squash: ' + error.message, 'error');
+      }
+    }
+
+    async function resetToCommit(mode) {
+      if (!selectedRepo || !contextMenuCommit) return;
+
+      const modeText = mode === 'hard' ? 'HARD reset (discard all changes)' : 'soft reset (keep changes staged)';
+      if (!confirm(`${modeText} to ${contextMenuCommit.hash.slice(0, 7)}?`)) return;
+
+      try {
+        const result = await callMCP('resetToCommit', {
+          repoPath: selectedRepo.path,
+          hash: contextMenuCommit.hash,
+          mode
+        });
+
+        if (result.warning) {
+          showToast(result.warning, 'warning');
+        } else if (result.reset) {
+          showToast(`Reset to ${contextMenuCommit.hash.slice(0, 7)}`, 'success');
+          await Promise.all([loadCommits(), loadWorkingStatus()]);
+        }
+      } catch (error) {
+        showToast('Failed to reset: ' + error.message, 'error');
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // BRANCH OPERATIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function showBranchModal() {
+      document.getElementById('new-branch-name').value = '';
+      populateBranchSelects();
+      document.getElementById('branch-modal').classList.remove('hidden');
+    }
+
+    function hideBranchModal() {
+      document.getElementById('branch-modal').classList.add('hidden');
+    }
+
+    function populateBranchSelects() {
+      const localBranches = branches.filter(b => !b.name.startsWith('origin/'));
+      const current = localBranches.find(b => b.current)?.name;
+
+      // Merge select - branches other than current
+      const mergeSelect = document.getElementById('merge-branch-select');
+      mergeSelect.innerHTML = localBranches
+        .filter(b => b.name !== current)
+        .map(b => `<option value="${b.name}">${b.name}</option>`)
+        .join('');
+
+      // Delete select - branches other than current
+      const deleteSelect = document.getElementById('delete-branch-select');
+      deleteSelect.innerHTML = localBranches
+        .filter(b => b.name !== current)
+        .map(b => `<option value="${b.name}">${b.name}</option>`)
+        .join('');
+    }
+
+    async function createBranch() {
+      if (!selectedRepo) return;
+      const name = document.getElementById('new-branch-name').value.trim();
+      if (!name) {
+        showToast('Please enter a branch name', 'error');
+        return;
+      }
+
+      const switchTo = document.getElementById('switch-after-create').checked;
+
+      try {
+        if (switchTo) {
+          await callMCP('createAndSwitchBranch', { repoPath: selectedRepo.path, branchName: name });
+        } else {
+          await callMCP('createBranch', { repoPath: selectedRepo.path, branchName: name });
+        }
+        showToast(`Branch "${name}" created!`, 'success');
+        hideBranchModal();
+        await loadBranches();
+      } catch (error) {
+        showToast('Failed to create branch: ' + error.message, 'error');
+      }
+    }
+
+    async function mergeBranch() {
+      if (!selectedRepo) return;
+      const branch = document.getElementById('merge-branch-select').value;
+      if (!branch) return;
+
+      try {
+        const result = await callMCP('mergeBranch', { repoPath: selectedRepo.path, branchName: branch });
+        if (result.conflicts) {
+          showToast('Merge has conflicts - resolve them', 'warning');
+          hideBranchModal();
+          await checkForConflicts();
+        } else {
+          showToast(`Merged ${branch}!`, 'success');
+          hideBranchModal();
+        }
+        await Promise.all([loadCommits(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to merge: ' + error.message, 'error');
+      }
+    }
+
+    async function deleteBranch() {
+      if (!selectedRepo) return;
+      const branch = document.getElementById('delete-branch-select').value;
+      if (!branch) return;
+
+      if (!confirm(`Delete branch "${branch}"?`)) return;
+
+      try {
+        await callMCP('deleteBranch', { repoPath: selectedRepo.path, branchName: branch, force: false });
+        showToast(`Deleted ${branch}`, 'info');
+        await loadBranches();
+        populateBranchSelects();
+      } catch (error) {
+        if (error.message?.includes('not fully merged')) {
+          if (confirm(`Branch "${branch}" is not fully merged. Force delete?`)) {
+            await callMCP('deleteBranch', { repoPath: selectedRepo.path, branchName: branch, force: true });
+            showToast(`Force deleted ${branch}`, 'info');
+            await loadBranches();
+            populateBranchSelects();
+          }
+        } else {
+          showToast('Failed to delete: ' + error.message, 'error');
+        }
+      }
+    }
+
+    async function switchBranch(branchName) {
+      if (!selectedRepo || !branchName) return;
+      try {
+        await callMCP('switchBranch', { repoPath: selectedRepo.path, branch: branchName });
+        showToast(`Switched to ${branchName}`, 'success');
+        await Promise.all([loadBranches(), loadCommits(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to switch: ' + error.message, 'error');
+        await loadBranches(); // Restore select to actual current branch
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CONFLICT HANDLING
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function checkForConflicts() {
+      if (!selectedRepo) return;
+
+      try {
+        currentConflicts = await callMCP('getConflicts', { repoPath: selectedRepo.path });
+        renderConflictUI();
+      } catch (error) {
+        console.error('Failed to check conflicts:', error);
+      }
+    }
+
+    function renderConflictUI() {
+      const banner = document.getElementById('conflict-banner');
+      const filesEl = document.getElementById('conflict-files');
+
+      if (!currentConflicts.hasConflicts || currentConflicts.operation === 'none') {
+        banner?.classList.add('hidden');
+        filesEl?.classList.add('hidden');
+        return;
+      }
+
+      // Show banner
+      const opName = {
+        merge: 'Merge',
+        rebase: 'Rebase',
+        'cherry-pick': 'Cherry-pick',
+        revert: 'Revert'
+      }[currentConflicts.operation] || currentConflicts.operation;
+
+      document.getElementById('conflict-operation').textContent = opName;
+      banner?.classList.remove('hidden');
+
+      // Show conflict files
+      filesEl.innerHTML = currentConflicts.conflicts.map(c => `
+        <div class="conflict-file">
+          <span class="conflict-file-path">${escapeHtml(c.path)}</span>
+          <span class="conflict-file-type">${escapeHtml(c.type)}</span>
+          <div class="conflict-resolve-btns">
+            <button onclick="resolveConflict('${escapeHtml(c.path)}', 'ours')">Use Ours</button>
+            <button onclick="resolveConflict('${escapeHtml(c.path)}', 'theirs')">Use Theirs</button>
+            <button onclick="showDiff('${escapeHtml(c.path)}', false)">View</button>
+          </div>
+        </div>
+      `).join('');
+      filesEl?.classList.remove('hidden');
+    }
+
+    async function resolveConflict(filePath, version) {
+      if (!selectedRepo) return;
+      try {
+        await callMCP('resolveConflict', { repoPath: selectedRepo.path, filePath, version });
+        showToast(`Resolved with ${version}`, 'success');
+        await Promise.all([checkForConflicts(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to resolve: ' + error.message, 'error');
+      }
+    }
+
+    async function continueOperation() {
+      if (!selectedRepo) return;
+      const op = currentConflicts.operation;
+
+      try {
+        if (op === 'merge') {
+          // For merge, just commit
+          await callMCP('commit', { repoPath: selectedRepo.path, message: 'Merge commit' });
+        } else if (op === 'rebase') {
+          await callMCP('continueRebase', { repoPath: selectedRepo.path });
+        } else if (op === 'cherry-pick') {
+          await callMCP('continueCherryPick', { repoPath: selectedRepo.path });
+        }
+        showToast(`${op} continued!`, 'success');
+        await Promise.all([checkForConflicts(), loadCommits(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to continue: ' + error.message, 'error');
+      }
+    }
+
+    async function abortOperation() {
+      if (!selectedRepo) return;
+      const op = currentConflicts.operation;
+
+      try {
+        if (op === 'merge') {
+          await callMCP('abortMerge', { repoPath: selectedRepo.path });
+        } else if (op === 'rebase') {
+          await callMCP('abortRebase', { repoPath: selectedRepo.path });
+        } else if (op === 'cherry-pick') {
+          await callMCP('abortCherryPick', { repoPath: selectedRepo.path });
+        } else if (op === 'revert') {
+          await callMCP('abortRevert', { repoPath: selectedRepo.path });
+        }
+        showToast(`${op} aborted`, 'info');
+        await Promise.all([checkForConflicts(), loadCommits(), loadWorkingStatus()]);
+      } catch (error) {
+        showToast('Failed to abort: ' + error.message, 'error');
+      }
+    }
+
+    // Renamed from fetch to avoid conflict with window.fetch
+    async function fetchRepo() {
+      if (!selectedRepo) return;
+      try {
+        document.getElementById('fetch-btn').disabled = true;
+        await callMCP('fetch', { repoPath: selectedRepo.path });
+        await Promise.all([loadCommits(), loadBranches()]);
+      } catch (error) {
+        showToast('Fetch failed: ' + error.message, 'error');
+      } finally {
+        document.getElementById('fetch-btn').disabled = false;
+      }
+    }
+
+    // Helpers
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diff = now - date;
+
+      if (diff < 60000) return 'just now';
+      if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+      if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+      if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Theme handling
+    function applyTheme(theme) {
+      const hljsDark = document.getElementById('hljs-dark');
+      const hljsLight = document.getElementById('hljs-light');
+
+      if (theme === 'light') {
+        document.documentElement.classList.add('light-theme', 'light');
+        document.documentElement.style.colorScheme = 'light';
+        if (hljsDark) hljsDark.disabled = true;
+        if (hljsLight) hljsLight.disabled = false;
+      } else {
+        document.documentElement.classList.remove('light-theme', 'light');
+        document.documentElement.style.colorScheme = 'dark';
+        if (hljsDark) hljsDark.disabled = false;
+        if (hljsLight) hljsLight.disabled = true;
+      }
+    }
+
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'photon:theme-change' || event.data.type === 'mcp:theme_changed') {
+        applyTheme(event.data.theme);
+      }
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      await new Promise(r => setTimeout(r, 100));
+
+      if (window.mcp?.theme) {
+        applyTheme(window.mcp.theme);
+      } else if (window.photon?.theme) {
+        applyTheme(window.photon.theme);
+      }
+
+      loadRepos();
+      initResizers();
+    });
+
+    // Resizable Columns
+    function initResizers() {
+      const sidebarResizer = document.getElementById('sidebar-resizer');
+      const commitsResizer = document.getElementById('commits-resizer');
+      const sidebar = document.querySelector('.sidebar');
+      const commitsPanel = document.getElementById('commits-panel');
+
+      let isResizing = false;
+      let currentResizer = null;
+      let startX = 0;
+      let startWidth = 0;
+
+      // Load saved widths from localStorage
+      const savedSidebarWidth = localStorage.getItem('git-box-sidebar-width');
+      const savedCommitsWidth = localStorage.getItem('git-box-commits-width');
+
+      if (savedSidebarWidth) {
+        sidebar.style.width = savedSidebarWidth + 'px';
+      }
+      if (savedCommitsWidth) {
+        commitsPanel.style.width = savedCommitsWidth + 'px';
+      }
+
+      function startResize(e, resizer, panel, minWidth, maxWidth, storageKey) {
+        isResizing = true;
+        currentResizer = { resizer, panel, minWidth, maxWidth, storageKey };
+        startX = e.clientX;
+        startWidth = panel.offsetWidth;
+
+        resizer.classList.add('active');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+
+        e.preventDefault();
+      }
+
+      function doResize(e) {
+        if (!isResizing || !currentResizer) return;
+
+        const { panel, minWidth, maxWidth, storageKey } = currentResizer;
+        const diff = e.clientX - startX;
+        let newWidth = startWidth + diff;
+
+        // Enforce min/max
+        newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+
+        panel.style.width = newWidth + 'px';
+        localStorage.setItem(storageKey, newWidth);
+      }
+
+      function stopResize() {
+        if (!isResizing) return;
+
+        isResizing = false;
+        if (currentResizer) {
+          currentResizer.resizer.classList.remove('active');
+        }
+        currentResizer = null;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+
+      // Sidebar resizer
+      sidebarResizer?.addEventListener('mousedown', (e) => {
+        startResize(e, sidebarResizer, sidebar, 150, 400, 'git-box-sidebar-width');
+      });
+
+      // Commits panel resizer
+      commitsResizer?.addEventListener('mousedown', (e) => {
+        startResize(e, commitsResizer, commitsPanel, 250, 600, 'git-box-commits-width');
+      });
+
+      document.addEventListener('mousemove', doResize);
+      document.addEventListener('mouseup', stopResize);
+    }
+  </script>
+</body>
+</html>
