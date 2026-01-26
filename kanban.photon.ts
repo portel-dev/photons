@@ -720,22 +720,25 @@ process.exit(0);
     if (params.beforeId) {
       const beforeIndex = board.tasks.findIndex((t) => t.id === params.beforeId);
       if (beforeIndex === -1) {
-        // beforeId not found, append to end
-        board.tasks.push(task);
+        // beforeId not found, insert at top of column
+        const firstInColumn = board.tasks.findIndex((t) => t.column === params.column);
+        if (firstInColumn === -1) {
+          board.tasks.push(task);
+        } else {
+          board.tasks.splice(firstInColumn, 0, task);
+        }
       } else {
         board.tasks.splice(beforeIndex, 0, task);
       }
     } else {
-      // No beforeId - append to end of the column
-      // Find the last task in this column and insert after it
-      let insertIndex = board.tasks.length;
-      for (let i = board.tasks.length - 1; i >= 0; i--) {
-        if (board.tasks[i].column === params.column) {
-          insertIndex = i + 1;
-          break;
-        }
+      // No beforeId - insert at TOP of the column (most visible position)
+      const firstInColumn = board.tasks.findIndex((t) => t.column === params.column);
+      if (firstInColumn === -1) {
+        // No tasks in column yet, just append
+        board.tasks.push(task);
+      } else {
+        board.tasks.splice(firstInColumn, 0, task);
       }
-      board.tasks.splice(insertIndex, 0, task);
     }
 
     await this.saveBoard(board);

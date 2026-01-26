@@ -427,6 +427,27 @@
       100% { transform: scale(1); box-shadow: none; }
     }
 
+    /* Highlight animation for remote updates (task moved/edited by another client or AI) */
+    .task-card.just-updated {
+      animation: cardHighlight 0.8s ease-out;
+    }
+
+    @keyframes cardHighlight {
+      0% { box-shadow: 0 0 0 2px var(--accent), 0 0 12px var(--accent); }
+      100% { box-shadow: none; }
+    }
+
+    /* Flash animation for newly created cards */
+    .task-card.just-created {
+      animation: cardFlashIn 0.5s ease-out;
+    }
+
+    @keyframes cardFlashIn {
+      0% { opacity: 0; transform: translateY(-8px); box-shadow: 0 0 0 2px var(--column-done), 0 0 12px var(--column-done); }
+      50% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 2px var(--column-done), 0 0 12px var(--column-done); }
+      100% { opacity: 1; transform: translateY(0); box-shadow: none; }
+    }
+
     /* Cards shifting to make room */
     .task-card.shifting {
       transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
@@ -1416,6 +1437,8 @@
             board.tasks.push(data.task);
             renderBoard();
             updateStats();
+            // Add flash animation to new card
+            highlightCard(data.task.id, 'just-created');
           }
           break;
 
@@ -1427,6 +1450,8 @@
               board.tasks[idx] = { ...board.tasks[idx], ...data.task };
               renderBoard();
               updateStats();
+              // Add highlight animation to moved card
+              highlightCard(data.task.id, 'just-updated');
             }
           }
           break;
@@ -1438,6 +1463,8 @@
               board.tasks[idx] = { ...board.tasks[idx], ...data.task };
               renderBoard();
               updateStats();
+              // Add highlight animation to updated card
+              highlightCard(data.task.id, 'just-updated');
             }
           }
           break;
@@ -1461,6 +1488,19 @@
           // Unknown event type - refresh to be safe
           refreshCurrentBoard();
       }
+    }
+
+    // Highlight a card with animation (for remote updates)
+    function highlightCard(taskId, animationClass) {
+      requestAnimationFrame(() => {
+        const card = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (card) {
+          card.classList.add(animationClass);
+          card.addEventListener('animationend', () => {
+            card.classList.remove(animationClass);
+          }, { once: true });
+        }
+      });
     }
 
     // Refresh the currently displayed board (or switch to most active in Auto mode)
@@ -2084,15 +2124,13 @@
           board.tasks.push(draggedTask);
         }
       } else {
-        // Insert at end of column - find last task in this column
-        let insertIndex = board.tasks.length;
-        for (let i = board.tasks.length - 1; i >= 0; i--) {
-          if (board.tasks[i].column === columnName) {
-            insertIndex = i + 1;
-            break;
-          }
+        // Insert at TOP of column (most visible position) - find first task in this column
+        const firstInColumn = board.tasks.findIndex(t => t.column === columnName);
+        if (firstInColumn === -1) {
+          board.tasks.push(draggedTask);
+        } else {
+          board.tasks.splice(firstInColumn, 0, draggedTask);
         }
-        board.tasks.splice(insertIndex, 0, draggedTask);
       }
 
       // FLIP Animation Step 2: Render new DOM (LAST position)
