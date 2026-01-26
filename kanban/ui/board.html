@@ -2086,7 +2086,8 @@
       `;
 
       const tasksContainer = columnEl.querySelector('.column-tasks');
-      tasks.forEach(task => {
+      // Render in reverse order - newest on top
+      [...tasks].reverse().forEach(task => {
         tasksContainer.appendChild(createTaskCard(task));
       });
 
