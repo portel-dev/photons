@@ -1133,6 +1133,96 @@
       font-size: 14px;
     }
 
+    /* Comments section in detail view */
+    .detail-comments-section {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comments-header {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: var(--text-secondary);
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .comments-list:empty::before {
+      content: 'No comments yet';
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    .comment {
+      padding: 10px 12px;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .comment.ai {
+      border-left: 3px solid var(--accent);
+    }
+
+    .comment.human {
+      border-left: 3px solid var(--column-done);
+    }
+
+    .comment-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .comment-author {
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .comment-content {
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .comment-form .btn {
+      align-self: flex-end;
+    }
+
     .detail-description h1, .detail-description h2, .detail-description h3 {
       font-size: 14px;
       font-weight: 600;
@@ -1342,6 +1432,14 @@
       </div>
       <div class="detail-body">
         <div class="detail-description task-description" id="detail-description"></div>
+        <div class="detail-comments-section" id="detail-comments-section">
+          <h3 class="comments-header">Comments</h3>
+          <div class="comments-list" id="comments-list"></div>
+          <div class="comment-form">
+            <textarea id="new-comment" placeholder="Add a comment..." rows="2"></textarea>
+            <button class="btn btn-primary" onclick="addCommentFromDetail()">Add Comment</button>
+          </div>
+        </div>
       </div>
       <div class="detail-footer">
         <select class="detail-column-select" id="detail-column" onchange="moveTaskFromDetail()">
@@ -1924,7 +2022,23 @@
     function renderMarkdown(text, taskId) {
       if (!text) return '';
 
-      let html = escapeHtml(text);
+      // Handle fenced code blocks BEFORE escaping (preserve content as-is)
+      const codeBlocks = [];
+      let processed = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+        const idx = codeBlocks.length;
+        codeBlocks.push({ lang, code: code.trim() });
+        return `__CODE_BLOCK_${idx}__`;
+      });
+
+      let html = escapeHtml(processed);
+
+      // Restore code blocks with proper formatting
+      codeBlocks.forEach((block, idx) => {
+        const escapedCode = escapeHtml(block.code);
+        const langClass = block.lang ? ` data-lang="${block.lang}"` : '';
+        html = html.replace(`__CODE_BLOCK_${idx}__`,
+          `<pre class="code-block"${langClass}><code>${escapedCode}</code></pre>`);
+      });
 
       // Convert checkboxes: - [ ] and - [x]
       // We'll use a unique index for each checkbox to track them
@@ -2336,6 +2450,12 @@
       // Render description with interactive checkboxes
       document.getElementById('detail-description').innerHTML = renderMarkdown(task.description || '', taskId);
 
+      // Render comments
+      renderDetailComments(task.comments || []);
+
+      // Clear comment input
+      document.getElementById('new-comment').value = '';
+
       // Populate column select
       const columnSelect = document.getElementById('detail-column');
       columnSelect.innerHTML = board.columns.map(col =>
@@ -2375,6 +2495,69 @@
       if (!currentDetailTaskId) return;
       closeDetailView();
       confirmDelete(currentDetailTaskId);
+    }
+
+    function renderDetailComments(comments) {
+      const listEl = document.getElementById('comments-list');
+      if (!comments || comments.length === 0) {
+        listEl.innerHTML = '';
+        return;
+      }
+
+      listEl.innerHTML = comments.map(comment => {
+        const date = new Date(comment.createdAt).toLocaleString();
+        return `
+          <div class="comment ${comment.author}">
+            <div class="comment-meta">
+              <span class="comment-author">${escapeHtml(comment.author)}</span>
+              <span class="comment-date">${date}</span>
+            </div>
+            <div class="comment-content">${escapeHtml(comment.content)}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function addCommentFromDetail() {
+      if (!currentDetailTaskId) return;
+
+      const textarea = document.getElementById('new-comment');
+      const content = textarea.value.trim();
+      if (!content) return;
+
+      try {
+        await window.photon.invoke('addComment', {
+          board: currentBoardName,
+          id: currentDetailTaskId,
+          content: content,
+          author: 'human'
+        });
+
+        // Update local state and re-render
+        const task = board.tasks.find(t => t.id === currentDetailTaskId);
+        if (task) {
+          if (!task.comments) task.comments = [];
+          task.comments.push({
+            id: Date.now().toString(),
+            author: 'human',
+            content: content,
+            createdAt: new Date().toISOString()
+          });
+          renderDetailComments(task.comments);
+
+          // Update comment count in header
+          const commentsEl = document.getElementById('detail-comments');
+          commentsEl.textContent = task.comments.length;
+          commentsEl.style.display = '';
+
+          // Update card in board
+          renderBoard();
+        }
+
+        textarea.value = '';
+      } catch (err) {
+        console.error('Failed to add comment:', err);
+      }
     }
 
     // New Board Modal
