@@ -673,8 +673,22 @@ process.exit(0);
       throw new Error(`Invalid column: ${params.column}. Available: ${board.columns.join(', ')}`);
     }
 
+    // Remove task from current position
+    const oldIndex = board.tasks.findIndex((t) => t.id === params.id);
+    board.tasks.splice(oldIndex, 1);
+
+    // Update column and timestamp
     task.column = params.column;
     task.updatedAt = new Date().toISOString();
+
+    // Insert at TOP of target column (most visible position)
+    const firstInColumn = board.tasks.findIndex((t) => t.column === params.column);
+    if (firstInColumn === -1) {
+      board.tasks.push(task);
+    } else {
+      board.tasks.splice(firstInColumn, 0, task);
+    }
+
     await this.saveBoard(board);
 
     // Notify connected UIs of the change (both in-process and cross-process)
