@@ -2701,6 +2701,9 @@
 
       if (!title) return;
 
+      // Keep form data in case of error
+      const formData = { id, column, title, description, priority, assignee };
+
       closeModal();
 
       try {
@@ -2755,6 +2758,17 @@
         updateStats();
       } catch (err) {
         console.error('Failed to save task:', err);
+        // Show error and reopen modal with data
+        alert('Failed to save task: ' + (err.message || 'Unknown error'));
+        // Reopen modal with form data
+        document.getElementById('modal-title').textContent = formData.id ? 'Edit Task' : 'New Task';
+        document.getElementById('task-id').value = formData.id || '';
+        document.getElementById('task-column').value = formData.column;
+        document.getElementById('task-title').value = formData.title;
+        document.getElementById('task-description').value = formData.description;
+        document.getElementById('task-priority').value = formData.priority;
+        document.getElementById('task-assignee').value = formData.assignee;
+        document.getElementById('task-modal').classList.add('visible');
       }
     }
 
