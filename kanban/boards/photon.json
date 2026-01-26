@@ -63,6 +63,17 @@
       "createdBy": "ai"
     },
     {
+      "id": "mkujcivzpzeyj",
+      "title": "Kanban UI Fixes",
+      "description": "- detail page for card does not render code blocks correctly\n- comments viewing and adding should be part of detail view and not edit view\n- edit fails at times figure out why and fix\n- keep the ui consistent, card places tags on top right",
+      "column": "In Progress",
+      "priority": "medium",
+      "assignee": "ai",
+      "createdAt": "2026-01-26T02:15:39.167Z",
+      "updatedAt": "2026-01-26T03:52:31.911Z",
+      "createdBy": "ai"
+    },
+    {
       "id": "mkh3zebj840km",
       "title": "Push photons repo changes to origin",
       "description": "17 commits ahead of origin/main - push kanban multi-tenancy and dashboard enhancements",
@@ -660,17 +671,6 @@
       ]
     },
     {
-      "id": "mkujcivzpzeyj",
-      "title": "Kanban UI Fixes",
-      "description": "- detail page for card does not render code blocks correctly\n- comments viewing and adding should be part of detail view and not edit view\n- edit fails at times figure out why and fix\n- keep the ui consistent, card places tags on top right",
-      "column": "Backlog",
-      "priority": "medium",
-      "assignee": "ai",
-      "createdAt": "2026-01-26T02:15:39.167Z",
-      "updatedAt": "2026-01-26T02:19:59.547Z",
-      "createdBy": "ai"
-    },
-    {
       "id": "mkujjlyyt5rj3",
       "title": "Needs CSS animation to show moves and edits in Kanban",
       "description": "Otherwise its hard to notice the changes that happen in a blink of an eye",
@@ -683,5 +683,5 @@
     }
   ],
   "createdAt": "2026-01-16T16:44:16.065Z",
-  "updatedAt": "2026-01-26T03:32:22.269Z"
+  "updatedAt": "2026-01-26T03:52:31.911Z"
 }

@@ -25,7 +25,7 @@ Kanban Board Photon
 
 ## 🔧 Tools
 
-This photon provides **26** tools:
+This photon provides **27** tools:
 
 
 ### `listProjectFolders`
@@ -303,6 +303,17 @@ Clear completed tasks (archive them)
 ### `getStats`
 
 Get board statistics
+
+
+
+
+
+---
+
+
+### `reportError`
+
+Report a JavaScript error from the UI  Used by the kanban UI to report runtime errors back to developers/AI. Errors are logged to a file for debugging and can trigger notifications.
 
 
 

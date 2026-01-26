@@ -1355,6 +1355,36 @@
   </div>
 
   <script>
+    // Runtime error reporting - catches JS errors and reports back to AI/developer
+    const jsErrors = [];
+    window.onerror = (message, source, line, col, error) => {
+      const errorInfo = {
+        message: String(message),
+        source: source?.replace(window.location.origin, ''),
+        line,
+        col,
+        stack: error?.stack,
+        timestamp: new Date().toISOString()
+      };
+      jsErrors.push(errorInfo);
+      console.error('[Kanban UI Error]', errorInfo);
+
+      // Report to parent (Beam) for logging
+      window.parent.postMessage({
+        type: 'photon:js-error',
+        photon: 'kanban',
+        error: errorInfo
+      }, '*');
+
+      // Also try to report via MCP if available
+      if (window.photon) {
+        window.photon.invoke('reportError', {
+          board: currentBoardName,
+          error: errorInfo
+        }).catch(() => {}); // Ignore if method doesn't exist
+      }
+    };
+
     // Board state
     let board = window.__PHOTON_DATA__ || { columns: [], tasks: [] };
     let currentBoardName = board.name || 'default';

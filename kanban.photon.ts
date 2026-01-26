@@ -1089,6 +1089,48 @@ process.exit(0);
     };
   }
 
+  /**
+   * Report a JavaScript error from the UI
+   *
+   * Used by the kanban UI to report runtime errors back to developers/AI.
+   * Errors are logged to a file for debugging and can trigger notifications.
+   *
+   * @internal
+   */
+  async reportError(params: {
+    board?: string;
+    error: {
+      message: string;
+      source?: string;
+      line?: number;
+      col?: number;
+      stack?: string;
+      timestamp?: string;
+    };
+  }): Promise<{ logged: boolean }> {
+    const errorLogPath = path.join(this.dataDir, 'ui-errors.log');
+    const logEntry = {
+      board: params.board || 'unknown',
+      ...params.error,
+      timestamp: params.error.timestamp || new Date().toISOString(),
+    };
+
+    // Append to error log
+    const logLine = JSON.stringify(logEntry) + '\n';
+    await fs.appendFile(errorLogPath, logLine);
+
+    // Also emit for real-time notification
+    this.emit({
+      channel: `kanban:errors`,
+      event: 'ui-error',
+      data: logEntry,
+    });
+
+    console.error('[Kanban UI Error]', logEntry.message, logEntry.source, logEntry.line);
+
+    return { logged: true };
+  }
+
   // ══════════════════════════════════════════════════════════════════════════════
   // SCHEDULED JOBS (daemon features)
   // ══════════════════════════════════════════════════════════════════════════════
