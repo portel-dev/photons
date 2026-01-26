@@ -984,7 +984,13 @@ process.exit(0);
       task.column = 'Backlog';
     }
 
-    board.tasks.push(task);
+    // Insert at TOP of target column (newest first)
+    const firstInColumn = board.tasks.findIndex(t => t.column === task.column);
+    if (firstInColumn === -1) {
+      board.tasks.push(task);
+    } else {
+      board.tasks.splice(firstInColumn, 0, task);
+    }
     await this.saveBoard(board);
 
     // Notify connected UIs of the change (both in-process and cross-process)

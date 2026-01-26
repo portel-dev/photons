@@ -380,7 +380,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:04a41d912fa95179cea4b0a6bfcb3a021d2611ba70e99e058dd57421315c200a",
+      "hash": "sha256:e32debc147ecdf0af69f21b576525f035e346a6a9be874869382dbb56746fb06",
       "tools": [
         "configure",
         "getConfig",
@@ -421,7 +421,8 @@
         "kanban/boards/photon.json",
         "kanban/boards/test-columns.json",
         "kanban/data.json",
-        "kanban/ui/board.html"
+        "kanban/ui/board.html",
+        "kanban/ui-errors.log"
       ]
     },
     {
