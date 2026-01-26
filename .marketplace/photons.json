@@ -380,7 +380,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:0a994a08c4f8ccdacdba7eb5820d2701652aed2f7eb223584f3c071c567de3d2",
+      "hash": "sha256:04a41d912fa95179cea4b0a6bfcb3a021d2611ba70e99e058dd57421315c200a",
       "tools": [
         "configure",
         "getConfig",
@@ -408,8 +408,11 @@
         "removeColumn",
         "clearCompleted",
         "getStats",
+        "setDependency",
         "reportError",
         "scheduledArchiveOldTasks",
+        "scheduledMorningPull",
+        "scheduledStaleTaskCheck",
         "handleGithubIssue",
         "batchMoveTasks"
       ],

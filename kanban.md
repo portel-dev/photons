@@ -22,15 +22,21 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **30** tools:
+This photon provides **33** tools:
 
 
 ### `configure`
 
-Configure the kanban photon  Set the projects root folder. This is stored persistently so all instances (Claude Code MCP, Beam UI, etc.) use the same configuration.
+Configure the kanban photon  Set the projects root folder and automation settings. This is stored persistently so all instances (Claude Code MCP, Beam UI, etc.) use the same configuration.
 
 
 
+
+**Example:**
+
+```typescript
+configure({ projectsRoot: '/Users/me/Projects' })
+```
 
 
 ---
@@ -160,7 +166,7 @@ Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on. 
 
 ### `createTask`
 
-Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory.
+Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory. Use 'blockedBy' to specify dependencies (task IDs that must complete first).
 
 
 
@@ -177,7 +183,7 @@ createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
 
 ### `moveTask`
 
-Move a task to a different column  Update the status of a task by moving it between columns. Common flow: Backlog → Todo → In Progress → Review → Done  **AI WORKFLOW**: When you complete a task, move it to "Review" - NOT "Done"! The "Review" column is for human verification. Only humans move tasks to "Done".
+Move a task to a different column  Update the status of a task by moving it between columns. Common flow: Backlog → Todo → In Progress → Review → Done  **AI WORKFLOW**: When you complete a task, move it to "Review" - NOT "Done"! The "Review" column is for human verification. Only humans move tasks to "Done".  **Dependencies**: Tasks with unresolved `blockedBy` cannot move to Review or Done.
 
 
 
@@ -211,7 +217,7 @@ reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
 
 ### `updateTask`
 
-Update a task's details  Modify task title, description, priority, assignee, labels, or context.
+Update a task's details  Modify task title, description, priority, assignee, labels, context, or dependencies.
 
 
 
@@ -222,7 +228,7 @@ Update a task's details  Modify task title, description, priority, assignee, lab
 
 ### `deleteTask`
 
-Delete a task
+Delete a task  Also removes this task from any other task's blockedBy list.
 
 
 
@@ -338,10 +344,27 @@ Clear completed tasks (archive them)
 
 ### `getStats`
 
-Get board statistics
+Get board statistics  Includes WIP status showing current vs limit for In Progress column.
 
 
 
+
+
+---
+
+
+### `setDependency`
+
+Set task dependencies  Convenience method to add or remove dependencies between tasks.
+
+
+
+
+**Example:**
+
+```typescript
+setDependency({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
+```
 
 
 ---
@@ -361,6 +384,28 @@ Report a JavaScript error from the UI  Used by the kanban UI to report runtime e
 ### `scheduledArchiveOldTasks`
 
 Archive old completed tasks  Runs daily at midnight to move completed tasks older than 7 days to an archive file, keeping the board clean.
+
+
+
+
+
+---
+
+
+### `scheduledMorningPull`
+
+Morning standup prep  Runs every weekday at 8am to pull tasks from Backlog → Todo. Helps teams prepare for the day with fresh tasks ready to work on.
+
+
+
+
+
+---
+
+
+### `scheduledStaleTaskCheck`
+
+Stale task cleanup  Runs weekly on Sunday to move stale tasks (no updates in N days) back to Backlog for re-prioritization.
 
 
 
