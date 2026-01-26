@@ -13,19 +13,49 @@ Kanban Board Photon
 ### Environment Variables
 
 
-- **`KANBAN_PHOTON_PROJECTSROOT`** [OPTIONAL]
-  - Type: string
-  - Description: No description available
-  
 
 
+No configuration required.
 
 
 
 
 ## 🔧 Tools
 
-This photon provides **27** tools:
+This photon provides **30** tools:
+
+
+### `configure`
+
+Configure the kanban photon  Set the projects root folder. This is stored persistently so all instances (Claude Code MCP, Beam UI, etc.) use the same configuration.
+
+
+
+
+
+---
+
+
+### `getConfig`
+
+Get current configuration
+
+
+
+
+
+---
+
+
+### `installHooks`
+
+Install Claude Code hooks in a project folder  Installs stop hook (blocks stopping with incomplete tasks) and user-prompt-submit hook (logs user messages for reference).  Only installs if the folder appears to be a Claude Code project (has .claude folder or CLAUDE.md).
+
+
+
+
+
+---
 
 
 ### `listProjectFolders`

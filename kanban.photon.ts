@@ -20,7 +20,7 @@ import { PhotonMCP } from '@portel/photon-core';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,17 +92,69 @@ function createEmptyBoard(name: string): Board {
 // KANBAN PHOTON
 // ════════════════════════════════════════════════════════════════════════════════
 
+// Config stored persistently so all instances (MCP, Beam, etc.) use same settings
+interface KanbanConfig {
+  projectsRoot: string;
+}
+
+const CONFIG_PATH = path.join(PHOTONS_DIR, 'kanban', 'config.json');
+const DEFAULT_PROJECTS_ROOT = path.join(process.env.HOME || '', 'Projects');
+
+function loadConfig(): KanbanConfig {
+  try {
+    if (existsSync(CONFIG_PATH)) {
+      return JSON.parse(readFileSync(CONFIG_PATH, 'utf-8'));
+    }
+  } catch {}
+  return { projectsRoot: DEFAULT_PROJECTS_ROOT };
+}
+
+function saveConfig(config: KanbanConfig): void {
+  const dir = path.dirname(CONFIG_PATH);
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
+  writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
+}
+
 export default class KanbanPhoton extends PhotonMCP {
   private boardsDir: string;
-  private projectsRoot: string;
+  private dataDir: string;
 
-  /**
-   * @param projectsRoot Root folder containing project folders (e.g., ~/Projects)
-   */
-  constructor(projectsRoot?: string) {
+  // projectsRoot is loaded from config file, not constructor
+  private get projectsRoot(): string {
+    return loadConfig().projectsRoot;
+  }
+
+  constructor() {
     super();
     this.boardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
-    this.projectsRoot = projectsRoot || process.env.PROJECTS_ROOT || path.join(process.env.HOME || '', 'Projects');
+    this.dataDir = path.join(PHOTONS_DIR, 'kanban');
+  }
+
+  /**
+   * Configure the kanban photon
+   *
+   * Set the projects root folder. This is stored persistently so all
+   * instances (Claude Code MCP, Beam UI, etc.) use the same configuration.
+   *
+   * @example configure({ projectsRoot: '/Users/me/Projects' })
+   */
+  async configure(params: {
+    projectsRoot: string;
+  }): Promise<{ success: boolean; config: KanbanConfig }> {
+    const config: KanbanConfig = {
+      projectsRoot: params.projectsRoot,
+    };
+    saveConfig(config);
+    return { success: true, config };
+  }
+
+  /**
+   * Get current configuration
+   */
+  async getConfig(): Promise<KanbanConfig & { configPath: string }> {
+    return { ...loadConfig(), configPath: CONFIG_PATH };
   }
 
   private getBoardPath(name: string): string {
@@ -207,7 +259,79 @@ export default class KanbanPhoton extends PhotonMCP {
   /**
    * Install Claude Code hooks in a project folder
    */
-  private async installHooks(projectRoot: string): Promise<void> {
+  /**
+   * Check if a folder is a Claude Code project
+   *
+   * Looks for indicators like .claude folder, CLAUDE.md, or .claude/settings.json
+   */
+  private isClaudeCodeProject(projectRoot: string): boolean {
+    const indicators = [
+      path.join(projectRoot, '.claude'),
+      path.join(projectRoot, 'CLAUDE.md'),
+      path.join(projectRoot, '.claude', 'settings.json'),
+      path.join(projectRoot, '.claude', 'settings.local.json'),
+    ];
+    return indicators.some(p => existsSync(p));
+  }
+
+  /**
+   * Install Claude Code hooks in a project folder
+   *
+   * Installs stop hook (blocks stopping with incomplete tasks) and
+   * user-prompt-submit hook (logs user messages for reference).
+   *
+   * Only installs if the folder appears to be a Claude Code project
+   * (has .claude folder or CLAUDE.md).
+   *
+   * @returns Status of installation
+   */
+  async installHooks(params?: { folder?: string }): Promise<{
+    installed: boolean;
+    projectRoot: string;
+    isClaudeProject: boolean;
+    message: string;
+  }> {
+    // Determine project root
+    let projectRoot: string;
+    if (params?.folder) {
+      projectRoot = path.isAbsolute(params.folder)
+        ? params.folder
+        : path.join(this.projectsRoot, params.folder);
+    } else {
+      projectRoot = process.cwd();
+    }
+
+    if (!existsSync(projectRoot)) {
+      return {
+        installed: false,
+        projectRoot,
+        isClaudeProject: false,
+        message: `Folder not found: ${projectRoot}`,
+      };
+    }
+
+    const isClaudeProject = this.isClaudeCodeProject(projectRoot);
+
+    if (!isClaudeProject) {
+      return {
+        installed: false,
+        projectRoot,
+        isClaudeProject: false,
+        message: `Not a Claude Code project (no .claude folder or CLAUDE.md). Create .claude folder first or run from a Claude Code session.`,
+      };
+    }
+
+    await this.writeHooksToProject(projectRoot);
+
+    return {
+      installed: true,
+      projectRoot,
+      isClaudeProject: true,
+      message: `Hooks installed to ${projectRoot}/.claude/hooks/`,
+    };
+  }
+
+  private async writeHooksToProject(projectRoot: string): Promise<void> {
     const claudeDir = path.join(projectRoot, '.claude');
     const hooksDir = path.join(claudeDir, 'hooks');
 
@@ -215,7 +339,7 @@ export default class KanbanPhoton extends PhotonMCP {
     await fs.mkdir(hooksDir, { recursive: true });
 
     // User prompt submit hook - logs user messages
-    const userPromptHook = `#!/usr/bin/env node
+    const userPromptHook = `#!/usr/bin/env -S node --experimental-strip-types
 /**
  * Claude Code UserPromptSubmit Hook - Message Logger
  * Logs user messages for reference and compaction-proof history.
@@ -252,7 +376,7 @@ process.exit(0);
 
     // Stop hook - checks for pending tasks
     const boardName = path.basename(projectRoot);
-    const stopHook = `#!/usr/bin/env node
+    const stopHook = `#!/usr/bin/env -S node --experimental-strip-types
 /**
  * Claude Code Stop Hook - Kanban Task Enforcement
  * Blocks stopping if there are incomplete tasks or unchecked items.
@@ -474,9 +598,9 @@ process.exit(0);
 
     await this.saveBoard(board);
 
-    // Auto-install hooks if linked to a project folder
-    if (projectRoot) {
-      await this.installHooks(projectRoot);
+    // Auto-install hooks if linked to a Claude Code project folder
+    if (projectRoot && this.isClaudeCodeProject(projectRoot)) {
+      await this.writeHooksToProject(projectRoot);
     }
 
     return board;
@@ -503,7 +627,11 @@ process.exit(0);
 
     board.projectRoot = projectRoot;
     await this.saveBoard(board);
-    await this.installHooks(projectRoot);
+
+    // Auto-install hooks if Claude Code project
+    if (this.isClaudeCodeProject(projectRoot)) {
+      await this.writeHooksToProject(projectRoot);
+    }
 
     return { success: true, projectRoot };
   }
