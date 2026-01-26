@@ -2536,11 +2536,18 @@
       const cards = e.currentTarget.querySelectorAll('.task-card:not(.dragging)');
       let foundTarget = false;
 
-      cards.forEach(card => {
+      cards.forEach((card, index) => {
         const rect = card.getBoundingClientRect();
         const midY = rect.top + rect.height / 2;
 
-        if (e.clientY < midY && !foundTarget) {
+        // For the FIRST card: if cursor is anywhere above the card's bottom,
+        // treat it as "insert at top" to make drag-to-top more intuitive
+        const isFirstCard = index === 0;
+        const shouldInsertBefore = isFirstCard
+          ? e.clientY < rect.bottom  // First card: anywhere above its bottom
+          : e.clientY < midY;        // Other cards: above midpoint
+
+        if (shouldInsertBefore && !foundTarget) {
           card.classList.add('drop-above');
           dropTargetId = card.dataset.taskId;
           foundTarget = true;
