@@ -1502,61 +1502,40 @@
       }
 
       .header {
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: flex-start;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
       }
 
       .board-header-left {
-        flex: 1 1 100%;
-        min-width: 0;
         display: flex;
         align-items: center;
-        gap: 8px;
         width: 100%;
       }
 
-      .header h1 {
-        display: block;
-        gap: 0;
-      }
-
-      .header h1::before {
-        margin-right: 8px;
-      }
-
       .board-title {
-        flex: 1 1 auto;
-        min-width: 0;
-        max-width: calc(100vw - 100px);
+        flex: 1;
+        max-width: none !important;
         font-size: 18px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
 
       .board-switcher {
-        flex-shrink: 0;
         margin-left: auto;
       }
 
       .stats {
-        order: 2;
-        flex: 1 1 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        font-size: 12px;
       }
 
       .search-container {
-        order: 3;
         width: 100%;
       }
 
       .search-input {
         width: 100%;
-      }
-
-      .stats {
-        flex-wrap: wrap;
-        gap: 8px 16px;
       }
 
       .column {
