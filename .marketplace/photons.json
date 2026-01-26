@@ -380,7 +380,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:40e53e500f5f908d1c7006a6f8c4d9548dcb3601a92db183ec5205a75894f190",
+      "hash": "sha256:97ed61ebfd40ca1ed0ca0b5252f7f4c3f45a71c578ae084c5818cec0bf77f0bc",
       "tools": [
         "listProjectFolders",
         "listBoards",

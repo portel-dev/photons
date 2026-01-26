@@ -91,7 +91,7 @@ Delete a board  Permanently remove a board and all its tasks. Use with caution!
 
 ### `main`
 
-Open the Kanban board  Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods.
+Open the Kanban board  Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods.  ## AI Workflow (IMPORTANT)  When working on tasks as an AI assistant:  1. **Check assigned tasks**: Use `getMyTasks` to find tasks assigned to you 2. **Work in "In Progress"**: Tasks you're actively working on should be here 3. **Move to "Review" when done**: Do NOT move directly to "Done"! - "Review" means: AI finished, waiting for human verification - Only humans should move tasks from "Review" to "Done" 4. **Add comments**: Document what you did for the reviewer  This keeps humans in the loop and ensures quality control.
 
 
 
@@ -119,7 +119,7 @@ getTasks({ board: 'my-project', assignee: 'ai' })
 
 ### `getMyTasks`
 
-Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on.
+Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on. Call this at the start of a session to check your workload.  **Workflow reminder**: - Work on tasks in "In Progress" - When finished, move to "Review" (not "Done") - Add a comment explaining what you did - Humans will review and move to "Done"
 
 
 
@@ -147,10 +147,16 @@ createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
 
 ### `moveTask`
 
-Move a task to a different column  Update the status of a task by moving it between columns. Common flow: Backlog → Todo → In Progress → Review → Done
+Move a task to a different column  Update the status of a task by moving it between columns. Common flow: Backlog → Todo → In Progress → Review → Done  **AI WORKFLOW**: When you complete a task, move it to "Review" - NOT "Done"! The "Review" column is for human verification. Only humans move tasks to "Done".
 
 
 
+
+**Example:**
+
+```typescript
+moveTask({ board: 'my-project', id: 'abc123', column: 'In Progress' })
+```
 
 
 ---
