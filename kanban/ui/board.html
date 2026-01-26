@@ -1452,7 +1452,7 @@
     });
 
     // Apply a specific event to the local board state (event sourcing)
-    function applyBoardEvent(eventType, data) {
+    async function applyBoardEvent(eventType, data) {
       switch (eventType) {
         case 'task-created':
           if (data.task && !board.tasks.find(t => t.id === data.task.id)) {
