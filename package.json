@@ -1,6 +1,10 @@
 {
+  "type": "module",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@portel/photon": "file:../photon",
+    "eslint": "^9.39.2",
+    "eslint-plugin-html": "^8.1.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
