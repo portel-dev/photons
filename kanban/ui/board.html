@@ -1509,12 +1509,22 @@
       .board-header-left {
         flex: 1 1 100%;
         min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .board-title {
+        flex: 1;
+        min-width: 0;
         max-width: none;
         font-size: 18px;
-        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .board-switcher {
+        flex-shrink: 0;
       }
 
       .stats {
