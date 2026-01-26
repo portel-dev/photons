@@ -2243,8 +2243,8 @@
       `;
 
       const tasksContainer = columnEl.querySelector('.column-tasks');
-      // Render in reverse order - newest on top
-      [...tasks].reverse().forEach(task => {
+      // Render in stored order (reorderTask handles positioning)
+      tasks.forEach(task => {
         tasksContainer.appendChild(createTaskCard(task));
       });
 
