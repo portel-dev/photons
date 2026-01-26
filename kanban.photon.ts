@@ -54,6 +54,11 @@ interface Task {
   createdAt: string;
   updatedAt: string;
   createdBy?: string;
+
+  // Card-specific automation (only used when in Backlog)
+  autoPullThreshold?: number;    // Pull when In Progress < N (undefined = never auto-pull)
+  autoReleaseMinutes?: number;   // Try to advance every N minutes (undefined = never auto-release)
+  lastReleaseAttempt?: string;   // ISO timestamp for auto-release tracking
 }
 
 interface Board {
@@ -104,7 +109,7 @@ interface KanbanConfig {
   staleTaskDays?: number;      // Days before task is stale (default: 7)
 }
 
-const DEFAULT_WIP_LIMIT = 3;
+const DEFAULT_WIP_LIMIT = 10;
 const DEFAULT_AUTO_PULL_SOURCE = 'Todo';
 const DEFAULT_MORNING_PULL_COUNT = 3;
 const DEFAULT_STALE_TASK_DAYS = 7;
@@ -379,22 +384,31 @@ export default class KanbanPhoton extends PhotonMCP {
   }
 
   /**
-   * Check WIP limit and auto-pull if enabled
+   * Check WIP limit and auto-pull cards with autoPullThreshold set
+   *
+   * Card-specific auto-pull: Each Backlog card can set its own threshold.
+   * When In Progress count < card's threshold, that card gets pulled.
    */
   private async checkWipAndAutoPull(board: Board): Promise<void> {
     const config = loadConfig();
-    if (!config.autoPullEnabled) return;
-
     const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
-    const pullSource = config.autoPullSource ?? DEFAULT_AUTO_PULL_SOURCE;
+    const inProgressCount = board.tasks.filter(t => t.column === 'In Progress').length;
 
-    const inProgress = board.tasks.filter(t => t.column === 'In Progress');
+    // Hard WIP limit - never exceed
+    if (inProgressCount >= wipLimit) return;
 
-    if (inProgress.length >= wipLimit) return;
+    // Find eligible cards: in Backlog, has threshold, threshold > inProgressCount, not blocked
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    const candidates = board.tasks
+      .filter(t =>
+        t.column === 'Backlog' &&
+        t.autoPullThreshold !== undefined &&
+        inProgressCount < t.autoPullThreshold &&
+        !this.isTaskBlocked(t, board)
+      )
+      .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
-    // Find next eligible task (not blocked, highest priority)
-    const nextTask = this.findNextPullableTask(board, pullSource);
-
+    const nextTask = candidates[0];
     if (nextTask) {
       const oldColumn = nextTask.column;
       nextTask.column = 'In Progress';
@@ -414,7 +428,7 @@ export default class KanbanPhoton extends PhotonMCP {
 
       this.emit({
         emit: 'toast',
-        message: `⚡ Auto-pulled "${nextTask.title}" to In Progress (WIP: ${inProgress.length + 1}/${wipLimit})`,
+        message: `⚡ Auto-pulled "${nextTask.title}" to In Progress (WIP: ${inProgressCount + 1}/${wipLimit})`,
       });
       this.emit({
         channel: `kanban:${board.name}`,
@@ -930,10 +944,13 @@ process.exit(0);
    * Add a task to the board. By default, tasks go to 'Backlog' column.
    * Use 'context' to store AI reasoning or notes for memory.
    * Use 'blockedBy' to specify dependencies (task IDs that must complete first).
+   * Use 'autoPullThreshold' to auto-pull when In Progress < N.
+   * Use 'autoReleaseMinutes' to auto-release after N minutes.
    *
    * @example createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
    * @example createTask({ title: 'Research auth', context: 'User wants JWT with refresh tokens', links: ['/src/auth/'] })
    * @example createTask({ title: 'Deploy', blockedBy: ['abc123'] }) // Blocked until abc123 is done
+   * @example createTask({ title: 'Recurring task', autoPullThreshold: 3, autoReleaseMinutes: 60 })
    */
   async createTask(params: {
     board?: string;
@@ -946,6 +963,10 @@ process.exit(0);
     context?: string;
     links?: string[];
     blockedBy?: string[];
+    /** Auto-pull threshold: pull when In Progress < N (only for Backlog cards) */
+    autoPullThreshold?: number;
+    /** Auto-release interval in minutes (only for Backlog cards) */
+    autoReleaseMinutes?: number;
   }): Promise<Task> {
     const board = await this.loadBoard(params.board);
 
@@ -969,6 +990,8 @@ process.exit(0);
       context: params.context,
       links: params.links,
       blockedBy: params.blockedBy,
+      autoPullThreshold: params.autoPullThreshold,
+      autoReleaseMinutes: params.autoReleaseMinutes,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       createdBy: 'ai',
@@ -1137,7 +1160,7 @@ process.exit(0);
   /**
    * Update a task's details
    *
-   * Modify task title, description, priority, assignee, labels, context, or dependencies.
+   * Modify task title, description, priority, assignee, labels, context, dependencies, or automation settings.
    */
   async updateTask(params: {
     board?: string;
@@ -1150,6 +1173,10 @@ process.exit(0);
     context?: string;
     links?: string[];
     blockedBy?: string[];
+    /** Auto-pull threshold: pull when In Progress < N (only for Backlog cards) */
+    autoPullThreshold?: number;
+    /** Auto-release interval in minutes (only for Backlog cards) */
+    autoReleaseMinutes?: number;
   }): Promise<Task> {
     const board = await this.loadBoard(params.board);
     const task = board.tasks.find((t) => t.id === params.id);
@@ -1182,6 +1209,8 @@ process.exit(0);
     if (params.context !== undefined) task.context = params.context;
     if (params.links !== undefined) task.links = params.links;
     if (params.blockedBy !== undefined) task.blockedBy = params.blockedBy;
+    if (params.autoPullThreshold !== undefined) task.autoPullThreshold = params.autoPullThreshold || undefined;
+    if (params.autoReleaseMinutes !== undefined) task.autoReleaseMinutes = params.autoReleaseMinutes || undefined;
     task.updatedAt = new Date().toISOString();
 
     await this.saveBoard(board);
@@ -1682,6 +1711,92 @@ process.exit(0);
     }
 
     return { pulled: totalPulled, boards: affectedBoards };
+  }
+
+  /**
+   * Time-based auto-release for cards with autoReleaseMinutes set
+   *
+   * Checks every 5 minutes for Backlog cards that have an auto-release
+   * interval configured. If the interval has passed since lastReleaseAttempt,
+   * the card is moved to In Progress (respecting WIP limit).
+   *
+   * @scheduled 0/5 * * * *
+   * @internal
+   */
+  async scheduledAutoRelease(): Promise<{ released: number; boards: string[] }> {
+    const boards = await this.listBoards();
+    const now = Date.now();
+    const affectedBoards: string[] = [];
+    let totalReleased = 0;
+
+    for (const boardMeta of boards) {
+      const board = await this.loadBoard(boardMeta.name);
+      const config = loadConfig();
+      const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
+      let inProgressCount = board.tasks.filter(t => t.column === 'In Progress').length;
+
+      if (inProgressCount >= wipLimit) continue;
+
+      // Find cards with autoReleaseMinutes set, not blocked, interval passed
+      const priorityOrder = { high: 0, medium: 1, low: 2 };
+      const candidates = board.tasks
+        .filter(t =>
+          t.column === 'Backlog' &&
+          t.autoReleaseMinutes !== undefined &&
+          !this.isTaskBlocked(t, board)
+        )
+        .filter(t => {
+          const lastAttempt = t.lastReleaseAttempt ? new Date(t.lastReleaseAttempt).getTime() : 0;
+          const intervalMs = (t.autoReleaseMinutes ?? 60) * 60 * 1000;
+          return (now - lastAttempt) >= intervalMs;
+        })
+        .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+      let boardChanged = false;
+      for (const task of candidates) {
+        if (inProgressCount >= wipLimit) break;
+
+        // Update lastReleaseAttempt
+        task.lastReleaseAttempt = new Date().toISOString();
+
+        // Move to In Progress
+        const oldColumn = task.column;
+        task.column = 'In Progress';
+        task.updatedAt = new Date().toISOString();
+
+        // Move to top of In Progress
+        const taskIndex = board.tasks.findIndex(t => t.id === task.id);
+        board.tasks.splice(taskIndex, 1);
+        const firstInProgress = board.tasks.findIndex(t => t.column === 'In Progress');
+        if (firstInProgress === -1) {
+          board.tasks.push(task);
+        } else {
+          board.tasks.splice(firstInProgress, 0, task);
+        }
+
+        inProgressCount++;
+        totalReleased++;
+        boardChanged = true;
+
+        this.emit({
+          emit: 'toast',
+          message: `⏰ Auto-released "${task.title}" to In Progress`,
+        });
+        this.emit({
+          channel: `kanban:${board.name}`,
+          event: 'task-auto-released',
+          data: { task, from: oldColumn },
+        });
+      }
+
+      if (boardChanged) {
+        await this.saveBoard(board);
+        affectedBoards.push(board.name);
+        this.emit({ emit: 'board-update', board: board.name });
+      }
+    }
+
+    return { released: totalReleased, boards: affectedBoards };
   }
 
   /**
