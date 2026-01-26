@@ -50,6 +50,7 @@ interface Task {
   context?: string; // For AI memory - store reasoning, notes, links
   links?: string[]; // Related files, URLs, or references
   comments?: Comment[]; // Instructions, updates, and conversation
+  blockedBy?: string[]; // Task IDs that must complete before this can move to Review/Done
   createdAt: string;
   updatedAt: string;
   createdBy?: string;
@@ -95,7 +96,18 @@ function createEmptyBoard(name: string): Board {
 // Config stored persistently so all instances (MCP, Beam, etc.) use same settings
 interface KanbanConfig {
   projectsRoot: string;
+  // WIP & Auto-pull settings
+  wipLimit?: number;           // Max cards in "In Progress" (default: 3)
+  autoPullEnabled?: boolean;   // Auto-pull when under WIP limit
+  autoPullSource?: string;     // Column to pull from (default: "Todo")
+  morningPullCount?: number;   // Cards to pull each morning (default: 3)
+  staleTaskDays?: number;      // Days before task is stale (default: 7)
 }
+
+const DEFAULT_WIP_LIMIT = 3;
+const DEFAULT_AUTO_PULL_SOURCE = 'Todo';
+const DEFAULT_MORNING_PULL_COUNT = 3;
+const DEFAULT_STALE_TASK_DAYS = 7;
 
 const CONFIG_PATH = path.join(PHOTONS_DIR, 'kanban', 'config.json');
 const DEFAULT_PROJECTS_ROOT = path.join(process.env.HOME || '', 'Projects');
@@ -135,16 +147,35 @@ export default class KanbanPhoton extends PhotonMCP {
   /**
    * Configure the kanban photon
    *
-   * Set the projects root folder. This is stored persistently so all
-   * instances (Claude Code MCP, Beam UI, etc.) use the same configuration.
+   * Set the projects root folder and automation settings. This is stored
+   * persistently so all instances (Claude Code MCP, Beam UI, etc.) use
+   * the same configuration.
    *
    * @example configure({ projectsRoot: '/Users/me/Projects' })
+   * @example configure({ projectsRoot: '/Users/me/Projects', wipLimit: 3, autoPullEnabled: true })
    */
   async configure(params: {
+    /** Root folder containing project folders */
     projectsRoot: string;
+    /** Max cards in "In Progress" column (default: 3) */
+    wipLimit?: number;
+    /** Auto-pull from Todo when In Progress is under WIP limit */
+    autoPullEnabled?: boolean;
+    /** Column to auto-pull from (default: "Todo") */
+    autoPullSource?: string;
+    /** Cards to pull from Backlog each morning (default: 3) */
+    morningPullCount?: number;
+    /** Days without update before task is stale (default: 7) */
+    staleTaskDays?: number;
   }): Promise<{ success: boolean; config: KanbanConfig }> {
+    const existing = loadConfig();
     const config: KanbanConfig = {
       projectsRoot: params.projectsRoot,
+      wipLimit: params.wipLimit ?? existing.wipLimit ?? DEFAULT_WIP_LIMIT,
+      autoPullEnabled: params.autoPullEnabled ?? existing.autoPullEnabled ?? false,
+      autoPullSource: params.autoPullSource ?? existing.autoPullSource ?? DEFAULT_AUTO_PULL_SOURCE,
+      morningPullCount: params.morningPullCount ?? existing.morningPullCount ?? DEFAULT_MORNING_PULL_COUNT,
+      staleTaskDays: params.staleTaskDays ?? existing.staleTaskDays ?? DEFAULT_STALE_TASK_DAYS,
     };
     saveConfig(config);
     return { success: true, config };
@@ -254,6 +285,156 @@ export default class KanbanPhoton extends PhotonMCP {
 
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // TASK AUTOMATION HELPERS
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Check if a task is blocked by unresolved dependencies
+   */
+  private isTaskBlocked(task: Task, board: Board): boolean {
+    if (!task.blockedBy || task.blockedBy.length === 0) return false;
+
+    // Check if any blocking task is NOT in Done
+    return task.blockedBy.some(blockerId => {
+      const blocker = board.tasks.find(t => t.id === blockerId);
+      return blocker && blocker.column !== 'Done';
+    });
+  }
+
+  /**
+   * Get the names of tasks blocking this task
+   */
+  private getBlockingTaskNames(task: Task, board: Board): string[] {
+    if (!task.blockedBy) return [];
+
+    return task.blockedBy
+      .map(id => board.tasks.find(t => t.id === id))
+      .filter(t => t && t.column !== 'Done')
+      .map(t => t!.title);
+  }
+
+  /**
+   * Detect circular dependencies
+   */
+  private hasCircularDependency(taskId: string, blockedBy: string[], board: Board, visited = new Set<string>()): boolean {
+    if (visited.has(taskId)) return true;
+    visited.add(taskId);
+
+    for (const blockerId of blockedBy) {
+      const blocker = board.tasks.find(t => t.id === blockerId);
+      if (blocker?.blockedBy) {
+        if (this.hasCircularDependency(taskId, blocker.blockedBy, board, visited)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Called after a task is moved - handles unblocking and auto-pull
+   */
+  private async afterTaskMoved(board: Board, task: Task, fromColumn: string, toColumn: string): Promise<void> {
+    // 1. If moved to Done, check if this unblocks other tasks
+    if (toColumn === 'Done') {
+      await this.checkUnblockedTasks(board, task.id);
+    }
+
+    // 2. If In Progress changed, check WIP and auto-pull
+    if (fromColumn === 'In Progress' || toColumn === 'In Progress') {
+      await this.checkWipAndAutoPull(board);
+    }
+  }
+
+  /**
+   * Check if completing a task unblocks others
+   */
+  private async checkUnblockedTasks(board: Board, completedTaskId: string): Promise<void> {
+    for (const task of board.tasks) {
+      if (!task.blockedBy?.includes(completedTaskId)) continue;
+
+      // Remove the completed task from blockedBy
+      task.blockedBy = task.blockedBy.filter(id => id !== completedTaskId);
+      task.updatedAt = new Date().toISOString();
+
+      // Check if task is now fully unblocked
+      if (!this.isTaskBlocked(task, board)) {
+        this.emit({
+          emit: 'toast',
+          message: `🔓 "${task.title}" is now unblocked!`,
+        });
+        this.emit({
+          channel: `kanban:${board.name}`,
+          event: 'task-unblocked',
+          data: { task, unblockedBy: completedTaskId },
+        });
+      }
+    }
+
+    await this.saveBoard(board);
+  }
+
+  /**
+   * Check WIP limit and auto-pull if enabled
+   */
+  private async checkWipAndAutoPull(board: Board): Promise<void> {
+    const config = loadConfig();
+    if (!config.autoPullEnabled) return;
+
+    const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
+    const pullSource = config.autoPullSource ?? DEFAULT_AUTO_PULL_SOURCE;
+
+    const inProgress = board.tasks.filter(t => t.column === 'In Progress');
+
+    if (inProgress.length >= wipLimit) return;
+
+    // Find next eligible task (not blocked, highest priority)
+    const nextTask = this.findNextPullableTask(board, pullSource);
+
+    if (nextTask) {
+      const oldColumn = nextTask.column;
+      nextTask.column = 'In Progress';
+      nextTask.updatedAt = new Date().toISOString();
+
+      // Move to top of In Progress
+      const taskIndex = board.tasks.findIndex(t => t.id === nextTask.id);
+      board.tasks.splice(taskIndex, 1);
+      const firstInProgress = board.tasks.findIndex(t => t.column === 'In Progress');
+      if (firstInProgress === -1) {
+        board.tasks.push(nextTask);
+      } else {
+        board.tasks.splice(firstInProgress, 0, nextTask);
+      }
+
+      await this.saveBoard(board);
+
+      this.emit({
+        emit: 'toast',
+        message: `⚡ Auto-pulled "${nextTask.title}" to In Progress (WIP: ${inProgress.length + 1}/${wipLimit})`,
+      });
+      this.emit({
+        channel: `kanban:${board.name}`,
+        event: 'task-auto-pulled',
+        data: { task: nextTask, from: oldColumn },
+      });
+    }
+  }
+
+  /**
+   * Find the next task that can be pulled to In Progress
+   */
+  private findNextPullableTask(board: Board, sourceColumn: string): Task | undefined {
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+
+    const candidates = board.tasks
+      .filter(t => t.column === sourceColumn && !this.isTaskBlocked(t, board))
+      .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+    return candidates[0];
   }
 
   /**
@@ -748,9 +929,11 @@ process.exit(0);
    *
    * Add a task to the board. By default, tasks go to 'Backlog' column.
    * Use 'context' to store AI reasoning or notes for memory.
+   * Use 'blockedBy' to specify dependencies (task IDs that must complete first).
    *
    * @example createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
    * @example createTask({ title: 'Research auth', context: 'User wants JWT with refresh tokens', links: ['/src/auth/'] })
+   * @example createTask({ title: 'Deploy', blockedBy: ['abc123'] }) // Blocked until abc123 is done
    */
   async createTask(params: {
     board?: string;
@@ -762,8 +945,18 @@ process.exit(0);
     labels?: string[];
     context?: string;
     links?: string[];
+    blockedBy?: string[];
   }): Promise<Task> {
     const board = await this.loadBoard(params.board);
+
+    // Validate blockedBy references exist
+    if (params.blockedBy) {
+      for (const blockerId of params.blockedBy) {
+        if (!board.tasks.find(t => t.id === blockerId)) {
+          throw new Error(`Invalid blockedBy reference: task "${blockerId}" not found`);
+        }
+      }
+    }
 
     const task: Task = {
       id: this.generateId(),
@@ -775,10 +968,16 @@ process.exit(0);
       labels: params.labels,
       context: params.context,
       links: params.links,
+      blockedBy: params.blockedBy,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       createdBy: 'ai',
     };
+
+    // Check for circular dependencies
+    if (task.blockedBy && this.hasCircularDependency(task.id, task.blockedBy, board)) {
+      throw new Error('Circular dependency detected');
+    }
 
     // Validate column exists
     if (!board.columns.includes(task.column)) {
@@ -809,6 +1008,8 @@ process.exit(0);
    * **AI WORKFLOW**: When you complete a task, move it to "Review" - NOT "Done"!
    * The "Review" column is for human verification. Only humans move tasks to "Done".
    *
+   * **Dependencies**: Tasks with unresolved `blockedBy` cannot move to Review or Done.
+   *
    * @example moveTask({ board: 'my-project', id: 'abc123', column: 'In Progress' })
    * @example moveTask({ id: 'abc123', column: 'Review' }) // AI finished, awaiting human review
    */
@@ -824,6 +1025,14 @@ process.exit(0);
     if (!board.columns.includes(params.column)) {
       throw new Error(`Invalid column: ${params.column}. Available: ${board.columns.join(', ')}`);
     }
+
+    // Check dependencies before moving to Review or Done
+    if (['Review', 'Done'].includes(params.column) && this.isTaskBlocked(task, board)) {
+      const blockers = this.getBlockingTaskNames(task, board);
+      throw new Error(`Cannot move to ${params.column}: blocked by "${blockers.join('", "')}". Complete blocking tasks first.`);
+    }
+
+    const fromColumn = task.column;
 
     // Remove task from current position
     const oldIndex = board.tasks.findIndex((t) => t.id === params.id);
@@ -846,6 +1055,9 @@ process.exit(0);
     // Notify connected UIs of the change (both in-process and cross-process)
     this.emit({ emit: 'board-update', board: board.name });
     this.emit({ channel: `kanban:${board.name}`, event: 'task-moved', data: { task } });
+
+    // After-move automation (unblock checks, WIP auto-pull)
+    await this.afterTaskMoved(board, task, fromColumn, params.column);
 
     return task;
   }
@@ -919,7 +1131,7 @@ process.exit(0);
   /**
    * Update a task's details
    *
-   * Modify task title, description, priority, assignee, labels, or context.
+   * Modify task title, description, priority, assignee, labels, context, or dependencies.
    */
   async updateTask(params: {
     board?: string;
@@ -931,12 +1143,29 @@ process.exit(0);
     labels?: string[];
     context?: string;
     links?: string[];
+    blockedBy?: string[];
   }): Promise<Task> {
     const board = await this.loadBoard(params.board);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
+    }
+
+    // Validate blockedBy references if provided
+    if (params.blockedBy) {
+      for (const blockerId of params.blockedBy) {
+        if (blockerId === params.id) {
+          throw new Error('Task cannot block itself');
+        }
+        if (!board.tasks.find(t => t.id === blockerId)) {
+          throw new Error(`Invalid blockedBy reference: task "${blockerId}" not found`);
+        }
+      }
+      // Check for circular dependencies
+      if (this.hasCircularDependency(params.id, params.blockedBy, board)) {
+        throw new Error('Circular dependency detected');
+      }
     }
 
     if (params.title !== undefined) task.title = params.title;
@@ -946,6 +1175,7 @@ process.exit(0);
     if (params.labels !== undefined) task.labels = params.labels;
     if (params.context !== undefined) task.context = params.context;
     if (params.links !== undefined) task.links = params.links;
+    if (params.blockedBy !== undefined) task.blockedBy = params.blockedBy;
     task.updatedAt = new Date().toISOString();
 
     await this.saveBoard(board);
@@ -959,6 +1189,8 @@ process.exit(0);
 
   /**
    * Delete a task
+   *
+   * Also removes this task from any other task's blockedBy list.
    */
   async deleteTask(params: { board?: string; id: string }): Promise<{ success: boolean; message: string }> {
     const board = await this.loadBoard(params.board);
@@ -969,6 +1201,15 @@ process.exit(0);
     }
 
     const [removed] = board.tasks.splice(index, 1);
+
+    // Remove this task from any blockedBy references
+    for (const task of board.tasks) {
+      if (task.blockedBy?.includes(removed.id)) {
+        task.blockedBy = task.blockedBy.filter(id => id !== removed.id);
+        task.updatedAt = new Date().toISOString();
+      }
+    }
+
     await this.saveBoard(board);
 
     // Notify connected UIs of the change (both in-process and cross-process)
@@ -1209,6 +1450,8 @@ process.exit(0);
 
   /**
    * Get board statistics
+   *
+   * Includes WIP status showing current vs limit for In Progress column.
    */
   async getStats(params?: { board?: string }): Promise<{
     board: string;
@@ -1216,11 +1459,15 @@ process.exit(0);
     byColumn: Record<string, number>;
     byPriority: Record<string, number>;
     byAssignee: Record<string, number>;
+    wip: { current: number; limit: number; autoPullEnabled: boolean };
+    blockedCount: number;
   }> {
     const board = await this.loadBoard(params?.board);
+    const config = loadConfig();
     const byColumn: Record<string, number> = {};
     const byPriority: Record<string, number> = { low: 0, medium: 0, high: 0 };
     const byAssignee: Record<string, number> = {};
+    let blockedCount = 0;
 
     board.columns.forEach((col) => (byColumn[col] = 0));
 
@@ -1230,6 +1477,9 @@ process.exit(0);
       if (task.assignee) {
         byAssignee[task.assignee] = (byAssignee[task.assignee] || 0) + 1;
       }
+      if (this.isTaskBlocked(task, board)) {
+        blockedCount++;
+      }
     });
 
     return {
@@ -1238,7 +1488,66 @@ process.exit(0);
       byColumn,
       byPriority,
       byAssignee,
+      wip: {
+        current: byColumn['In Progress'] || 0,
+        limit: config.wipLimit ?? DEFAULT_WIP_LIMIT,
+        autoPullEnabled: config.autoPullEnabled ?? false,
+      },
+      blockedCount,
     };
+  }
+
+  /**
+   * Set task dependencies
+   *
+   * Convenience method to add or remove dependencies between tasks.
+   *
+   * @example setDependency({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
+   * @example setDependency({ id: 'task2', blockedBy: 'task1', remove: true }) // remove dependency
+   */
+  async setDependency(params: {
+    board?: string;
+    id: string;
+    blockedBy: string;
+    remove?: boolean;
+  }): Promise<Task> {
+    const board = await this.loadBoard(params.board);
+    const task = board.tasks.find(t => t.id === params.id);
+    const blocker = board.tasks.find(t => t.id === params.blockedBy);
+
+    if (!task) {
+      throw new Error(`Task not found: ${params.id}`);
+    }
+    if (!blocker) {
+      throw new Error(`Blocking task not found: ${params.blockedBy}`);
+    }
+    if (params.id === params.blockedBy) {
+      throw new Error('Task cannot block itself');
+    }
+
+    if (!task.blockedBy) {
+      task.blockedBy = [];
+    }
+
+    if (params.remove) {
+      task.blockedBy = task.blockedBy.filter(id => id !== params.blockedBy);
+    } else {
+      if (!task.blockedBy.includes(params.blockedBy)) {
+        // Check for circular dependency
+        if (this.hasCircularDependency(params.id, [...task.blockedBy, params.blockedBy], board)) {
+          throw new Error('Circular dependency detected');
+        }
+        task.blockedBy.push(params.blockedBy);
+      }
+    }
+
+    task.updatedAt = new Date().toISOString();
+    await this.saveBoard(board);
+
+    this.emit({ emit: 'board-update', board: board.name });
+    this.emit({ channel: `kanban:${board.name}`, event: 'dependency-changed', data: { task, blocker, removed: params.remove } });
+
+    return task;
   }
 
   /**
@@ -1321,6 +1630,114 @@ process.exit(0);
     }
 
     return { archived: totalArchived };
+  }
+
+  /**
+   * Morning standup prep
+   *
+   * Runs every weekday at 8am to pull tasks from Backlog → Todo.
+   * Helps teams prepare for the day with fresh tasks ready to work on.
+   *
+   * @scheduled 0 8 * * 1-5
+   * @internal
+   */
+  async scheduledMorningPull(): Promise<{ pulled: number; boards: string[] }> {
+    const config = loadConfig();
+    const pullCount = config.morningPullCount ?? DEFAULT_MORNING_PULL_COUNT;
+    const boards = await this.listBoards();
+    const affectedBoards: string[] = [];
+    let totalPulled = 0;
+
+    for (const boardMeta of boards) {
+      const board = await this.loadBoard(boardMeta.name);
+      let pulledFromBoard = 0;
+
+      // Find eligible tasks in Backlog (not blocked, by priority)
+      for (let i = 0; i < pullCount; i++) {
+        const next = this.findNextPullableTask(board, 'Backlog');
+        if (!next) break;
+
+        next.column = 'Todo';
+        next.updatedAt = new Date().toISOString();
+        pulledFromBoard++;
+      }
+
+      if (pulledFromBoard > 0) {
+        await this.saveBoard(board);
+        affectedBoards.push(board.name);
+        totalPulled += pulledFromBoard;
+
+        this.emit({
+          emit: 'toast',
+          message: `☀️ Morning prep: ${pulledFromBoard} tasks moved to Todo [${board.name}]`,
+        });
+        this.emit({ emit: 'board-update', board: board.name });
+      }
+    }
+
+    return { pulled: totalPulled, boards: affectedBoards };
+  }
+
+  /**
+   * Stale task cleanup
+   *
+   * Runs weekly on Sunday to move stale tasks (no updates in N days)
+   * back to Backlog for re-prioritization.
+   *
+   * @scheduled 0 0 * * 0
+   * @internal
+   */
+  async scheduledStaleTaskCheck(): Promise<{ moved: number; boards: string[] }> {
+    const config = loadConfig();
+    const staleDays = config.staleTaskDays ?? DEFAULT_STALE_TASK_DAYS;
+    const staleThreshold = Date.now() - staleDays * 24 * 60 * 60 * 1000;
+
+    const boards = await this.listBoards();
+    const affectedBoards: string[] = [];
+    let totalMoved = 0;
+
+    for (const boardMeta of boards) {
+      const board = await this.loadBoard(boardMeta.name);
+      const staleTasks: Task[] = [];
+
+      // Find stale tasks in Todo or In Progress
+      for (const task of board.tasks) {
+        if (!['Todo', 'In Progress'].includes(task.column)) continue;
+
+        const lastUpdate = new Date(task.updatedAt).getTime();
+        if (lastUpdate < staleThreshold) {
+          staleTasks.push(task);
+        }
+      }
+
+      if (staleTasks.length > 0) {
+        for (const task of staleTasks) {
+          task.column = 'Backlog';
+          task.updatedAt = new Date().toISOString();
+
+          // Add a comment about why it was moved
+          if (!task.comments) task.comments = [];
+          task.comments.push({
+            id: this.generateId(),
+            author: 'ai',
+            content: `Moved to Backlog: no updates in ${staleDays} days.`,
+            createdAt: new Date().toISOString(),
+          });
+        }
+
+        await this.saveBoard(board);
+        affectedBoards.push(board.name);
+        totalMoved += staleTasks.length;
+
+        this.emit({
+          emit: 'toast',
+          message: `🧹 Stale cleanup: ${staleTasks.length} tasks moved to Backlog [${board.name}]`,
+        });
+        this.emit({ emit: 'board-update', board: board.name });
+      }
+    }
+
+    return { moved: totalMoved, boards: affectedBoards };
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
