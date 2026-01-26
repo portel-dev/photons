@@ -95,6 +95,7 @@ function createEmptyBoard(name: string): Board {
 export default class KanbanPhoton extends PhotonMCP {
   private boardsDir: string;
   private boardCache: Map<string, Board> = new Map();
+  private boardMtimes: Map<string, number> = new Map(); // Track file modification times
   private projectsRoot: string;
 
   /**
@@ -113,24 +114,30 @@ export default class KanbanPhoton extends PhotonMCP {
   }
 
   private async loadBoard(name: string = 'default'): Promise<Board> {
-    // Check cache first
-    if (this.boardCache.has(name)) {
-      return this.boardCache.get(name)!;
-    }
-
     const boardPath = this.getBoardPath(name);
 
+    // Check if file has been modified since we cached it
     try {
+      const stat = await fs.stat(boardPath);
+      const mtime = stat.mtimeMs;
+      const cachedMtime = this.boardMtimes.get(name);
+
+      // Use cache only if mtime matches (file hasn't changed)
+      if (this.boardCache.has(name) && cachedMtime === mtime) {
+        return this.boardCache.get(name)!;
+      }
+
+      // File exists and either not cached or modified - reload
       const data = await fs.readFile(boardPath, 'utf-8');
       const board = JSON.parse(data) as Board;
       board.name = name; // Ensure name matches
       this.boardCache.set(name, board);
+      this.boardMtimes.set(name, mtime);
       return board;
     } catch {
       // Board doesn't exist - create it
       const board = createEmptyBoard(name);
       await this.saveBoard(board);
-      this.boardCache.set(name, board);
       return board;
     }
   }
@@ -140,7 +147,10 @@ export default class KanbanPhoton extends PhotonMCP {
     await fs.mkdir(this.boardsDir, { recursive: true });
     const boardPath = this.getBoardPath(board.name);
     await fs.writeFile(boardPath, JSON.stringify(board, null, 2));
+    // Update cache with new data and mtime
+    const stat = await fs.stat(boardPath);
     this.boardCache.set(board.name, board);
+    this.boardMtimes.set(board.name, stat.mtimeMs);
   }
 
   private generateId(): string {
