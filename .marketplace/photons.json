@@ -836,7 +836,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../team-dashboard.photon.ts",
-      "hash": "sha256:f58ceddc4a8effbaa70e44139cf6ac950881e9378b5c0eeacfc68cf530c74f2d",
+      "hash": "sha256:3b52b21e544020db58ee3e439cdd377d70ff9d82199b92c30c2f1252a0d68020",
       "tools": [
         "main",
         "getDashboardData",
@@ -855,7 +855,9 @@
         "setTeamName",
         "addGitHubRepo",
         "removeGitHubRepo",
-        "listGitHubRepos"
+        "listGitHubRepos",
+        "listKanbanBoards",
+        "setKanbanBoard"
       ],
       "assets": [
         "team-dashboard/config.json",

@@ -99,6 +99,7 @@ interface DashboardConfig {
   githubRepos: GitHubRepo[];
   showWeather: boolean;
   teamName: string;
+  kanbanBoard: string; // Board name to display (without .json extension)
 }
 
 // ════════════════════════════════════════════════════════════════════════════════
@@ -115,6 +116,7 @@ const DEFAULT_CONFIG: DashboardConfig = {
   githubRepos: [],
   showWeather: false,
   teamName: 'Team Dashboard',
+  kanbanBoard: 'default', // Board name (maps to kanban/boards/<name>.json)
 };
 
 // ════════════════════════════════════════════════════════════════════════════════
@@ -123,13 +125,16 @@ const DEFAULT_CONFIG: DashboardConfig = {
 
 export default class TeamDashboardPhoton extends PhotonMCP {
   private configPath: string;
-  private kanbanDataPath: string;
   private config: DashboardConfig = DEFAULT_CONFIG;
 
   constructor() {
     super();
     this.configPath = path.join(PHOTONS_DIR, 'team-dashboard', 'config.json');
-    this.kanbanDataPath = path.join(PHOTONS_DIR, 'kanban', 'boards', 'default.json');
+  }
+
+  /** Get the kanban board data path based on current config */
+  private getKanbanDataPath(): string {
+    return path.join(PHOTONS_DIR, 'kanban', 'boards', `${this.config.kanbanBoard}.json`);
   }
 
   private async loadConfig(): Promise<DashboardConfig> {
@@ -196,17 +201,20 @@ export default class TeamDashboardPhoton extends PhotonMCP {
   /**
    * Debug: Show resolved paths
    */
-  async getDebugPaths(): Promise<{ dirname: string; kanbanPath: string; configPath: string; exists: boolean }> {
+  async getDebugPaths(): Promise<{ dirname: string; kanbanPath: string; configPath: string; exists: boolean; board: string }> {
+    await this.loadConfig();
+    const kanbanPath = this.getKanbanDataPath();
     let exists = false;
     try {
-      await fs.access(this.kanbanDataPath);
+      await fs.access(kanbanPath);
       exists = true;
     } catch {}
     return {
       dirname: __dirname,
-      kanbanPath: this.kanbanDataPath,
+      kanbanPath,
       configPath: this.configPath,
       exists,
+      board: this.config.kanbanBoard,
     };
   }
 
@@ -216,8 +224,9 @@ export default class TeamDashboardPhoton extends PhotonMCP {
    * Reads from the Kanban photon's data file to get task counts and progress.
    */
   async getKanbanStats(): Promise<KanbanStats | null> {
+    await this.loadConfig();
     try {
-      const data = await fs.readFile(this.kanbanDataPath, 'utf-8');
+      const data = await fs.readFile(this.getKanbanDataPath(), 'utf-8');
       const board = JSON.parse(data);
 
       const byColumn: Record<string, number> = {};
@@ -399,8 +408,9 @@ export default class TeamDashboardPhoton extends PhotonMCP {
    * Returns the highest priority in-progress task from the Kanban board.
    */
   async getTodaysFocus(): Promise<TodaysFocus | null> {
+    await this.loadConfig();
     try {
-      const data = await fs.readFile(this.kanbanDataPath, 'utf-8');
+      const data = await fs.readFile(this.getKanbanDataPath(), 'utf-8');
       const board = JSON.parse(data);
 
       // Find tasks in progress
@@ -634,6 +644,63 @@ export default class TeamDashboardPhoton extends PhotonMCP {
     await this.loadConfig();
     return {
       repos: this.config.githubRepos.map((r) => `${r.owner}/${r.repo}`),
+    };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // KANBAN BOARD CONFIGURATION
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * List available Kanban boards
+   *
+   * Scans the kanban/boards directory for available board files.
+   */
+  async listKanbanBoards(): Promise<{ boards: string[]; current: string }> {
+    await this.loadConfig();
+    const boardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
+
+    try {
+      const files = await fs.readdir(boardsDir);
+      const boards = files
+        .filter((f) => f.endsWith('.json'))
+        .map((f) => f.replace('.json', ''));
+
+      return {
+        boards,
+        current: this.config.kanbanBoard,
+      };
+    } catch {
+      return {
+        boards: [],
+        current: this.config.kanbanBoard,
+      };
+    }
+  }
+
+  /**
+   * Set the Kanban board to display
+   *
+   * @param board - Board name (without .json extension)
+   */
+  async setKanbanBoard(params: { board: string }): Promise<{ success: boolean; board: string; exists: boolean }> {
+    await this.loadConfig();
+
+    const boardPath = path.join(PHOTONS_DIR, 'kanban', 'boards', `${params.board}.json`);
+    let exists = false;
+
+    try {
+      await fs.access(boardPath);
+      exists = true;
+    } catch {}
+
+    this.config.kanbanBoard = params.board;
+    await this.saveConfig();
+
+    return {
+      success: true,
+      board: params.board,
+      exists,
     };
   }
 
