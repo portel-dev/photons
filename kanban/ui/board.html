@@ -444,19 +444,19 @@
     .task-card.heat-high,
     .task-card.heat-medium,
     .task-card.heat-low {
-      transition: background-color 2s ease-out;
+      transition: border-left-color 2s ease-out;
     }
 
     .task-card.heat-high {
-      background-color: var(--heat-high);
+      border-left: 3px solid rgba(239, 68, 68, 0.9);
     }
 
     .task-card.heat-medium {
-      background-color: var(--heat-medium);
+      border-left: 3px solid rgba(239, 68, 68, 0.5);
     }
 
     .task-card.heat-low {
-      background-color: var(--heat-low);
+      border-left: 3px solid rgba(239, 68, 68, 0.25);
     }
 
     @keyframes cardFlash {
