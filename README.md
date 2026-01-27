@@ -69,7 +69,7 @@ export class GitBoxPhoton extends PhotonMCP {
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
 | **Social Formatter** | Social Media Formatter | 4 | [View →](social-formatter.md) |
 | **SQLite Photon MCP** | SQLite database operations | 15 | [View →](sqlite.md) |
-| **Team Dashboard** | Team Dashboard Photon | 18 | [View →](team-dashboard.md) |
+| **Team Dashboard** | Team Dashboard Photon | 20 | [View →](team-dashboard.md) |
 | **Telegram** | Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation | 12 | [View →](telegram.md) |
 | **Time** | Timezone and time conversion operations | 9 | [View →](time.md) |
 | **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |

@@ -22,7 +22,7 @@ No configuration required.
 
 ## 🔧 Tools
 
-This photon provides **18** tools:
+This photon provides **20** tools:
 
 
 ### `main`
@@ -227,6 +227,34 @@ Remove a GitHub repository from tracking
 ### `listGitHubRepos`
 
 List all tracked GitHub repositories
+
+
+
+
+
+---
+
+
+### `listKanbanBoards`
+
+List available Kanban boards  Scans the kanban/boards directory for available board files.
+
+
+
+
+
+---
+
+
+### `setKanbanBoard`
+
+Set the Kanban board to display
+
+
+**Parameters:**
+
+
+- **`board`** (any) - - Board name (without .json extension)
 
 
 
