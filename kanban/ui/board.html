@@ -2415,6 +2415,13 @@
                 task.comments.push(data.comment);
                 renderBoard();
                 highlightCard(data.taskId, 'just-updated');
+                // Update detail modal if open for this task
+                if (currentDetailTaskId === data.taskId) {
+                  renderDetailComments(task.comments);
+                  const commentsEl = document.getElementById('detail-comments');
+                  commentsEl.textContent = task.comments.length;
+                  commentsEl.style.display = '';
+                }
               }
             }
           }
@@ -3657,23 +3664,27 @@
       if (!content) return;
 
       try {
-        await window.photon.invoke('addComment', {
+        const result = await window.photon.invoke('addComment', {
           board: currentBoardName,
           id: currentDetailTaskId,
           content: content,
           author: 'human'
         });
 
-        // Update local state and re-render
+        // Use the returned comment with real ID to update local state
         const task = board.tasks.find(t => t.id === currentDetailTaskId);
         if (task) {
           if (!task.comments) task.comments = [];
-          task.comments.push({
-            id: Date.now().toString(),
+          // Only add if not already present (real-time event may have arrived first)
+          const comment = result.comment || {
+            id: result.id || Date.now().toString(),
             author: 'human',
             content: content,
             createdAt: new Date().toISOString()
-          });
+          };
+          if (!task.comments.find(c => c.id === comment.id)) {
+            task.comments.push(comment);
+          }
           renderDetailComments(task.comments);
 
           // Update comment count in header
