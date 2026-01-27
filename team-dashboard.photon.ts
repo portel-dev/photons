@@ -16,6 +16,7 @@
 import { PhotonMCP } from '@portel/photon-core';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import * as os from 'os';
 import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -25,7 +26,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Get the photons directory - BEAM compiles to cache, so we need the source location
-const PHOTONS_DIR = process.env.PHOTONS_DIR || '/Users/arul/Projects/photons';
+// Default to ~/.photon for user photons (can be overridden via PHOTONS_DIR)
+const PHOTONS_DIR = process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
