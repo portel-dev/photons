@@ -1046,10 +1046,19 @@
       color: var(--text-secondary);
     }
 
-    .automation-row input[type="number"],
     .automation-row select {
       min-width: 120px;
       padding: 4px 28px 4px 8px;
+      font-size: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-primary);
+    }
+
+    .automation-row input[type="number"] {
+      width: 70px;
+      padding: 4px 8px;
       font-size: 12px;
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
@@ -1547,16 +1556,18 @@
 
     /* Comments section in detail view */
     .detail-comments-section {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color);
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
     }
 
-    .comments-header {
-      font-size: 14px;
+    .detail-comments-section h4 {
+      font-size: 12px;
       font-weight: 600;
-      margin: 0 0 12px 0;
-      color: var(--text-secondary);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
 
     .comments-list {
@@ -1652,6 +1663,12 @@
       justify-content: space-between;
       padding-top: 16px;
       border-top: 1px solid var(--border-color);
+    }
+
+    .detail-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .detail-actions {
@@ -2125,6 +2142,14 @@
           <div class="detail-description task-description" id="detail-description"></div>
           <textarea class="detail-description-edit" id="detail-description-edit" placeholder="Add a description..."></textarea>
         </div>
+        <div class="detail-comments-section" id="detail-comments-section">
+          <h4>Comments</h4>
+          <div class="comments-list" id="detail-comments-list"></div>
+          <div class="comment-form">
+            <textarea id="new-comment" placeholder="Add a comment..." rows="2"></textarea>
+            <button class="btn btn-primary" onclick="addCommentFromDetail()">Add Comment</button>
+          </div>
+        </div>
         <div class="detail-dependencies" id="detail-dependencies">
           <h4>Dependencies</h4>
           <div class="dependency-list" id="dependency-list"></div>
@@ -2157,22 +2182,16 @@
             </select>
           </div>
         </div>
-        <div class="detail-comments-section" id="detail-comments-section">
-          <h3 class="comments-header">Comments</h3>
-          <div class="comments-list" id="detail-comments-list"></div>
-          <div class="comment-form">
-            <textarea id="new-comment" placeholder="Add a comment..." rows="2"></textarea>
-            <button class="btn btn-primary" onclick="addCommentFromDetail()">Add Comment</button>
-          </div>
-        </div>
       </div>
       <div class="detail-footer">
-        <select class="detail-column-select" id="detail-column">
-        </select>
+        <div class="detail-footer-left">
+          <select class="detail-column-select" id="detail-column">
+          </select>
+          <button class="btn btn-danger" onclick="deleteFromDetail()">Delete</button>
+        </div>
         <div class="detail-actions">
           <button class="btn btn-secondary" onclick="cancelDetailChanges()">Cancel</button>
           <button class="btn btn-primary" onclick="saveDetailChanges()">Save</button>
-          <button class="btn btn-danger" onclick="deleteFromDetail()">Delete</button>
         </div>
       </div>
     </div>
