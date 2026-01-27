@@ -24,6 +24,10 @@
       --column-progress: #f59e0b;
       --column-review: #8b5cf6;
       --column-done: #10b981;
+      /* Heat display colors - subtle red tints for recently updated cards */
+      --heat-high: rgba(239, 68, 68, 0.25);
+      --heat-medium: rgba(239, 68, 68, 0.15);
+      --heat-low: rgba(239, 68, 68, 0.08);
     }
 
     /* Light theme - Zinc scale, Linear/Notion inspired */
@@ -38,6 +42,10 @@
       --border-color: #d4d4d8;
       --accent: #3b82f6;
       --accent-hover: #2563eb;
+      /* Heat display colors for light theme - slightly more visible */
+      --heat-high: rgba(220, 38, 38, 0.18);
+      --heat-medium: rgba(220, 38, 38, 0.10);
+      --heat-low: rgba(220, 38, 38, 0.05);
     }
 
     * {
@@ -427,27 +435,45 @@
       100% { transform: scale(1); box-shadow: none; }
     }
 
-    /* Highlight animation for remote updates (task moved/edited by another client or AI) */
-    /* Single red color with transparency fade: 50% → 0% over 2 seconds */
+    /* Heat display for recently updated cards */
+    /* Brief flash to attract attention, then persistent subtle highlight */
     .task-card.just-updated {
-      animation: cardHighlight 2s ease-out;
+      animation: cardFlash 0.4s ease-out;
     }
 
-    @keyframes cardHighlight {
-      0% { background: rgba(239, 68, 68, 0.5); }
-      100% { background: var(--bg-card); }
+    .task-card.heat-high,
+    .task-card.heat-medium,
+    .task-card.heat-low {
+      transition: background-color 2s ease-out;
+    }
+
+    .task-card.heat-high {
+      background-color: var(--heat-high);
+    }
+
+    .task-card.heat-medium {
+      background-color: var(--heat-medium);
+    }
+
+    .task-card.heat-low {
+      background-color: var(--heat-low);
+    }
+
+    @keyframes cardFlash {
+      0% { transform: scale(1.02); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
     }
 
     /* Flash animation for newly created cards */
-    /* Same red highlight but with slide-in effect */
     .task-card.just-created {
-      animation: cardFlashIn 2s ease-out;
+      animation: cardFlashIn 0.5s ease-out;
     }
 
     @keyframes cardFlashIn {
-      0% { opacity: 0; transform: translateY(-8px); background: rgba(239, 68, 68, 0.5); }
-      20% { opacity: 1; transform: translateY(0); background: rgba(239, 68, 68, 0.5); }
-      100% { opacity: 1; transform: translateY(0); background: var(--bg-card); }
+      0% { opacity: 0; transform: translateY(-8px) scale(1.02); }
+      50% { opacity: 1; transform: translateY(0) scale(1.02); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     /* Cards shifting to make room */
@@ -2309,16 +2335,63 @@
       }
     }
 
-    // Highlight a card with animation (for remote updates)
+    // Track heat timers for cleanup
+    const heatTimers = new Map();
+
+    // Highlight a card with animation and persistent heat display
+    // Heat fades over ~60 seconds: high (0-20s) → medium (20-40s) → low (40-60s) → none
     function highlightCard(taskId, animationClass) {
       requestAnimationFrame(() => {
         const card = document.querySelector(`[data-task-id="${taskId}"]`);
-        if (card) {
-          card.classList.add(animationClass);
-          card.addEventListener('animationend', () => {
-            card.classList.remove(animationClass);
-          }, { once: true });
+        if (!card) return;
+
+        // Clear any existing heat timers for this card
+        const existingTimers = heatTimers.get(taskId);
+        if (existingTimers) {
+          existingTimers.forEach(t => clearTimeout(t));
         }
+
+        // Brief flash animation to attract attention
+        card.classList.add(animationClass);
+        card.addEventListener('animationend', () => {
+          card.classList.remove(animationClass);
+        }, { once: true });
+
+        // Apply heat-high immediately
+        card.classList.remove('heat-medium', 'heat-low');
+        card.classList.add('heat-high');
+
+        // Set up heat decay timers
+        const timers = [];
+
+        // After 20s: transition to medium
+        timers.push(setTimeout(() => {
+          const c = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (c) {
+            c.classList.remove('heat-high');
+            c.classList.add('heat-medium');
+          }
+        }, 20000));
+
+        // After 40s: transition to low
+        timers.push(setTimeout(() => {
+          const c = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (c) {
+            c.classList.remove('heat-medium');
+            c.classList.add('heat-low');
+          }
+        }, 40000));
+
+        // After 60s: remove heat entirely
+        timers.push(setTimeout(() => {
+          const c = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (c) {
+            c.classList.remove('heat-low');
+          }
+          heatTimers.delete(taskId);
+        }, 60000));
+
+        heatTimers.set(taskId, timers);
       });
     }
 
