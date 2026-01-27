@@ -1674,6 +1674,70 @@
       border-color: var(--accent);
     }
 
+    /* Description section with edit toggle */
+    .detail-description-wrapper {
+      position: relative;
+    }
+
+    .detail-description-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .detail-description-header h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    .edit-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .edit-toggle-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .detail-description-edit {
+      display: none;
+      width: 100%;
+      min-height: 150px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    .detail-description-edit:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .detail-description-wrapper.editing .detail-description {
+      display: none;
+    }
+
+    .detail-description-wrapper.editing .detail-description-edit {
+      display: block;
+    }
+
     /* Make card clickable */
     .task-card {
       cursor: pointer;
@@ -2052,40 +2116,47 @@
         </div>
         <button class="modal-close" onclick="closeDetailView()">&times;</button>
       </div>
-      <div class="detail-dependencies" id="detail-dependencies">
-        <h4>Dependencies</h4>
-        <div class="dependency-list" id="dependency-list"></div>
-        <div class="dependency-add-row">
-          <select class="dependency-select" id="dependency-select">
-            <option value="">Add dependency...</option>
-          </select>
-          <button class="dependency-add-btn" onclick="addDependency()">Add</button>
-        </div>
-      </div>
-      <div class="detail-automation" id="detail-automation">
-        <h4>Automation</h4>
-        <div class="automation-row">
-          <label>Auto-pull when In Progress &lt;</label>
-          <input type="number" id="auto-pull-threshold" min="0" max="10" value="0" onchange="updateAutoPullThreshold()">
-        </div>
-        <div class="automation-row">
-          <label>Schedule move to</label>
-          <select id="scheduled-column" onchange="updateScheduledMove()">
-            <option value="">Don't schedule</option>
-          </select>
-          <select id="scheduled-time" onchange="updateScheduledMove()">
-            <option value="">Select time</option>
-            <option value="15">in 15 min</option>
-            <option value="30">in 30 min</option>
-            <option value="60">in 1 hour</option>
-            <option value="120">in 2 hours</option>
-            <option value="480">in 8 hours</option>
-            <option value="1440">tomorrow</option>
-          </select>
-        </div>
-      </div>
       <div class="detail-body">
-        <div class="detail-description task-description" id="detail-description"></div>
+        <div class="detail-description-wrapper" id="detail-description-wrapper">
+          <div class="detail-description-header">
+            <h4>Description</h4>
+            <button class="edit-toggle-btn" onclick="toggleDescriptionEdit()" title="Edit description">✏️</button>
+          </div>
+          <div class="detail-description task-description" id="detail-description"></div>
+          <textarea class="detail-description-edit" id="detail-description-edit" placeholder="Add a description..."></textarea>
+        </div>
+        <div class="detail-dependencies" id="detail-dependencies">
+          <h4>Dependencies</h4>
+          <div class="dependency-list" id="dependency-list"></div>
+          <div class="dependency-add-row">
+            <select class="dependency-select" id="dependency-select">
+              <option value="">Add dependency...</option>
+            </select>
+            <button class="dependency-add-btn" onclick="addDependency()">Add</button>
+          </div>
+        </div>
+        <div class="detail-automation" id="detail-automation">
+          <h4>Automation</h4>
+          <div class="automation-row">
+            <label>Auto-pull when In Progress &lt;</label>
+            <input type="number" id="auto-pull-threshold" min="0" max="10" value="0">
+          </div>
+          <div class="automation-row">
+            <label>Schedule move to</label>
+            <select id="scheduled-column">
+              <option value="">Don't schedule</option>
+            </select>
+            <select id="scheduled-time">
+              <option value="">Select time</option>
+              <option value="15">in 15 min</option>
+              <option value="30">in 30 min</option>
+              <option value="60">in 1 hour</option>
+              <option value="120">in 2 hours</option>
+              <option value="480">in 8 hours</option>
+              <option value="1440">tomorrow</option>
+            </select>
+          </div>
+        </div>
         <div class="detail-comments-section" id="detail-comments-section">
           <h3 class="comments-header">Comments</h3>
           <div class="comments-list" id="detail-comments-list"></div>
@@ -2096,10 +2167,11 @@
         </div>
       </div>
       <div class="detail-footer">
-        <select class="detail-column-select" id="detail-column" onchange="moveTaskFromDetail()">
+        <select class="detail-column-select" id="detail-column">
         </select>
         <div class="detail-actions">
-          <button class="btn btn-secondary" onclick="openEditFromDetail()">Edit</button>
+          <button class="btn btn-secondary" onclick="cancelDetailChanges()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveDetailChanges()">Save</button>
           <button class="btn btn-danger" onclick="deleteFromDetail()">Delete</button>
         </div>
       </div>
@@ -3236,12 +3308,29 @@
 
     // Detail View Modal
     let currentDetailTaskId = null;
+    let detailEditState = null; // Tracks unsaved changes
+
+    function initDetailEditState(task) {
+      detailEditState = {
+        description: task.description || '',
+        blockedBy: [...(task.blockedBy || [])],
+        autoPullThreshold: task.autoPullThreshold || 0,
+        scheduledColumn: '',
+        scheduledTime: '',
+        column: task.column
+      };
+    }
 
     function openDetailView(taskId) {
       const task = board.tasks.find(t => t.id === taskId);
       if (!task) return;
 
       currentDetailTaskId = taskId;
+      initDetailEditState(task);
+
+      // Reset description to view mode
+      document.getElementById('detail-description-wrapper').classList.remove('editing');
+      document.getElementById('detail-description-edit').value = task.description || '';
 
       // Set title
       document.getElementById('detail-title').textContent = task.title;
@@ -3343,48 +3432,105 @@
 
     function closeDetailView() {
       document.getElementById('detail-modal').classList.remove('visible');
+      document.getElementById('detail-description-wrapper').classList.remove('editing');
       currentDetailTaskId = null;
+      detailEditState = null;
     }
 
-    async function moveTaskFromDetail() {
-      if (!currentDetailTaskId) return;
-      const newColumn = document.getElementById('detail-column').value;
+    function toggleDescriptionEdit() {
+      const wrapper = document.getElementById('detail-description-wrapper');
+      const textarea = document.getElementById('detail-description-edit');
+      const isEditing = wrapper.classList.toggle('editing');
+
+      if (isEditing) {
+        // Entering edit mode - sync textarea with current state
+        textarea.value = detailEditState.description;
+        textarea.focus();
+      } else {
+        // Exiting edit mode - update state from textarea
+        detailEditState.description = textarea.value;
+        // Re-render the markdown preview with current state
+        document.getElementById('detail-description').innerHTML = renderMarkdown(detailEditState.description, currentDetailTaskId);
+      }
+    }
+
+    function cancelDetailChanges() {
+      closeDetailView();
+    }
+
+    async function saveDetailChanges() {
+      if (!currentDetailTaskId || !detailEditState) return;
+
       const task = board.tasks.find(t => t.id === currentDetailTaskId);
+      if (!task) return;
+
+      // Get current values from form
+      const wrapper = document.getElementById('detail-description-wrapper');
+      if (wrapper.classList.contains('editing')) {
+        detailEditState.description = document.getElementById('detail-description-edit').value;
+      }
+
+      const newColumn = document.getElementById('detail-column').value;
+      const autoPullThreshold = parseInt(document.getElementById('auto-pull-threshold').value) || 0;
+      const scheduledColumn = document.getElementById('scheduled-column').value;
+      const scheduledTime = parseInt(document.getElementById('scheduled-time').value) || 0;
 
       // Check if task is blocked and trying to move to Review or Done
-      if (task && hasUnresolvedDependencies(task) && (newColumn === 'Review' || newColumn === 'Done')) {
-        const blockerNames = (task.blockedBy || [])
+      if (hasUnresolvedDependencies(task) && (newColumn === 'Review' || newColumn === 'Done')) {
+        const blockerNames = detailEditState.blockedBy
           .map(id => board.tasks.find(t => t.id === id))
           .filter(t => t && t.column !== 'Done')
           .map(t => t.title)
           .join(', ');
         showToast(`Blocked by: ${blockerNames}`, 'error');
-        // Reset select to current column
-        document.getElementById('detail-column').value = task.column;
         return;
       }
 
       try {
-        await window.photon.invoke('moveTask', {
+        // Prepare update payload
+        const updates = {
           board: currentBoardName,
           id: currentDetailTaskId,
-          column: newColumn
-        });
-        // Update local state
-        if (task) task.column = newColumn;
-        renderBoard();
-        updateDetailModal(currentDetailTaskId);
-        showToast(`Moved to ${newColumn}`);
-      } catch (err) {
-        console.error('Failed to move task:', err);
-        showToast('Failed to move task', 'error');
-      }
-    }
+          description: detailEditState.description,
+          blockedBy: detailEditState.blockedBy,
+          autoPullThreshold: autoPullThreshold
+        };
 
-    function openEditFromDetail() {
-      if (!currentDetailTaskId) return;
-      closeDetailView();
-      openEditTask(currentDetailTaskId);
+        // Add scheduled move info if set
+        if (scheduledColumn && scheduledTime) {
+          updates.autoReleaseMinutes = scheduledTime;
+          // Store target column in context
+          const scheduleNote = `[Scheduled: Move to ${scheduledColumn} in ${scheduledTime} min]`;
+          if (!updates.description.includes('[Scheduled:')) {
+            updates.description = updates.description ? `${updates.description}\n\n${scheduleNote}` : scheduleNote;
+          }
+        }
+
+        // Save the task
+        await window.photon.invoke('updateTask', updates);
+
+        // Move task if column changed
+        if (newColumn !== task.column) {
+          await window.photon.invoke('moveTask', {
+            board: currentBoardName,
+            id: currentDetailTaskId,
+            column: newColumn
+          });
+          task.column = newColumn;
+        }
+
+        // Update local state
+        task.description = detailEditState.description;
+        task.blockedBy = detailEditState.blockedBy;
+        task.autoPullThreshold = autoPullThreshold;
+
+        renderBoard();
+        closeDetailView();
+        showToast('Changes saved');
+      } catch (err) {
+        console.error('Failed to save changes:', err);
+        showToast('Failed to save changes', 'error');
+      }
     }
 
     function deleteFromDetail() {
@@ -3393,122 +3539,68 @@
       confirmDelete(currentDetailTaskId);
     }
 
-    // Add a dependency to the current task
-    async function addDependency() {
-      if (!currentDetailTaskId) return;
+    // Add a dependency to the current task (updates local state only - saved on Save button)
+    function addDependency() {
+      if (!currentDetailTaskId || !detailEditState) return;
       const select = document.getElementById('dependency-select');
       const blockerId = select.value;
       if (!blockerId) return;
 
-      const task = board.tasks.find(t => t.id === currentDetailTaskId);
-      if (!task) return;
-
-      try {
-        // Add to existing dependencies
-        const newBlockedBy = [...(task.blockedBy || []), blockerId];
-        await window.photon.invoke('setDependency', {
-          board: currentBoardName,
-          id: currentDetailTaskId,
-          blockedBy: blockerId
-        });
-
-        // Update local state
-        task.blockedBy = newBlockedBy;
-        renderBoard();
-        updateDetailModal(currentDetailTaskId);
-        showToast('Dependency added');
-      } catch (err) {
-        console.error('Failed to add dependency:', err);
-        showToast('Failed to add dependency', 'error');
+      // Add to edit state
+      if (!detailEditState.blockedBy.includes(blockerId)) {
+        detailEditState.blockedBy.push(blockerId);
       }
+
+      // Re-render dependencies in the modal
+      renderDependencyList();
+
+      // Reset dropdown
+      select.value = '';
     }
 
-    // Remove a dependency from the current task
-    async function removeDependency(blockerId) {
-      if (!currentDetailTaskId) return;
+    // Remove a dependency from the current task (updates local state only - saved on Save button)
+    function removeDependency(blockerId) {
+      if (!currentDetailTaskId || !detailEditState) return;
 
-      const task = board.tasks.find(t => t.id === currentDetailTaskId);
-      if (!task) return;
+      // Remove from edit state
+      detailEditState.blockedBy = detailEditState.blockedBy.filter(id => id !== blockerId);
 
-      try {
-        await window.photon.invoke('setDependency', {
-          board: currentBoardName,
-          id: currentDetailTaskId,
-          blockedBy: blockerId,
-          remove: true
-        });
-
-        // Update local state
-        task.blockedBy = (task.blockedBy || []).filter(id => id !== blockerId);
-        renderBoard();
-        updateDetailModal(currentDetailTaskId);
-        showToast('Dependency removed');
-      } catch (err) {
-        console.error('Failed to remove dependency:', err);
-        showToast('Failed to remove dependency', 'error');
-      }
+      // Re-render dependencies in the modal
+      renderDependencyList();
     }
 
-    // Update auto-pull threshold for a task
-    async function updateAutoPullThreshold() {
-      if (!currentDetailTaskId) return;
-
-      const threshold = parseInt(document.getElementById('auto-pull-threshold').value) || 0;
-      const task = board.tasks.find(t => t.id === currentDetailTaskId);
-      if (!task) return;
-
-      try {
-        await window.photon.invoke('updateTask', {
-          board: currentBoardName,
-          id: currentDetailTaskId,
-          autoPullThreshold: threshold
-        });
-
-        task.autoPullThreshold = threshold;
-        if (threshold > 0) {
-          showToast(`Will auto-pull when In Progress < ${threshold}`);
-        } else {
-          showToast('Auto-pull disabled');
-        }
-      } catch (err) {
-        console.error('Failed to update auto-pull threshold:', err);
-        showToast('Failed to update setting', 'error');
-      }
-    }
-
-    // Schedule a move for the current task
-    async function updateScheduledMove() {
-      if (!currentDetailTaskId) return;
-
-      const targetColumn = document.getElementById('scheduled-column').value;
-      const minutes = parseInt(document.getElementById('scheduled-time').value) || 0;
-
-      if (!targetColumn || !minutes) {
-        // Clear any scheduled move indication
-        return;
+    // Render the dependency list based on current edit state
+    function renderDependencyList() {
+      const depsListEl = document.getElementById('dependency-list');
+      if (detailEditState.blockedBy.length > 0) {
+        depsListEl.innerHTML = detailEditState.blockedBy.map(blockerId => {
+          const blocker = board.tasks.find(t => t.id === blockerId);
+          if (!blocker) return '';
+          const isDone = blocker.column === 'Done';
+          return `
+            <div class="dependency-item">
+              <span class="dependency-status ${isDone ? 'done' : 'pending'}">${isDone ? '✓' : '○'}</span>
+              <span class="dependency-title">${escapeHtml(blocker.title)}</span>
+              <span class="dependency-column">${blocker.column}</span>
+              <button class="dependency-remove" onclick="removeDependency('${blockerId}')" title="Remove dependency">&times;</button>
+            </div>
+          `;
+        }).join('');
+      } else {
+        depsListEl.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; font-style: italic;">No dependencies</div>';
       }
 
-      const task = board.tasks.find(t => t.id === currentDetailTaskId);
-      if (!task) return;
-
-      try {
-        await window.photon.invoke('updateTask', {
-          board: currentBoardName,
-          id: currentDetailTaskId,
-          autoReleaseMinutes: minutes,
-          // Store the target column in context for now
-          context: task.context ? `${task.context}\n[Scheduled: Move to ${targetColumn} in ${minutes} min]` : `[Scheduled: Move to ${targetColumn} in ${minutes} min]`
-        });
-
-        showToast(`Scheduled to move to ${targetColumn} in ${formatDuration(minutes)}`);
-
-        // Reset the selects
-        document.getElementById('scheduled-column').value = '';
-        document.getElementById('scheduled-time').value = '';
-      } catch (err) {
-        console.error('Failed to schedule move:', err);
-        showToast('Failed to schedule move', 'error');
-      }
+      // Update dropdown to exclude already selected dependencies
+      const depSelect = document.getElementById('dependency-select');
+      const availableTasks = board.tasks.filter(t =>
+        t.id !== currentDetailTaskId &&
+        !detailEditState.blockedBy.includes(t.id) &&
+        t.column !== 'Done'
+      );
+      depSelect.innerHTML = '<option value="">Add dependency...</option>' +
+        availableTasks.map(t =>
+          `<option value="${t.id}">${escapeHtml(t.title)} (${t.column})</option>`
+        ).join('');
     }
 
     function formatDuration(minutes) {
