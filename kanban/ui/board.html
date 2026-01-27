@@ -428,24 +428,26 @@
     }
 
     /* Highlight animation for remote updates (task moved/edited by another client or AI) */
+    /* Single red color with transparency fade: 50% → 0% over 2 seconds */
     .task-card.just-updated {
-      animation: cardHighlight 0.8s ease-out;
+      animation: cardHighlight 2s ease-out;
     }
 
     @keyframes cardHighlight {
-      0% { box-shadow: 0 0 0 2px var(--accent), 0 0 12px var(--accent); }
-      100% { box-shadow: none; }
+      0% { background: rgba(239, 68, 68, 0.5); }
+      100% { background: var(--bg-card); }
     }
 
     /* Flash animation for newly created cards */
+    /* Same red highlight but with slide-in effect */
     .task-card.just-created {
-      animation: cardFlashIn 0.5s ease-out;
+      animation: cardFlashIn 2s ease-out;
     }
 
     @keyframes cardFlashIn {
-      0% { opacity: 0; transform: translateY(-8px); box-shadow: 0 0 0 2px var(--column-done), 0 0 12px var(--column-done); }
-      50% { opacity: 1; transform: translateY(0); box-shadow: 0 0 0 2px var(--column-done), 0 0 12px var(--column-done); }
-      100% { opacity: 1; transform: translateY(0); box-shadow: none; }
+      0% { opacity: 0; transform: translateY(-8px); background: rgba(239, 68, 68, 0.5); }
+      20% { opacity: 1; transform: translateY(0); background: rgba(239, 68, 68, 0.5); }
+      100% { opacity: 1; transform: translateY(0); background: var(--bg-card); }
     }
 
     /* Cards shifting to make room */
@@ -525,13 +527,16 @@
     .progress-row .progress-count {
       font-weight: 600;
       font-size: 10px;
-      color: var(--text-muted);
       white-space: nowrap;
+      /* Color changes based on progress via inline style */
     }
 
-    .progress-row .progress-count.complete {
-      color: var(--column-done);
-    }
+    /* Progress count color classes - from red (0%) to green (100%) */
+    .progress-row .progress-count.progress-0 { color: var(--text-muted); }
+    .progress-row .progress-count.progress-25 { color: #f87171; }
+    .progress-row .progress-count.progress-50 { color: #fbbf24; }
+    .progress-row .progress-count.progress-75 { color: #a3e635; }
+    .progress-row .progress-count.progress-100 { color: var(--column-done); }
 
     .progress-row .progress-label {
       flex: 1;
@@ -549,12 +554,12 @@
 
     .progress-row .progress-bar-fill {
       height: 100%;
-      background: var(--accent);
+      background: rgba(160, 160, 160, 0.4);
       transition: width 0.2s ease;
     }
 
     .progress-row .progress-bar-fill.complete {
-      background: var(--column-done);
+      background: rgba(160, 160, 160, 0.5);
     }
 
     /* Markdown rendered content */
@@ -917,6 +922,165 @@
     .dependency-column {
       font-size: 11px;
       color: var(--text-muted);
+    }
+
+    .dependency-remove {
+      width: 18px;
+      height: 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .dependency-remove:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .dependency-add-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .dependency-select {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+    }
+
+    .dependency-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .dependency-add-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .dependency-add-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .dependency-add-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Automation settings section in detail view */
+    .detail-automation {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+    }
+
+    .detail-automation h4 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .automation-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .automation-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .automation-row label {
+      flex: 1;
+      color: var(--text-secondary);
+    }
+
+    .automation-row input[type="number"],
+    .automation-row select {
+      width: 80px;
+      padding: 4px 8px;
+      font-size: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-primary);
+    }
+
+    .automation-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 13px;
+      color: var(--text-primary);
+      animation: toastIn 0.3s ease-out;
+      max-width: 300px;
+    }
+
+    .toast.error {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .toast.success {
+      border-color: var(--column-done);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .toast.fade-out {
+      animation: toastOut 0.3s ease-out forwards;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(10px); }
     }
 
     .task-actions {
@@ -1862,15 +2026,43 @@
         </div>
         <button class="modal-close" onclick="closeDetailView()">&times;</button>
       </div>
-      <div class="detail-dependencies" id="detail-dependencies" style="display: none;">
-        <h4>Waiting for</h4>
+      <div class="detail-dependencies" id="detail-dependencies">
+        <h4>Dependencies</h4>
         <div class="dependency-list" id="dependency-list"></div>
+        <div class="dependency-add-row">
+          <select class="dependency-select" id="dependency-select">
+            <option value="">Add dependency...</option>
+          </select>
+          <button class="dependency-add-btn" onclick="addDependency()">Add</button>
+        </div>
+      </div>
+      <div class="detail-automation" id="detail-automation">
+        <h4>Automation</h4>
+        <div class="automation-row">
+          <label>Auto-pull when In Progress &lt;</label>
+          <input type="number" id="auto-pull-threshold" min="0" max="10" value="0" onchange="updateAutoPullThreshold()">
+        </div>
+        <div class="automation-row">
+          <label>Schedule move to</label>
+          <select id="scheduled-column" onchange="updateScheduledMove()">
+            <option value="">Don't schedule</option>
+          </select>
+          <select id="scheduled-time" onchange="updateScheduledMove()">
+            <option value="">Select time</option>
+            <option value="15">in 15 min</option>
+            <option value="30">in 30 min</option>
+            <option value="60">in 1 hour</option>
+            <option value="120">in 2 hours</option>
+            <option value="480">in 8 hours</option>
+            <option value="1440">tomorrow</option>
+          </select>
+        </div>
       </div>
       <div class="detail-body">
         <div class="detail-description task-description" id="detail-description"></div>
         <div class="detail-comments-section" id="detail-comments-section">
           <h3 class="comments-header">Comments</h3>
-          <div class="comments-list" id="comments-list"></div>
+          <div class="comments-list" id="detail-comments-list"></div>
           <div class="comment-form">
             <textarea id="new-comment" placeholder="Add a comment..." rows="2"></textarea>
             <button class="btn btn-primary" onclick="addCommentFromDetail()">Add Comment</button>
@@ -1936,12 +2128,18 @@
     let morningPullCount = 3;
     let staleTaskDays = 7;
 
+    // Event replay tracking for reliable real-time sync
+    // When we reconnect, we send lastEventId so server can replay missed events
+    let lastEventId = null;
+
     // Notify parent about which board we're viewing (for on-demand subscriptions)
     // Parent will use photonId from selected photon, we just provide the itemId
+    // Includes lastEventId for replay of missed events on reconnect
     function notifyViewingBoard() {
       window.parent.postMessage({
         type: 'photon:viewing',
-        itemId: currentBoardName
+        itemId: currentBoardName,
+        lastEventId: lastEventId
       }, '*');
     }
 
@@ -2016,14 +2214,25 @@
 
       // Handle channel events (task-moved, task-updated, etc.) - apply delta directly
       if (event.data?.type === 'photon:channel-event') {
-        const { photon, channel, event: eventType, data } = event.data;
+        const { photon, channel, event: eventType, data, _eventId } = event.data;
         if (photon === 'kanban') {
+          // Track last received event ID for replay on reconnect
+          if (_eventId !== undefined && (_eventId > lastEventId || lastEventId === null)) {
+            lastEventId = _eventId;
+          }
           // Extract board name from channel (e.g., "kanban:photon" -> "photon")
           const boardName = channel?.split(':')[1];
           if (boardName === currentBoardName && data) {
             applyBoardEvent(eventType, data);
           }
         }
+      }
+
+      // Handle refresh-needed signal (lastEventId was too old, full sync required)
+      if (event.data?.type === 'photon:refresh-needed') {
+        console.log('📡 Refresh needed - lastEventId too old, reloading board');
+        lastEventId = null; // Reset so we start fresh
+        await refreshCurrentBoard();
       }
     });
 
@@ -2080,7 +2289,18 @@
           break;
 
         case 'comment-added':
-          // Comments don't affect the board view, but could update task if modal is open
+          if (data.taskId && data.comment) {
+            const task = board.tasks.find(t => t.id === data.taskId);
+            if (task) {
+              if (!task.comments) task.comments = [];
+              // Only add if not already present (avoid duplicates)
+              if (!task.comments.find(c => c.id === data.comment.id)) {
+                task.comments.push(data.comment);
+                renderBoard();
+                highlightCard(data.taskId, 'just-updated');
+              }
+            }
+          }
           break;
 
         default:
@@ -2643,9 +2863,15 @@
         const progressRows = checkboxGroups.map(group => {
           const percent = group.total > 0 ? Math.round((group.checked / group.total) * 100) : 0;
           const isComplete = group.checked === group.total;
+          // Determine progress color class based on percentage
+          let progressClass = 'progress-0';
+          if (percent >= 100) progressClass = 'progress-100';
+          else if (percent >= 75) progressClass = 'progress-75';
+          else if (percent >= 50) progressClass = 'progress-50';
+          else if (percent > 0) progressClass = 'progress-25';
           return `
             <div class="progress-row">
-              <span class="progress-count ${isComplete ? 'complete' : ''}">${group.checked}/${group.total}</span>
+              <span class="progress-count ${progressClass}">${group.checked}/${group.total}</span>
               <span class="progress-label">${escapeHtml(group.label)}</span>
               <div class="progress-bar">
                 <div class="progress-bar-fill ${isComplete ? 'complete' : ''}" style="width: ${percent}%"></div>
@@ -2763,6 +2989,19 @@
 
       // Skip if dropping on itself in same position
       if (draggedTask.column === columnName && dropTargetId === draggedTask.id) return;
+
+      // Prevent moving blocked tasks to Review or Done
+      if (hasUnresolvedDependencies(draggedTask) && (columnName === 'Review' || columnName === 'Done')) {
+        const blockerNames = (draggedTask.blockedBy || [])
+          .map(id => board.tasks.find(t => t.id === id))
+          .filter(t => t && t.column !== 'Done')
+          .map(t => t.title)
+          .join(', ');
+        showToast(`Can't move: blocked by "${blockerNames}"`, 'error');
+        draggedTask = null;
+        dropTargetId = null;
+        return;
+      }
 
       // FLIP Animation Step 1: Record FIRST positions
       const cardPositions = new Map();
@@ -2964,11 +3203,9 @@
       const isBlocked = hasUnresolvedDependencies(task);
       blockedEl.style.display = isBlocked ? '' : 'none';
 
-      // Render dependencies
-      const depsEl = document.getElementById('detail-dependencies');
+      // Render dependencies with remove buttons
       const depsListEl = document.getElementById('dependency-list');
       if (task.blockedBy && task.blockedBy.length > 0) {
-        depsEl.style.display = '';
         depsListEl.innerHTML = task.blockedBy.map(blockerId => {
           const blocker = board.tasks.find(t => t.id === blockerId);
           if (!blocker) return '';
@@ -2978,12 +3215,40 @@
               <span class="dependency-status ${isDone ? 'done' : 'pending'}">${isDone ? '✓' : '○'}</span>
               <span class="dependency-title">${escapeHtml(blocker.title)}</span>
               <span class="dependency-column">${blocker.column}</span>
+              <button class="dependency-remove" onclick="removeDependency('${blockerId}')" title="Remove dependency">&times;</button>
             </div>
           `;
         }).join('');
       } else {
-        depsEl.style.display = 'none';
+        depsListEl.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; font-style: italic;">No dependencies</div>';
       }
+
+      // Populate dependency dropdown (exclude current task and existing dependencies)
+      const depSelect = document.getElementById('dependency-select');
+      const existingDeps = task.blockedBy || [];
+      const availableTasks = board.tasks.filter(t =>
+        t.id !== taskId &&
+        !existingDeps.includes(t.id) &&
+        t.column !== 'Done' // Only show non-completed tasks
+      );
+      depSelect.innerHTML = '<option value="">Add dependency...</option>' +
+        availableTasks.map(t =>
+          `<option value="${t.id}">${escapeHtml(t.title)} (${t.column})</option>`
+        ).join('');
+
+      // Populate automation settings
+      const autoPullInput = document.getElementById('auto-pull-threshold');
+      autoPullInput.value = task.autoPullThreshold || 0;
+
+      // Populate scheduled column dropdown
+      const schedColSelect = document.getElementById('scheduled-column');
+      schedColSelect.innerHTML = '<option value="">Don\'t schedule</option>' +
+        board.columns.filter(col => col !== task.column).map(col =>
+          `<option value="${col}">${col}</option>`
+        ).join('');
+
+      // Reset scheduled time
+      document.getElementById('scheduled-time').value = '';
 
       // Render description with interactive checkboxes
       document.getElementById('detail-description').innerHTML = renderMarkdown(task.description || '', taskId);
@@ -3011,15 +3276,35 @@
     async function moveTaskFromDetail() {
       if (!currentDetailTaskId) return;
       const newColumn = document.getElementById('detail-column').value;
+      const task = board.tasks.find(t => t.id === currentDetailTaskId);
+
+      // Check if task is blocked and trying to move to Review or Done
+      if (task && hasUnresolvedDependencies(task) && (newColumn === 'Review' || newColumn === 'Done')) {
+        const blockerNames = (task.blockedBy || [])
+          .map(id => board.tasks.find(t => t.id === id))
+          .filter(t => t && t.column !== 'Done')
+          .map(t => t.title)
+          .join(', ');
+        showToast(`Blocked by: ${blockerNames}`, 'error');
+        // Reset select to current column
+        document.getElementById('detail-column').value = task.column;
+        return;
+      }
 
       try {
-        await window.photon.invoke('moveTask', { id: currentDetailTaskId, column: newColumn });
+        await window.photon.invoke('moveTask', {
+          board: currentBoardName,
+          id: currentDetailTaskId,
+          column: newColumn
+        });
         // Update local state
-        const task = board.tasks.find(t => t.id === currentDetailTaskId);
         if (task) task.column = newColumn;
         renderBoard();
+        updateDetailModal(currentDetailTaskId);
+        showToast(`Moved to ${newColumn}`);
       } catch (err) {
         console.error('Failed to move task:', err);
+        showToast('Failed to move task', 'error');
       }
     }
 
@@ -3035,8 +3320,132 @@
       confirmDelete(currentDetailTaskId);
     }
 
+    // Add a dependency to the current task
+    async function addDependency() {
+      if (!currentDetailTaskId) return;
+      const select = document.getElementById('dependency-select');
+      const blockerId = select.value;
+      if (!blockerId) return;
+
+      const task = board.tasks.find(t => t.id === currentDetailTaskId);
+      if (!task) return;
+
+      try {
+        // Add to existing dependencies
+        const newBlockedBy = [...(task.blockedBy || []), blockerId];
+        await window.photon.invoke('setDependency', {
+          board: currentBoardName,
+          id: currentDetailTaskId,
+          blockedBy: blockerId
+        });
+
+        // Update local state
+        task.blockedBy = newBlockedBy;
+        renderBoard();
+        updateDetailModal(currentDetailTaskId);
+        showToast('Dependency added');
+      } catch (err) {
+        console.error('Failed to add dependency:', err);
+        showToast('Failed to add dependency', 'error');
+      }
+    }
+
+    // Remove a dependency from the current task
+    async function removeDependency(blockerId) {
+      if (!currentDetailTaskId) return;
+
+      const task = board.tasks.find(t => t.id === currentDetailTaskId);
+      if (!task) return;
+
+      try {
+        await window.photon.invoke('setDependency', {
+          board: currentBoardName,
+          id: currentDetailTaskId,
+          blockedBy: blockerId,
+          remove: true
+        });
+
+        // Update local state
+        task.blockedBy = (task.blockedBy || []).filter(id => id !== blockerId);
+        renderBoard();
+        updateDetailModal(currentDetailTaskId);
+        showToast('Dependency removed');
+      } catch (err) {
+        console.error('Failed to remove dependency:', err);
+        showToast('Failed to remove dependency', 'error');
+      }
+    }
+
+    // Update auto-pull threshold for a task
+    async function updateAutoPullThreshold() {
+      if (!currentDetailTaskId) return;
+
+      const threshold = parseInt(document.getElementById('auto-pull-threshold').value) || 0;
+      const task = board.tasks.find(t => t.id === currentDetailTaskId);
+      if (!task) return;
+
+      try {
+        await window.photon.invoke('updateTask', {
+          board: currentBoardName,
+          id: currentDetailTaskId,
+          autoPullThreshold: threshold
+        });
+
+        task.autoPullThreshold = threshold;
+        if (threshold > 0) {
+          showToast(`Will auto-pull when In Progress < ${threshold}`);
+        } else {
+          showToast('Auto-pull disabled');
+        }
+      } catch (err) {
+        console.error('Failed to update auto-pull threshold:', err);
+        showToast('Failed to update setting', 'error');
+      }
+    }
+
+    // Schedule a move for the current task
+    async function updateScheduledMove() {
+      if (!currentDetailTaskId) return;
+
+      const targetColumn = document.getElementById('scheduled-column').value;
+      const minutes = parseInt(document.getElementById('scheduled-time').value) || 0;
+
+      if (!targetColumn || !minutes) {
+        // Clear any scheduled move indication
+        return;
+      }
+
+      const task = board.tasks.find(t => t.id === currentDetailTaskId);
+      if (!task) return;
+
+      try {
+        await window.photon.invoke('updateTask', {
+          board: currentBoardName,
+          id: currentDetailTaskId,
+          autoReleaseMinutes: minutes,
+          // Store the target column in context for now
+          context: task.context ? `${task.context}\n[Scheduled: Move to ${targetColumn} in ${minutes} min]` : `[Scheduled: Move to ${targetColumn} in ${minutes} min]`
+        });
+
+        showToast(`Scheduled to move to ${targetColumn} in ${formatDuration(minutes)}`);
+
+        // Reset the selects
+        document.getElementById('scheduled-column').value = '';
+        document.getElementById('scheduled-time').value = '';
+      } catch (err) {
+        console.error('Failed to schedule move:', err);
+        showToast('Failed to schedule move', 'error');
+      }
+    }
+
+    function formatDuration(minutes) {
+      if (minutes < 60) return `${minutes} min`;
+      if (minutes < 1440) return `${Math.floor(minutes / 60)} hour${minutes >= 120 ? 's' : ''}`;
+      return 'tomorrow';
+    }
+
     function renderDetailComments(comments) {
-      const listEl = document.getElementById('comments-list');
+      const listEl = document.getElementById('detail-comments-list');
       if (!comments || comments.length === 0) {
         listEl.innerHTML = '';
         return;
@@ -3511,6 +3920,26 @@
         closeSettings();
       }
     });
+    // Toast notification system
+    function showToast(message, type = 'success') {
+      let container = document.querySelector('.toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      // Auto-remove after 3 seconds
+      setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
   </script>
 </body>
 </html>
