@@ -1,6 +1,9 @@
 {
   "name": "photons",
   "version": "1.4.1",
+  "owner": {
+    "name": "Portel"
+  },
   "photons": [
     {
       "name": "aws-s3",
