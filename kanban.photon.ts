@@ -19,6 +19,7 @@
 import { PhotonMCP } from '@portel/photon-core';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import * as os from 'os';
 import { fileURLToPath } from 'url';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 
@@ -26,7 +27,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // BEAM compiles photons to a cache directory, so we need the source location
-const PHOTONS_DIR = process.env.PHOTONS_DIR || '/Users/arul/Projects/photons';
+// Default to ~/.photon for user photons (can be overridden via PHOTONS_DIR)
+const PHOTONS_DIR = process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -115,7 +117,7 @@ const DEFAULT_MORNING_PULL_COUNT = 3;
 const DEFAULT_STALE_TASK_DAYS = 7;
 
 const CONFIG_PATH = path.join(PHOTONS_DIR, 'kanban', 'config.json');
-const DEFAULT_PROJECTS_ROOT = path.join(process.env.HOME || '', 'Projects');
+const DEFAULT_PROJECTS_ROOT = path.join(os.homedir(), 'Projects');
 
 function loadConfig(): KanbanConfig {
   try {

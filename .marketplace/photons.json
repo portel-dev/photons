@@ -451,7 +451,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:108a03da39cfe89ad5410e74f7bf88ddb63bc53627b0c2af719dc1aa208cf778",
+      "hash": "sha256:6e9224da4d81eec1d84dae8e4404d407180881cbd1e0b02b1797dd207bb124fb",
       "tools": [
         "configure",
         "getConfig",
@@ -833,7 +833,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../team-dashboard.photon.ts",
-      "hash": "sha256:2b6b99545b01d1daecc56700a6540693cd91471c08ed98561f637e368a53d406",
+      "hash": "sha256:f58ceddc4a8effbaa70e44139cf6ac950881e9378b5c0eeacfc68cf530c74f2d",
       "tools": [
         "main",
         "getDashboardData",
