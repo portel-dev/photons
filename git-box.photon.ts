@@ -13,6 +13,7 @@ const execAsync = promisify(exec);
  * @icon 📬
  * @description Mailbox-style Git interface - manage repos like an inbox
  * @version 2.0.0
+ * @cli git - https://git-scm.com/downloads
  *
  * ## Quick Reference
  *
