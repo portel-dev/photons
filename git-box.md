@@ -1,14 +1,10 @@
 # @name git-box @icon 📬 @description Mailbox-style Git interface
 
-manage repos like an inbox /
-export class GitBoxPhoton extends PhotonMCP {
-  private configPath = path.join(os.homedir(), '.photon', 'git-box.json');
-
-  /
+manage repos like an inbox @version 2.0.0
 
 ## 📋 Overview
 
-**Version:** 1.4.1
+**Version:** 2.0.0
 **Author:** Unknown
 **License:** MIT
 
@@ -40,7 +36,7 @@ Opens the mailbox interface for managing git repositories. Displays tracked repo
 ---
 
 
-### `addRepo`
+### `repoAdd`
 
 Add a repository to track (auto-initializes if not a repo)
 
@@ -59,7 +55,7 @@ Add a repository to track (auto-initializes if not a repo)
 ---
 
 
-### `initRepo`
+### `repoInit`
 
 Initialize a new git repository
 
@@ -78,7 +74,7 @@ Initialize a new git repository
 ---
 
 
-### `scanAvailableRepos`
+### `availableRepos`
 
 Scan projects root folder for available git repositories and folders
 
@@ -89,7 +85,7 @@ Scan projects root folder for available git repositories and folders
 ---
 
 
-### `setProjectsRoot`
+### `projectsRootSet`
 
 Set the projects root folder
 
@@ -106,7 +102,7 @@ Set the projects root folder
 ---
 
 
-### `removeRepo`
+### `repoRemove`
 
 Remove a repository from tracking
 
@@ -123,7 +119,7 @@ Remove a repository from tracking
 ---
 
 
-### `listRepos`
+### `repos`
 
 List all tracked repositories with status counts
 
@@ -134,7 +130,7 @@ List all tracked repositories with status counts
 ---
 
 
-### `getCommits`
+### `commits`
 
 Get commit history for a repository (like inbox messages)
 
@@ -155,7 +151,7 @@ Get commit history for a repository (like inbox messages)
 ---
 
 
-### `getCommitFiles`
+### `commitFiles`
 
 Get files changed in a specific commit
 
@@ -174,7 +170,7 @@ Get files changed in a specific commit
 ---
 
 
-### `getStatus`
+### `status`
 
 Get current working tree status (staged and unstaged changes)
 
@@ -191,7 +187,7 @@ Get current working tree status (staged and unstaged changes)
 ---
 
 
-### `stageFile`
+### `fileStage`
 
 Stage a file for commit
 
@@ -210,7 +206,7 @@ Stage a file for commit
 ---
 
 
-### `unstageFile`
+### `fileUnstage`
 
 Unstage a file
 
@@ -307,7 +303,7 @@ Fetch updates from remote without merging
 ---
 
 
-### `getBranches`
+### `branches`
 
 Get list of branches
 
@@ -324,7 +320,7 @@ Get list of branches
 ---
 
 
-### `switchBranch`
+### `branchSwitch`
 
 Switch to a different branch
 
@@ -343,7 +339,7 @@ Switch to a different branch
 ---
 
 
-### `getDiff`
+### `diff`
 
 Get diff for a file with syntax-highlighted output
 
@@ -364,7 +360,7 @@ Get diff for a file with syntax-highlighted output
 ---
 
 
-### `discardChanges`
+### `changesDiscard`
 
 Discard changes in a file
 
@@ -383,7 +379,7 @@ Discard changes in a file
 ---
 
 
-### `getCommitDiff`
+### `commitDiff`
 
 Get diff for a specific file in a commit
 
@@ -404,7 +400,7 @@ Get diff for a specific file in a commit
 ---
 
 
-### `getFileContent`
+### `fileContent`
 
 Get file content (current version or from a specific commit)
 
@@ -425,7 +421,7 @@ Get file content (current version or from a specific commit)
 ---
 
 
-### `createBranch`
+### `branchCreate`
 
 Create a new branch
 
@@ -446,7 +442,7 @@ Create a new branch
 ---
 
 
-### `createAndSwitchBranch`
+### `branchCreateSwitch`
 
 Create and switch to a new branch
 
@@ -467,7 +463,7 @@ Create and switch to a new branch
 ---
 
 
-### `deleteBranch`
+### `branchDelete`
 
 Delete a branch
 
@@ -488,7 +484,7 @@ Delete a branch
 ---
 
 
-### `mergeBranch`
+### `branchMerge`
 
 Merge a branch into the current branch
 
@@ -509,7 +505,7 @@ Merge a branch into the current branch
 ---
 
 
-### `abortMerge`
+### `mergeAbort`
 
 Abort an in-progress merge
 
@@ -526,7 +522,7 @@ Abort an in-progress merge
 ---
 
 
-### `getReflog`
+### `reflog`
 
 Get reflog - history of all git operations (undo stack)
 
@@ -562,7 +558,7 @@ Undo the last git operation (soft reset to previous HEAD)
 ---
 
 
-### `resetToCommit`
+### `commitReset`
 
 Reset to a specific commit (from reflog or commit history)
 
@@ -583,7 +579,7 @@ Reset to a specific commit (from reflog or commit history)
 ---
 
 
-### `recoverCommit`
+### `commitRecover`
 
 Recover a "lost" commit using reflog
 
@@ -604,7 +600,7 @@ Recover a "lost" commit using reflog
 ---
 
 
-### `listStashes`
+### `stashes`
 
 List all stashes
 
@@ -621,7 +617,7 @@ List all stashes
 ---
 
 
-### `createStash`
+### `stashCreate`
 
 Create a new stash
 
@@ -642,7 +638,7 @@ Create a new stash
 ---
 
 
-### `applyStash`
+### `stashApply`
 
 Apply a stash (keep the stash)
 
@@ -661,7 +657,7 @@ Apply a stash (keep the stash)
 ---
 
 
-### `popStash`
+### `stashPop`
 
 Pop a stash (apply and remove)
 
@@ -680,7 +676,7 @@ Pop a stash (apply and remove)
 ---
 
 
-### `dropStash`
+### `stashDrop`
 
 Drop (delete) a stash
 
@@ -699,7 +695,7 @@ Drop (delete) a stash
 ---
 
 
-### `showStash`
+### `stashShow`
 
 Show diff of a stash
 
@@ -718,7 +714,7 @@ Show diff of a stash
 ---
 
 
-### `clearStashes`
+### `stashesClear`
 
 Clear all stashes (dangerous!)
 
@@ -737,7 +733,7 @@ Clear all stashes (dangerous!)
 ---
 
 
-### `squashCommits`
+### `commitsSquash`
 
 Squash multiple commits into one
 
@@ -758,7 +754,7 @@ Squash multiple commits into one
 ---
 
 
-### `amendCommitMessage`
+### `commitMessageAmend`
 
 Amend an older commit's message using automated rebase
 
@@ -779,7 +775,7 @@ Amend an older commit's message using automated rebase
 ---
 
 
-### `removeFileFromHistory`
+### `fileRemoveFromHistory`
 
 Remove a file from the entire git history (dangerous!)
 
@@ -821,7 +817,7 @@ Cherry-pick one or more commits from another branch
 ---
 
 
-### `abortCherryPick`
+### `cherryPickAbort`
 
 Abort an in-progress cherry-pick
 
@@ -838,7 +834,7 @@ Abort an in-progress cherry-pick
 ---
 
 
-### `continueCherryPick`
+### `cherryPickContinue`
 
 Continue cherry-pick after resolving conflicts
 
@@ -855,7 +851,7 @@ Continue cherry-pick after resolving conflicts
 ---
 
 
-### `revertCommit`
+### `commitRevert`
 
 Revert a specific commit (creates a new commit that undoes it)
 
@@ -876,7 +872,7 @@ Revert a specific commit (creates a new commit that undoes it)
 ---
 
 
-### `abortRevert`
+### `revertAbort`
 
 Abort an in-progress revert
 
@@ -893,7 +889,7 @@ Abort an in-progress revert
 ---
 
 
-### `fixupCommit`
+### `commitFixup`
 
 Fixup - amend staged changes into an older commit
 
@@ -912,7 +908,7 @@ Fixup - amend staged changes into an older commit
 ---
 
 
-### `getRebasePreview`
+### `rebasePreview`
 
 Interactive rebase preview - shows what commits would be affected
 
@@ -931,7 +927,7 @@ Interactive rebase preview - shows what commits would be affected
 ---
 
 
-### `scriptedRebase`
+### `rebaseScripted`
 
 Perform a scripted rebase with custom actions for each commit
 
@@ -952,7 +948,7 @@ Perform a scripted rebase with custom actions for each commit
 ---
 
 
-### `continueRebase`
+### `rebaseContinue`
 
 Continue an in-progress rebase
 
@@ -969,7 +965,7 @@ Continue an in-progress rebase
 ---
 
 
-### `abortRebase`
+### `rebaseAbort`
 
 Abort an in-progress rebase
 
@@ -986,7 +982,7 @@ Abort an in-progress rebase
 ---
 
 
-### `getConflicts`
+### `conflicts`
 
 Get conflicts in current merge/rebase/cherry-pick
 
@@ -1003,7 +999,7 @@ Get conflicts in current merge/rebase/cherry-pick
 ---
 
 
-### `markResolved`
+### `conflictMarkResolved`
 
 Mark a conflicted file as resolved
 
@@ -1022,7 +1018,7 @@ Mark a conflicted file as resolved
 ---
 
 
-### `resolveConflict`
+### `conflictResolve`
 
 Use ours or theirs version for a conflicted file
 
@@ -1043,7 +1039,7 @@ Use ours or theirs version for a conflicted file
 ---
 
 
-### `getBlame`
+### `blame`
 
 Get blame information for a file
 
@@ -1066,7 +1062,7 @@ Get blame information for a file
 ---
 
 
-### `searchCommits`
+### `commitsSearch`
 
 Search for commits by message, author, or content
 
@@ -1089,7 +1085,7 @@ Search for commits by message, author, or content
 ---
 
 
-### `findChange`
+### `changeFind`
 
 Find which commit introduced a specific line or change (pickaxe)
 
@@ -1157,4 +1153,4 @@ No external dependencies required.
 
 ## 📄 License
 
-MIT • Version 1.4.1
+MIT • Version 2.0.0

@@ -4,7 +4,7 @@ Kanban Board Photon
 
 ## 📋 Overview
 
-**Version:** 2.0.0
+**Version:** 2.1.0
 **Author:** Portel
 **License:** MIT
 
@@ -19,15 +19,50 @@ No configuration required.
 
 
 
+### Setup Instructions
+
+*
+- `configure()` - Get/set config (no params = get, with params = set)
+**Boards:**
+- `boards()` - List all boards
+- `board()` - Get board details
+- `boardCreate()` - Create new board
+- `boardDelete()` - Delete a board
+- `projectLink()` - Link board to project folder
+- `projects()` - List available project folders
+**Tasks:**
+- `tasks()` - List tasks (with filters)
+- `task()` - Get single task with comments
+- `myTasks()` - Get tasks assigned to AI
+- `taskCreate()` - Create new task
+- `taskMove()` - Move task to column
+- `taskUpdate()` - Update task details
+- `taskDelete()` - Delete a task
+- `taskReorder()` - Reorder within column
+- `search()` - Search tasks by keyword
+**Comments & Dependencies:**
+- `commentAdd()` - Add comment to task
+- `comments()` - Get task comments
+- `dependencySet()` - Set/remove task dependencies
+**Columns & Stats:**
+- `columnAdd()` - Add new column
+- `columnRemove()` - Remove column
+- `stats()` - Get board statistics
+- `completedClear()` - Archive completed tasks
+**Batch & Utility:**
+- `main()` - Entry point (shows board UI)
+- `active()` - Get most recently updated board
+- `batchMove()` - Move multiple tasks at once
+
 
 ## 🔧 Tools
 
-This photon provides **34** tools:
+This photon provides **33** tools:
 
 
 ### `configure`
 
-Configure the kanban photon  Set the projects root folder and automation settings. This is stored persistently so all instances (Claude Code MCP, Beam UI, etc.) use the same configuration.
+Configure the kanban photon  Set the projects root folder and automation settings. This is stored persistently so all instances (Claude Code MCP, Beam UI, etc.) use the same configuration.  Call without params to get current config, or with params to set.
 
 
 
@@ -35,19 +70,8 @@ Configure the kanban photon  Set the projects root folder and automation setting
 **Example:**
 
 ```typescript
-configure({ projectsRoot: '/Users/me/Projects' })
+configure() // get current config
 ```
-
-
----
-
-
-### `getConfig`
-
-Get current configuration
-
-
-
 
 
 ---
@@ -64,7 +88,7 @@ Install Claude Code hooks in a project folder  Installs stop hook (blocks stoppi
 ---
 
 
-### `listProjectFolders`
+### `projects`
 
 List available project folders  Shows folders in the configured projects root that can be linked to boards. Use this when creating a new board to see available projects.
 
@@ -75,7 +99,7 @@ List available project folders  Shows folders in the configured projects root th
 ---
 
 
-### `listBoards`
+### `boards`
 
 List all boards  See all available boards with task counts. Use this to find existing project boards or check if a board exists.
 
@@ -86,9 +110,9 @@ List all boards  See all available boards with task counts. Use this to find exi
 ---
 
 
-### `createBoard`
+### `boardCreate`
 
-Create a new board  Create a board linked to a project folder. If no folder specified, use listProjectFolders() to see available options.  When a folder is provided: - Board name = folder name - Claude Code hooks are auto-installed in the project - Board is linked to the project for task tracking
+Create a new board  Create a board linked to a project folder. If no folder specified, use projects() to see available options.  When a folder is provided: - Board name = folder name - Claude Code hooks are auto-installed in the project - Board is linked to the project for task tracking
 
 
 
@@ -96,14 +120,14 @@ Create a new board  Create a board linked to a project folder. If no folder spec
 **Example:**
 
 ```typescript
-createBoard({ folder: 'my-project' })
+boardCreate({ folder: 'my-project' })
 ```
 
 
 ---
 
 
-### `linkProject`
+### `projectLink`
 
 Link an existing board to a project folder  Use this to link a board that was created without a folder, or to regenerate hooks for an existing project.
 
@@ -114,7 +138,7 @@ Link an existing board to a project folder  Use this to link a board that was cr
 ---
 
 
-### `deleteBoard`
+### `boardDelete`
 
 Delete a board  Permanently remove a board and all its tasks. Use with caution!
 
@@ -127,7 +151,7 @@ Delete a board  Permanently remove a board and all its tasks. Use with caution!
 
 ### `main`
 
-Open the Kanban board  Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods.  ## AI Workflow (IMPORTANT)  When working on tasks as an AI assistant:  1. **Check assigned tasks**: Use `getMyTasks` to find tasks assigned to you 2. **Work in "In Progress"**: Tasks you're actively working on should be here 3. **Move to "Review" when done**: Do NOT move directly to "Done"! - "Review" means: AI finished, waiting for human verification - Only humans should move tasks from "Review" to "Done" 4. **Add comments**: Document what you did for the reviewer  This keeps humans in the loop and ensures quality control.
+Open the Kanban board  Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods.  ## AI Workflow (IMPORTANT)  When working on tasks as an AI assistant:  1. **Check assigned tasks**: Use `myTasks` to find tasks assigned to you 2. **Work in "In Progress"**: Tasks you're actively working on should be here 3. **Move to "Review" when done**: Do NOT move directly to "Done"! - "Review" means: AI finished, waiting for human verification - Only humans should move tasks from "Review" to "Done" 4. **Add comments**: Document what you did for the reviewer  This keeps humans in the loop and ensures quality control.
 
 
 
@@ -136,7 +160,7 @@ Open the Kanban board  Visual drag-and-drop board for managing tasks. Both human
 ---
 
 
-### `getTasks`
+### `tasks`
 
 Get all tasks, optionally filtered  Use this to understand the current state of the project, find tasks assigned to you, or check what needs attention.
 
@@ -146,14 +170,14 @@ Get all tasks, optionally filtered  Use this to understand the current state of 
 **Example:**
 
 ```typescript
-getTasks({ board: 'my-project', assignee: 'ai' })
+tasks({ board: 'my-project', assignee: 'ai' })
 ```
 
 
 ---
 
 
-### `getMyTasks`
+### `myTasks`
 
 Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on. Call this at the start of a session to check your workload.  **Workflow reminder**: - Work on tasks in "In Progress" - When finished, move to "Review" (not "Done") - Add a comment explaining what you did - Humans will review and move to "Done"
 
@@ -164,7 +188,7 @@ Get tasks assigned to AI  Quickly see what tasks are waiting for AI to work on. 
 ---
 
 
-### `createTask`
+### `taskCreate`
 
 Create a new task  Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory. Use 'blockedBy' to specify dependencies (task IDs that must complete first). Use 'autoPullThreshold' to auto-pull when In Progress < N. Use 'autoReleaseMinutes' to auto-release after N minutes.
 
@@ -174,14 +198,14 @@ Create a new task  Add a task to the board. By default, tasks go to 'Backlog' co
 **Example:**
 
 ```typescript
-createTask({ board: 'my-project', title: 'Fix bug', priority: 'high' })
+taskCreate({ board: 'my-project', title: 'Fix bug', priority: 'high' })
 ```
 
 
 ---
 
 
-### `moveTask`
+### `taskMove`
 
 Move a task to a different column  Update the status of a task by moving it between columns. Common flow: Backlog → Todo → In Progress → Review → Done  **AI WORKFLOW**: When you complete a task, move it to "Review" - NOT "Done"! The "Review" column is for human verification. Only humans move tasks to "Done".  **Dependencies**: Tasks with unresolved `blockedBy` cannot move to Review or Done.
 
@@ -191,14 +215,14 @@ Move a task to a different column  Update the status of a task by moving it betw
 **Example:**
 
 ```typescript
-moveTask({ board: 'my-project', id: 'abc123', column: 'In Progress' })
+taskMove({ board: 'my-project', id: 'abc123', column: 'In Progress' })
 ```
 
 
 ---
 
 
-### `reorderTask`
+### `taskReorder`
 
 Reorder a task within or across columns  Move a task to a specific position. Use `beforeId` to place before another task, or omit to place at the end of the column. Array order = display order.
 
@@ -215,7 +239,7 @@ reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
 ---
 
 
-### `updateTask`
+### `taskUpdate`
 
 Update a task's details  Modify task title, description, priority, assignee, labels, context, dependencies, or automation settings.
 
@@ -226,7 +250,7 @@ Update a task's details  Modify task title, description, priority, assignee, lab
 ---
 
 
-### `deleteTask`
+### `taskDelete`
 
 Delete a task  Also removes this task from any other task's blockedBy list.
 
@@ -237,7 +261,7 @@ Delete a task  Also removes this task from any other task's blockedBy list.
 ---
 
 
-### `searchTasks`
+### `search`
 
 Search tasks across all boards or within a specific board  Find tasks by keyword in title, description, or context.
 
@@ -248,7 +272,7 @@ Search tasks across all boards or within a specific board  Find tasks by keyword
 ---
 
 
-### `addComment`
+### `commentAdd`
 
 Add a comment to a task  Use comments for instructions, updates, questions, and conversation. Both humans and AI can add comments to track progress and communicate.
 
@@ -258,14 +282,14 @@ Add a comment to a task  Use comments for instructions, updates, questions, and 
 **Example:**
 
 ```typescript
-addComment({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
+commentAdd({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
 ```
 
 
 ---
 
 
-### `getComments`
+### `comments`
 
 Get comments for a task  Retrieve all comments/conversation for a specific task.
 
@@ -276,7 +300,7 @@ Get comments for a task  Retrieve all comments/conversation for a specific task.
 ---
 
 
-### `getTask`
+### `task`
 
 Get a task with all its details including comments  Returns the full task object with comments for context.
 
@@ -287,7 +311,7 @@ Get a task with all its details including comments  Returns the full task object
 ---
 
 
-### `getBoard`
+### `board`
 
 Get the current board state  Returns all columns and tasks. Useful for AI to understand the full context.
 
@@ -298,7 +322,7 @@ Get the current board state  Returns all columns and tasks. Useful for AI to und
 ---
 
 
-### `getActiveBoard`
+### `active`
 
 Get the most recently active board  Returns the board that was most recently updated (by AI or humans). Useful for AI to know which project currently needs attention, and for the UI "Auto" mode to follow activity across boards.
 
@@ -309,7 +333,7 @@ Get the most recently active board  Returns the board that was most recently upd
 ---
 
 
-### `addColumn`
+### `columnAdd`
 
 Add a new column to the board
 
@@ -320,7 +344,7 @@ Add a new column to the board
 ---
 
 
-### `removeColumn`
+### `columnRemove`
 
 Remove a column (moves tasks to Backlog)
 
@@ -331,7 +355,7 @@ Remove a column (moves tasks to Backlog)
 ---
 
 
-### `clearCompleted`
+### `completedClear`
 
 Clear completed tasks (archive them)
 
@@ -342,7 +366,7 @@ Clear completed tasks (archive them)
 ---
 
 
-### `getStats`
+### `stats`
 
 Get board statistics  Includes WIP status showing current vs limit for In Progress column.
 
@@ -353,7 +377,7 @@ Get board statistics  Includes WIP status showing current vs limit for In Progre
 ---
 
 
-### `setDependency`
+### `dependencySet`
 
 Set task dependencies  Convenience method to add or remove dependencies between tasks.
 
@@ -363,7 +387,7 @@ Set task dependencies  Convenience method to add or remove dependencies between 
 **Example:**
 
 ```typescript
-setDependency({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
+dependencySet({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
 ```
 
 
@@ -436,7 +460,7 @@ Handle GitHub webhook for issue events  Creates or updates tasks when GitHub iss
 ---
 
 
-### `batchMoveTasks`
+### `batchMove`
 
 Batch move tasks with exclusive lock  Move multiple tasks atomically. Uses distributed lock to prevent concurrent modifications from corrupting the board.  Option 1: Use @locked tag (entire method locked)
 
@@ -498,4 +522,4 @@ This photon automatically installs the following dependencies:
 
 ## 📄 License
 
-MIT • Version 2.0.0
+MIT • Version 2.1.0
