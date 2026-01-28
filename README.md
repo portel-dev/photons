@@ -44,22 +44,19 @@ We welcome contributions! Submit pull requests for:
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
 | **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
-| **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox /
-export class GitBoxPhoton extends PhotonMCP {
-  private configPath = path.join(os.homedir(), '.photon', 'git-box.json');
-
-  / | 57 | [View →](git-box.md) |
+| **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox @version 2.0.0 | 57 | [View →](git-box.md) |
 | **Git** | Local git repository operations | 15 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
 | **Google TV Remote** | Control Google TV and Android TV devices | 37 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
-| **Kanban** | Kanban Board Photon | 34 | [View →](kanban.md) |
+| **Kanban** | Kanban Board Photon | 33 | [View →](kanban.md) |
 | **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
 | **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
 | **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 8 | [View →](math.md) |
+| **Mcp Orchestrator** | MCP Orchestrator Photon | 10 | [View →](mcp-orchestrator.md) |
 | **MongoDB** | NoSQL database operations | 18 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 11 | [View →](postgres.md) |
 | **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |
@@ -77,7 +74,7 @@ export class GitBoxPhoton extends PhotonMCP {
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 37 photons ready to use
+**Total:** 38 photons ready to use
 
 ---
 
@@ -121,7 +118,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 37 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 38 focused tools at its fingertips.
 
 ---
 
@@ -187,7 +184,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 37 production-ready photons available
+- 📦 38 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

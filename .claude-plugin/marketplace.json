@@ -190,7 +190,7 @@
     },
     {
       "name": "git-box",
-      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox /\nexport class GitBoxPhoton extends PhotonMCP {\n  private configPath = path.join(os.homedir(), '.photon', 'git-box.json');\n\n  /",
+      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -400,6 +400,24 @@
           "args": [
             "mcp",
             "math"
+          ]
+        }
+      }
+    },
+    {
+      "name": "mcp-orchestrator",
+      "description": "MCP Orchestrator Photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "mcp-orchestrator": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "mcp-orchestrator"
           ]
         }
       }
