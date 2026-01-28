@@ -1,6 +1,7 @@
 import { PhotonMCP } from '@portel/photon-core';
 import { execSync, exec } from 'child_process';
 import { promisify } from 'util';
+// Fix: use trimEnd() instead of trim() to preserve git status leading whitespace
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -11,9 +12,127 @@ const execAsync = promisify(exec);
  * @name git-box
  * @icon 📬
  * @description Mailbox-style Git interface - manage repos like an inbox
+ * @version 2.0.0
+ *
+ * ## Quick Reference
+ *
+ * ### Repository Management
+ * | Method | Description |
+ * |--------|-------------|
+ * | `repos` | List all tracked repositories |
+ * | `repoAdd` | Add a repository to track |
+ * | `repoRemove` | Remove a repository from tracking |
+ * | `repoInit` | Initialize a new git repository |
+ * | `availableRepos` | Scan projects folder for repos |
+ * | `projectsRootSet` | Set the projects root folder |
+ *
+ * ### Working Tree
+ * | Method | Description |
+ * |--------|-------------|
+ * | `status` | Get staged/unstaged/untracked files |
+ * | `fileStage` | Stage a file for commit |
+ * | `fileUnstage` | Unstage a file |
+ * | `changesDiscard` | Discard changes in a file |
+ * | `diff` | Get diff for a file |
+ * | `fileContent` | Get file content |
+ *
+ * ### Commits
+ * | Method | Description |
+ * |--------|-------------|
+ * | `commits` | Get commit history |
+ * | `commitFiles` | Get files changed in a commit |
+ * | `commitDiff` | Get diff for a file in a commit |
+ * | `commit` | Create a commit |
+ * | `commitRevert` | Revert a commit |
+ * | `commitReset` | Reset to a commit |
+ * | `commitRecover` | Recover a lost commit |
+ * | `commitFixup` | Amend staged changes into older commit |
+ * | `commitMessageAmend` | Amend an older commit's message |
+ * | `commitsSquash` | Squash multiple commits |
+ * | `commitsSearch` | Search commits |
+ *
+ * ### Branches
+ * | Method | Description |
+ * |--------|-------------|
+ * | `branches` | List all branches |
+ * | `branchCreate` | Create a new branch |
+ * | `branchCreateSwitch` | Create and switch to branch |
+ * | `branchSwitch` | Switch to a branch |
+ * | `branchDelete` | Delete a branch |
+ * | `branchMerge` | Merge a branch |
+ * | `mergeAbort` | Abort an in-progress merge |
+ *
+ * ### Remote Operations
+ * | Method | Description |
+ * |--------|-------------|
+ * | `pull` | Pull changes from remote |
+ * | `push` | Push changes to remote |
+ * | `fetch` | Fetch updates from remote |
+ *
+ * ### Stash
+ * | Method | Description |
+ * |--------|-------------|
+ * | `stashes` | List all stashes |
+ * | `stashCreate` | Create a stash |
+ * | `stashApply` | Apply a stash (keep it) |
+ * | `stashPop` | Apply and remove a stash |
+ * | `stashDrop` | Delete a stash |
+ * | `stashShow` | Show stash diff |
+ * | `stashesClear` | Clear all stashes |
+ *
+ * ### History & Undo
+ * | Method | Description |
+ * |--------|-------------|
+ * | `reflog` | Get git operation history |
+ * | `undoLast` | Undo last git operation |
+ * | `blame` | Get blame info for file |
+ * | `changeFind` | Find commit that introduced change |
+ *
+ * ### Rebase & Cherry-pick
+ * | Method | Description |
+ * |--------|-------------|
+ * | `rebasePreview` | Preview commits to rebase |
+ * | `rebaseScripted` | Perform scripted rebase |
+ * | `rebaseContinue` | Continue rebase |
+ * | `rebaseAbort` | Abort rebase |
+ * | `cherryPick` | Cherry-pick commits |
+ * | `cherryPickContinue` | Continue cherry-pick |
+ * | `cherryPickAbort` | Abort cherry-pick |
+ * | `revertAbort` | Abort revert |
+ *
+ * ### Conflicts
+ * | Method | Description |
+ * |--------|-------------|
+ * | `conflicts` | Get current conflicts |
+ * | `conflictResolve` | Resolve with ours/theirs |
+ * | `conflictMarkResolved` | Mark file as resolved |
+ *
+ * ### Advanced
+ * | Method | Description |
+ * |--------|-------------|
+ * | `fileRemoveFromHistory` | Remove file from all history |
  */
 export class GitBoxPhoton extends PhotonMCP {
   private configPath = path.join(os.homedir(), '.photon', 'git-box.json');
+
+  /**
+   * Escape a string for safe shell usage
+   */
+  private _shellEscape(str: string): string {
+    // Use single quotes and escape any single quotes within
+    return `'${str.replace(/'/g, "'\\''")}'`;
+  }
+
+  /**
+   * Validate that a string is a safe git ref name (branch, tag, etc.)
+   */
+  private _isValidRefName(name: string): boolean {
+    // Reject obvious command injection attempts
+    if (name.startsWith('-')) return false;
+    if (name.includes('..')) return false;
+    if (/[;\$`|&<>]/.test(name)) return false;
+    return true;
+  }
 
   /**
    * Opens the mailbox interface for managing git repositories.
@@ -21,7 +140,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @ui mailbox
    */
   async main() {
-    const repos = await this.listRepos();
+    const repos = await this.repos();
     return { repos };
   }
 
@@ -45,12 +164,14 @@ export class GitBoxPhoton extends PhotonMCP {
     fs.writeFileSync(this.configPath, JSON.stringify(config, null, 2));
   }
 
-  private async _runGit(repoPath: string, command: string): Promise<string> {
+  private async _runGit(repoPath: string, command: string, maxBuffer?: number): Promise<string> {
     try {
-      const { stdout } = await execAsync(`git -C "${repoPath}" ${command}`);
-      return stdout.trim();
+      const options = maxBuffer ? { maxBuffer } : { maxBuffer: 10 * 1024 * 1024 }; // 10MB default
+      const { stdout } = await execAsync(`git -C ${this._shellEscape(repoPath)} ${command}`, options);
+      // Use trimEnd() to preserve leading whitespace (important for git status --porcelain format)
+      return stdout.trimEnd();
     } catch (error: any) {
-      if (error.stdout) return error.stdout.trim();
+      if (error.stdout) return error.stdout.trimEnd();
       throw error;
     }
   }
@@ -60,7 +181,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to git repository
    * @param autoInit Whether to auto-initialize if not a repo (default: true)
    */
-  async addRepo(params: { repoPath: string; autoInit?: boolean }) {
+  async repoAdd(params: { repoPath: string; autoInit?: boolean }) {
     const fullPath = path.resolve(params.repoPath);
     const { autoInit = true } = params;
 
@@ -127,7 +248,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param folderPath Path to folder
    * @param force Skip safety checks
    */
-  async initRepo(params: { folderPath: string; force?: boolean }) {
+  async repoInit(params: { folderPath: string; force?: boolean }) {
     const fullPath = path.resolve(params.folderPath);
     const { force = false } = params;
 
@@ -162,7 +283,7 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * Scan projects root folder for available git repositories and folders
    */
-  async scanAvailableRepos() {
+  async availableRepos() {
     const config = this._loadConfig();
     const projectsRoot = config.projectsRoot || path.join(os.homedir(), 'Projects');
     const available: Array<{
@@ -219,7 +340,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Set the projects root folder
    * @param rootPath Path to folder containing git repositories
    */
-  async setProjectsRoot(params: { rootPath: string }) {
+  async projectsRootSet(params: { rootPath: string }) {
     const fullPath = path.resolve(params.rootPath.replace(/^~/, os.homedir()));
 
     if (!fs.existsSync(fullPath)) {
@@ -237,7 +358,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Remove a repository from tracking
    * @param repoPath Path to git repository
    */
-  async removeRepo(params: { repoPath: string }) {
+  async repoRemove(params: { repoPath: string }) {
     const fullPath = path.resolve(params.repoPath);
     const config = this._loadConfig();
     config.repos = config.repos.filter(r => r !== fullPath);
@@ -248,46 +369,48 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * List all tracked repositories with status counts
    */
-  async listRepos() {
+  async repos() {
     const config = this._loadConfig();
-    const repos = [];
 
-    for (const repoPath of config.repos) {
-      if (!fs.existsSync(repoPath)) continue;
-
-      try {
-        const name = path.basename(repoPath);
-        const branch = await this._runGit(repoPath, 'rev-parse --abbrev-ref HEAD');
-
-        // Count uncommitted changes
-        const status = await this._runGit(repoPath, 'status --porcelain');
-        const uncommitted = status ? status.split('\n').length : 0;
-
-        // Count unpushed commits
-        let unpushed = 0;
+    // Fetch status for all repos in parallel for better performance
+    const repoPromises = config.repos
+      .filter(repoPath => fs.existsSync(repoPath))
+      .map(async (repoPath) => {
         try {
-          const ahead = await this._runGit(repoPath, `rev-list --count @{u}..HEAD`);
-          unpushed = parseInt(ahead) || 0;
-        } catch {}
+          const name = path.basename(repoPath);
+          const branch = await this._runGit(repoPath, 'rev-parse --abbrev-ref HEAD');
 
-        repos.push({
-          path: repoPath,
-          name,
-          branch,
-          uncommitted,
-          unpushed,
-          badge: uncommitted + unpushed,
-        });
-      } catch (error) {
-        repos.push({
-          path: repoPath,
-          name: path.basename(repoPath),
-          error: 'Failed to read repository',
-        });
-      }
-    }
+          // Count uncommitted changes (avoid -uall flag for large repos)
+          const status = await this._runGit(repoPath, 'status --porcelain');
+          const uncommitted = status ? status.split('\n').filter(Boolean).length : 0;
 
-    return repos;
+          // Count unpushed commits
+          let unpushed = 0;
+          try {
+            const ahead = await this._runGit(repoPath, 'rev-list --count @{u}..HEAD');
+            unpushed = parseInt(ahead) || 0;
+          } catch {
+            // No upstream configured
+          }
+
+          return {
+            path: repoPath,
+            name,
+            branch,
+            uncommitted,
+            unpushed,
+            badge: uncommitted + unpushed,
+          };
+        } catch {
+          return {
+            path: repoPath,
+            name: path.basename(repoPath),
+            error: 'Failed to read repository',
+          };
+        }
+      });
+
+    return Promise.all(repoPromises);
   }
 
   /**
@@ -296,17 +419,24 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param limit Number of commits to fetch
    * @param branch Branch to show commits from
    */
-  async getCommits(params: { repoPath: string; limit?: number; branch?: string }) {
+  async commits(params: { repoPath: string; limit?: number; branch?: string }) {
     const { repoPath, limit = 50, branch } = params;
     const branchArg = branch || 'HEAD';
 
+    // Validate branch name to prevent command injection
+    if (branch && !this._isValidRefName(branch)) {
+      throw new Error(`Invalid branch name: ${branch}`);
+    }
+
     const format = '%H|%h|%an|%ae|%at|%s';
-    const output = await this._runGit(repoPath, `log ${branchArg} -n ${limit} --format="${format}"`);
+    const output = await this._runGit(repoPath, `log ${this._shellEscape(branchArg)} -n ${limit} --format="${format}"`);
 
     if (!output) return [];
 
     return output.split('\n').map(line => {
-      const [hash, shortHash, author, email, timestamp, subject] = line.split('|');
+      const parts = line.split('|');
+      const [hash, shortHash, author, email, timestamp] = parts;
+      const subject = parts.slice(5).join('|'); // Subject may contain |
       return {
         hash,
         shortHash,
@@ -323,7 +453,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param hash Commit hash
    */
-  async getCommitFiles(params: { repoPath: string; hash: string }) {
+  async commitFiles(params: { repoPath: string; hash: string }) {
     const { repoPath, hash } = params;
 
     const output = await this._runGit(repoPath, `diff-tree --no-commit-id --name-status -r ${hash}`);
@@ -352,10 +482,11 @@ export class GitBoxPhoton extends PhotonMCP {
    * Get current working tree status (staged and unstaged changes)
    * @param repoPath Path to repository
    */
-  async getStatus(params: { repoPath: string }) {
+  async status(params: { repoPath: string }) {
     const { repoPath } = params;
 
-    const output = await this._runGit(repoPath, 'status --porcelain -uall');
+    // Note: Avoid -uall flag as it can cause memory issues on large repos
+    const output = await this._runGit(repoPath, 'status --porcelain');
     if (!output) return { staged: [], unstaged: [], untracked: [] };
 
     const staged: any[] = [];
@@ -368,8 +499,8 @@ export class GitBoxPhoton extends PhotonMCP {
       const indexStatus = line.charAt(0);
       const workStatus = line.charAt(1);
       // Git porcelain format: XY PATH (XY are 2 status chars, then space, then path)
-      // But when Y is space, it can look like only one space. Use slice(2) + trimStart to handle both.
-      const filePath = line.slice(2).trimStart();
+      // The third char is always a space, so slice from position 3
+      const filePath = line.slice(3);
 
       const statusMap: Record<string, string> = {
         'A': 'added',
@@ -399,7 +530,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param filePath File to stage (or "." for all)
    */
-  async stageFile(params: { repoPath: string; filePath: string }) {
+  async fileStage(params: { repoPath: string; filePath: string }) {
     await this._runGit(params.repoPath, `add "${params.filePath}"`);
     this.emit({ emit: 'status', message: `Staged: ${params.filePath}` });
     return { staged: params.filePath };
@@ -410,7 +541,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param filePath File to unstage
    */
-  async unstageFile(params: { repoPath: string; filePath: string }) {
+  async fileUnstage(params: { repoPath: string; filePath: string }) {
     await this._runGit(params.repoPath, `reset HEAD "${params.filePath}"`);
     this.emit({ emit: 'status', message: `Unstaged: ${params.filePath}` });
     return { unstaged: params.filePath };
@@ -425,18 +556,18 @@ export class GitBoxPhoton extends PhotonMCP {
     const { repoPath, message } = params;
 
     // Check if there are staged changes
-    const status = await this.getStatus({ repoPath });
-    if (status.staged.length === 0) {
+    const st = await this.status({ repoPath });
+    if (st.staged.length === 0) {
       throw new Error('No staged changes to commit');
     }
 
-    await this._runGit(repoPath, `commit -m "${message.replace(/"/g, '\\"')}"`);
+    await this._runGit(repoPath, `commit -m ${this._shellEscape(message)}`);
 
     this.emit({ emit: 'toast', message: 'Commit created!', type: 'success' });
     return {
       committed: true,
       message,
-      files: status.staged.length
+      files: st.staged.length
     };
   }
 
@@ -492,14 +623,15 @@ export class GitBoxPhoton extends PhotonMCP {
    * Get list of branches
    * @param repoPath Path to repository
    */
-  async getBranches(params: { repoPath: string }) {
+  async branches(params: { repoPath: string }) {
     const { repoPath } = params;
 
-    const output = await this._runGit(repoPath, 'branch -a --format="%(refname:short)|%(objectname:short)|%(upstream:track)"');
+    // Use a delimiter unlikely to appear in branch names
+    const output = await this._runGit(repoPath, 'branch -a --format="%(refname:short)\t%(objectname:short)\t%(upstream:track)"');
     const current = await this._runGit(repoPath, 'rev-parse --abbrev-ref HEAD');
 
     const branches = output.split('\n').filter(Boolean).map(line => {
-      const [name, hash, track] = line.split('|');
+      const [name, hash, track] = line.split('\t');
       return {
         name,
         hash,
@@ -516,9 +648,12 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param branch Branch name to switch to
    */
-  async switchBranch(params: { repoPath: string; branch: string }) {
+  async branchSwitch(params: { repoPath: string; branch: string }) {
     const { repoPath, branch } = params;
-    await this._runGit(repoPath, `checkout ${branch}`);
+    if (!this._isValidRefName(branch)) {
+      throw new Error(`Invalid branch name: ${branch}`);
+    }
+    await this._runGit(repoPath, `checkout ${this._shellEscape(branch)}`);
     this.emit({ emit: 'toast', message: `Switched to ${branch}`, type: 'success' });
     return { branch };
   }
@@ -529,7 +664,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param filePath File to diff
    * @param staged Whether to show staged diff
    */
-  async getDiff(params: { repoPath: string; filePath: string; staged?: boolean }) {
+  async diff(params: { repoPath: string; filePath: string; staged?: boolean }) {
     const { repoPath, filePath, staged = false } = params;
     const stageArg = staged ? '--cached' : '';
     const diff = await this._runGit(repoPath, `diff ${stageArg} -- "${filePath}"`);
@@ -550,7 +685,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param filePath File to discard changes
    */
-  async discardChanges(params: { repoPath: string; filePath: string }) {
+  async changesDiscard(params: { repoPath: string; filePath: string }) {
     const { repoPath, filePath } = params;
     await this._runGit(repoPath, `checkout -- "${filePath}"`);
     this.emit({ emit: 'toast', message: `Discarded: ${filePath}`, type: 'info' });
@@ -563,7 +698,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param hash Commit hash
    * @param filePath File to get diff for
    */
-  async getCommitDiff(params: { repoPath: string; hash: string; filePath: string }) {
+  async commitDiff(params: { repoPath: string; hash: string; filePath: string }) {
     const { repoPath, hash, filePath } = params;
     // Show diff between this commit and its parent
     const diff = await this._runGit(repoPath, `show ${hash} -- "${filePath}"`);
@@ -583,7 +718,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param filePath File to read
    * @param hash Optional commit hash (omit for working tree version)
    */
-  async getFileContent(params: { repoPath: string; filePath: string; hash?: string }) {
+  async fileContent(params: { repoPath: string; filePath: string; hash?: string }) {
     const { repoPath, filePath, hash } = params;
 
     let content: string;
@@ -626,10 +761,16 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param branchName Name for the new branch
    * @param startPoint Optional commit/branch to start from (default: HEAD)
    */
-  async createBranch(params: { repoPath: string; branchName: string; startPoint?: string }) {
+  async branchCreate(params: { repoPath: string; branchName: string; startPoint?: string }) {
     const { repoPath, branchName, startPoint } = params;
-    const startArg = startPoint ? ` ${startPoint}` : '';
-    await this._runGit(repoPath, `branch ${branchName}${startArg}`);
+    if (!this._isValidRefName(branchName)) {
+      throw new Error(`Invalid branch name: ${branchName}`);
+    }
+    if (startPoint && !this._isValidRefName(startPoint)) {
+      throw new Error(`Invalid start point: ${startPoint}`);
+    }
+    const startArg = startPoint ? ` ${this._shellEscape(startPoint)}` : '';
+    await this._runGit(repoPath, `branch ${this._shellEscape(branchName)}${startArg}`);
     this.emit({ emit: 'toast', message: `Created branch: ${branchName}`, type: 'success' });
     return { created: branchName };
   }
@@ -640,10 +781,16 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param branchName Name for the new branch
    * @param startPoint Optional commit/branch to start from
    */
-  async createAndSwitchBranch(params: { repoPath: string; branchName: string; startPoint?: string }) {
+  async branchCreateSwitch(params: { repoPath: string; branchName: string; startPoint?: string }) {
     const { repoPath, branchName, startPoint } = params;
-    const startArg = startPoint ? ` ${startPoint}` : '';
-    await this._runGit(repoPath, `checkout -b ${branchName}${startArg}`);
+    if (!this._isValidRefName(branchName)) {
+      throw new Error(`Invalid branch name: ${branchName}`);
+    }
+    if (startPoint && !this._isValidRefName(startPoint)) {
+      throw new Error(`Invalid start point: ${startPoint}`);
+    }
+    const startArg = startPoint ? ` ${this._shellEscape(startPoint)}` : '';
+    await this._runGit(repoPath, `checkout -b ${this._shellEscape(branchName)}${startArg}`);
     this.emit({ emit: 'toast', message: `Created and switched to: ${branchName}`, type: 'success' });
     return { created: branchName, switched: true };
   }
@@ -654,10 +801,13 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param branchName Branch to delete
    * @param force Force delete even if not merged
    */
-  async deleteBranch(params: { repoPath: string; branchName: string; force?: boolean }) {
+  async branchDelete(params: { repoPath: string; branchName: string; force?: boolean }) {
     const { repoPath, branchName, force = false } = params;
+    if (!this._isValidRefName(branchName)) {
+      throw new Error(`Invalid branch name: ${branchName}`);
+    }
     const flag = force ? '-D' : '-d';
-    await this._runGit(repoPath, `branch ${flag} ${branchName}`);
+    await this._runGit(repoPath, `branch ${flag} ${this._shellEscape(branchName)}`);
     this.emit({ emit: 'toast', message: `Deleted branch: ${branchName}`, type: 'info' });
     return { deleted: branchName };
   }
@@ -668,12 +818,15 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param branchName Branch to merge
    * @param noFastForward Create merge commit even if fast-forward is possible
    */
-  async mergeBranch(params: { repoPath: string; branchName: string; noFastForward?: boolean }) {
+  async branchMerge(params: { repoPath: string; branchName: string; noFastForward?: boolean }) {
     const { repoPath, branchName, noFastForward = false } = params;
+    if (!this._isValidRefName(branchName)) {
+      throw new Error(`Invalid branch name: ${branchName}`);
+    }
     const ffArg = noFastForward ? '--no-ff ' : '';
 
     try {
-      const output = await this._runGit(repoPath, `merge ${ffArg}${branchName}`);
+      const output = await this._runGit(repoPath, `merge ${ffArg}${this._shellEscape(branchName)}`);
       this.emit({ emit: 'toast', message: `Merged ${branchName}`, type: 'success' });
       return { merged: branchName, output, conflicts: false };
     } catch (error: any) {
@@ -692,7 +845,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Abort an in-progress merge
    * @param repoPath Path to repository
    */
-  async abortMerge(params: { repoPath: string }) {
+  async mergeAbort(params: { repoPath: string }) {
     await this._runGit(params.repoPath, 'merge --abort');
     this.emit({ emit: 'toast', message: 'Merge aborted', type: 'info' });
     return { aborted: true };
@@ -707,15 +860,19 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param limit Number of entries to fetch
    */
-  async getReflog(params: { repoPath: string; limit?: number }) {
+  async reflog(params: { repoPath: string; limit?: number }) {
     const { repoPath, limit = 20 } = params;
-    const format = '%H|%h|%gd|%gs|%ci';
+    // Use tab delimiter to avoid issues with | in messages
+    const format = '%H\t%h\t%gd\t%gs\t%ci';
     const output = await this._runGit(repoPath, `reflog -n ${limit} --format="${format}"`);
 
     if (!output) return [];
 
     return output.split('\n').filter(Boolean).map(line => {
-      const [hash, shortHash, ref, action, date] = line.split('|');
+      const parts = line.split('\t');
+      const [hash, shortHash, ref] = parts;
+      const date = parts[parts.length - 1];
+      const action = parts.slice(3, -1).join('\t'); // Action may contain tabs
       return { hash, shortHash, ref, action, date };
     });
   }
@@ -728,16 +885,16 @@ export class GitBoxPhoton extends PhotonMCP {
     const { repoPath } = params;
 
     // Get the previous HEAD from reflog
-    const reflog = await this.getReflog({ repoPath, limit: 2 });
-    if (reflog.length < 2) {
+    const reflogEntries = await this.reflog({ repoPath, limit: 2 });
+    if (reflogEntries.length < 2) {
       throw new Error('No previous state to undo to');
     }
 
-    const previousState = reflog[1];
+    const previousState = reflogEntries[1];
     await this._runGit(repoPath, `reset --soft ${previousState.hash}`);
-    this.emit({ emit: 'toast', message: `Undid: ${reflog[0].action}`, type: 'success' });
+    this.emit({ emit: 'toast', message: `Undid: ${reflogEntries[0].action}`, type: 'success' });
 
-    return { undone: reflog[0].action, restoredTo: previousState.hash };
+    return { undone: reflogEntries[0].action, restoredTo: previousState.hash };
   }
 
   /**
@@ -746,18 +903,18 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param hash Commit hash to reset to
    * @param mode Reset mode: soft (keep changes staged), mixed (keep changes unstaged), hard (discard all)
    */
-  async resetToCommit(params: { repoPath: string; hash: string; mode?: 'soft' | 'mixed' | 'hard' }) {
+  async commitReset(params: { repoPath: string; hash: string; mode?: 'soft' | 'mixed' | 'hard' }) {
     const { repoPath, hash, mode = 'soft' } = params;
 
     // Safety check for hard reset
     if (mode === 'hard') {
-      const status = await this.getStatus({ repoPath });
-      const hasChanges = status.staged.length > 0 || status.unstaged.length > 0;
+      const st = await this.status({ repoPath });
+      const hasChanges = st.staged.length > 0 || st.unstaged.length > 0;
       if (hasChanges) {
         return {
           reset: false,
           warning: 'You have uncommitted changes. Use mode=hard to discard them.',
-          changes: { staged: status.staged.length, unstaged: status.unstaged.length }
+          changes: { staged: st.staged.length, unstaged: st.unstaged.length }
         };
       }
     }
@@ -774,7 +931,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param hash Commit hash to recover (create a branch pointing to it)
    * @param branchName Name for the recovery branch
    */
-  async recoverCommit(params: { repoPath: string; hash: string; branchName?: string }) {
+  async commitRecover(params: { repoPath: string; hash: string; branchName?: string }) {
     const { repoPath, hash, branchName = `recovered-${hash.slice(0, 7)}` } = params;
 
     await this._runGit(repoPath, `branch ${branchName} ${hash}`);
@@ -791,7 +948,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * List all stashes
    * @param repoPath Path to repository
    */
-  async listStashes(params: { repoPath: string }) {
+  async stashes(params: { repoPath: string }) {
     const { repoPath } = params;
     const output = await this._runGit(repoPath, 'stash list --format="%gd|%ci|%gs"');
 
@@ -809,20 +966,20 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param message Optional stash message
    * @param includeUntracked Include untracked files
    */
-  async createStash(params: { repoPath: string; message?: string; includeUntracked?: boolean }) {
+  async stashCreate(params: { repoPath: string; message?: string; includeUntracked?: boolean }) {
     const { repoPath, message, includeUntracked = false } = params;
 
     // Check if there are changes to stash
-    const status = await this.getStatus({ repoPath });
-    const hasChanges = status.staged.length > 0 || status.unstaged.length > 0 ||
-                       (includeUntracked && status.untracked.length > 0);
+    const st = await this.status({ repoPath });
+    const hasChanges = st.staged.length > 0 || st.unstaged.length > 0 ||
+                       (includeUntracked && st.untracked.length > 0);
 
     if (!hasChanges) {
       return { stashed: false, message: 'No changes to stash' };
     }
 
     const untrackedArg = includeUntracked ? '-u ' : '';
-    const msgArg = message ? ` -m "${message.replace(/"/g, '\\"')}"` : '';
+    const msgArg = message ? ` -m ${this._shellEscape(message)}` : '';
 
     await this._runGit(repoPath, `stash push ${untrackedArg}${msgArg}`.trim());
     this.emit({ emit: 'toast', message: 'Changes stashed', type: 'success' });
@@ -835,7 +992,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param stashRef Stash reference (e.g., "stash@{0}") - defaults to latest
    */
-  async applyStash(params: { repoPath: string; stashRef?: string }) {
+  async stashApply(params: { repoPath: string; stashRef?: string }) {
     const { repoPath, stashRef = 'stash@{0}' } = params;
 
     try {
@@ -855,7 +1012,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param stashRef Stash reference - defaults to latest
    */
-  async popStash(params: { repoPath: string; stashRef?: string }) {
+  async stashPop(params: { repoPath: string; stashRef?: string }) {
     const { repoPath, stashRef = 'stash@{0}' } = params;
 
     try {
@@ -875,7 +1032,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param stashRef Stash reference to drop
    */
-  async dropStash(params: { repoPath: string; stashRef: string }) {
+  async stashDrop(params: { repoPath: string; stashRef: string }) {
     const { repoPath, stashRef } = params;
     await this._runGit(repoPath, `stash drop ${stashRef}`);
     this.emit({ emit: 'toast', message: `Dropped: ${stashRef}`, type: 'info' });
@@ -887,7 +1044,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param stashRef Stash reference
    */
-  async showStash(params: { repoPath: string; stashRef?: string }) {
+  async stashShow(params: { repoPath: string; stashRef?: string }) {
     const { repoPath, stashRef = 'stash@{0}' } = params;
     const diff = await this._runGit(repoPath, `stash show -p ${stashRef}`);
     const stats = await this._runGit(repoPath, `stash show --stat ${stashRef}`);
@@ -905,15 +1062,14 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param confirm Must be true to proceed
    */
-  async clearStashes(params: { repoPath: string; confirm: boolean }) {
+  async stashesClear(params: { repoPath: string; confirm: boolean }) {
     const { repoPath, confirm } = params;
 
     if (!confirm) {
-      const stashes = await this.listStashes({ repoPath });
       return {
         cleared: false,
-        warning: `This will delete ${stashes.length} stash(es). Set confirm=true to proceed.`,
-        count: stashes.length
+        warning: `This will delete ${stashList.length} stash(es). Set confirm=true to proceed.`,
+        count: stashList.length
       };
     }
 
@@ -932,12 +1088,12 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param baseCommit The commit BEFORE the range to squash (commits after this get squashed)
    * @param message New commit message for the squashed commit
    */
-  async squashCommits(params: { repoPath: string; baseCommit: string; message: string }) {
+  async commitsSquash(params: { repoPath: string; baseCommit: string; message: string }) {
     const { repoPath, baseCommit, message } = params;
 
     // Safety: check for uncommitted changes
-    const status = await this.getStatus({ repoPath });
-    if (status.staged.length > 0 || status.unstaged.length > 0) {
+    const st = await this.status({ repoPath });
+    if (st.staged.length > 0 || st.unstaged.length > 0) {
       return { squashed: false, error: 'You have uncommitted changes. Commit or stash them first.' };
     }
 
@@ -946,10 +1102,10 @@ export class GitBoxPhoton extends PhotonMCP {
 
     try {
       // Soft reset to base commit (keeps all changes staged)
-      await this._runGit(repoPath, `reset --soft ${baseCommit}`);
+      await this._runGit(repoPath, `reset --soft ${this._shellEscape(baseCommit)}`);
 
       // Create new squashed commit
-      await this._runGit(repoPath, `commit -m "${message.replace(/"/g, '\\"')}"`);
+      await this._runGit(repoPath, `commit -m ${this._shellEscape(message)}`);
 
       const newHead = await this._runGit(repoPath, 'rev-parse --short HEAD');
       this.emit({ emit: 'toast', message: `Squashed into ${newHead}`, type: 'success' });
@@ -968,33 +1124,57 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param commitHash The commit whose message to change
    * @param newMessage The new commit message
    */
-  async amendCommitMessage(params: { repoPath: string; commitHash: string; newMessage: string }) {
+  async commitMessageAmend(params: { repoPath: string; commitHash: string; newMessage: string }) {
     const { repoPath, commitHash, newMessage } = params;
 
+    // Validate commit hash
+    if (!this._isValidRefName(commitHash)) {
+      throw new Error(`Invalid commit hash: ${commitHash}`);
+    }
+
     // Safety check
-    const status = await this.getStatus({ repoPath });
-    if (status.staged.length > 0 || status.unstaged.length > 0) {
+    const st = await this.status({ repoPath });
+    if (st.staged.length > 0 || st.unstaged.length > 0) {
       return { amended: false, error: 'You have uncommitted changes. Commit or stash them first.' };
     }
 
     const originalHead = await this._runGit(repoPath, 'rev-parse HEAD');
 
     try {
-      // Use GIT_SEQUENCE_EDITOR to automate the rebase
+      // Create a cross-platform script to modify the rebase todo
       const shortHash = commitHash.slice(0, 7);
-      const sedScript = `s/^pick ${shortHash}/reword ${shortHash}/`;
+      const tmpDir = path.join(os.tmpdir(), `git-box-${Date.now()}`);
+      fs.mkdirSync(tmpDir, { recursive: true });
 
-      // Set the commit message for the reword
-      const env = {
-        GIT_SEQUENCE_EDITOR: `sed -i '' '${sedScript}'`,
-        GIT_EDITOR: `printf '${newMessage.replace(/'/g, "'\\''")}' >`
-      };
+      // Script to change 'pick' to 'reword' for our commit
+      const seqEditorScript = path.join(tmpDir, 'seq-editor.sh');
+      const seqContent = `#!/bin/sh
+sed 's/^pick ${shortHash}/reword ${shortHash}/' "$1" > "$1.tmp" && mv "$1.tmp" "$1"
+`;
+      fs.writeFileSync(seqEditorScript, seqContent, { mode: 0o755 });
 
-      const envStr = Object.entries(env).map(([k, v]) => `${k}="${v}"`).join(' ');
-      await execAsync(`${envStr} git -C "${repoPath}" rebase -i ${commitHash}^`);
+      // Script to write the new message
+      const msgEditorScript = path.join(tmpDir, 'msg-editor.sh');
+      const msgFile = path.join(tmpDir, 'message.txt');
+      fs.writeFileSync(msgFile, newMessage);
+      const msgContent = `#!/bin/sh
+cat ${this._shellEscape(msgFile)} > "$1"
+`;
+      fs.writeFileSync(msgEditorScript, msgContent, { mode: 0o755 });
 
-      this.emit({ emit: 'toast', message: 'Commit message amended', type: 'success' });
-      return { amended: true, commit: commitHash };
+      try {
+        await execAsync(
+          `GIT_SEQUENCE_EDITOR=${this._shellEscape(seqEditorScript)} ` +
+          `GIT_EDITOR=${this._shellEscape(msgEditorScript)} ` +
+          `git -C ${this._shellEscape(repoPath)} rebase -i ${this._shellEscape(commitHash)}^`
+        );
+
+        this.emit({ emit: 'toast', message: 'Commit message amended', type: 'success' });
+        return { amended: true, commit: commitHash };
+      } finally {
+        // Cleanup temp files
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+      }
     } catch (error: any) {
       // Abort rebase if in progress
       await this._runGit(repoPath, 'rebase --abort').catch(() => {});
@@ -1008,7 +1188,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param filePath File to remove from history
    * @param confirm Must be true to proceed
    */
-  async removeFileFromHistory(params: { repoPath: string; filePath: string; confirm: boolean }) {
+  async fileRemoveFromHistory(params: { repoPath: string; filePath: string; confirm: boolean }) {
     const { repoPath, filePath, confirm } = params;
 
     if (!confirm) {
@@ -1088,7 +1268,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Abort an in-progress cherry-pick
    * @param repoPath Path to repository
    */
-  async abortCherryPick(params: { repoPath: string }) {
+  async cherryPickAbort(params: { repoPath: string }) {
     await this._runGit(params.repoPath, 'cherry-pick --abort');
     this.emit({ emit: 'toast', message: 'Cherry-pick aborted', type: 'info' });
     return { aborted: true };
@@ -1098,7 +1278,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Continue cherry-pick after resolving conflicts
    * @param repoPath Path to repository
    */
-  async continueCherryPick(params: { repoPath: string }) {
+  async cherryPickContinue(params: { repoPath: string }) {
     await this._runGit(params.repoPath, 'cherry-pick --continue');
     this.emit({ emit: 'toast', message: 'Cherry-pick continued', type: 'success' });
     return { continued: true };
@@ -1110,7 +1290,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param commitHash Commit to revert
    * @param noCommit If true, stage the revert without committing
    */
-  async revertCommit(params: { repoPath: string; commitHash: string; noCommit?: boolean }) {
+  async commitRevert(params: { repoPath: string; commitHash: string; noCommit?: boolean }) {
     const { repoPath, commitHash, noCommit = false } = params;
 
     try {
@@ -1134,7 +1314,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Abort an in-progress revert
    * @param repoPath Path to repository
    */
-  async abortRevert(params: { repoPath: string }) {
+  async revertAbort(params: { repoPath: string }) {
     await this._runGit(params.repoPath, 'revert --abort');
     this.emit({ emit: 'toast', message: 'Revert aborted', type: 'info' });
     return { aborted: true };
@@ -1145,12 +1325,12 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param targetCommit The commit to amend the staged changes into
    */
-  async fixupCommit(params: { repoPath: string; targetCommit: string }) {
+  async commitFixup(params: { repoPath: string; targetCommit: string }) {
     const { repoPath, targetCommit } = params;
 
     // Check for staged changes
-    const status = await this.getStatus({ repoPath });
-    if (status.staged.length === 0) {
+    const st = await this.status({ repoPath });
+    if (st.staged.length === 0) {
       return { fixed: false, error: 'No staged changes to fixup. Stage your changes first.' };
     }
 
@@ -1178,7 +1358,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param baseCommit The commit to rebase onto (commits after this are affected)
    */
-  async getRebasePreview(params: { repoPath: string; baseCommit: string }) {
+  async rebasePreview(params: { repoPath: string; baseCommit: string }) {
     const { repoPath, baseCommit } = params;
 
     const format = '%H|%h|%s';
@@ -1202,7 +1382,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param baseCommit The commit to rebase onto
    * @param actions Array of actions: { hash, action: 'pick'|'reword'|'squash'|'fixup'|'drop', message? }
    */
-  async scriptedRebase(params: {
+  async rebaseScripted(params: {
     repoPath: string;
     baseCommit: string;
     actions: Array<{ hash: string; action: 'pick' | 'reword' | 'squash' | 'fixup' | 'drop'; message?: string }>;
@@ -1210,26 +1390,36 @@ export class GitBoxPhoton extends PhotonMCP {
     const { repoPath, baseCommit, actions } = params;
 
     // Safety check
-    const status = await this.getStatus({ repoPath });
-    if (status.staged.length > 0 || status.unstaged.length > 0) {
+    const st = await this.status({ repoPath });
+    if (st.staged.length > 0 || st.unstaged.length > 0) {
       return { rebased: false, error: 'You have uncommitted changes. Commit or stash them first.' };
     }
 
     const originalHead = await this._runGit(repoPath, 'rev-parse HEAD');
+
+    // Validate inputs
+    if (!this._isValidRefName(baseCommit)) {
+      throw new Error(`Invalid base commit: ${baseCommit}`);
+    }
 
     try {
       // Build the rebase script
       const script = actions.map(a => `${a.action} ${a.hash.slice(0, 7)}`).join('\n');
 
       // Create a temporary script that writes our sequence
+      const tmpDir = path.join(os.tmpdir(), `git-box-rebase-${Date.now()}`);
+      fs.mkdirSync(tmpDir, { recursive: true });
+      const scriptPath = path.join(tmpDir, 'rebase-script.sh');
       const scriptContent = `#!/bin/sh\ncat > "$1" << 'SEQUENCE'\n${script}\nSEQUENCE`;
-      const scriptPath = `/tmp/git-rebase-script-${Date.now()}.sh`;
       fs.writeFileSync(scriptPath, scriptContent, { mode: 0o755 });
 
       try {
-        await execAsync(`GIT_SEQUENCE_EDITOR="${scriptPath}" git -C "${repoPath}" rebase -i ${baseCommit}`);
+        await execAsync(
+          `GIT_SEQUENCE_EDITOR=${this._shellEscape(scriptPath)} ` +
+          `git -C ${this._shellEscape(repoPath)} rebase -i ${this._shellEscape(baseCommit)}`
+        );
       } finally {
-        fs.unlinkSync(scriptPath);
+        fs.rmSync(tmpDir, { recursive: true, force: true });
       }
 
       this.emit({ emit: 'toast', message: 'Rebase completed', type: 'success' });
@@ -1252,7 +1442,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Continue an in-progress rebase
    * @param repoPath Path to repository
    */
-  async continueRebase(params: { repoPath: string }) {
+  async rebaseContinue(params: { repoPath: string }) {
     await this._runGit(params.repoPath, 'rebase --continue');
     this.emit({ emit: 'toast', message: 'Rebase continued', type: 'success' });
     return { continued: true };
@@ -1262,7 +1452,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Abort an in-progress rebase
    * @param repoPath Path to repository
    */
-  async abortRebase(params: { repoPath: string }) {
+  async rebaseAbort(params: { repoPath: string }) {
     await this._runGit(params.repoPath, 'rebase --abort');
     this.emit({ emit: 'toast', message: 'Rebase aborted', type: 'info' });
     return { aborted: true };
@@ -1272,7 +1462,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Get conflicts in current merge/rebase/cherry-pick
    * @param repoPath Path to repository
    */
-  async getConflicts(params: { repoPath: string }) {
+  async conflicts(params: { repoPath: string }) {
     const { repoPath } = params;
 
     const status = await this._runGit(repoPath, 'status --porcelain');
@@ -1315,7 +1505,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param filePath File to mark as resolved
    */
-  async markResolved(params: { repoPath: string; filePath: string }) {
+  async conflictMarkResolved(params: { repoPath: string; filePath: string }) {
     const { repoPath, filePath } = params;
     await this._runGit(repoPath, `add "${filePath}"`);
     this.emit({ emit: 'toast', message: `Marked resolved: ${filePath}`, type: 'success' });
@@ -1328,7 +1518,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param filePath Conflicted file
    * @param version Which version to use: 'ours' or 'theirs'
    */
-  async resolveConflict(params: { repoPath: string; filePath: string; version: 'ours' | 'theirs' }) {
+  async conflictResolve(params: { repoPath: string; filePath: string; version: 'ours' | 'theirs' }) {
     const { repoPath, filePath, version } = params;
     await this._runGit(repoPath, `checkout --${version} "${filePath}"`);
     await this._runGit(repoPath, `add "${filePath}"`);
@@ -1347,7 +1537,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param startLine Optional start line
    * @param endLine Optional end line
    */
-  async getBlame(params: { repoPath: string; filePath: string; startLine?: number; endLine?: number }) {
+  async blame(params: { repoPath: string; filePath: string; startLine?: number; endLine?: number }) {
     const { repoPath, filePath, startLine, endLine } = params;
 
     let lineArg = '';
@@ -1406,7 +1596,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param type Type of search: 'message', 'author', 'content', 'all'
    * @param limit Max results
    */
-  async searchCommits(params: { repoPath: string; query: string; type?: 'message' | 'author' | 'content' | 'all'; limit?: number }) {
+  async commitsSearch(params: { repoPath: string; query: string; type?: 'message' | 'author' | 'content' | 'all'; limit?: number }) {
     const { repoPath, query, type = 'all', limit = 50 } = params;
 
     const format = '%H|%h|%an|%at|%s';
@@ -1449,7 +1639,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param searchText Text to search for
    * @param filePath Optional file to limit search to
    */
-  async findChange(params: { repoPath: string; searchText: string; filePath?: string }) {
+  async changeFind(params: { repoPath: string; searchText: string; filePath?: string }) {
     const { repoPath, searchText, filePath } = params;
 
     const fileArg = filePath ? `-- "${filePath}"` : '';
