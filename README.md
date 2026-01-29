@@ -36,12 +36,9 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Code Diagram** | Generate a Mermaid diagram from a file | 3 | [View →](code-diagram.md) |
-| **Connect Four** | Play against AI with distributed locks | 8 | [View →](connect-four.md) |
-| **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
 | **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
 | **Demo Photon** | Comprehensive feature demonstration | 21 | [View →](demo.md) |
-| **Discord** | Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation | 6 | [View →](discord.md) |
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
 | **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
@@ -49,34 +46,24 @@ We welcome contributions! Submit pull requests for:
 | **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads | 57 | [View →](git-box.md) |
 | **Git** | Local git repository operations | 15 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
-| **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
 | **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
-| **Google TV Remote** | Control Google TV and Android TV devices | 37 | [View →](google-tv.md) |
 | **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
 | **Kanban** | Kanban Board Photon | 33 | [View →](kanban.md) |
 | **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
-| **Knowledge Graph** | Persistent knowledge graph with entities and relations | 11 | [View →](knowledge-graph.md) |
-| **LG Remote** | Control LG WebOS TVs | 27 | [View →](lg-remote.md) |
 | **Math Photon MCP** | Advanced math expression evaluator | 8 | [View →](math.md) |
 | **Mcp Orchestrator** | MCP Orchestrator Photon | 10 | [View →](mcp-orchestrator.md) |
 | **MongoDB** | NoSQL database operations | 18 | [View →](mongodb.md) |
 | **PostgreSQL** | Database operations for PostgreSQL | 11 | [View →](postgres.md) |
 | **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |
 | **Redis** | In-memory data store and cache | 23 | [View →](redis.md) |
-| **RSS Feed** | Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds | 5 | [View →](rss-feed.md) |
-| **Rss To Slack** | RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack | 2 | [View →](rss-to-slack.md) |
 | **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
-| **Social Formatter** | Social Media Formatter | 4 | [View →](social-formatter.md) |
 | **SQLite Photon MCP** | SQLite database operations | 15 | [View →](sqlite.md) |
 | **Team Dashboard** | Team Dashboard Photon | 20 | [View →](team-dashboard.md) |
-| **Telegram** | Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation | 12 | [View →](telegram.md) |
 | **Time** | Timezone and time conversion operations | 9 | [View →](time.md) |
-| **Tuya Smart Light** | Control Tuya/Wipro/Smart Life WiFi bulbs | 9 | [View →](tuya-smart-light.md) |
-| **Uptime Monitor** | Uptime Monitor Workflow Monitors website availability and sends alerts | 3 | [View →](uptime-monitor.md) |
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 40 photons ready to use
+**Total:** 27 photons ready to use
 
 ---
 
@@ -120,7 +107,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 40 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 27 focused tools at its fingertips.
 
 ---
 
@@ -186,7 +173,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 40 production-ready photons available
+- 📦 27 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
