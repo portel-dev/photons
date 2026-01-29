@@ -44,6 +44,26 @@
       "assets": []
     },
     {
+      "name": "connect-four",
+      "version": "1.0.0",
+      "description": "Connect Four - Play against AI with distributed locks",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../connect-four.photon.ts",
+      "hash": "sha256:6dd0786cad7c4d866054daadd097aa160b41292c6814bc917dfeacc5e4a88f1a",
+      "tools": [
+        "newGame",
+        "dropPiece",
+        "board",
+        "games",
+        "resign",
+        "stats",
+        "replay",
+        "scheduledCleanup"
+      ],
+      "assets": []
+    },
+    {
       "name": "dashboard",
       "version": "1.0.0",
       "description": "Dashboard Photon",
