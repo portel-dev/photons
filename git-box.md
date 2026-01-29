@@ -1,6 +1,6 @@
 # @name git-box @icon 📬 @description Mailbox-style Git interface
 
-manage repos like an inbox @version 2.0.0
+manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads
 
 ## 📋 Overview
 

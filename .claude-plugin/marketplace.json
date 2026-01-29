@@ -27,6 +27,24 @@
       }
     },
     {
+      "name": "booking",
+      "description": "Booking System - Time slot reservation with distributed locks",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "booking": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "booking"
+          ]
+        }
+      }
+    },
+    {
       "name": "code-diagram",
       "description": "Generate a Mermaid diagram from a file",
       "source": "./",
@@ -189,8 +207,26 @@
       }
     },
     {
+      "name": "form-inbox",
+      "description": "Form Inbox - Webhook-powered form submission collector",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "form-inbox": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "form-inbox"
+          ]
+        }
+      }
+    },
+    {
       "name": "git-box",
-      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0",
+      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads",
       "source": "./",
       "strict": false,
       "hooks": [

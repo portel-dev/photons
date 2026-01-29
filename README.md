@@ -35,6 +35,7 @@ We welcome contributions! Submit pull requests for:
 | Photon | Focus | Tools | Details |
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
+| **Booking System** | Time slot reservation with distributed locks | 12 | [View →](booking.md) |
 | **Code Diagram** | Generate a Mermaid diagram from a file | 3 | [View →](code-diagram.md) |
 | **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
 | **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
@@ -44,7 +45,8 @@ We welcome contributions! Submit pull requests for:
 | **Docker** | Container management operations | 10 | [View →](docker.md) |
 | **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
 | **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
-| **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox @version 2.0.0 | 57 | [View →](git-box.md) |
+| **Form Inbox** | Webhook-powered form submission collector | 12 | [View →](form-inbox.md) |
+| **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads | 57 | [View →](git-box.md) |
 | **Git** | Local git repository operations | 15 | [View →](git.md) |
 | **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
 | **Github Pr Notifier** | GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack | 2 | [View →](github-pr-notifier.md) |
@@ -74,7 +76,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 38 photons ready to use
+**Total:** 40 photons ready to use
 
 ---
 
@@ -118,7 +120,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 38 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 40 focused tools at its fingertips.
 
 ---
 
@@ -184,7 +186,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 38 production-ready photons available
+- 📦 40 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
