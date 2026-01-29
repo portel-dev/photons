@@ -44,42 +44,6 @@
       "assets": []
     },
     {
-      "name": "connect-four",
-      "version": "1.0.0",
-      "description": "Connect Four - Play against AI with distributed locks",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../connect-four.photon.ts",
-      "hash": "sha256:6dd0786cad7c4d866054daadd097aa160b41292c6814bc917dfeacc5e4a88f1a",
-      "tools": [
-        "newGame",
-        "dropPiece",
-        "board",
-        "games",
-        "resign",
-        "stats",
-        "replay",
-        "scheduledCleanup"
-      ],
-      "assets": []
-    },
-    {
-      "name": "content-creator",
-      "version": "1.4.1",
-      "description": "Content Creator Photon",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../content-creator.photon.ts",
-      "hash": "sha256:3d29ec18c2023eec5d0189392f56a86f8a95cda5d1687be71333879be38a2189",
-      "tools": [
-        "research",
-        "generate",
-        "formatContent",
-        "createContent"
-      ],
-      "assets": []
-    },
-    {
       "name": "dashboard",
       "version": "1.0.0",
       "description": "Dashboard Photon",
@@ -146,24 +110,6 @@
         "getDocs",
         "getTree",
         "getConfig"
-      ],
-      "assets": []
-    },
-    {
-      "name": "discord",
-      "version": "1.4.1",
-      "description": "Discord - Send messages and manage Discord via webhooks Like n8n's Discord node - notifications, alerts, and automation",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../discord.photon.ts",
-      "hash": "sha256:766512fc447df75269027ceb319f400424dbd9befc4e2a60d08cd8f33f7d2e06",
-      "tools": [
-        "send",
-        "embed",
-        "alert",
-        "deployment",
-        "commits",
-        "metrics"
       ],
       "assets": []
     },
@@ -386,20 +332,6 @@
       "assets": []
     },
     {
-      "name": "github-pr-notifier",
-      "version": "1.4.1",
-      "description": "GitHub PR Notifier Workflow Monitors GitHub PRs and sends notifications to Slack",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../github-pr-notifier.photon.ts",
-      "hash": "sha256:29e1964f499bf57adcf244f422f0ca25c9edaf76312be0a1e8250fe8fa7e483b",
-      "tools": [
-        "monitor",
-        "summary"
-      ],
-      "assets": []
-    },
-    {
       "name": "google-calendar",
       "version": "1.0.0",
       "description": "Google Calendar - Calendar integration",
@@ -417,55 +349,6 @@
         "freeBusy",
         "search",
         "upcoming"
-      ],
-      "assets": []
-    },
-    {
-      "name": "google-tv",
-      "version": "1.0.0",
-      "description": "Google TV Remote - Control Google TV and Android TV devices",
-      "author": "Photon",
-      "license": "MIT",
-      "source": "../google-tv.photon.ts",
-      "hash": "sha256:79ae756014c3e8784441d824d3068812be5893aabb8291bfabf17452e539984b",
-      "tools": [
-        "discover",
-        "connect",
-        "disconnect",
-        "status",
-        "list",
-        "forget",
-        "volume",
-        "mute",
-        "on",
-        "off",
-        "power",
-        "app",
-        "launch",
-        "play",
-        "pause",
-        "playPause",
-        "stop",
-        "next",
-        "previous",
-        "rewind",
-        "forward",
-        "home",
-        "back",
-        "select",
-        "up",
-        "down",
-        "left",
-        "right",
-        "menu",
-        "settings",
-        "info",
-        "channelUp",
-        "channelDown",
-        "input",
-        "button",
-        "number",
-        "remoteUI"
       ],
       "assets": []
     },
@@ -583,68 +466,6 @@
         "kitchen-sink/ui/search-results.html",
         "kitchen-sink/ui/users.html"
       ]
-    },
-    {
-      "name": "knowledge-graph",
-      "version": "1.0.0",
-      "description": "Knowledge Graph - Persistent knowledge graph with entities and relations",
-      "author": "Portel",
-      "license": "MIT",
-      "source": "../knowledge-graph.photon.ts",
-      "hash": "sha256:756308be7ce2c18d0a7d132591d3e7396834e1a3e41d146d1b6f20772d81eb0f",
-      "tools": [
-        "entities",
-        "relations",
-        "observe",
-        "removeEntities",
-        "removeObservations",
-        "removeRelations",
-        "graph",
-        "search",
-        "nodes",
-        "clear",
-        "export"
-      ],
-      "assets": []
-    },
-    {
-      "name": "lg-remote",
-      "version": "1.1.0",
-      "description": "LG Remote - Control LG WebOS TVs",
-      "author": "Photon (based on pokemote by mithileshchellappan)",
-      "license": "MIT",
-      "source": "../lg-remote.photon.ts",
-      "hash": "sha256:a8148a86844c964c27f645005cf6324b82023a2f81ea76ec7689cfe0883e38e1",
-      "tools": [
-        "discover",
-        "connect",
-        "pair",
-        "disconnect",
-        "list",
-        "forget",
-        "status",
-        "volume",
-        "mute",
-        "setMac",
-        "on",
-        "off",
-        "notify",
-        "app",
-        "apps",
-        "channel",
-        "channels",
-        "input",
-        "inputs",
-        "play",
-        "pause",
-        "stop",
-        "rewind",
-        "forward",
-        "button",
-        "systemInfo",
-        "softwareInfo"
-      ],
-      "assets": []
     },
     {
       "name": "math",
@@ -802,37 +623,6 @@
       "assets": []
     },
     {
-      "name": "rss-feed",
-      "version": "1.4.1",
-      "description": "RSS Feed - Read and parse RSS/Atom feeds Like n8n's RSS Read node - monitor blogs, news, and content feeds",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../rss-feed.photon.ts",
-      "hash": "sha256:f5e92c4229481057f998b57cfde387aa24118581c6668768914055d4b07ee2f5",
-      "tools": [
-        "read",
-        "getNew",
-        "search",
-        "readMultiple",
-        "info"
-      ],
-      "assets": []
-    },
-    {
-      "name": "rss-to-slack",
-      "version": "1.4.1",
-      "description": "RSS to Slack Workflow Monitors RSS feeds and posts new items to Slack",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../rss-to-slack.photon.ts",
-      "hash": "sha256:6a3fba3484c1bd3ab67535297fe37042b964788ae75991af780cb03579c4d98c",
-      "tools": [
-        "monitor",
-        "setup"
-      ],
-      "assets": []
-    },
-    {
       "name": "slack",
       "version": "1.0.0",
       "description": "Slack - Send messages and manage Slack workspace",
@@ -848,22 +638,6 @@
         "react",
         "upload",
         "search"
-      ],
-      "assets": []
-    },
-    {
-      "name": "social-formatter",
-      "version": "1.4.1",
-      "description": "Social Media Formatter",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../social-formatter.photon.ts",
-      "hash": "sha256:16dd1c6d39137d673e1b1af6c7dad0e5e4b726a2eee3d8632ab2a195826efcc7",
-      "tools": [
-        "format",
-        "formatSingle",
-        "getPlatforms",
-        "createThread"
       ],
       "assets": []
     },
@@ -930,30 +704,6 @@
       ]
     },
     {
-      "name": "telegram",
-      "version": "1.4.1",
-      "description": "Telegram - Send messages via Telegram Bot API Like n8n's Telegram node - notifications and bot automation",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../telegram.photon.ts",
-      "hash": "sha256:016d75b93da5c2976d1976a1334cd7c1503fbac6fa109191a0214f157cb22495",
-      "tools": [
-        "send",
-        "sendPhoto",
-        "sendDocument",
-        "sendLocation",
-        "sendPoll",
-        "alert",
-        "deployment",
-        "getMe",
-        "getChat",
-        "getUpdates",
-        "deleteMessage",
-        "pinMessage"
-      ],
-      "assets": []
-    },
-    {
       "name": "time",
       "version": "1.0.0",
       "description": "Time - Timezone and time conversion operations",
@@ -971,42 +721,6 @@
         "testTimezones",
         "testTimezonesRegion",
         "testConvert"
-      ],
-      "assets": []
-    },
-    {
-      "name": "tuya-smart-light",
-      "version": "2.1.0",
-      "description": "Tuya Smart Light - Control Tuya/Wipro/Smart Life WiFi bulbs",
-      "author": "Photon",
-      "license": "MIT",
-      "source": "../tuya-smart-light.photon.ts",
-      "hash": "sha256:75c6b1e500b0329005fca9b9fdd650a442de377c4429ac557759707022596589",
-      "tools": [
-        "setup",
-        "list",
-        "on",
-        "off",
-        "toggle",
-        "brightness",
-        "temperature",
-        "color",
-        "status"
-      ],
-      "assets": []
-    },
-    {
-      "name": "uptime-monitor",
-      "version": "1.4.1",
-      "description": "Uptime Monitor Workflow Monitors website availability and sends alerts",
-      "author": "Unknown",
-      "license": "MIT",
-      "source": "../uptime-monitor.photon.ts",
-      "hash": "sha256:22258435cf0f91d495fd4a3a2b2ea1c7306eba00eae4b2403f3c94e03271ab98",
-      "tools": [
-        "check",
-        "setup",
-        "stats"
       ],
       "assets": []
     },
