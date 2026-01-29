@@ -29,6 +29,30 @@
       "assets": []
     },
     {
+      "name": "booking",
+      "version": "1.0.0",
+      "description": "Booking System - Time slot reservation with distributed locks",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../booking.photon.ts",
+      "hash": "sha256:daddaa5d0999fd701c8b843ba17a1f88c1b498ffdfae1e2e47aadc1fd515f8dd",
+      "tools": [
+        "resources",
+        "resourceCreate",
+        "resourceUpdate",
+        "resourceDelete",
+        "availability",
+        "book",
+        "cancel",
+        "bookings",
+        "myBookings",
+        "stats",
+        "scheduledReminders",
+        "scheduledCleanup"
+      ],
+      "assets": []
+    },
+    {
       "name": "code-diagram",
       "version": "1.0.0",
       "description": "Generate a Mermaid diagram from a file",
@@ -225,13 +249,37 @@
       "assets": []
     },
     {
+      "name": "form-inbox",
+      "version": "1.0.0",
+      "description": "Form Inbox - Webhook-powered form submission collector",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../form-inbox.photon.ts",
+      "hash": "sha256:7384cb0610e4a2a42c85aedaecaff6933c21f91efdc2b91c310fd15aa1fa9c5b",
+      "tools": [
+        "forms",
+        "formCreate",
+        "formDelete",
+        "submissions",
+        "submission",
+        "submissionDelete",
+        "export",
+        "stats",
+        "handleSubmission",
+        "handleBulkImport",
+        "scheduledDigest",
+        "scheduledCleanup"
+      ],
+      "assets": []
+    },
+    {
       "name": "git-box",
       "version": "2.0.0",
-      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0",
+      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads",
       "author": "Unknown",
       "license": "MIT",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:3e8cf94f4287ae4f08e05747e006fa0fc5f98c4fd4a8beca754d4fe01b907ed3",
+      "hash": "sha256:4cbe2f0cf09dc304c49ac4230cb54e830ce919f58d0c9d4334021c2ac2b8ffd4",
       "tools": [
         "main",
         "repoAdd",
