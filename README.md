@@ -36,6 +36,7 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
 | **Code Diagram** | Generate a Mermaid diagram from a file | 3 | [View →](code-diagram.md) |
+| **Connect Four** | Play against AI with distributed locks | 8 | [View →](connect-four.md) |
 | **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
 | **Demo Photon** | Comprehensive feature demonstration | 21 | [View →](demo.md) |
@@ -63,7 +64,7 @@ We welcome contributions! Submit pull requests for:
 | **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
 
 
-**Total:** 27 photons ready to use
+**Total:** 28 photons ready to use
 
 ---
 
@@ -107,7 +108,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 27 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 28 focused tools at its fingertips.
 
 ---
 
@@ -173,7 +174,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 27 production-ready photons available
+- 📦 28 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

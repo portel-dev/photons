@@ -45,6 +45,24 @@
       }
     },
     {
+      "name": "connect-four",
+      "description": "Connect Four - Play against AI with distributed locks",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "connect-four": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "connect-four"
+          ]
+        }
+      }
+    },
+    {
       "name": "dashboard",
       "description": "Dashboard Photon",
       "source": "./",
