@@ -27,24 +27,6 @@
       }
     },
     {
-      "name": "booking",
-      "description": "Booking System - Time slot reservation with distributed locks",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "booking": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "booking"
-          ]
-        }
-      }
-    },
-    {
       "name": "code-diagram",
       "description": "Generate a Mermaid diagram from a file",
       "source": "./",
@@ -58,6 +40,24 @@
           "args": [
             "mcp",
             "code-diagram"
+          ]
+        }
+      }
+    },
+    {
+      "name": "connect-four",
+      "description": "Connect Four - Play against AI with distributed locks",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "connect-four": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "connect-four"
           ]
         }
       }

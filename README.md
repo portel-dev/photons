@@ -35,8 +35,8 @@ We welcome contributions! Submit pull requests for:
 | Photon | Focus | Tools | Details |
 |--------|-------|-------|---------|
 | **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
-| **Booking System** | Time slot reservation with distributed locks | 12 | [View →](booking.md) |
 | **Code Diagram** | Generate a Mermaid diagram from a file | 3 | [View →](code-diagram.md) |
+| **Connect Four** | Play against AI with distributed locks | 8 | [View →](connect-four.md) |
 | **Content Creator** | Content Creator Photon | 4 | [View →](content-creator.md) |
 | **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
 | **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
