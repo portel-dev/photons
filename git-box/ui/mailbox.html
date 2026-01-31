@@ -625,7 +625,7 @@
     .file-status-icon.modified { background: var(--warning); }
     .file-status-icon.deleted { background: var(--danger); }
     .file-status-icon.renamed { background: var(--info); }
-    .file-status-icon.untracked { background: var(--text-muted); }
+    .file-status-icon.untracked { background: var(--success); }
 
     .file-name {
       font-size: 12px;
@@ -2510,7 +2510,7 @@
 
     function renderFileItem(file, isStaged) {
       const status = file.status || 'modified';
-      const icon = { added: 'A', modified: 'M', deleted: 'D', renamed: 'R', untracked: '?' }[status] || '?';
+      const icon = { added: 'A', modified: 'M', deleted: 'D', renamed: 'R', untracked: 'U' }[status] || '?';
       const fileName = file.path.split('/').pop();
       const dirPath = file.path.includes('/') ? file.path.substring(0, file.path.lastIndexOf('/')) : '';
 
@@ -2948,7 +2948,7 @@
                    data-path="${escapeHtml(f.path)}"
                    onclick="showCommitDiff(this.dataset.hash, this.dataset.path)"
                    style="cursor: pointer;">
-                <div class="file-status-icon ${f.status}">${{ added: 'A', modified: 'M', deleted: 'D', renamed: 'R' }[f.status] || '?'}</div>
+                <div class="file-status-icon ${f.status}">${{ added: 'A', modified: 'M', deleted: 'D', renamed: 'R', untracked: 'U' }[f.status] || '?'}</div>
                 <span class="file-name">${escapeHtml(fileName)}</span>
                 <span class="file-path">${escapeHtml(dirPath)}</span>
               </div>
