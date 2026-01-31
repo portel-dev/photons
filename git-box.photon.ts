@@ -434,6 +434,17 @@ export class GitBoxPhoton extends PhotonMCP {
 
     if (!output) return [];
 
+    // Get set of unpushed commit hashes
+    let unpushedHashes = new Set<string>();
+    try {
+      const unpushedOutput = await this._runGit(repoPath, 'rev-list @{u}..HEAD');
+      if (unpushedOutput) {
+        unpushedHashes = new Set(unpushedOutput.split('\n').filter(Boolean));
+      }
+    } catch {
+      // No upstream configured — treat all as unknown (pushed: true to avoid false amber)
+    }
+
     return output.split('\n').map(line => {
       const parts = line.split('|');
       const [hash, shortHash, author, email, timestamp] = parts;
@@ -445,6 +456,7 @@ export class GitBoxPhoton extends PhotonMCP {
         email,
         date: new Date(parseInt(timestamp) * 1000).toISOString(),
         subject,
+        pushed: !unpushedHashes.has(hash),
       };
     });
   }

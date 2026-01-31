@@ -680,53 +680,57 @@
       color: var(--text-muted);
     }
 
-    .commit-btn {
+    .commit-buttons {
+      display: flex;
+      gap: 0;
+      align-items: center;
+    }
+
+    /* Unified action button group */
+    .action-btn-group {
+      position: relative;
+      display: flex;
+    }
+
+    .action-main-btn {
       padding: 8px 16px;
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 6px 0 0 6px;
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
     }
 
-    .commit-btn:hover:not(:disabled) {
+    .action-main-btn:hover:not(:disabled) {
       background: var(--accent-hover);
     }
 
-    .commit-btn:disabled {
+    .action-main-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
 
-    .commit-buttons {
-      display: flex;
-      gap: 8px;
-      align-items: center;
+    .action-dropdown-btn {
+      padding: 8px 8px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-left: 1px solid rgba(255,255,255,0.2);
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      cursor: pointer;
     }
 
-    /* Stash dropdown */
-    .stash-dropdown {
-      position: relative;
-      display: flex;
+    .action-dropdown-btn:hover {
+      background: var(--accent-hover);
     }
 
-    .stash-dropdown .btn {
-      border-radius: 6px 0 0 6px;
-    }
-
-    .stash-menu-btn {
-      border-radius: 0 6px 6px 0 !important;
-      border-left: none !important;
-      padding: 6px 8px !important;
-      min-width: auto;
-    }
-
-    .stash-menu {
+    .action-menu {
       position: absolute;
       top: 100%;
-      left: 0;
+      right: 0;
       margin-top: 4px;
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
@@ -735,6 +739,29 @@
       min-width: 280px;
       z-index: 100;
       overflow: hidden;
+    }
+
+    .action-menu-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-menu-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .action-menu-item.active {
+      color: var(--accent);
+    }
+
+    .action-menu-divider {
+      border-top: 1px solid var(--border-color);
+      margin: 4px 0;
     }
 
     .stash-menu-header {
@@ -1039,6 +1066,14 @@
       border-radius: 50%;
       background: var(--accent);
       flex-shrink: 0;
+    }
+
+    .commit-dot.pushed {
+      background: var(--success);
+    }
+
+    .commit-dot.unpushed {
+      background: var(--warning);
     }
 
     .commit-info {
@@ -1643,6 +1678,7 @@
       font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
       font-size: 12px;
       line-height: 1.6;
+      overflow-x: auto;
     }
 
     .file-line {
@@ -1670,7 +1706,7 @@
       flex: 1;
       padding: 0 12px;
       white-space: pre;
-      overflow-x: auto;
+      overflow-x: visible;
     }
 
     /* Ensure highlight.js styles apply inside file-line-content */
@@ -1907,21 +1943,27 @@
 
             <!-- Commit/Stash form at TOP -->
             <div class="commit-form" id="commit-form">
-              <textarea class="commit-input" id="commit-message" rows="2" placeholder="Enter commit message (or stash description)..."></textarea>
+              <textarea class="commit-input" id="commit-message" rows="2" placeholder="Enter commit message..."></textarea>
               <div class="commit-actions">
                 <span class="commit-hint" id="commit-hint">0 files staged</span>
                 <div class="commit-buttons">
-                  <div class="stash-dropdown">
-                    <button class="btn" id="stash-btn" onclick="stashChanges()">Stash</button>
-                    <button class="btn stash-menu-btn" id="stash-menu-btn" onclick="toggleStashMenu(event)">▾</button>
-                    <div class="stash-menu hidden" id="stash-menu">
+                  <div class="action-btn-group">
+                    <button class="action-main-btn" id="action-main-btn" onclick="executeAction()" disabled>Commit</button>
+                    <button class="action-dropdown-btn" id="action-dropdown-btn" onclick="toggleActionMenu(event)">▾</button>
+                    <div class="action-menu hidden" id="action-menu">
+                      <div class="action-menu-item active" id="menu-commit-mode" onclick="setActionMode('commit')">
+                        <span>✓</span> Commit
+                      </div>
+                      <div class="action-menu-item" id="menu-stash-mode" onclick="setActionMode('stash')">
+                        <span style="visibility:hidden">✓</span> Stash changes
+                      </div>
+                      <div class="action-menu-divider"></div>
                       <div class="stash-menu-header">Saved Stashes</div>
                       <div class="stash-list" id="stash-list">
                         <div class="stash-empty">No stashes</div>
                       </div>
                     </div>
                   </div>
-                  <button class="commit-btn" id="commit-btn" onclick="commit()" disabled>Commit</button>
                 </div>
               </div>
             </div>
@@ -2090,6 +2132,7 @@
   </div>
 
   <!-- Add Repository Modal -->
+  <div id="add-repo-modal" class="modal-overlay hidden">
     <div class="modal" style="width: 500px;">
       <div class="modal-header">
         <span class="modal-title">Add Repository</span>
@@ -2143,6 +2186,7 @@
     let contextMenuCommit = null;
     let squashBaseCommit = null;
     let currentConflicts = { conflicts: [], operation: 'none' };
+    let currentAction = 'commit'; // 'commit' or 'stash'
 
     // Save state to widget state (persisted by host)
     function saveState() {
@@ -2185,7 +2229,7 @@
     // Load repositories
     async function loadRepos() {
       try {
-        repos = await callMCP('listRepos');
+        repos = await callMCP('repos');
         renderRepos();
 
         // Try to restore selected repo from persisted state
@@ -2268,7 +2312,7 @@
       if (!selectedRepo) return;
 
       try {
-        const data = await callMCP('getBranches', { repoPath: selectedRepo.path });
+        const data = await callMCP('branches', { repoPath: selectedRepo.path });
         branches = data.branches || [];
         currentBranch = branches.find(b => b.current);
 
@@ -2314,7 +2358,7 @@
       if (!selectedRepo) return;
 
       try {
-        workingFiles = await callMCP('getStatus', { repoPath: selectedRepo.path });
+        workingFiles = await callMCP('status', { repoPath: selectedRepo.path });
         renderChanges();
         // Also check for conflicts
         await checkForConflicts();
@@ -2441,7 +2485,7 @@
       }
 
       try {
-        const diff = await callMCP('getDiff', {
+        const diff = await callMCP('diff', {
           repoPath: selectedRepo.path,
           filePath: filePath,
           staged: isStaged
@@ -2586,6 +2630,38 @@
       }
 
       try {
+        // Custom renderer to handle image paths
+        const renderer = new marked.Renderer();
+        renderer.image = function(href, title, text) {
+          // Handle the token format if href is an object
+          if (typeof href === 'object' && href !== null) {
+            text = href.text || '';
+            title = href.title || '';
+            href = href.href || '';
+          }
+
+          let imgSrc = href;
+
+          // If it's a relative path and we have a GitHub remote, convert to raw URL
+          if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('data:')) {
+            if (selectedRepo && selectedRepo.remote) {
+              // Extract GitHub user/repo from remote URL
+              const match = selectedRepo.remote.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+              if (match) {
+                const [, user, repo] = match;
+                const branch = selectedRepo.branch || 'main';
+                // Get directory of current file for relative path resolution
+                const fileDir = currentDiffContext?.filePath?.split('/').slice(0, -1).join('/') || '';
+                const imagePath = fileDir ? `${fileDir}/${href}`.replace(/\/+/g, '/') : href;
+                imgSrc = `https://raw.githubusercontent.com/${user}/${repo}/refs/heads/${branch}/${imagePath}`;
+              }
+            }
+          }
+
+          const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
+          return `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(text)}"${titleAttr} loading="lazy">`;
+        };
+
         // Configure marked for GitHub-flavored markdown
         marked.setOptions({
           breaks: true,
@@ -2598,7 +2674,7 @@
           }
         });
 
-        const html = marked.parse(content);
+        const html = marked.parse(content, { renderer });
         return `<div class="markdown-preview">${html}</div>`;
       } catch (e) {
         return `<div class="empty-state"><div class="empty-state-text">Failed to render markdown: ${escapeHtml(e.message)}</div></div>`;
@@ -2615,7 +2691,7 @@
         // Markdown preview
         content.innerHTML = '<div class="loading">Loading preview...</div>';
         try {
-          const fileData = await callMCP('getFileContent', {
+          const fileData = await callMCP('fileContent', {
             repoPath: selectedRepo.path,
             filePath: currentDiffContext.filePath,
             hash: currentDiffContext.commitHash
@@ -2628,7 +2704,7 @@
       } else if (tab === 'file') {
         content.innerHTML = '<div class="loading">Loading file...</div>';
         try {
-          const fileData = await callMCP('getFileContent', {
+          const fileData = await callMCP('fileContent', {
             repoPath: selectedRepo.path,
             filePath: currentDiffContext.filePath,
             hash: currentDiffContext.commitHash
@@ -2642,13 +2718,13 @@
         try {
           let diff;
           if (currentDiffContext.type === 'commit') {
-            diff = await callMCP('getCommitDiff', {
+            diff = await callMCP('commitDiff', {
               repoPath: selectedRepo.path,
               hash: currentDiffContext.commitHash,
               filePath: currentDiffContext.filePath
             });
           } else {
-            diff = await callMCP('getDiff', {
+            diff = await callMCP('diff', {
               repoPath: selectedRepo.path,
               filePath: currentDiffContext.filePath,
               staged: currentDiffContext.isStaged
@@ -2677,7 +2753,7 @@
       if (!selectedRepo) return;
 
       try {
-        commits = await callMCP('getCommits', { repoPath: selectedRepo.path, limit: 100 });
+        commits = await callMCP('commits', { repoPath: selectedRepo.path, limit: 100 });
         renderCommits();
       } catch (error) {
         console.error('Failed to load commits:', error);
@@ -2719,7 +2795,7 @@
         <div class="commit-item ${selectedView === commit.hash ? 'selected' : ''}"
              onclick="selectCommit('${commit.hash}')"
              oncontextmenu="showCommitContextMenu(event, '${commit.hash}')">
-          <div class="commit-dot"></div>
+          <div class="commit-dot ${commit.pushed === false ? 'unpushed' : 'pushed'}"></div>
           <div class="commit-info">
             <div class="commit-message">${escapeHtml(commit.subject)}</div>
             <div class="commit-meta">
@@ -2776,7 +2852,7 @@
 
         // Load commit files
         try {
-          const files = await callMCP('getCommitFiles', { repoPath: selectedRepo.path, hash });
+          const files = await callMCP('commitFiles', { repoPath: selectedRepo.path, hash });
           document.getElementById('commit-files').innerHTML = files.map(f => {
             const fileName = f.path.split('/').pop();
             const dirPath = f.path.includes('/') ? f.path.substring(0, f.path.lastIndexOf('/') + 1) : '';
@@ -2822,7 +2898,7 @@
       }
 
       try {
-        const diff = await callMCP('getCommitDiff', {
+        const diff = await callMCP('commitDiff', {
           repoPath: selectedRepo.path,
           hash: commitHash,
           filePath: filePath
@@ -2837,7 +2913,7 @@
     async function stageFile(filePath) {
       if (!selectedRepo) return;
       try {
-        await callMCP('stageFile', { repoPath: selectedRepo.path, filePath });
+        await callMCP('fileStage', { repoPath: selectedRepo.path, filePath });
         await loadWorkingStatus();
         renderCommits();
         if (selectedView === 'uncommitted') renderChanges();
@@ -2849,7 +2925,7 @@
     async function unstageFile(filePath) {
       if (!selectedRepo) return;
       try {
-        await callMCP('unstageFile', { repoPath: selectedRepo.path, filePath });
+        await callMCP('fileUnstage', { repoPath: selectedRepo.path, filePath });
         await loadWorkingStatus();
         renderCommits();
         if (selectedView === 'uncommitted') renderChanges();
@@ -2863,7 +2939,7 @@
       if (event) event.stopPropagation();
       if (!selectedRepo) return;
       try {
-        await callMCP('stageFile', { repoPath: selectedRepo.path, filePath: '.' });
+        await callMCP('fileStage', { repoPath: selectedRepo.path, filePath: '.' });
         await loadWorkingStatus();
         renderCommits();
         if (selectedView === 'uncommitted') renderChanges();
@@ -2881,7 +2957,7 @@
       try {
         // Unstage all files at once using git reset HEAD
         for (const file of staged) {
-          await callMCP('unstageFile', { repoPath: selectedRepo.path, filePath: file.path });
+          await callMCP('fileUnstage', { repoPath: selectedRepo.path, filePath: file.path });
         }
         await loadWorkingStatus();
         renderCommits();
@@ -2898,8 +2974,62 @@
       if (!messageEl) return;
       const message = messageEl.value.trim();
       const stagedCount = workingFiles.staged?.length || 0;
-      const btn = document.getElementById('commit-btn');
-      if (btn) btn.disabled = !message || stagedCount === 0;
+      const btn = document.getElementById('action-main-btn');
+      if (!btn) return;
+
+      if (currentAction === 'commit') {
+        btn.disabled = !message || stagedCount === 0;
+      } else {
+        // Stash mode: just need some changes to exist
+        const totalChanges = (workingFiles.staged?.length || 0) +
+                             (workingFiles.unstaged?.length || 0) +
+                             (workingFiles.untracked?.length || 0);
+        btn.disabled = totalChanges === 0;
+      }
+    }
+
+    function setActionMode(mode) {
+      currentAction = mode;
+      const btn = document.getElementById('action-main-btn');
+      const messageEl = document.getElementById('commit-message');
+      const commitItem = document.getElementById('menu-commit-mode');
+      const stashItem = document.getElementById('menu-stash-mode');
+
+      if (mode === 'commit') {
+        btn.textContent = 'Commit';
+        messageEl.placeholder = 'Enter commit message...';
+        commitItem.querySelector('span').style.visibility = 'visible';
+        stashItem.querySelector('span').style.visibility = 'hidden';
+        commitItem.classList.add('active');
+        stashItem.classList.remove('active');
+      } else {
+        btn.textContent = 'Stash';
+        messageEl.placeholder = 'Enter stash description...';
+        stashItem.querySelector('span').style.visibility = 'visible';
+        commitItem.querySelector('span').style.visibility = 'hidden';
+        stashItem.classList.add('active');
+        commitItem.classList.remove('active');
+      }
+
+      updateCommitButton();
+      toggleActionMenu(); // close menu
+    }
+
+    function executeAction() {
+      if (currentAction === 'commit') {
+        commit();
+      } else {
+        stashChanges();
+      }
+    }
+
+    function toggleActionMenu(event) {
+      if (event) event.stopPropagation();
+      const menu = document.getElementById('action-menu');
+      menu.classList.toggle('hidden');
+      if (!menu.classList.contains('hidden')) {
+        loadStashes();
+      }
     }
 
     // Listen for message input
@@ -2953,7 +3083,7 @@
         document.getElementById('push-btn').disabled = true;
         await callMCP('push', { repoPath: selectedRepo.path });
         showToast('Push successful!', 'success');
-        await loadBranches();
+        await Promise.all([loadCommits(), loadBranches(), loadRepos()]);
       } catch (error) {
         showToast('Push failed: ' + error.message, 'error');
       } finally {
@@ -2985,7 +3115,7 @@
       listEl.innerHTML = '<div class="loading" style="padding: 16px; font-size: 12px;">Scanning projects folder...</div>';
 
       try {
-        const data = await callMCP('scanAvailableRepos');
+        const data = await callMCP('availableRepos');
 
         hintEl.textContent = `Scanning: ${data.projectsRoot}`;
 
@@ -3036,7 +3166,7 @@
 
     async function addRepoFromList(repoPath) {
       try {
-        const result = await callMCP('addRepo', { repoPath, autoInit: false });
+        const result = await callMCP('repoAdd', { repoPath, autoInit: false });
         if (result.added === false && result.insideRepo) {
           showToast(result.error, 'error');
           return;
@@ -3053,7 +3183,7 @@
       if (!confirm(`Initialize git repository in "${folderPath.split('/').pop()}"?`)) return;
 
       try {
-        const result = await callMCP('addRepo', { repoPath: folderPath, autoInit: true });
+        const result = await callMCP('repoAdd', { repoPath: folderPath, autoInit: true });
         if (result.added === false) {
           showToast(result.error || 'Failed to initialize', 'error');
           return;
@@ -3083,7 +3213,7 @@
       }
 
       try {
-        await callMCP('addRepo', { repoPath });
+        await callMCP('repoAdd', { repoPath });
         showToast('Repository added!', 'success');
         hideAddRepoModal();
         await loadRepos();
@@ -3103,7 +3233,7 @@
     async function loadStashes() {
       if (!selectedRepo) return;
       try {
-        stashes = await callMCP('listStashes', { repoPath: selectedRepo.path });
+        stashes = await callMCP('stashes', { repoPath: selectedRepo.path });
         renderStashMenu();
       } catch (error) {
         console.error('Failed to load stashes:', error);
@@ -3135,19 +3265,10 @@
       `).join('');
     }
 
-    function toggleStashMenu(event) {
-      event.stopPropagation();
-      const menu = document.getElementById('stash-menu');
-      menu.classList.toggle('hidden');
-      if (!menu.classList.contains('hidden')) {
-        loadStashes();
-      }
-    }
-
-    // Close stash menu when clicking elsewhere
+    // Close action menu when clicking elsewhere
     document.addEventListener('click', (e) => {
-      const menu = document.getElementById('stash-menu');
-      const btn = document.getElementById('stash-menu-btn');
+      const menu = document.getElementById('action-menu');
+      const btn = document.getElementById('action-dropdown-btn');
       if (menu && !menu.contains(e.target) && e.target !== btn) {
         menu.classList.add('hidden');
       }
@@ -3159,7 +3280,7 @@
       const message = messageEl?.value.trim() || '';
 
       try {
-        const result = await callMCP('createStash', {
+        const result = await callMCP('stashCreate', {
           repoPath: selectedRepo.path,
           message: message || undefined,
           includeUntracked: true
@@ -3181,7 +3302,7 @@
     async function applyStash(ref) {
       if (!selectedRepo) return;
       try {
-        const result = await callMCP('applyStash', { repoPath: selectedRepo.path, stashRef: ref });
+        const result = await callMCP('stashApply', { repoPath: selectedRepo.path, stashRef: ref });
         if (result.conflicts) {
           showToast('Applied with conflicts - resolve them', 'warning');
         } else {
@@ -3198,7 +3319,7 @@
     async function popStash(ref) {
       if (!selectedRepo) return;
       try {
-        const result = await callMCP('popStash', { repoPath: selectedRepo.path, stashRef: ref });
+        const result = await callMCP('stashPop', { repoPath: selectedRepo.path, stashRef: ref });
         if (result.conflicts) {
           showToast('Popped with conflicts - resolve them', 'warning');
         } else {
@@ -3217,7 +3338,7 @@
       if (!confirm('Drop this stash? This cannot be undone.')) return;
 
       try {
-        await callMCP('dropStash', { repoPath: selectedRepo.path, stashRef: ref });
+        await callMCP('stashDrop', { repoPath: selectedRepo.path, stashRef: ref });
         showToast('Stash dropped', 'info');
         await loadStashes();
       } catch (error) {
@@ -3268,7 +3389,7 @@
       if (!selectedRepo || !contextMenuCommit) return;
 
       try {
-        const result = await callMCP('revertCommit', {
+        const result = await callMCP('commitRevert', {
           repoPath: selectedRepo.path,
           commitHash: contextMenuCommit.hash
         });
@@ -3333,7 +3454,7 @@
       }
 
       try {
-        const result = await callMCP('amendCommitMessage', {
+        const result = await callMCP('commitMessageAmend', {
           repoPath: selectedRepo.path,
           commitHash: contextMenuCommit.hash,
           newMessage
@@ -3381,7 +3502,7 @@
       }
 
       try {
-        const result = await callMCP('squashCommits', {
+        const result = await callMCP('commitsSquash', {
           repoPath: selectedRepo.path,
           baseCommit: squashBaseCommit,
           message
@@ -3406,7 +3527,7 @@
       if (!confirm(`${modeText} to ${contextMenuCommit.hash.slice(0, 7)}?`)) return;
 
       try {
-        const result = await callMCP('resetToCommit', {
+        const result = await callMCP('commitReset', {
           repoPath: selectedRepo.path,
           hash: contextMenuCommit.hash,
           mode
@@ -3468,9 +3589,9 @@
 
       try {
         if (switchTo) {
-          await callMCP('createAndSwitchBranch', { repoPath: selectedRepo.path, branchName: name });
+          await callMCP('branchCreateSwitch', { repoPath: selectedRepo.path, branchName: name });
         } else {
-          await callMCP('createBranch', { repoPath: selectedRepo.path, branchName: name });
+          await callMCP('branchCreate', { repoPath: selectedRepo.path, branchName: name });
         }
         showToast(`Branch "${name}" created!`, 'success');
         hideBranchModal();
@@ -3486,7 +3607,7 @@
       if (!branch) return;
 
       try {
-        const result = await callMCP('mergeBranch', { repoPath: selectedRepo.path, branchName: branch });
+        const result = await callMCP('branchMerge', { repoPath: selectedRepo.path, branchName: branch });
         if (result.conflicts) {
           showToast('Merge has conflicts - resolve them', 'warning');
           hideBranchModal();
@@ -3509,14 +3630,14 @@
       if (!confirm(`Delete branch "${branch}"?`)) return;
 
       try {
-        await callMCP('deleteBranch', { repoPath: selectedRepo.path, branchName: branch, force: false });
+        await callMCP('branchDelete', { repoPath: selectedRepo.path, branchName: branch, force: false });
         showToast(`Deleted ${branch}`, 'info');
         await loadBranches();
         populateBranchSelects();
       } catch (error) {
         if (error.message?.includes('not fully merged')) {
           if (confirm(`Branch "${branch}" is not fully merged. Force delete?`)) {
-            await callMCP('deleteBranch', { repoPath: selectedRepo.path, branchName: branch, force: true });
+            await callMCP('branchDelete', { repoPath: selectedRepo.path, branchName: branch, force: true });
             showToast(`Force deleted ${branch}`, 'info');
             await loadBranches();
             populateBranchSelects();
@@ -3530,7 +3651,7 @@
     async function switchBranch(branchName) {
       if (!selectedRepo || !branchName) return;
       try {
-        await callMCP('switchBranch', { repoPath: selectedRepo.path, branch: branchName });
+        await callMCP('branchSwitch', { repoPath: selectedRepo.path, branch: branchName });
         showToast(`Switched to ${branchName}`, 'success');
         await Promise.all([loadBranches(), loadCommits(), loadWorkingStatus()]);
       } catch (error) {
@@ -3547,7 +3668,7 @@
       if (!selectedRepo) return;
 
       try {
-        currentConflicts = await callMCP('getConflicts', { repoPath: selectedRepo.path });
+        currentConflicts = await callMCP('conflicts', { repoPath: selectedRepo.path });
         renderConflictUI();
       } catch (error) {
         console.error('Failed to check conflicts:', error);
@@ -3593,7 +3714,7 @@
     async function resolveConflict(filePath, version) {
       if (!selectedRepo) return;
       try {
-        await callMCP('resolveConflict', { repoPath: selectedRepo.path, filePath, version });
+        await callMCP('conflictResolve', { repoPath: selectedRepo.path, filePath, version });
         showToast(`Resolved with ${version}`, 'success');
         await Promise.all([checkForConflicts(), loadWorkingStatus()]);
       } catch (error) {
@@ -3610,9 +3731,9 @@
           // For merge, just commit
           await callMCP('commit', { repoPath: selectedRepo.path, message: 'Merge commit' });
         } else if (op === 'rebase') {
-          await callMCP('continueRebase', { repoPath: selectedRepo.path });
+          await callMCP('rebaseContinue', { repoPath: selectedRepo.path });
         } else if (op === 'cherry-pick') {
-          await callMCP('continueCherryPick', { repoPath: selectedRepo.path });
+          await callMCP('cherryPickContinue', { repoPath: selectedRepo.path });
         }
         showToast(`${op} continued!`, 'success');
         await Promise.all([checkForConflicts(), loadCommits(), loadWorkingStatus()]);
@@ -3627,13 +3748,13 @@
 
       try {
         if (op === 'merge') {
-          await callMCP('abortMerge', { repoPath: selectedRepo.path });
+          await callMCP('mergeAbort', { repoPath: selectedRepo.path });
         } else if (op === 'rebase') {
-          await callMCP('abortRebase', { repoPath: selectedRepo.path });
+          await callMCP('rebaseAbort', { repoPath: selectedRepo.path });
         } else if (op === 'cherry-pick') {
-          await callMCP('abortCherryPick', { repoPath: selectedRepo.path });
+          await callMCP('cherryPickAbort', { repoPath: selectedRepo.path });
         } else if (op === 'revert') {
-          await callMCP('abortRevert', { repoPath: selectedRepo.path });
+          await callMCP('revertAbort', { repoPath: selectedRepo.path });
         }
         showToast(`${op} aborted`, 'info');
         await Promise.all([checkForConflicts(), loadCommits(), loadWorkingStatus()]);
