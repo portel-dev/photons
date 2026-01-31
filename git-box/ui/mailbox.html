@@ -853,6 +853,38 @@
       color: var(--danger);
     }
 
+    /* Stash badge in toolbar */
+    .stash-badge-wrapper {
+      position: relative;
+    }
+
+    .stash-badge-btn {
+      color: var(--info) !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stash-badge-btn.hidden {
+      display: none;
+    }
+
+    .stash-popover {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 6px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      min-width: 300px;
+      z-index: 200;
+      overflow: hidden;
+    }
+
+    .stash-popover.hidden {
+      display: none;
+    }
+
     /* Commit context menu */
     .context-menu {
       position: fixed;
@@ -1883,6 +1915,17 @@
             <option>Select branch</option>
           </select>
           <button id="branch-actions-btn" class="btn sm" onclick="showBranchModal()" disabled title="Branch actions">+</button>
+          <div class="stash-badge-wrapper">
+            <button id="stash-badge-btn" class="btn sm stash-badge-btn hidden" onclick="toggleStashPopover(event)" title="Stashes">
+              ⊟ <span id="stash-badge-count">0</span>
+            </button>
+            <div class="stash-popover hidden" id="stash-popover">
+              <div class="stash-menu-header">Saved Stashes</div>
+              <div class="stash-list" id="stash-list">
+                <div class="stash-empty">No stashes</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="toolbar-group">
           <button id="pull-btn" onclick="pull()" disabled>
@@ -1956,11 +1999,6 @@
                       </div>
                       <div class="action-menu-item" id="menu-stash-mode" onclick="setActionMode('stash')">
                         <span style="visibility:hidden">✓</span> Stash changes
-                      </div>
-                      <div class="action-menu-divider"></div>
-                      <div class="stash-menu-header">Saved Stashes</div>
-                      <div class="stash-list" id="stash-list">
-                        <div class="stash-empty">No stashes</div>
                       </div>
                     </div>
                   </div>
@@ -3027,7 +3065,13 @@
       if (event) event.stopPropagation();
       const menu = document.getElementById('action-menu');
       menu.classList.toggle('hidden');
-      if (!menu.classList.contains('hidden')) {
+    }
+
+    function toggleStashPopover(event) {
+      if (event) event.stopPropagation();
+      const popover = document.getElementById('stash-popover');
+      popover.classList.toggle('hidden');
+      if (!popover.classList.contains('hidden')) {
         loadStashes();
       }
     }
@@ -3234,10 +3278,25 @@
       if (!selectedRepo) return;
       try {
         stashes = await callMCP('stashes', { repoPath: selectedRepo.path });
+        updateStashBadge();
         renderStashMenu();
       } catch (error) {
         console.error('Failed to load stashes:', error);
         stashes = [];
+        updateStashBadge();
+      }
+    }
+
+    function updateStashBadge() {
+      const badge = document.getElementById('stash-badge-btn');
+      const countEl = document.getElementById('stash-badge-count');
+      if (!badge || !countEl) return;
+
+      if (stashes.length > 0) {
+        badge.classList.remove('hidden');
+        countEl.textContent = stashes.length;
+      } else {
+        badge.classList.add('hidden');
       }
     }
 
@@ -3265,12 +3324,18 @@
       `).join('');
     }
 
-    // Close action menu when clicking elsewhere
+    // Close menus when clicking elsewhere
     document.addEventListener('click', (e) => {
-      const menu = document.getElementById('action-menu');
-      const btn = document.getElementById('action-dropdown-btn');
-      if (menu && !menu.contains(e.target) && e.target !== btn) {
-        menu.classList.add('hidden');
+      const actionMenu = document.getElementById('action-menu');
+      const actionBtn = document.getElementById('action-dropdown-btn');
+      if (actionMenu && !actionMenu.contains(e.target) && e.target !== actionBtn) {
+        actionMenu.classList.add('hidden');
+      }
+
+      const stashPopover = document.getElementById('stash-popover');
+      const stashBadge = document.getElementById('stash-badge-btn');
+      if (stashPopover && !stashPopover.contains(e.target) && e.target !== stashBadge && !stashBadge?.contains(e.target)) {
+        stashPopover.classList.add('hidden');
       }
     });
 
