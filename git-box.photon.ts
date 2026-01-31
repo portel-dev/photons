@@ -1,4 +1,4 @@
-import { PhotonMCP } from '@portel/photon-core';
+import { PhotonMCP, io } from '@portel/photon-core';
 import { execSync, exec } from 'child_process';
 import { promisify } from 'util';
 // Fix: use trimEnd() instead of trim() to preserve git status leading whitespace
@@ -178,13 +178,29 @@ export class GitBoxPhoton extends PhotonMCP {
   }
 
   /**
-   * Add a repository to track (auto-initializes if not a repo)
-   * @param repoPath Path to git repository
-   * @param autoInit Whether to auto-initialize if not a repo (default: true)
+   * Find immediate child folders that are git repositories
    */
-  async repoAdd(params: { repoPath: string; autoInit?: boolean }) {
+  private _findChildGitRepos(folderPath: string): Array<{ name: string; path: string }> {
+    const results: Array<{ name: string; path: string }> = [];
+    try {
+      const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+      for (const entry of entries) {
+        if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+        const childPath = path.join(folderPath, entry.name);
+        if (fs.existsSync(path.join(childPath, '.git'))) {
+          results.push({ name: entry.name, path: childPath });
+        }
+      }
+    } catch {}
+    return results;
+  }
+
+  /**
+   * Add a repository to track — prompts interactively if the folder isn't a git repo
+   * @param repoPath Path to git repository
+   */
+  async *repoAdd(params: { repoPath: string }): AsyncGenerator<any> {
     const fullPath = path.resolve(params.repoPath);
-    const { autoInit = true } = params;
 
     if (!fs.existsSync(fullPath)) {
       throw new Error(`Path does not exist: ${fullPath}`);
@@ -197,35 +213,74 @@ export class GitBoxPhoton extends PhotonMCP {
       const parentRepo = this._findParentGitRepo(fullPath);
 
       if (parentRepo) {
-        return {
-          added: false,
-          insideRepo: parentRepo,
-          error: `This folder is inside another git repository: ${parentRepo}`,
-          suggestion: 'Add the parent repo instead, or create this as a submodule.'
-        };
+        const useParent: boolean = yield io.ask.confirm(
+          `"${path.basename(fullPath)}" is inside another git repository: ${path.basename(parentRepo)}. Add the parent repo instead?`,
+          { default: true }
+        );
+
+        if (useParent) {
+          return yield* this._addRepoToConfig(parentRepo, false);
+        }
+        return { added: false, cancelled: true };
       }
 
-      if (!autoInit) {
-        return {
-          added: false,
-          notARepo: true,
-          error: `Not a git repository: ${fullPath}`,
-          canInit: true
-        };
+      // Check for child git repos
+      const childRepos = this._findChildGitRepos(fullPath);
+
+      if (childRepos.length > 0) {
+        const options = [
+          `Initialize "${path.basename(fullPath)}" as a new git repo`,
+          ...childRepos.map(r => `Add subfolder: ${r.name} (existing git repo)`)
+        ];
+
+        const choice: string = yield io.ask.select(
+          `"${path.basename(fullPath)}" is not a git repository, but it contains ${childRepos.length} git repo(s) inside. What would you like to do?`,
+          options
+        );
+
+        if (choice === options[0]) {
+          // Initialize this folder
+          await this._runGit(fullPath, 'init');
+          this.emit({ emit: 'toast', message: `Initialized git repo: ${path.basename(fullPath)}`, type: 'success' });
+          return yield* this._addRepoToConfig(fullPath, true);
+        } else {
+          // Find which child repo was selected
+          const idx = options.indexOf(choice) - 1;
+          if (idx >= 0 && idx < childRepos.length) {
+            return yield* this._addRepoToConfig(childRepos[idx].path, false);
+          }
+          return { added: false, cancelled: true };
+        }
       }
 
-      // Safe to initialize
+      // No children, no parent — just a plain folder
+      const shouldInit: boolean = yield io.ask.confirm(
+        `"${path.basename(fullPath)}" is not a git repository. Initialize it as one?`,
+        { default: true }
+      );
+
+      if (!shouldInit) {
+        return { added: false, cancelled: true };
+      }
+
       await this._runGit(fullPath, 'init');
       this.emit({ emit: 'toast', message: `Initialized git repo: ${path.basename(fullPath)}`, type: 'success' });
+      return yield* this._addRepoToConfig(fullPath, true);
     }
 
+    return yield* this._addRepoToConfig(fullPath, false);
+  }
+
+  /**
+   * Helper to add a repo path to config and return result
+   */
+  private async *_addRepoToConfig(fullPath: string, initialized: boolean): AsyncGenerator<any> {
     const config = this._loadConfig();
     if (!config.repos.includes(fullPath)) {
       config.repos.push(fullPath);
       this._saveConfig(config);
     }
-
-    return { added: fullPath, total: config.repos.length, initialized: !isGitRepo };
+    return { added: fullPath, total: config.repos.length, initialized };
   }
 
   /**

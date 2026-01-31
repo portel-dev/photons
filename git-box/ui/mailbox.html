@@ -2391,18 +2391,19 @@
         const data = await callMCP('branches', { repoPath: selectedRepo.path });
         branches = data.branches || [];
         currentBranch = branches.find(b => b.current);
-
-        const select = document.getElementById('branch-select');
-        select.innerHTML = branches
-          .filter(b => !b.name.startsWith('origin/'))
-          .map(b => `<option value="${b.name}" ${b.current ? 'selected' : ''}>${b.name}</option>`)
-          .join('');
-
-        // Update sync status
-        updateSyncStatus();
       } catch (error) {
         console.error('Failed to load branches:', error);
+        branches = [];
+        currentBranch = null;
       }
+
+      const select = document.getElementById('branch-select');
+      select.innerHTML = branches
+        .filter(b => !b.name.startsWith('origin/'))
+        .map(b => `<option value="${b.name}" ${b.current ? 'selected' : ''}>${b.name}</option>`)
+        .join('');
+
+      updateSyncStatus();
     }
 
     function updateSyncStatus() {
@@ -2435,12 +2436,12 @@
 
       try {
         workingFiles = await callMCP('status', { repoPath: selectedRepo.path });
-        renderChanges();
-        // Also check for conflicts
-        await checkForConflicts();
       } catch (error) {
         console.error('Failed to load status:', error);
+        workingFiles = { staged: [], unstaged: [], untracked: [] };
       }
+      renderChanges();
+      await checkForConflicts();
     }
 
     function renderChanges() {
@@ -2830,10 +2831,11 @@
 
       try {
         commits = await callMCP('commits', { repoPath: selectedRepo.path, limit: 100 });
-        renderCommits();
       } catch (error) {
         console.error('Failed to load commits:', error);
+        commits = [];
       }
+      renderCommits();
     }
 
     function renderCommits() {
