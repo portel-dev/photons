@@ -230,6 +230,29 @@
       background: var(--success);
     }
 
+    .repo-overflow-btn {
+      opacity: 0;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 14px;
+      line-height: 1;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+    }
+
+    .repo-item:hover .repo-overflow-btn {
+      opacity: 1;
+    }
+
+    .repo-overflow-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
     .repo-badge.clean::before {
       content: "✓";
     }
@@ -2089,6 +2112,20 @@
     </div>
   </div>
 
+  <!-- Repo Context Menu -->
+  <div id="repo-context-menu" class="context-menu hidden">
+    <div class="context-menu-item" onclick="copyRepoPath()">
+      <span class="icon">📋</span> Copy path
+    </div>
+    <div class="context-menu-item" onclick="openRepoInTerminal()">
+      <span class="icon">⌨️</span> Open in terminal
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item danger" onclick="removeRepo()">
+      <span class="icon">✕</span> Remove repository
+    </div>
+  </div>
+
   <!-- Branch Modal -->
   <div id="branch-modal" class="modal-overlay hidden">
     <div class="modal">
@@ -2311,6 +2348,7 @@
             ? `<span class="repo-badge">${repo.badge}</span>`
             : `<span class="repo-badge clean"></span>`
           }
+          <button class="repo-overflow-btn" onclick="event.stopPropagation(); showRepoContextMenu(event, '${repo.path.replace(/'/g, "\\'")}')" title="More actions">···</button>
         </div>
       `).join('');
     }
@@ -3445,10 +3483,71 @@
       menu.classList.remove('hidden');
     }
 
-    // Close context menu on click elsewhere
+    // Close context menus on click elsewhere
     document.addEventListener('click', () => {
       document.getElementById('commit-context-menu')?.classList.add('hidden');
+      document.getElementById('repo-context-menu')?.classList.add('hidden');
     });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // REPO CONTEXT MENU
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    let contextMenuRepoPath = null;
+
+    function showRepoContextMenu(event, repoPath) {
+      event.preventDefault();
+      event.stopPropagation();
+      contextMenuRepoPath = repoPath;
+
+      const menu = document.getElementById('repo-context-menu');
+      menu.style.left = event.clientX + 'px';
+      menu.style.top = event.clientY + 'px';
+      menu.classList.remove('hidden');
+    }
+
+    async function removeRepo() {
+      if (!contextMenuRepoPath) return;
+      const name = contextMenuRepoPath.split('/').pop();
+
+      if (!confirm(`Remove "${name}" from Git Box?\n\nThis only removes it from tracking — your files are safe.`)) return;
+
+      try {
+        await callMCP('repoRemove', { repoPath: contextMenuRepoPath });
+        showToast(`Removed ${name}`, 'info');
+
+        // If we removed the selected repo, clear selection
+        if (selectedRepo?.path === contextMenuRepoPath) {
+          selectedRepo = null;
+          selectedView = null;
+          document.getElementById('branch-select').disabled = true;
+          document.getElementById('branch-actions-btn').disabled = true;
+          document.getElementById('pull-btn').disabled = true;
+          document.getElementById('push-btn').disabled = true;
+          document.getElementById('fetch-btn').disabled = true;
+          document.getElementById('undo-btn').disabled = true;
+        }
+
+        await loadRepos();
+      } catch (error) {
+        showToast('Failed to remove: ' + error.message, 'error');
+      }
+    }
+
+    function copyRepoPath() {
+      if (!contextMenuRepoPath) return;
+      navigator.clipboard.writeText(contextMenuRepoPath).then(() => {
+        showToast('Path copied', 'success');
+      });
+    }
+
+    function openRepoInTerminal() {
+      if (!contextMenuRepoPath) return;
+      // This would need OS-level support; for now copy path
+      navigator.clipboard.writeText(`cd ${contextMenuRepoPath}`).then(() => {
+        showToast('cd command copied to clipboard', 'info');
+      });
+    }
 
     async function revertSelectedCommit() {
       if (!selectedRepo || !contextMenuCommit) return;
