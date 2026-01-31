@@ -2727,17 +2727,22 @@
 
           let imgSrc = href;
 
-          // If it's a relative path and we have a GitHub remote, convert to raw URL
+          // If it's a relative path, resolve it
           if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('data:')) {
-            if (selectedRepo && selectedRepo.remote) {
-              // Extract GitHub user/repo from remote URL
+            // Get directory of current file for relative path resolution
+            const fileDir = currentDiffContext?.filePath?.split('/').slice(0, -1).join('/') || '';
+            const imagePath = fileDir ? `${fileDir}/${href}`.replace(/\/+/g, '/') : href;
+
+            if (selectedRepo && selectedRepo.path) {
+              // Serve from local filesystem via Beam's local-file API
+              const fullPath = selectedRepo.path + '/' + imagePath;
+              imgSrc = `/api/local-file?path=${encodeURIComponent(fullPath)}`;
+            } else if (selectedRepo && selectedRepo.remote) {
+              // Fallback: try GitHub raw URL
               const match = selectedRepo.remote.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
               if (match) {
                 const [, user, repo] = match;
                 const branch = selectedRepo.branch || 'main';
-                // Get directory of current file for relative path resolution
-                const fileDir = currentDiffContext?.filePath?.split('/').slice(0, -1).join('/') || '';
-                const imagePath = fileDir ? `${fileDir}/${href}`.replace(/\/+/g, '/') : href;
                 imgSrc = `https://raw.githubusercontent.com/${user}/${repo}/refs/heads/${branch}/${imagePath}`;
               }
             }
