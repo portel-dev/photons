@@ -233,19 +233,25 @@
     .repo-overflow-btn {
       opacity: 0;
       border: none;
-      background: none;
+      background: var(--bg-hover);
       color: var(--text-muted);
       cursor: pointer;
-      padding: 2px 4px;
+      padding: 2px 6px;
       font-size: 14px;
       line-height: 1;
       border-radius: 4px;
       letter-spacing: 1px;
       flex-shrink: 0;
+      width: 0;
+      overflow: visible;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
     }
 
     .repo-item:hover .repo-overflow-btn {
       opacity: 1;
+      pointer-events: auto;
     }
 
     .repo-overflow-btn:hover {
@@ -2344,11 +2350,11 @@
             <div class="repo-name">${escapeHtml(repo.name)}</div>
             <div class="repo-branch">${escapeHtml(repo.branch || 'main')}</div>
           </div>
+          <button class="repo-overflow-btn" onclick="event.stopPropagation(); showRepoContextMenu(event, '${repo.path.replace(/'/g, "\\'")}')" title="More actions">···</button>
           ${repo.badge > 0
             ? `<span class="repo-badge">${repo.badge}</span>`
             : `<span class="repo-badge clean"></span>`
           }
-          <button class="repo-overflow-btn" onclick="event.stopPropagation(); showRepoContextMenu(event, '${repo.path.replace(/'/g, "\\'")}')" title="More actions">···</button>
         </div>
       `).join('');
     }
