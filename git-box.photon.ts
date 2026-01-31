@@ -813,7 +813,16 @@ export class GitBoxPhoton extends PhotonMCP {
     } else {
       // Get current working tree version
       const fullPath = path.join(repoPath, filePath);
-      content = fs.readFileSync(fullPath, 'utf-8');
+      if (!fs.existsSync(fullPath)) {
+        // File may be deleted or renamed — try reading from git HEAD
+        try {
+          content = await this._runGit(repoPath, `show HEAD:${this._shellEscape(filePath)}`);
+        } catch {
+          throw new Error(`File not found: ${filePath} (may have been deleted or renamed)`);
+        }
+      } else {
+        content = fs.readFileSync(fullPath, 'utf-8');
+      }
     }
 
     // Detect language from extension for syntax highlighting hints
