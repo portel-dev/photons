@@ -2545,6 +2545,8 @@
     let currentDiffContext = null;
 
     async function showDiff(filePath, isStaged) {
+      if (!filePath) return;
+
       const modal = document.getElementById('diff-modal');
       const content = document.getElementById('diff-content');
       const title = document.getElementById('diff-title');
