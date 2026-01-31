@@ -125,6 +125,22 @@ export class GitBoxPhoton extends PhotonMCP {
   }
 
   /**
+   * Unquote a path from git's porcelain/status output.
+   * Git wraps paths containing spaces or special chars in double quotes
+   * and backslash-escapes quotes and backslashes within.
+   */
+  private _unquoteGitPath(p: string): string {
+    if (p.startsWith('"') && p.endsWith('"')) {
+      return p.slice(1, -1)
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\')
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t');
+    }
+    return p;
+  }
+
+  /**
    * Validate that a string is a safe git ref name (branch, tag, etc.)
    */
   private _isValidRefName(name: string): boolean {
@@ -529,7 +545,7 @@ export class GitBoxPhoton extends PhotonMCP {
 
     return output.split('\n').map(line => {
       const [status, ...pathParts] = line.split('\t');
-      const filePath = pathParts.join('\t'); // Handle paths with tabs
+      const filePath = this._unquoteGitPath(pathParts.join('\t'));
 
       const statusMap: Record<string, string> = {
         'A': 'added',
@@ -568,7 +584,8 @@ export class GitBoxPhoton extends PhotonMCP {
       const workStatus = line.charAt(1);
       // Git porcelain format: XY PATH (XY are 2 status chars, then space, then path)
       // The third char is always a space, so slice from position 3
-      const filePath = line.slice(3);
+      // Git quotes paths with spaces/special chars — unquote them
+      const filePath = this._unquoteGitPath(line.slice(3));
 
       const statusMap: Record<string, string> = {
         'A': 'added',
@@ -599,7 +616,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param filePath File to stage (or "." for all)
    */
   async fileStage(params: { repoPath: string; filePath: string }) {
-    await this._runGit(params.repoPath, `add "${params.filePath}"`);
+    await this._runGit(params.repoPath, `add -- ${this._shellEscape(params.filePath)}`);
     this.emit({ emit: 'status', message: `Staged: ${params.filePath}` });
     return { staged: params.filePath };
   }
@@ -610,7 +627,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param filePath File to unstage
    */
   async fileUnstage(params: { repoPath: string; filePath: string }) {
-    await this._runGit(params.repoPath, `reset HEAD "${params.filePath}"`);
+    await this._runGit(params.repoPath, `reset HEAD -- ${this._shellEscape(params.filePath)}`);
     this.emit({ emit: 'status', message: `Unstaged: ${params.filePath}` });
     return { unstaged: params.filePath };
   }
@@ -735,7 +752,7 @@ export class GitBoxPhoton extends PhotonMCP {
   async diff(params: { repoPath: string; filePath: string; staged?: boolean }) {
     const { repoPath, filePath, staged = false } = params;
     const stageArg = staged ? '--cached' : '';
-    const diff = await this._runGit(repoPath, `diff ${stageArg} -- "${filePath}"`);
+    const diff = await this._runGit(repoPath, `diff ${stageArg} -- ${this._shellEscape(filePath)}`);
 
     // Split into lines for easier rendering
     const lines = diff ? diff.split('\n') : [];
@@ -755,7 +772,7 @@ export class GitBoxPhoton extends PhotonMCP {
    */
   async changesDiscard(params: { repoPath: string; filePath: string }) {
     const { repoPath, filePath } = params;
-    await this._runGit(repoPath, `checkout -- "${filePath}"`);
+    await this._runGit(repoPath, `checkout -- ${this._shellEscape(filePath)}`);
     this.emit({ emit: 'toast', message: `Discarded: ${filePath}`, type: 'info' });
     return { discarded: filePath };
   }
@@ -769,7 +786,7 @@ export class GitBoxPhoton extends PhotonMCP {
   async commitDiff(params: { repoPath: string; hash: string; filePath: string }) {
     const { repoPath, hash, filePath } = params;
     // Show diff between this commit and its parent
-    const diff = await this._runGit(repoPath, `show ${hash} -- "${filePath}"`);
+    const diff = await this._runGit(repoPath, `show ${hash} -- ${this._shellEscape(filePath)}`);
     const lines = diff ? diff.split('\n') : [];
 
     return {
@@ -792,7 +809,7 @@ export class GitBoxPhoton extends PhotonMCP {
     let content: string;
     if (hash) {
       // Get file from specific commit
-      content = await this._runGit(repoPath, `show ${hash}:"${filePath}"`);
+      content = await this._runGit(repoPath, `show ${hash}:${this._shellEscape(filePath)}`);
     } else {
       // Get current working tree version
       const fullPath = path.join(repoPath, filePath);
@@ -1261,7 +1278,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
 
     if (!confirm) {
       // Show what would be affected
-      const commits = await this._runGit(repoPath, `log --all --oneline -- "${filePath}"`);
+      const commits = await this._runGit(repoPath, `log --all --oneline -- ${this._shellEscape(filePath)}`);
       const commitCount = commits ? commits.split('\n').filter(Boolean).length : 0;
 
       return {
@@ -1575,7 +1592,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    */
   async conflictMarkResolved(params: { repoPath: string; filePath: string }) {
     const { repoPath, filePath } = params;
-    await this._runGit(repoPath, `add "${filePath}"`);
+    await this._runGit(repoPath, `add -- ${this._shellEscape(filePath)}`);
     this.emit({ emit: 'toast', message: `Marked resolved: ${filePath}`, type: 'success' });
     return { resolved: filePath };
   }
@@ -1588,8 +1605,8 @@ cat ${this._shellEscape(msgFile)} > "$1"
    */
   async conflictResolve(params: { repoPath: string; filePath: string; version: 'ours' | 'theirs' }) {
     const { repoPath, filePath, version } = params;
-    await this._runGit(repoPath, `checkout --${version} "${filePath}"`);
-    await this._runGit(repoPath, `add "${filePath}"`);
+    await this._runGit(repoPath, `checkout --${version} -- ${this._shellEscape(filePath)}`);
+    await this._runGit(repoPath, `add -- ${this._shellEscape(filePath)}`);
     this.emit({ emit: 'toast', message: `Resolved with ${version}: ${filePath}`, type: 'success' });
     return { resolved: filePath, version };
   }
@@ -1613,7 +1630,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
       lineArg = `-L ${startLine},${endLine}`;
     }
 
-    const output = await this._runGit(repoPath, `blame ${lineArg} --porcelain "${filePath}"`);
+    const output = await this._runGit(repoPath, `blame ${lineArg} --porcelain -- ${this._shellEscape(filePath)}`);
 
     // Parse porcelain blame output
     const lines: any[] = [];
@@ -1710,7 +1727,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
   async changeFind(params: { repoPath: string; searchText: string; filePath?: string }) {
     const { repoPath, searchText, filePath } = params;
 
-    const fileArg = filePath ? `-- "${filePath}"` : '';
+    const fileArg = filePath ? `-- ${this._shellEscape(filePath)}` : '';
     const format = '%H|%h|%an|%at|%s';
 
     const output = await this._runGit(repoPath, `log -S"${searchText}" --format="${format}" ${fileArg}`);
