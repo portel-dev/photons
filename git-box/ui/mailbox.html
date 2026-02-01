@@ -2084,7 +2084,10 @@
     <div class="diff-modal-content">
       <div class="diff-modal-header">
         <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1;">
-          <span class="diff-modal-title" id="diff-title">file.txt</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="diff-modal-title" id="diff-title">file.txt</span>
+            <span id="diff-view-label" style="display: none; font-size: 0.7em; color: var(--text-secondary); background: var(--bg-secondary); padding: 1px 6px; border-radius: 3px;"></span>
+          </div>
           <span id="diff-commit-info" style="font-size: 0.75em; color: var(--text-secondary); display: none;"></span>
         </div>
         <div class="diff-modal-tabs">
@@ -2781,9 +2784,11 @@
     }
 
     function updatePreviewTabVisibility(filePath) {
+      const tabsContainer = document.querySelector('.diff-modal-tabs');
       const diffTab = document.getElementById('tab-diff');
       const fileTab = document.getElementById('tab-file');
       const previewTab = document.getElementById('tab-preview');
+      const viewLabel = document.getElementById('diff-view-label');
       const isImage = isImageFile(filePath);
       const isBinary = isBinaryFile(filePath);
       const isUntracked = currentDiffContext?.fileStatus === 'untracked';
@@ -2805,6 +2810,18 @@
       } else {
         diffTab.classList.remove('hidden');
         fileTab.classList.remove('hidden');
+      }
+
+      // Count visible tabs — if only one, hide tabs and show view label in title
+      const visibleTabs = [diffTab, fileTab, previewTab].filter(t => !t.classList.contains('hidden'));
+      if (visibleTabs.length <= 1) {
+        tabsContainer.classList.add('hidden');
+        const label = visibleTabs.length === 1 ? visibleTabs[0].textContent : '';
+        viewLabel.textContent = label;
+        viewLabel.style.display = label ? 'inline' : 'none';
+      } else {
+        tabsContainer.classList.remove('hidden');
+        viewLabel.style.display = 'none';
       }
     }
 
