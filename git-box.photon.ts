@@ -607,7 +607,26 @@ export class GitBoxPhoton extends PhotonMCP {
       }
     }
 
-    return { staged, unstaged, untracked };
+    // Filter out deleted symlinks (e.g. symlinked directories) — they can't be diffed
+    const filterSymlinks = async (files: any[]) => {
+      const result: any[] = [];
+      for (const f of files) {
+        if (f.status === 'deleted') {
+          try {
+            const mode = await this._runGit(repoPath, `ls-files -s -- ${this._shellEscape(f.path)}`);
+            if (mode.startsWith('120000')) continue; // symlink — skip
+          } catch { /* keep it if check fails */ }
+        }
+        result.push(f);
+      }
+      return result;
+    };
+
+    return {
+      staged: await filterSymlinks(staged),
+      unstaged: await filterSymlinks(unstaged),
+      untracked,
+    };
   }
 
   /**
@@ -754,6 +773,9 @@ export class GitBoxPhoton extends PhotonMCP {
     const stageArg = staged ? '--cached' : '';
     const diff = await this._runGit(repoPath, `diff ${stageArg} -- ${this._shellEscape(filePath)}`);
 
+    // Detect binary files
+    const isBinary = diff.includes('Binary files') && diff.includes('differ');
+
     // Split into lines for easier rendering
     const lines = diff ? diff.split('\n') : [];
 
@@ -761,7 +783,8 @@ export class GitBoxPhoton extends PhotonMCP {
       diff,
       lines,
       filePath,
-      staged
+      staged,
+      isBinary,
     };
   }
 
@@ -787,13 +810,15 @@ export class GitBoxPhoton extends PhotonMCP {
     const { repoPath, hash, filePath } = params;
     // Show diff between this commit and its parent
     const diff = await this._runGit(repoPath, `show ${hash} -- ${this._shellEscape(filePath)}`);
+    const isBinary = diff.includes('Binary files') && diff.includes('differ');
     const lines = diff ? diff.split('\n') : [];
 
     return {
       diff,
       lines,
       hash,
-      filePath
+      filePath,
+      isBinary,
     };
   }
 
@@ -825,8 +850,30 @@ export class GitBoxPhoton extends PhotonMCP {
       }
     }
 
-    // Detect language from extension for syntax highlighting hints
+    // Detect binary files by extension
+    const binaryExts = new Set([
+      'png', 'jpg', 'jpeg', 'gif', 'bmp', 'ico', 'webp', 'svg', 'avif',
+      'mp3', 'mp4', 'wav', 'ogg', 'webm', 'mov', 'avi',
+      'pdf', 'zip', 'gz', 'tar', 'rar', '7z',
+      'woff', 'woff2', 'ttf', 'otf', 'eot',
+      'exe', 'dll', 'so', 'dylib', 'o', 'a',
+    ]);
     const ext = path.extname(filePath).slice(1).toLowerCase();
+    const isBinary = binaryExts.has(ext);
+    const isImage = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'ico', 'webp', 'svg', 'avif'].includes(ext);
+
+    if (isBinary) {
+      return {
+        content: '',
+        lines: [],
+        filePath,
+        language: 'binary',
+        isBinary: true,
+        isImage,
+      };
+    }
+
+    // Detect language from extension for syntax highlighting hints
     const langMap: Record<string, string> = {
       'ts': 'typescript', 'tsx': 'typescript', 'js': 'javascript', 'jsx': 'javascript',
       'py': 'python', 'rb': 'ruby', 'go': 'go', 'rs': 'rust', 'java': 'java',

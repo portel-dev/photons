@@ -2525,7 +2525,8 @@
           <span class="file-name"
                 data-path="${escapeHtml(file.path)}"
                 data-staged="${isStaged}"
-                onclick="event.stopPropagation(); showDiff(this.dataset.path, this.dataset.staged === 'true')"
+                data-status="${escapeHtml(status)}"
+                onclick="event.stopPropagation(); showDiff(this.dataset.path, this.dataset.staged === 'true', this.dataset.status)"
                 title="Click to view diff"
                 style="cursor: pointer;">${escapeHtml(fileName)}</span>
           <span class="file-path">${escapeHtml(dirPath)}</span>
@@ -2544,7 +2545,7 @@
     // State for diff modal
     let currentDiffContext = null;
 
-    async function showDiff(filePath, isStaged) {
+    async function showDiff(filePath, isStaged, fileStatus) {
       if (!filePath) return;
 
       const modal = document.getElementById('diff-modal');
@@ -2552,20 +2553,24 @@
       const title = document.getElementById('diff-title');
 
       // Store context for tab switching
-      currentDiffContext = { type: 'working', filePath, isStaged, commitHash: null };
+      currentDiffContext = { type: 'working', filePath, isStaged, commitHash: null, fileStatus };
 
       title.textContent = filePath;
       content.innerHTML = '<div class="loading">Loading changes...</div>';
       modal.classList.remove('hidden');
       updatePreviewTabVisibility(filePath);
 
-      // Default to preview for markdown files, diff for others
-      const defaultTab = isMarkdownFile(filePath) ? 'preview' : 'diff';
+      // Default tab: preview for markdown/images, diff for others
+      const defaultTab = (isMarkdownFile(filePath) || isImageFile(filePath)) ? 'preview' : 'diff';
       setActiveTab(defaultTab);
 
-      // If markdown, load preview first
+      // If preview-able, load preview first
       if (defaultTab === 'preview') {
-        switchDiffTab('preview');
+        if (isImageFile(filePath)) {
+          content.innerHTML = renderImagePreview(filePath);
+        } else {
+          switchDiffTab('preview');
+        }
         return;
       }
 
@@ -2575,7 +2580,11 @@
           filePath: filePath,
           staged: isStaged
         });
-        content.innerHTML = renderDiff(diff);
+        if (diff.isBinary) {
+          content.innerHTML = '<div class="empty-state"><div class="empty-state-text">Binary file — no text diff available</div></div>';
+        } else {
+          content.innerHTML = renderDiff(diff);
+        }
       } catch (error) {
         content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load diff: ${escapeHtml(error.message)}</div></div>`;
       }
@@ -2700,9 +2709,40 @@
       return ['md', 'markdown', 'mdx'].includes(ext);
     }
 
+    function isImageFile(filePath) {
+      const ext = filePath.split('.').pop()?.toLowerCase();
+      return ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'ico', 'webp', 'svg', 'avif'].includes(ext);
+    }
+
+    function isBinaryFile(filePath) {
+      const ext = filePath.split('.').pop()?.toLowerCase();
+      return ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'ico', 'webp', 'svg', 'avif',
+              'mp3', 'mp4', 'wav', 'ogg', 'webm', 'mov', 'avi',
+              'pdf', 'zip', 'gz', 'tar', 'rar', '7z',
+              'woff', 'woff2', 'ttf', 'otf', 'eot',
+              'exe', 'dll', 'so', 'dylib', 'o', 'a'].includes(ext);
+    }
+
+    function renderImagePreview(filePath) {
+      // Check if file is deleted — can't preview deleted files from disk
+      const isDeleted = currentDiffContext && currentDiffContext.fileStatus === 'deleted';
+      if (isDeleted) {
+        return '<div class="empty-state"><div class="empty-state-text">Image was deleted — no preview available</div></div>';
+      }
+      const fullPath = selectedRepo.path + '/' + filePath;
+      const src = `/api/local-file?path=${encodeURIComponent(fullPath)}`;
+      return `
+        <div style="display: flex; flex-direction: column; align-items: center; padding: 24px; gap: 16px;">
+          <img src="${escapeHtml(src)}" alt="${escapeHtml(filePath)}"
+               style="max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px; background: var(--bg-secondary);" />
+          <span style="color: var(--text-secondary); font-size: 0.85em;">${escapeHtml(filePath)}</span>
+        </div>
+      `;
+    }
+
     function updatePreviewTabVisibility(filePath) {
       const previewTab = document.getElementById('tab-preview');
-      if (isMarkdownFile(filePath)) {
+      if (isMarkdownFile(filePath) || isImageFile(filePath)) {
         previewTab.classList.remove('hidden');
       } else {
         previewTab.classList.add('hidden');
@@ -2785,6 +2825,11 @@
       setActiveTab(tab);
 
       if (tab === 'preview') {
+        // Image preview
+        if (isImageFile(currentDiffContext.filePath)) {
+          content.innerHTML = renderImagePreview(currentDiffContext.filePath);
+          return;
+        }
         // Markdown preview
         content.innerHTML = '<div class="loading">Loading preview...</div>';
         try {
@@ -2799,6 +2844,14 @@
           content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load preview: ${escapeHtml(error.message)}</div></div>`;
         }
       } else if (tab === 'file') {
+        if (isBinaryFile(currentDiffContext.filePath)) {
+          if (isImageFile(currentDiffContext.filePath)) {
+            content.innerHTML = renderImagePreview(currentDiffContext.filePath);
+          } else {
+            content.innerHTML = '<div class="empty-state"><div class="empty-state-text">Binary file — cannot display as text</div></div>';
+          }
+          return;
+        }
         content.innerHTML = '<div class="loading">Loading file...</div>';
         try {
           const fileData = await callMCP('fileContent', {
@@ -2811,6 +2864,15 @@
           content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load file: ${escapeHtml(error.message)}</div></div>`;
         }
       } else {
+        // Diff tab — binary files have no text diff
+        if (isBinaryFile(currentDiffContext.filePath)) {
+          if (isImageFile(currentDiffContext.filePath)) {
+            content.innerHTML = renderImagePreview(currentDiffContext.filePath);
+          } else {
+            content.innerHTML = '<div class="empty-state"><div class="empty-state-text">Binary file — no text diff available</div></div>';
+          }
+          return;
+        }
         content.innerHTML = '<div class="loading">Loading changes...</div>';
         try {
           let diff;
@@ -2827,7 +2889,11 @@
               staged: currentDiffContext.isStaged
             });
           }
-          content.innerHTML = renderDiff(diff);
+          if (diff.isBinary) {
+            content.innerHTML = '<div class="empty-state"><div class="empty-state-text">Binary file changed</div></div>';
+          } else {
+            content.innerHTML = renderDiff(diff);
+          }
         } catch (error) {
           content.innerHTML = `<div class="empty-state"><div class="empty-state-text">Failed to load diff: ${escapeHtml(error.message)}</div></div>`;
         }
