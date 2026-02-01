@@ -2726,6 +2726,7 @@
           }
 
           let imgSrc = href;
+          let fallbackSrc = '';
 
           // If it's a relative path, resolve it
           if (href && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('data:')) {
@@ -2737,6 +2738,11 @@
               // Serve from local filesystem via Beam's local-file API
               const fullPath = selectedRepo.path + '/' + imagePath;
               imgSrc = `/api/local-file?path=${encodeURIComponent(fullPath)}`;
+              // Fallback: try repo-root-relative path (common in book/wiki projects)
+              if (fileDir && href !== imagePath) {
+                const rootPath = selectedRepo.path + '/' + href;
+                fallbackSrc = `/api/local-file?path=${encodeURIComponent(rootPath)}`;
+              }
             } else if (selectedRepo && selectedRepo.remote) {
               // Fallback: try GitHub raw URL
               const match = selectedRepo.remote.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
@@ -2749,7 +2755,8 @@
           }
 
           const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-          return `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(text)}"${titleAttr} loading="lazy">`;
+          const onerrorAttr = fallbackSrc ? ` onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='${escapeHtml(fallbackSrc)}';}"` : '';
+          return `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(text)}"${titleAttr}${onerrorAttr} loading="lazy">`;
         };
 
         // Configure marked for GitHub-flavored markdown
