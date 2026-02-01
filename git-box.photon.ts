@@ -795,7 +795,19 @@ export class GitBoxPhoton extends PhotonMCP {
    */
   async changesDiscard(params: { repoPath: string; filePath: string }) {
     const { repoPath, filePath } = params;
-    await this._runGit(repoPath, `checkout -- ${this._shellEscape(filePath)}`);
+    const escapedPath = this._shellEscape(filePath);
+    // Check if file is tracked
+    try {
+      await this._runGit(repoPath, `ls-files --error-unmatch ${escapedPath}`);
+      // Tracked file — restore from HEAD
+      await this._runGit(repoPath, `checkout -- ${escapedPath}`);
+    } catch {
+      // Untracked file — delete it
+      const fullPath = path.join(repoPath, filePath);
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath);
+      }
+    }
     this.emit({ emit: 'toast', message: `Discarded: ${filePath}`, type: 'info' });
     return { discarded: filePath };
   }

@@ -665,6 +665,12 @@
       color: var(--accent);
     }
 
+    .file-diff-btn.discard-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
     /* Commit Form */
     .commit-form {
       padding: 16px;
@@ -2077,7 +2083,10 @@
   <div id="diff-modal" class="diff-modal hidden" onclick="if(event.target === this) closeDiffModal()">
     <div class="diff-modal-content">
       <div class="diff-modal-header">
-        <span class="diff-modal-title" id="diff-title">file.txt</span>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1;">
+          <span class="diff-modal-title" id="diff-title">file.txt</span>
+          <span id="diff-commit-info" style="font-size: 0.75em; color: var(--text-secondary); display: none;"></span>
+        </div>
         <div class="diff-modal-tabs">
           <button class="diff-tab active" id="tab-diff" onclick="switchDiffTab('diff')">Diff</button>
           <button class="diff-tab" id="tab-file" onclick="switchDiffTab('file')">Source</button>
@@ -2530,6 +2539,11 @@
                 title="Click to view diff"
                 style="cursor: pointer;">${escapeHtml(fileName)}</span>
           <span class="file-path">${escapeHtml(dirPath)}</span>
+          <button class="file-diff-btn discard-btn"
+                  data-path="${escapeHtml(file.path)}"
+                  data-status="${escapeHtml(status)}"
+                  onclick="event.stopPropagation(); discardFileChanges(this.dataset.path, this.dataset.status)"
+                  title="Discard changes">✕</button>
         </div>
       `;
     }
@@ -2539,6 +2553,17 @@
         await unstageFile(filePath);
       } else {
         await stageFile(filePath);
+      }
+    }
+
+    async function discardFileChanges(filePath, status) {
+      const action = status === 'untracked' ? 'delete' : 'discard changes to';
+      if (!confirm(`${action} ${filePath}?`)) return;
+      try {
+        await callMCP('changesDiscard', { repoPath: selectedRepo.path, filePath });
+        renderChanges();
+      } catch (error) {
+        showToast('Failed to discard: ' + error.message, 'error');
       }
     }
 
@@ -2556,6 +2581,7 @@
       currentDiffContext = { type: 'working', filePath, isStaged, commitHash: null, fileStatus };
 
       title.textContent = filePath;
+      document.getElementById('diff-commit-info').style.display = 'none';
       content.innerHTML = '<div class="loading">Loading changes...</div>';
       modal.classList.remove('hidden');
       updatePreviewTabVisibility(filePath);
@@ -3061,15 +3087,27 @@
       currentDiffContext = { type: 'commit', filePath, isStaged: false, commitHash };
 
       title.textContent = filePath;
+
+      // Show commit info in header
+      const commitInfoEl = document.getElementById('diff-commit-info');
+      const commit = commits.find(c => c.hash === commitHash);
+      if (commit) {
+        commitInfoEl.textContent = `${commitHash.slice(0, 7)} · ${commit.subject}`;
+        commitInfoEl.style.display = 'block';
+      } else {
+        commitInfoEl.textContent = commitHash.slice(0, 7);
+        commitInfoEl.style.display = 'block';
+      }
+
       content.innerHTML = '<div class="loading">Loading changes...</div>';
       modal.classList.remove('hidden');
       updatePreviewTabVisibility(filePath);
 
-      // Default to preview for markdown files, diff for others
-      const defaultTab = isMarkdownFile(filePath) ? 'preview' : 'diff';
+      // Default to preview for markdown/image files, diff for others
+      const defaultTab = (isMarkdownFile(filePath) || isImageFile(filePath)) ? 'preview' : 'diff';
       setActiveTab(defaultTab);
 
-      // If markdown, load preview first
+      // If preview-able, load preview first
       if (defaultTab === 'preview') {
         switchDiffTab('preview');
         return;
