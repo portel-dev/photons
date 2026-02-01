@@ -2741,11 +2741,25 @@
     }
 
     function updatePreviewTabVisibility(filePath) {
+      const diffTab = document.getElementById('tab-diff');
+      const fileTab = document.getElementById('tab-file');
       const previewTab = document.getElementById('tab-preview');
-      if (isMarkdownFile(filePath) || isImageFile(filePath)) {
+      const isImage = isImageFile(filePath);
+      const isBinary = isBinaryFile(filePath);
+
+      if (isImage || isMarkdownFile(filePath)) {
         previewTab.classList.remove('hidden');
       } else {
         previewTab.classList.add('hidden');
+      }
+
+      // Images/binaries: hide Diff and Source — only Preview is meaningful
+      if (isImage || isBinary) {
+        diffTab.classList.add('hidden');
+        fileTab.classList.add('hidden');
+      } else {
+        diffTab.classList.remove('hidden');
+        fileTab.classList.remove('hidden');
       }
     }
 
