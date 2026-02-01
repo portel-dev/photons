@@ -2586,17 +2586,31 @@
       modal.classList.remove('hidden');
       updatePreviewTabVisibility(filePath);
 
-      // Default tab: preview for markdown/images, diff for others
-      const defaultTab = (isMarkdownFile(filePath) || isImageFile(filePath)) ? 'preview' : 'diff';
+      // Default tab logic:
+      // - Images/markdown → preview
+      // - Untracked files → source (no diff exists for new files)
+      // - Everything else → diff
+      let defaultTab;
+      if (isMarkdownFile(filePath) || isImageFile(filePath)) {
+        defaultTab = 'preview';
+      } else if (fileStatus === 'untracked') {
+        defaultTab = 'file';
+      } else {
+        defaultTab = 'diff';
+      }
       setActiveTab(defaultTab);
 
-      // If preview-able, load preview first
+      // If not loading diff tab, delegate to switchDiffTab
       if (defaultTab === 'preview') {
         if (isImageFile(filePath)) {
           content.innerHTML = renderImagePreview(filePath);
         } else {
           switchDiffTab('preview');
         }
+        return;
+      }
+      if (defaultTab === 'file') {
+        switchDiffTab('file');
         return;
       }
 
@@ -2772,6 +2786,7 @@
       const previewTab = document.getElementById('tab-preview');
       const isImage = isImageFile(filePath);
       const isBinary = isBinaryFile(filePath);
+      const isUntracked = currentDiffContext?.fileStatus === 'untracked';
 
       if (isImage || isMarkdownFile(filePath)) {
         previewTab.classList.remove('hidden');
@@ -2783,6 +2798,10 @@
       if (isImage || isBinary) {
         diffTab.classList.add('hidden');
         fileTab.classList.add('hidden');
+      } else if (isUntracked) {
+        // Untracked files have no diff — hide Diff tab, show Source
+        diffTab.classList.add('hidden');
+        fileTab.classList.remove('hidden');
       } else {
         diffTab.classList.remove('hidden');
         fileTab.classList.remove('hidden');
