@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integration Demo — Result Viewer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg, #f5f5f5);
+      color: var(--fg, #1a1a1a);
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--card-bg, #ffffff);
+      border: 1px solid var(--border, #e0e0e0);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--fg-muted, #666);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .value {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge.ok { background: #d4edda; color: #155724; }
+    .badge.warn { background: #fff3cd; color: #856404; }
+    .badge.error { background: #f8d7da; color: #721c24; }
+
+    .steps {
+      list-style: none;
+      padding: 0;
+    }
+
+    .steps li {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border, #e0e0e0);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .steps li:last-child { border-bottom: none; }
+
+    .step-icon { font-size: 16px; }
+
+    pre {
+      background: var(--code-bg, #f0f0f0);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="card">
+      <h3>Waiting for result...</h3>
+      <p>Run a tool method to see results here.</p>
+    </div>
+  </div>
+
+  <script>
+    function render(data) {
+      const root = document.getElementById('root');
+
+      if (!data) {
+        root.innerHTML = '<div class="card"><h3>No Data</h3><p>No result received.</p></div>';
+        return;
+      }
+
+      let html = '';
+
+      // Info method result
+      if (data.photonName) {
+        html += `
+          <div class="card">
+            <h3>Photon Info</h3>
+            <div class="value">${data.photonName} v${data.photonVersion || '?'}</div>
+          </div>
+          <div class="card">
+            <h3>Runtime</h3>
+            <div class="value">${data.runtime || 'unknown'}</div>
+            <span class="badge ok">Compatible</span>
+          </div>
+        `;
+        if (data.dependencies) {
+          html += `<div class="card"><h3>Dependencies</h3><pre>${JSON.stringify(data.dependencies, null, 2)}</pre></div>`;
+        }
+      }
+
+      // Workflow result
+      if (data.steps && Array.isArray(data.steps)) {
+        html += '<div class="card"><h3>Workflow Steps</h3><ul class="steps">';
+        for (const step of data.steps) {
+          const icon = step.status === 'complete' ? '&#x2705;' : step.status === 'pending' ? '&#x23F3;' : '&#x25B6;';
+          html += `<li><span class="step-icon">${icon}</span> ${step.name || step.message || JSON.stringify(step)}</li>`;
+        }
+        html += '</ul></div>';
+      }
+
+      // Generic fallback
+      if (!html) {
+        html = `<div class="card"><h3>Result</h3><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+      }
+
+      root.innerHTML = html;
+    }
+
+    // Photon UI integration: called when tool result arrives
+    if (typeof window !== 'undefined') {
+      window.onResult = render;
+    }
+  </script>
+</body>
+</html>
