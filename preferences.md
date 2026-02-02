@@ -2,27 +2,17 @@
 
 Preferences Photon
 
-## 📋 Overview
+> **7 tools** · Workflow Photon · v1.5.1 · MIT
 
-**Version:** 1.4.1
-**Author:** Unknown
-**License:** MIT
+**Platform Features:** `generator` `custom-ui` `elicitation` `streaming`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
-
-This photon provides **7** tools:
 
 
 ### `getPreferences`
@@ -41,10 +31,9 @@ Get current user preferences
 Get a specific preference value
 
 
-**Parameters:**
-
-
-- **`key`** (any) - - The preference key to retrieve
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | - The preference key to retrieve |
 
 
 
@@ -53,7 +42,7 @@ Get a specific preference value
 ---
 
 
-### `editSettings`
+### `editSettings` ⚡
 
 Open the settings UI for editing preferences  Shows the settings form UI and handles user input. Demonstrates EmitUI yield type for MCP Apps.
 
@@ -64,7 +53,7 @@ Open the settings UI for editing preferences  Shows the settings form UI and han
 ---
 
 
-### `previewTheme`
+### `previewTheme` ⚡
 
 Preview a theme before applying  Shows an inline preview of the selected theme.
 
@@ -75,7 +64,7 @@ Preview a theme before applying  Shows an inline preview of the selected theme.
 ---
 
 
-### `resetToDefaults`
+### `resetToDefaults` ⚡
 
 Reset preferences to defaults  Loads defaults from the resources/defaults.json asset.
 
@@ -91,10 +80,9 @@ Reset preferences to defaults  Loads defaults from the resources/defaults.json a
 Import preferences from JSON
 
 
-**Parameters:**
-
-
-- **`preferences`** (any) - - JSON object with preference values
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `preferences` | any | Yes | - JSON object with preference values |
 
 
 
@@ -117,52 +105,71 @@ Export current preferences as JSON
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    subgraph preferences["📦 Preferences"]
+        START([▶ Start])
+        N0[📢 Opening settings...]
+        START --> N0
+        N1[📣 ui]
+        N0 --> N1
+        N2{❓ form}
+        N1 --> N2
+        N3[🎉 Settings unchanged]
+        N2 --> N3
+        N4[🎉 Settings saved!]
+        N3 --> N4
+        N5[📢 Previewing ${params.theme} ...]
+        N4 --> N5
+        N6[📣 ui]
+        N5 --> N6
+        N7{🙋 confirm}
+        N6 --> N7
+        N8([❌ Cancelled])
+        N7 -->|No| N8
+        N7 -->|Yes| N9
+        N9[Continue]
+        N10[🎉 Theme applied!]
+        N9 --> N10
+        N11{🙋 confirm}
+        N10 --> N11
+        N12([❌ Cancelled])
+        N11 -->|No| N12
+        N11 -->|Yes| N13
+        N13[Continue]
+        N14[🎉 Reset cancelled]
+        N13 --> N14
+        N15[⏳ progress]
+        N14 --> N15
+        N16[⏳ progress]
+        N15 --> N16
+        N17[🎉 Preferences reset to defaults]
+        N16 --> N17
+        SUCCESS([✅ Success])
+        N17 --> SUCCESS
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add preferences
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./preferences.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp preferences.photon.ts ~/.photon/
-
-# Run by name
-photon mcp preferences
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp preferences --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get preferences --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @portel/photon-core@latest
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.4.1
+MIT · v1.5.1 · Portel

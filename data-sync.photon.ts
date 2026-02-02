@@ -9,6 +9,8 @@
  *
  * @mcp postgres anthropics/mcp-server-postgres
  * @mcp filesystem anthropics/mcp-server-filesystem
+ *
+ * @author Portel
  */
 export default class DataSync {
   /**

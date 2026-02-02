@@ -2,40 +2,23 @@
 
 Kitchen Sink Photon
 
-## 📋 Overview
+> **25 tools** · Streaming Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Unknown
-**License:** MIT
+**Platform Features:** `generator` `custom-ui`
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`KITCHEN_SINK_PHOTON_APIKEY`** [OPTIONAL]
-  - Type: string
-  - Description: No description available
-  - Default: `<your-api-key>`
-
-- **`KITCHEN_SINK_PHOTON_BASEURL`** [OPTIONAL]
-  - Type: string
-  - Description: No description available
-  - Default: `https://api.example.com`
-
-- **`KITCHEN_SINK_PHOTON_DEBUG`** [OPTIONAL]
-  - Type: boolean
-  - Description: No description available
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `KITCHEN_SINK_PHOTON_APIKEY` | No | string | No description available (default: `<your-api-key>`) |
+| `KITCHEN_SINK_PHOTON_BASEURL` | No | string | No description available (default: `https://api.example.com`) |
+| `KITCHEN_SINK_PHOTON_DEBUG` | No | boolean | No description available |
 
 
 
 
 ## 🔧 Tools
-
-This photon provides **25** tools:
 
 
 ### `basicStringReturn`
@@ -98,10 +81,9 @@ Returns an array
 Demonstrates string parameter
 
 
-**Parameters:**
-
-
-- **`message`** (any) - The message to echo back
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | any | Yes | The message to echo back |
 
 
 
@@ -115,10 +97,9 @@ Demonstrates string parameter
 Demonstrates number parameter
 
 
-**Parameters:**
-
-
-- **`value`** (any) - A numeric value to double
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `value` | any | Yes | A numeric value to double |
 
 
 
@@ -132,10 +113,9 @@ Demonstrates number parameter
 Demonstrates boolean parameter
 
 
-**Parameters:**
-
-
-- **`enabled`** (any) - Whether the feature is enabled
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `enabled` | any | Yes | Whether the feature is enabled |
 
 
 
@@ -149,10 +129,9 @@ Demonstrates boolean parameter
 Demonstrates enum parameter (string literals)
 
 
-**Parameters:**
-
-
-- **`level`** (any) - Log level to use
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `level` | any | Yes | Log level to use |
 
 
 
@@ -166,12 +145,10 @@ Demonstrates enum parameter (string literals)
 Demonstrates optional parameter with default
 
 
-**Parameters:**
-
-
-- **`name`** (any) - Name to greet (optional, defaults to "World")
-
-- **`excited`** (any) - Add exclamation marks
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | any | Yes | Name to greet (optional, defaults to "World") |
+| `excited` | any | Yes | Add exclamation marks |
 
 
 
@@ -185,10 +162,9 @@ Demonstrates optional parameter with default
 Demonstrates array parameter
 
 
-**Parameters:**
-
-
-- **`items`** (any) - List of items to process
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `items` | any | Yes | List of items to process |
 
 
 
@@ -202,10 +178,9 @@ Demonstrates array parameter
 Demonstrates object parameter
 
 
-**Parameters:**
-
-
-- **`user`** (any) - User object with name and age
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `user` | any | Yes | User object with name and age |
 
 
 
@@ -219,14 +194,11 @@ Demonstrates object parameter
 Demonstrates multiple required parameters
 
 
-**Parameters:**
-
-
-- **`firstName`** (any) - First name (required)
-
-- **`lastName`** (any) - Last name (required)
-
-- **`age`** (any) - Age (required)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `firstName` | any | Yes | First name (required) |
+| `lastName` | any | Yes | Last name (required) |
+| `age` | any | Yes | Age (required) |
 
 
 
@@ -235,7 +207,7 @@ Demonstrates multiple required parameters
 ---
 
 
-### `streamingText`
+### `streamingText` ⚡
 
 Streams text word by word  Async generators enable streaming responses. Each yield sends a chunk to the client.
 
@@ -246,15 +218,14 @@ Streams text word by word  Async generators enable streaming responses. Each yie
 ---
 
 
-### `streamingNumbers`
+### `streamingNumbers` ⚡
 
 Streams numbered items
 
 
-**Parameters:**
-
-
-- **`count`** (any) - Number of items to stream
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `count` | any | Yes | Number of items to stream |
 
 
 
@@ -263,7 +234,7 @@ Streams numbered items
 ---
 
 
-### `streamingObjects`
+### `streamingObjects` ⚡
 
 Streams JSON objects  You can stream structured data too - each yield is a complete chunk.
 
@@ -274,15 +245,14 @@ Streams JSON objects  You can stream structured data too - each yield is a compl
 ---
 
 
-### `progressDemo`
+### `progressDemo` ⚡
 
 Demonstrates progress reporting using io helper  Uses async generator with `io.emit.*` to send progress updates.
 
 
-**Parameters:**
-
-
-- **`duration`** (any) - Duration in seconds (default 5)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `duration` | any | Yes | Duration in seconds (default 5) |
 
 
 
@@ -296,10 +266,9 @@ Demonstrates progress reporting using io helper  Uses async generator with `io.e
 Simple counter with in-memory state  State persists during the server session but resets on restart.
 
 
-**Parameters:**
-
-
-- **`action`** (any) - What to do with the counter
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `action` | any | Yes | What to do with the counter |
 
 
 
@@ -313,12 +282,10 @@ Simple counter with in-memory state  State persists during the server session bu
 In-memory todo list
 
 
-**Parameters:**
-
-
-- **`action`** (any) - What to do
-
-- **`item`** (any) - Item to add or remove
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `action` | any | Yes | What to do |
+| `item` | any | Yes | Item to add or remove |
 
 
 
@@ -354,10 +321,9 @@ Get dashboard metrics  Returns data for the dashboard UI template.
 Search results with rich display
 
 
-**Parameters:**
-
-
-- **`query`** (any) - Search query string
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | any | Yes | Search query string |
 
 
 
@@ -371,10 +337,9 @@ Search results with rich display
 Demonstrates proper error handling  Thrown errors are caught and returned as MCP error responses.
 
 
-**Parameters:**
-
-
-- **`shouldFail`** (any) - Whether to simulate a failure
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `shouldFail` | any | Yes | Whether to simulate a failure |
 
 
 
@@ -388,10 +353,9 @@ Demonstrates proper error handling  Thrown errors are caught and returned as MCP
 Demonstrates validation errors
 
 
-**Parameters:**
-
-
-- **`value`** (any) - Must be between 1 and 100
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `value` | any | Yes | Must be between 1 and 100 |
 
 
 
@@ -414,48 +378,81 @@ Shows current configuration  Demonstrates accessing constructor parameters (env 
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph kitchen_sink["📦 Kitchen Sink"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 basicStringReturn]
+        PHOTON --> T0
+        T1[🔧 basicNumberReturn]
+        PHOTON --> T1
+        T2[🔧 basicBooleanReturn]
+        PHOTON --> T2
+        T3[🔧 basicObjectReturn]
+        PHOTON --> T3
+        T4[🔧 basicArrayReturn]
+        PHOTON --> T4
+        T5[🔧 paramString]
+        PHOTON --> T5
+        T6[🔧 paramNumber]
+        PHOTON --> T6
+        T7[🔧 paramBoolean]
+        PHOTON --> T7
+        T8[🔧 paramEnum]
+        PHOTON --> T8
+        T9[🔧 paramOptional]
+        PHOTON --> T9
+        T10[🔧 paramArray]
+        PHOTON --> T10
+        T11[🔧 paramObject]
+        PHOTON --> T11
+        T12[🔧 paramMultipleRequired]
+        PHOTON --> T12
+        T13[🌊 streamingText (stream)]
+        PHOTON --> T13
+        T14[🌊 streamingNumbers (stream)]
+        PHOTON --> T14
+        T15[🌊 streamingObjects (stream)]
+        PHOTON --> T15
+        T16[🌊 progressDemo (stream)]
+        PHOTON --> T16
+        T17[🔧 memoryCounter]
+        PHOTON --> T17
+        T18[🔧 memoryTodoList]
+        PHOTON --> T18
+        T19[🔧 uiGetUsers]
+        PHOTON --> T19
+        T20[🔧 uiGetDashboard]
+        PHOTON --> T20
+        T21[🔧 uiSearch]
+        PHOTON --> T21
+        T22[🔧 errorHandlingDemo]
+        PHOTON --> T22
+        T23[🔧 errorValidation]
+        PHOTON --> T23
+        T24[🔧 showConfig]
+        PHOTON --> T24
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add kitchen-sink
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./kitchen-sink.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp kitchen-sink.photon.ts ~/.photon/
-
-# Run by name
-photon mcp kitchen-sink
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp kitchen-sink --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get kitchen-sink --mcp
 ```
 
 ## 📦 Dependencies
 
+No external dependencies.
 
-No external dependencies required.
+---
 
-
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

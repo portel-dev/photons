@@ -15,6 +15,8 @@
  *       defaults.json     - Default configuration
  *
  * @dependencies @portel/photon-core@latest
+ *
+ * @author Portel
  */
 
 import { PhotonMCP } from '@portel/photon-core';

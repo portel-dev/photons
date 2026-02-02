@@ -2,27 +2,17 @@
 
 Generate a Mermaid diagram from a file
 
-## 📋 Overview
+> **3 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
+**Platform Features:** `mcp-bridge` `photon-bridge`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
-
-This photon provides **3** tools:
 
 
 ### `generate`
@@ -30,16 +20,12 @@ This photon provides **3** tools:
 Generate a Mermaid diagram from code string
 
 
-**Parameters:**
-
-
-- **`code`** (any) - The TypeScript/JavaScript code to analyze
-
-- **`type`** (any) [choice: auto,workflow,api,deps,calls] - Diagram type {@default auto}
-
-- **`style`** (any) [choice: linear,branching,structure] - Diagram style {@default linear}
-
-- **`name`** (any) - Optional name for the diagram {@default Code}
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `code` | any | Yes | The TypeScript/JavaScript code to analyze |
+| `type` | any | Yes | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
+| `style` | any | Yes | Diagram style {@default linear} [choice: linear,branching,structure] |
+| `name` | any | Yes | Optional name for the diagram {@default Code} |
 
 
 
@@ -53,14 +39,11 @@ Generate a Mermaid diagram from code string
 Generate a Mermaid diagram from a file
 
 
-**Parameters:**
-
-
-- **`path`** (any) - Path to the TypeScript/JavaScript file
-
-- **`type`** (any) [choice: auto,workflow,api,deps,calls] - Diagram type {@default auto}
-
-- **`style`** (any) [choice: linear,branching,structure] - Diagram style {@default linear}
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | Path to the TypeScript/JavaScript file |
+| `type` | any | Yes | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
+| `style` | any | Yes | Diagram style {@default linear} [choice: linear,branching,structure] |
 
 
 
@@ -83,52 +66,45 @@ List available diagram types and styles
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph code_diagram["📦 Code Diagram"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 generate]
+        PHOTON --> T0
+        T1[🔧 fromFile]
+        PHOTON --> T1
+        T2[🔧 types]
+        PHOTON --> T2
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 typescript]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add code-diagram
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./code-diagram.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp code-diagram.photon.ts ~/.photon/
-
-# Run by name
-photon mcp code-diagram
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp code-diagram --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get code-diagram --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 typescript@^5.0.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

@@ -5,6 +5,7 @@
  * Use this as a reference for building your own photons.
  *
  * @version 1.0.0
+ * @author Portel
  */
 
 import { PhotonMCP, io } from '@portel/photon-core';

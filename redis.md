@@ -2,33 +2,17 @@
 
 In-memory data store and cache
 
-## 📋 Overview
+> **23 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`REDIS_URL`** [OPTIONAL]
-  - Type: string
-  - Description: Redis connection URL (default: redis://localhost:6379)
-  - Default: `redis://localhost:6379`
-
-- **`REDIS_PASSWORD`** [OPTIONAL]
-  - Type: string
-  - Description: Redis password (optional)
-  
-
-- **`REDIS_DATABASE`** [OPTIONAL]
-  - Type: number
-  - Description: Database number (default: 0)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `REDIS_URL` | No | string | Redis connection URL (default: redis://localhost:6379) (default: `redis://localhost:6379`) |
+| `REDIS_PASSWORD` | No | string | Redis password (optional) |
+| `REDIS_DATABASE` | No | number | Database number (default: 0) |
 
 
 
@@ -41,18 +25,15 @@ In-memory data store and cache
 
 ## 🔧 Tools
 
-This photon provides **23** tools:
-
 
 ### `get`
 
 Get value by key
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `user:123:session`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `user:123:session`) |
 
 
 
@@ -66,14 +47,11 @@ Get value by key
 Set key-value pair
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `user:123:name`)
-
-- **`value`** (any) [min: 1] - Value to store (e.g., `John`)
-
-- **`ttl`** (any) [min: 1, max: 2592000] - Time to live in seconds (optional, max 30 days) (e.g., `3600`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `user:123:name`) |
+| `value` | any | Yes | Value to store [min: 1] (e.g. `John`) |
+| `ttl` | any | Yes | Time to live in seconds (optional, max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
 
 
 
@@ -87,10 +65,9 @@ Set key-value pair
 Delete one or more keys
 
 
-**Parameters:**
-
-
-- **`keys`** (any) [min: 1] - Key name(s) to delete (string or array) (e.g., `["user:123","user:124"]`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `keys` | any | Yes | Key name(s) to delete (string or array) [min: 1] (e.g. `["user:123","user:124"]`) |
 
 
 
@@ -104,10 +81,9 @@ Delete one or more keys
 Check if key exists
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `user:123`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `user:123`) |
 
 
 
@@ -121,10 +97,9 @@ Check if key exists
 Get all keys matching pattern
 
 
-**Parameters:**
-
-
-- **`pattern`** (any) [min: 1, max: 200] - Key pattern (e.g., `user:*`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `pattern` | any | Yes | Key pattern [min: 1, max: 200] (e.g. `user:*`) |
 
 
 
@@ -138,12 +113,10 @@ Get all keys matching pattern
 Increment numeric value
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `counter:page_views`)
-
-- **`amount`** (any, optional) [min: 1] - Amount to increment by (e.g., `5`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `counter:page_views`) |
+| `amount` | any | No | Amount to increment by [min: 1] (e.g. `5`) |
 
 
 
@@ -157,12 +130,10 @@ Increment numeric value
 Decrement numeric value
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `counter:stock`)
-
-- **`amount`** (any, optional) [min: 1] - Amount to decrement by (e.g., `3`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `counter:stock`) |
+| `amount` | any | No | Amount to decrement by [min: 1] (e.g. `3`) |
 
 
 
@@ -176,12 +147,10 @@ Decrement numeric value
 Set expiration time on key
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `session:123`)
-
-- **`seconds`** (any) [min: 1, max: 2592000] - Seconds until expiration (max 30 days) (e.g., `3600`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
+| `seconds` | any | Yes | Seconds until expiration (max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
 
 
 
@@ -195,10 +164,9 @@ Set expiration time on key
 Get time to live for key
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Key name (e.g., `session:123`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
 
 
 
@@ -212,12 +180,10 @@ Get time to live for key
 Push value to list (left side)
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
-
-- **`values`** (any) [min: 1] - Array of values to push (e.g., `["job1","job2"]`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `values` | any | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
 
 
 
@@ -231,12 +197,10 @@ Push value to list (left side)
 Push value to list (right side)
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
-
-- **`values`** (any) [min: 1] - Array of values to push (e.g., `["job1","job2"]`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `values` | any | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
 
 
 
@@ -250,10 +214,9 @@ Push value to list (right side)
 Pop value from list (left side)
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
 
 
 
@@ -267,10 +230,9 @@ Pop value from list (left side)
 Pop value from list (right side)
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
 
 
 
@@ -284,10 +246,9 @@ Pop value from list (right side)
 Get list length
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - List key name (e.g., `queue:jobs`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
 
 
 
@@ -301,12 +262,10 @@ Get list length
 Get hash field value
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Hash key name (e.g., `user:123`)
-
-- **`field`** (any) [min: 1, max: 200] - Field name (e.g., `name`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
+| `field` | any | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
 
 
 
@@ -320,14 +279,11 @@ Get hash field value
 Set hash field value
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Hash key name (e.g., `user:123`)
-
-- **`field`** (any) [min: 1, max: 200] - Field name (e.g., `name`)
-
-- **`value`** (any) [min: 1] - Value to set (e.g., `John`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
+| `field` | any | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
+| `value` | any | Yes | Value to set [min: 1] (e.g. `John`) |
 
 
 
@@ -341,10 +297,9 @@ Set hash field value
 Get all fields and values in hash
 
 
-**Parameters:**
-
-
-- **`key`** (any) [min: 1, max: 512] - Hash key name (e.g., `user:123`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `key` | any | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
 
 
 
@@ -422,52 +377,85 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph redis["📦 Redis"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 get]
+        PHOTON --> T0
+        T1[✏️ set]
+        PHOTON --> T1
+        T2[🔧 del]
+        PHOTON --> T2
+        T3[🔧 exists]
+        PHOTON --> T3
+        T4[🔧 keys]
+        PHOTON --> T4
+        T5[🔧 incr]
+        PHOTON --> T5
+        T6[🔧 decr]
+        PHOTON --> T6
+        T7[🔧 expire]
+        PHOTON --> T7
+        T8[🔧 ttl]
+        PHOTON --> T8
+        T9[🔧 lpush]
+        PHOTON --> T9
+        T10[🔧 rpush]
+        PHOTON --> T10
+        T11[🔧 lpop]
+        PHOTON --> T11
+        T12[🔧 rpop]
+        PHOTON --> T12
+        T13[🔧 llen]
+        PHOTON --> T13
+        T14[🔧 hget]
+        PHOTON --> T14
+        T15[🔧 hset]
+        PHOTON --> T15
+        T16[🔧 hgetall]
+        PHOTON --> T16
+        T17[🔧 flush]
+        PHOTON --> T17
+        T18[✅ testAfterAll]
+        PHOTON --> T18
+        T19[✅ testSetGet]
+        PHOTON --> T19
+        T20[✅ testDel]
+        PHOTON --> T20
+        T21[✅ testExists]
+        PHOTON --> T21
+        T22[✅ testSetWithTtl]
+        PHOTON --> T22
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 redis]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add redis
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./redis.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp redis.photon.ts ~/.photon/
-
-# Run by name
-photon mcp redis
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp redis --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get redis --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 redis@^4.6.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

@@ -2,30 +2,21 @@
 
 Comprehensive feature demonstration
 
-## 📋 Overview
+> **21 tools** · Streaming Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Unknown
-**License:** MIT
+**Platform Features:** `generator`
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`DEMO_PHOTON_APIKEY`** [OPTIONAL]
-  - Type: string
-  - Description: No description available
-  - Default: `demo-key`
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `DEMO_PHOTON_APIKEY` | No | string | No description available (default: `demo-key`) |
 
 
 
 
 ## 🔧 Tools
-
-This photon provides **21** tools:
 
 
 ### `getString`
@@ -88,10 +79,9 @@ Returns an array
 Echo back a message
 
 
-**Parameters:**
-
-
-- **`message`** (any) - The message to echo
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | any | Yes | The message to echo |
 
 
 
@@ -105,12 +95,10 @@ Echo back a message
 Add two numbers
 
 
-**Parameters:**
-
-
-- **`a`** (any) - First number
-
-- **`b`** (any) - Second number
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `a` | any | Yes | First number |
+| `b` | any | Yes | Second number |
 
 
 
@@ -124,10 +112,9 @@ Add two numbers
 Greet with optional name
 
 
-**Parameters:**
-
-
-- **`name`** (any, optional) - Optional name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | any | No | Optional name |
 
 
 
@@ -141,10 +128,9 @@ Greet with optional name
 Set log level
 
 
-**Parameters:**
-
-
-- **`level`** (any) - Log level to set
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `level` | any | Yes | Log level to set |
 
 
 
@@ -153,15 +139,14 @@ Set log level
 ---
 
 
-### `showProgress`
+### `showProgress` ⚡
 
 Demonstrates progress indicators
 
 
-**Parameters:**
-
-
-- **`steps`** (any) - Number of steps to execute
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `steps` | any | Yes | Number of steps to execute |
 
 
 
@@ -170,7 +155,7 @@ Demonstrates progress indicators
 ---
 
 
-### `showSpinner`
+### `showSpinner` ⚡
 
 Spinner progress (indeterminate)
 
@@ -181,7 +166,7 @@ Spinner progress (indeterminate)
 ---
 
 
-### `askName`
+### `askName` ⚡
 
 Ask for user's name interactively
 
@@ -192,7 +177,7 @@ Ask for user's name interactively
 ---
 
 
-### `confirmAction`
+### `confirmAction` ⚡
 
 Confirm action with user
 
@@ -203,7 +188,7 @@ Confirm action with user
 ---
 
 
-### `selectOption`
+### `selectOption` ⚡
 
 Select from options
 
@@ -214,7 +199,7 @@ Select from options
 ---
 
 
-### `multiStepForm`
+### `multiStepForm` ⚡
 
 Multi-step form with progress
 
@@ -230,10 +215,9 @@ Multi-step form with progress
 Counter with persistent state
 
 
-**Parameters:**
-
-
-- **`action`** (any) - Action to perform
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `action` | any | Yes | Action to perform |
 
 
 
@@ -247,12 +231,10 @@ Counter with persistent state
 Todo list manager
 
 
-**Parameters:**
-
-
-- **`action`** (any) - Action to perform
-
-- **`item`** (any) - Todo item text
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `action` | any | Yes | Action to perform |
+| `item` | any | Yes | Todo item text |
 
 
 
@@ -308,48 +290,73 @@ Get configuration (demonstrates accessing constructor params)
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph demo["📦 Demo"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 getString]
+        PHOTON --> T0
+        T1[📖 getNumber]
+        PHOTON --> T1
+        T2[📖 getBoolean]
+        PHOTON --> T2
+        T3[📖 getObject]
+        PHOTON --> T3
+        T4[📖 getArray]
+        PHOTON --> T4
+        T5[🔧 echo]
+        PHOTON --> T5
+        T6[✏️ add]
+        PHOTON --> T6
+        T7[🔧 greet]
+        PHOTON --> T7
+        T8[✏️ setLogLevel]
+        PHOTON --> T8
+        T9[🌊 showProgress (stream)]
+        PHOTON --> T9
+        T10[🌊 showSpinner (stream)]
+        PHOTON --> T10
+        T11[🌊 askName (stream)]
+        PHOTON --> T11
+        T12[🌊 confirmAction (stream)]
+        PHOTON --> T12
+        T13[🌊 selectOption (stream)]
+        PHOTON --> T13
+        T14[🌊 multiStepForm (stream)]
+        PHOTON --> T14
+        T15[🔧 counter]
+        PHOTON --> T15
+        T16[🔧 todos]
+        PHOTON --> T16
+        T17[📖 getUsers]
+        PHOTON --> T17
+        T18[📖 getDocs]
+        PHOTON --> T18
+        T19[📖 getTree]
+        PHOTON --> T19
+        T20[📖 getConfig]
+        PHOTON --> T20
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add demo
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./demo.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp demo.photon.ts ~/.photon/
-
-# Run by name
-photon mcp demo
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp demo --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get demo --mcp
 ```
 
 ## 📦 Dependencies
 
+No external dependencies.
 
-No external dependencies required.
+---
 
-
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

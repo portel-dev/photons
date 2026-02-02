@@ -2,27 +2,17 @@
 
 Dashboard Photon
 
-## 📋 Overview
+> **6 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
+**Platform Features:** `custom-ui` `dashboard`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
-
-This photon provides **6** tools:
 
 
 ### `overview`
@@ -63,12 +53,10 @@ Recent activity feed  Returns activity stream for the timeline UI.
 Add a new task
 
 
-**Parameters:**
-
-
-- **`title`** (any) - Task title
-
-- **`priority`** (any) - Task priority
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `title` | any | Yes | Task title |
+| `priority` | any | Yes | Task priority |
 
 
 
@@ -82,12 +70,10 @@ Add a new task
 Update task status
 
 
-**Parameters:**
-
-
-- **`id`** (any) - Task ID
-
-- **`status`** (any) - New status
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | any | Yes | Task ID |
+| `status` | any | Yes | New status |
 
 
 
@@ -101,10 +87,9 @@ Update task status
 Delete a task
 
 
-**Parameters:**
-
-
-- **`id`** (any) - Task ID to delete
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | any | Yes | Task ID to delete |
 
 
 
@@ -116,52 +101,46 @@ Delete a task
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph dashboard["📦 Dashboard"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 overview]
+        PHOTON --> T0
+        T1[🔧 main]
+        PHOTON --> T1
+        T2[🔧 activity]
+        PHOTON --> T2
+        T3[✏️ add]
+        PHOTON --> T3
+        T4[🔄 update]
+        PHOTON --> T4
+        T5[🗑️ delete]
+        PHOTON --> T5
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add dashboard
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./dashboard.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp dashboard.photon.ts ~/.photon/
-
-# Run by name
-photon mcp dashboard
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp dashboard --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get dashboard --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @portel/photon-core@latest
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

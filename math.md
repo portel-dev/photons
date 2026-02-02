@@ -2,27 +2,16 @@
 
 Advanced math expression evaluator
 
-## 📋 Overview
+> **8 tools** · API Photon · v1.1.0 · MIT
 
-**Version:** 1.1.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
-
-This photon provides **8** tools:
 
 
 ### `calculate`
@@ -30,10 +19,9 @@ This photon provides **8** tools:
 Calculate a math expression string. Supports +, -, *, /, ^, parentheses, sqrt, log, sin, cos, tan, pow, min, max, sum, mean, median, std, abs, floor, ceil, round, random, PI, E. Example: { expression: "mean([1,2,3,4]) + max(5, 10) - abs(-7)" }
 
 
-**Parameters:**
-
-
-- **`expression`** (any) - The math expression to calculate
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `expression` | any | Yes | The math expression to calculate |
 
 
 
@@ -122,48 +110,47 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph math["📦 Math"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 calculate]
+        PHOTON --> T0
+        T1[✅ testBasicArithmetic]
+        PHOTON --> T1
+        T2[✅ testSqrt]
+        PHOTON --> T2
+        T3[✅ testPower]
+        PHOTON --> T3
+        T4[✅ testAbs]
+        PHOTON --> T4
+        T5[✅ testMean]
+        PHOTON --> T5
+        T6[✅ testComplexExpression]
+        PHOTON --> T6
+        T7[✅ testExternalService]
+        PHOTON --> T7
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add math
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./math.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp math.photon.ts ~/.photon/
-
-# Run by name
-photon mcp math
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp math --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get math --mcp
 ```
 
 ## 📦 Dependencies
 
+No external dependencies.
 
-No external dependencies required.
+---
 
-
-## 📄 License
-
-MIT • Version 1.1.0
+MIT · v1.1.0 · Portel

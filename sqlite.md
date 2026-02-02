@@ -2,30 +2,20 @@
 
 SQLite database operations
 
-## 📋 Overview
+> **15 tools** · API Photon · v1.1.0 · MIT
 
-**Version:** 1.1.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`S_Q_LITE_PATH`** [OPTIONAL]
-  - Type: string
-  - Description: No description available
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `S_Q_LITE_PATH` | No | string | No description available |
 
 
 
 
 ## 🔧 Tools
-
-This photon provides **15** tools:
 
 
 ### `open`
@@ -33,12 +23,10 @@ This photon provides **15** tools:
 Open a SQLite database
 
 
-**Parameters:**
-
-
-- **`path`** (any) - Database file path (use ":memory:" for in-memory database)
-
-- **`readonly`** (any, optional) - Open in readonly mode
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | Database file path (use ":memory:" for in-memory database) |
+| `readonly` | any | No | Open in readonly mode |
 
 
 
@@ -52,12 +40,10 @@ Open a SQLite database
 Execute a SELECT query
 
 
-**Parameters:**
-
-
-- **`sql`** (any) - SQL query string
-
-- **`params`** (any) - Query parameters (for prepared statements)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sql` | any | Yes | SQL query string |
+| `params` | any | Yes | Query parameters (for prepared statements) |
 
 
 
@@ -71,12 +57,10 @@ Execute a SELECT query
 Execute a single SELECT query and return first row
 
 
-**Parameters:**
-
-
-- **`sql`** (any) - SQL query string
-
-- **`params`** (any) - Query parameters (for prepared statements)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sql` | any | Yes | SQL query string |
+| `params` | any | Yes | Query parameters (for prepared statements) |
 
 
 
@@ -90,12 +74,10 @@ Execute a single SELECT query and return first row
 Execute an INSERT, UPDATE, or DELETE statement
 
 
-**Parameters:**
-
-
-- **`sql`** (any) - SQL statement string
-
-- **`params`** (any) - Statement parameters (for prepared statements)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sql` | any | Yes | SQL statement string |
+| `params` | any | Yes | Statement parameters (for prepared statements) |
 
 
 
@@ -109,10 +91,9 @@ Execute an INSERT, UPDATE, or DELETE statement
 Execute multiple SQL statements in a transaction
 
 
-**Parameters:**
-
-
-- **`statements`** (any) - Array of SQL statements with optional parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `statements` | any | Yes | Array of SQL statements with optional parameters |
 
 
 
@@ -137,10 +118,9 @@ List all tables in the database
 Get schema information for a table
 
 
-**Parameters:**
-
-
-- **`table`** (any) - Table name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `table` | any | Yes | Table name |
 
 
 
@@ -165,10 +145,9 @@ Close the database connection
 Create a backup of the database
 
 
-**Parameters:**
-
-
-- **`destination`** (any) - Path to backup file
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `destination` | any | Yes | Path to backup file |
 
 
 
@@ -246,52 +225,69 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph sqlite["📦 Sqlite"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 open]
+        PHOTON --> T0
+        T1[📖 query]
+        PHOTON --> T1
+        T2[📖 queryOne]
+        PHOTON --> T2
+        T3[▶️ execute]
+        PHOTON --> T3
+        T4[🔧 transaction]
+        PHOTON --> T4
+        T5[📖 listTables]
+        PHOTON --> T5
+        T6[🔧 schema]
+        PHOTON --> T6
+        T7[🔧 close]
+        PHOTON --> T7
+        T8[🔧 backup]
+        PHOTON --> T8
+        T9[✅ testBeforeAll]
+        PHOTON --> T9
+        T10[✅ testAfterAll]
+        PHOTON --> T10
+        T11[✅ testOpen]
+        PHOTON --> T11
+        T12[✅ testTables]
+        PHOTON --> T12
+        T13[✅ testInsertQuery]
+        PHOTON --> T13
+        T14[✅ testSchema]
+        PHOTON --> T14
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 better-sqlite3]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add sqlite
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./sqlite.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp sqlite.photon.ts ~/.photon/
-
-# Run by name
-photon mcp sqlite
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp sqlite --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get sqlite --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 better-sqlite3@^11.0.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.1.0
+MIT · v1.1.0 · Portel

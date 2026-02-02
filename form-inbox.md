@@ -2,27 +2,17 @@
 
 Webhook-powered form submission collector
 
-## 📋 Overview
+> **12 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
+**Platform Features:** `stateful` `channels`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
-
-This photon provides **12** tools:
 
 
 ### `forms`
@@ -178,52 +168,58 @@ Cleanup old submissions  Removes submissions older than 90 days to keep data man
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph form_inbox["📦 Form Inbox"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 forms]
+        PHOTON --> T0
+        T1[🔧 formCreate]
+        PHOTON --> T1
+        T2[🔧 formDelete]
+        PHOTON --> T2
+        T3[🔧 submissions]
+        PHOTON --> T3
+        T4[🔧 submission]
+        PHOTON --> T4
+        T5[🔧 submissionDelete]
+        PHOTON --> T5
+        T6[📥 export]
+        PHOTON --> T6
+        T7[🔧 stats]
+        PHOTON --> T7
+        T8[🔧 handleSubmission]
+        PHOTON --> T8
+        T9[🔧 handleBulkImport]
+        PHOTON --> T9
+        T10[🔧 scheduledDigest]
+        PHOTON --> T10
+        T11[🔧 scheduledCleanup]
+        PHOTON --> T11
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add form-inbox
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./form-inbox.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp form-inbox.photon.ts ~/.photon/
-
-# Run by name
-photon mcp form-inbox
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp form-inbox --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get form-inbox --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @portel/photon-core@latest
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

@@ -2,33 +2,17 @@
 
 Cloud object storage operations
 
-## 📋 Overview
+> **11 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`AWS_S3_ACCESSKEYID`** [REQUIRED]
-  - Type: string
-  - Description: AWS access key ID (required)
-  
-
-- **`AWS_S3_SECRETACCESSKEY`** [REQUIRED]
-  - Type: string
-  - Description: AWS secret access key (required)
-  
-
-- **`AWS_S3_REGION`** [OPTIONAL]
-  - Type: string
-  - Description: AWS region (default: us-east-1)
-  - Default: `us-east-1`
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `AWS_S3_ACCESSKEYID` | Yes | string | AWS access key ID (required) |
+| `AWS_S3_SECRETACCESSKEY` | Yes | string | AWS secret access key (required) |
+| `AWS_S3_REGION` | No | string | AWS region (default: us-east-1) (default: `us-east-1`) |
 
 
 
@@ -41,26 +25,19 @@ Cloud object storage operations
 
 ## 🔧 Tools
 
-This photon provides **11** tools:
-
 
 ### `upload`
 
 Upload object to bucket
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
-
-- **`content`** (any) [min: 1] - Content to upload (string or base64) (e.g., `Hello World`)
-
-- **`contentType`** (any, optional) [max: 100] - MIME type (e.g., `text/plain`)
-
-- **`encoding`** (any, optional) [max: 20] - Content encoding (e.g., `base64`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `content` | any | Yes | Content to upload (string or base64) [min: 1] (e.g. `Hello World`) |
+| `contentType` | any | No | MIME type [max: 100] (e.g. `text/plain`) |
+| `encoding` | any | No | Content encoding [max: 20] (e.g. `base64`) |
 
 
 
@@ -74,14 +51,11 @@ Upload object to bucket
 Download object from bucket
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
-
-- **`encoding`** (any) [max: 20] - Return encoding (optional, "base64" for binary files) (e.g., `base64`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `encoding` | any | Yes | Return encoding (optional, "base64" for binary files) [max: 20] (e.g. `base64`) |
 
 
 
@@ -95,14 +69,11 @@ Download object from bucket
 List objects in bucket
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`prefix`** (any, optional) [max: 1024] - Filter by key prefix (e.g., `documents/`)
-
-- **`maxKeys`** (any, optional) [min: 1, max: 1000] - Maximum number of objects to return
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `prefix` | any | No | Filter by key prefix [max: 1024] (e.g. `documents/`) |
+| `maxKeys` | any | No | Maximum number of objects to return [min: 1, max: 1000] |
 
 
 
@@ -116,12 +87,10 @@ List objects in bucket
 Delete object from bucket
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/old-report.pdf`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/old-report.pdf`) |
 
 
 
@@ -135,12 +104,10 @@ Delete object from bucket
 Delete multiple objects from bucket
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`keys`** (any) [min: 1] - Array of object keys to delete (e.g., `["old/file1.txt","old/file2.txt"]`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `keys` | any | Yes | Array of object keys to delete [min: 1] (e.g. `["old/file1.txt","old/file2.txt"]`) |
 
 
 
@@ -154,12 +121,10 @@ Delete multiple objects from bucket
 Get object metadata
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
 
 
 
@@ -173,16 +138,12 @@ Get object metadata
 Copy object within S3
 
 
-**Parameters:**
-
-
-- **`sourceBucket`** (any) [min: 1, max: 63] - Source bucket name (e.g., `my-source-bucket`)
-
-- **`sourceKey`** (any) [min: 1, max: 1024] - Source object key (e.g., `documents/original.pdf`)
-
-- **`destinationBucket`** (any) [min: 1, max: 63] - Destination bucket name (e.g., `my-dest-bucket`)
-
-- **`destinationKey`** (any) [min: 1, max: 1024] - Destination object key (e.g., `backups/copy.pdf`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sourceBucket` | any | Yes | Source bucket name [min: 1, max: 63] (e.g. `my-source-bucket`) |
+| `sourceKey` | any | Yes | Source object key [min: 1, max: 1024] (e.g. `documents/original.pdf`) |
+| `destinationBucket` | any | Yes | Destination bucket name [min: 1, max: 63] (e.g. `my-dest-bucket`) |
+| `destinationKey` | any | Yes | Destination object key [min: 1, max: 1024] (e.g. `backups/copy.pdf`) |
 
 
 
@@ -196,16 +157,12 @@ Copy object within S3
 Generate presigned URL for object access
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-app-bucket`)
-
-- **`key`** (any) [min: 1, max: 1024] - Object key (file path) (e.g., `documents/report.pdf`)
-
-- **`expiresIn`** (any, optional) [min: 1, max: 604800] - Expiration time in seconds
-
-- **`operation`** (any, optional) [max: 10] - Operation type (e.g., `get`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `expiresIn` | any | No | Expiration time in seconds [min: 1, max: 604800] |
+| `operation` | any | No | Operation type [max: 10] (e.g. `get`) |
 
 
 
@@ -230,10 +187,9 @@ List all buckets
 Create a new bucket
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (must be globally unique) (e.g., `my-new-app-bucket-2024`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name (must be globally unique) [min: 1, max: 63] (e.g. `my-new-app-bucket-2024`) |
 
 
 
@@ -247,10 +203,9 @@ Create a new bucket
 Delete a bucket (must be empty)
 
 
-**Parameters:**
-
-
-- **`bucket`** (any) [min: 1, max: 63] - Bucket name (e.g., `my-old-bucket`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-old-bucket`) |
 
 
 
@@ -262,52 +217,56 @@ Delete a bucket (must be empty)
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph aws_s3["📦 Aws S3"]
+        direction TB
+        PHOTON((🎯))
+        T0[📤 upload]
+        PHOTON --> T0
+        T1[📥 download]
+        PHOTON --> T1
+        T2[📖 list]
+        PHOTON --> T2
+        T3[🗑️ remove]
+        PHOTON --> T3
+        T4[🗑️ removeMany]
+        PHOTON --> T4
+        T5[🔧 metadata]
+        PHOTON --> T5
+        T6[🔧 copy]
+        PHOTON --> T6
+        T7[🔧 presign]
+        PHOTON --> T7
+        T8[🔧 buckets]
+        PHOTON --> T8
+        T9[🔧 bucket]
+        PHOTON --> T9
+        T10[🗑️ removeBucket]
+        PHOTON --> T10
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add aws-s3
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./aws-s3.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp aws-s3.photon.ts ~/.photon/
-
-# Run by name
-photon mcp aws-s3
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp aws-s3 --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get aws-s3 --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @aws-sdk/client-s3@^3.511.0, @aws-sdk/s3-request-presigner@^3.511.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

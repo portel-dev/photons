@@ -2,23 +2,15 @@
 
 Local git repository operations
 
-## 📋 Overview
+> **15 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`GIT_REPOPATH`** [OPTIONAL]
-  - Type: string
-  - Description: Default repository path (default: current directory)
-  - Default: `process.cwd()`
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `GIT_REPOPATH` | No | string | Default repository path (default: current directory) (default: `process.cwd()`) |
 
 
 
@@ -29,18 +21,15 @@ Local git repository operations
 
 ## 🔧 Tools
 
-This photon provides **15** tools:
-
 
 ### `status`
 
 Get git status of repository
 
 
-**Parameters:**
-
-
-- **`path`** (any, optional) - Repository path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | No | Repository path |
 
 
 
@@ -54,14 +43,11 @@ Get git status of repository
 View commit history
 
 
-**Parameters:**
-
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`maxCount`** (any, optional) [min: 1, max: 100] - Maximum number of commits to retrieve
-
-- **`branch`** (any, optional) [max: 200] - Branch name to get logs from (e.g., `main`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | No | Repository path [max: 500] |
+| `maxCount` | any | No | Maximum number of commits to retrieve [min: 1, max: 100] |
+| `branch` | any | No | Branch name to get logs from [max: 200] (e.g. `main`) |
 
 
 
@@ -75,14 +61,11 @@ View commit history
 Show differences in repository
 
 
-**Parameters:**
-
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`staged`** (any, optional) - Show staged changes only
-
-- **`file`** (any, optional) [max: 500] - Specific file to show diff for
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | No | Repository path [max: 500] |
+| `staged` | any | No | Show staged changes only |
+| `file` | any | No | Specific file to show diff for [max: 500] |
 
 
 
@@ -96,10 +79,9 @@ Show differences in repository
 List all branches in repository
 
 
-**Parameters:**
-
-
-- **`path`** (any, optional) - Repository path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | No | Repository path |
 
 
 
@@ -113,14 +95,11 @@ List all branches in repository
 Create a new branch
 
 
-**Parameters:**
-
-
-- **`name`** (any) [min: 1, max: 200] - Branch name to create (e.g., `feature/new-feature`)
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`checkout`** (any, optional) - Checkout the new branch after creation
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | any | Yes | Branch name to create [min: 1, max: 200] (e.g. `feature/new-feature`) |
+| `path` | any | No | Repository path [max: 500] |
+| `checkout` | any | No | Checkout the new branch after creation |
 
 
 
@@ -134,12 +113,10 @@ Create a new branch
 Checkout (switch to) a branch
 
 
-**Parameters:**
-
-
-- **`name`** (any) [min: 1, max: 200] - Branch name to checkout (e.g., `main`)
-
-- **`path`** (any, optional) [max: 500] - Repository path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | any | Yes | Branch name to checkout [min: 1, max: 200] (e.g. `main`) |
+| `path` | any | No | Repository path [max: 500] |
 
 
 
@@ -153,14 +130,11 @@ Checkout (switch to) a branch
 Delete a branch
 
 
-**Parameters:**
-
-
-- **`name`** (any) [min: 1, max: 200] - Branch name to delete (e.g., `old-feature`)
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`force`** (any, optional) - Force delete even if not fully merged
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | any | Yes | Branch name to delete [min: 1, max: 200] (e.g. `old-feature`) |
+| `path` | any | No | Repository path [max: 500] |
+| `force` | any | No | Force delete even if not fully merged |
 
 
 
@@ -174,12 +148,10 @@ Delete a branch
 Stage files for commit
 
 
-**Parameters:**
-
-
-- **`files`** (any) [min: 1] - Array of file paths to stage (use '.' for all files) (e.g., `["src/index.ts","README.md"]`)
-
-- **`path`** (any, optional) [max: 500] - Repository path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `files` | any | Yes | Array of file paths to stage (use '.' for all files) [min: 1] (e.g. `["src/index.ts","README.md"]`) |
+| `path` | any | No | Repository path [max: 500] |
 
 
 
@@ -193,14 +165,11 @@ Stage files for commit
 Create a commit
 
 
-**Parameters:**
-
-
-- **`message`** (any) [min: 1, max: 500] - Commit message (e.g., `fix: resolve authentication bug`)
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`author`** (any) [max: 200] - Optional author override (format: "Name <email>")
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | any | Yes | Commit message [min: 1, max: 500] (e.g. `fix: resolve authentication bug`) |
+| `path` | any | No | Repository path [max: 500] |
+| `author` | any | Yes | Optional author override (format: "Name <email>") [max: 200] |
 
 
 
@@ -214,16 +183,12 @@ Create a commit
 Push commits to remote repository
 
 
-**Parameters:**
-
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`remote`** (any, optional) [max: 200] - Remote name (e.g., `origin`)
-
-- **`branch`** (any, optional) [max: 200] - Branch name (e.g., `main`)
-
-- **`force`** (any, optional) - Force push
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | No | Repository path [max: 500] |
+| `remote` | any | No | Remote name [max: 200] (e.g. `origin`) |
+| `branch` | any | No | Branch name [max: 200] (e.g. `main`) |
+| `force` | any | No | Force push |
 
 
 
@@ -237,14 +202,11 @@ Push commits to remote repository
 Pull changes from remote repository
 
 
-**Parameters:**
-
-
-- **`path`** (any, optional) [max: 500] - Repository path
-
-- **`remote`** (any, optional) [max: 200] - Remote name (e.g., `origin`)
-
-- **`branch`** (any, optional) [max: 200] - Branch name (e.g., `main`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | No | Repository path [max: 500] |
+| `remote` | any | No | Remote name [max: 200] (e.g. `origin`) |
+| `branch` | any | No | Branch name [max: 200] (e.g. `main`) |
 
 
 
@@ -300,52 +262,69 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph git["📦 Git"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 status]
+        PHOTON --> T0
+        T1[🔧 log]
+        PHOTON --> T1
+        T2[🔧 diff]
+        PHOTON --> T2
+        T3[🔧 branches]
+        PHOTON --> T3
+        T4[🔧 branch]
+        PHOTON --> T4
+        T5[✅ checkout]
+        PHOTON --> T5
+        T6[🗑️ removeBranch]
+        PHOTON --> T6
+        T7[✏️ add]
+        PHOTON --> T7
+        T8[🔧 commit]
+        PHOTON --> T8
+        T9[📤 push]
+        PHOTON --> T9
+        T10[🔧 pull]
+        PHOTON --> T10
+        T11[✅ testStatus]
+        PHOTON --> T11
+        T12[✅ testLog]
+        PHOTON --> T12
+        T13[✅ testDiff]
+        PHOTON --> T13
+        T14[✅ testBranches]
+        PHOTON --> T14
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 simple-git]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add git
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./git.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp git.photon.ts ~/.photon/
-
-# Run by name
-photon mcp git
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp git --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get git --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 simple-git@^3.21.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

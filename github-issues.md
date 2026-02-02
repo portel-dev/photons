@@ -2,28 +2,16 @@
 
 Manage GitHub repository issues
 
-## 📋 Overview
+> **7 tools** · API Photon · v1.1.0 · MIT
 
-**Version:** 1.1.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`GIT_HUB_ISSUES_TOKEN`** [REQUIRED]
-  - Type: string
-  - Description: GitHub personal access token (required)
-  
-
-- **`GIT_HUB_ISSUES_BASEURL`** [OPTIONAL]
-  - Type: string
-  - Description: GitHub API base URL (default: https://api.github.com)
-  - Default: `https://api.github.com`
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `GIT_HUB_ISSUES_TOKEN` | Yes | string | GitHub personal access token (required) |
+| `GIT_HUB_ISSUES_BASEURL` | No | string | GitHub API base URL (default: https://api.github.com) (default: `https://api.github.com`) |
 
 
 
@@ -36,28 +24,20 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **7** tools:
-
 
 ### `listIssues`
 
 List issues in a repository
 
 
-**Parameters:**
-
-
-- **`owner`** (any) - Repository owner (username or organization)
-
-- **`repo`** (any) - Repository name
-
-- **`state`** (any, optional) - Issue state filter
-
-- **`labels`** (any) - Comma-separated label names to filter by
-
-- **`sort`** (any, optional) - Sort by created, updated, or comments
-
-- **`per_page`** (any, optional) - Number of results per page
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | any | Yes | Repository owner (username or organization) |
+| `repo` | any | Yes | Repository name |
+| `state` | any | No | Issue state filter |
+| `labels` | any | Yes | Comma-separated label names to filter by |
+| `sort` | any | No | Sort by created, updated, or comments |
+| `per_page` | any | No | Number of results per page |
 
 
 
@@ -71,14 +51,11 @@ List issues in a repository
 Get a single issue by number
 
 
-**Parameters:**
-
-
-- **`owner`** (any) - Repository owner
-
-- **`repo`** (any) - Repository name
-
-- **`issue_number`** (any) - Issue number
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | any | Yes | Repository owner |
+| `repo` | any | Yes | Repository name |
+| `issue_number` | any | Yes | Issue number |
 
 
 
@@ -92,20 +69,14 @@ Get a single issue by number
 Create a new issue
 
 
-**Parameters:**
-
-
-- **`owner`** (any) - Repository owner
-
-- **`repo`** (any) - Repository name
-
-- **`title`** (any) - Issue title
-
-- **`body`** (any) - Issue description/body
-
-- **`labels`** (any) - Array of label names
-
-- **`assignees`** (any) - Array of usernames to assign
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | any | Yes | Repository owner |
+| `repo` | any | Yes | Repository name |
+| `title` | any | Yes | Issue title |
+| `body` | any | Yes | Issue description/body |
+| `labels` | any | Yes | Array of label names |
+| `assignees` | any | Yes | Array of usernames to assign |
 
 
 
@@ -119,22 +90,15 @@ Create a new issue
 Update an existing issue
 
 
-**Parameters:**
-
-
-- **`owner`** (any) - Repository owner
-
-- **`repo`** (any) - Repository name
-
-- **`issue_number`** (any) - Issue number to update
-
-- **`title`** (any, optional) - New title
-
-- **`body`** (any, optional) - New body
-
-- **`state`** (any, optional) - New state: open or closed
-
-- **`labels`** (any, optional) - New labels
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | any | Yes | Repository owner |
+| `repo` | any | Yes | Repository name |
+| `issue_number` | any | Yes | Issue number to update |
+| `title` | any | No | New title |
+| `body` | any | No | New body |
+| `state` | any | No | New state: open or closed |
+| `labels` | any | No | New labels |
 
 
 
@@ -148,16 +112,12 @@ Update an existing issue
 Add a comment to an issue
 
 
-**Parameters:**
-
-
-- **`owner`** (any) - Repository owner
-
-- **`repo`** (any) - Repository name
-
-- **`issue_number`** (any) - Issue number
-
-- **`body`** (any) - Comment text
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | any | Yes | Repository owner |
+| `repo` | any | Yes | Repository name |
+| `issue_number` | any | Yes | Issue number |
+| `body` | any | Yes | Comment text |
 
 
 
@@ -171,14 +131,11 @@ Add a comment to an issue
 List comments on an issue
 
 
-**Parameters:**
-
-
-- **`owner`** (any) - Repository owner
-
-- **`repo`** (any) - Repository name
-
-- **`issue_number`** (any) - Issue number
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | any | Yes | Repository owner |
+| `repo` | any | Yes | Repository name |
+| `issue_number` | any | Yes | Issue number |
 
 
 
@@ -192,16 +149,12 @@ List comments on an issue
 Search issues across repositories
 
 
-**Parameters:**
-
-
-- **`query`** (any) - Search query (e.g., "is:open label:bug")
-
-- **`sort`** (any, optional) - Sort by created, updated, or comments
-
-- **`order`** (any, optional) - Sort order: asc or desc
-
-- **`per_page`** (any, optional) - Number of results per page
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | any | Yes | Search query (e.g., "is:open label:bug") |
+| `sort` | any | No | Sort by created, updated, or comments |
+| `order` | any | No | Sort order: asc or desc |
+| `per_page` | any | No | Number of results per page |
 
 
 
@@ -213,52 +166,48 @@ Search issues across repositories
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph github_issues["📦 Github Issues"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 listIssues]
+        PHOTON --> T0
+        T1[📖 getIssue]
+        PHOTON --> T1
+        T2[✏️ createIssue]
+        PHOTON --> T2
+        T3[🔄 updateIssue]
+        PHOTON --> T3
+        T4[✏️ addComment]
+        PHOTON --> T4
+        T5[📖 listComments]
+        PHOTON --> T5
+        T6[📖 searchIssues]
+        PHOTON --> T6
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add github-issues
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./github-issues.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp github-issues.photon.ts ~/.photon/
-
-# Run by name
-photon mcp github-issues
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp github-issues --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get github-issues --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @octokit/rest@^20.0.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.1.0
+MIT · v1.1.0 · Portel

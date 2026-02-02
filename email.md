@@ -2,63 +2,23 @@
 
 Send and receive emails via SMTP and IMAP
 
-## 📋 Overview
+> **8 tools** · API Photon · v1.1.0 · MIT
 
-**Version:** 1.1.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`EMAIL_SMTPHOST`** [REQUIRED]
-  - Type: string
-  - Description: SMTP server hostname (e.g., smtp.gmail.com)
-  
-
-- **`EMAIL_SMTPPORT`** [OPTIONAL]
-  - Type: number
-  - Description: SMTP server port (default: 587 for TLS, 465 for SSL)
-  - Default: `587`
-
-- **`EMAIL_SMTPUSER`** [REQUIRED]
-  - Type: string
-  - Description: SMTP username/email
-  
-
-- **`EMAIL_SMTPPASSWORD`** [REQUIRED]
-  - Type: string
-  - Description: SMTP password or app-specific password
-  
-
-- **`EMAIL_SMTPSECURE`** [OPTIONAL]
-  - Type: boolean
-  - Description: Use SSL (default: false, uses STARTTLS)
-  
-
-- **`EMAIL_IMAPHOST`** [OPTIONAL]
-  - Type: string
-  - Description: IMAP server hostname (optional, for receiving)
-  
-
-- **`EMAIL_IMAPPORT`** [OPTIONAL]
-  - Type: number
-  - Description: IMAP server port (optional, default: 993)
-  - Default: `993`
-
-- **`EMAIL_IMAPUSER`** [OPTIONAL]
-  - Type: string
-  - Description: IMAP username (optional, defaults to smtpUser)
-  
-
-- **`EMAIL_IMAPPASSWORD`** [OPTIONAL]
-  - Type: string
-  - Description: IMAP password (optional, defaults to smtpPassword)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `EMAIL_SMTPHOST` | Yes | string | SMTP server hostname (e.g., smtp.gmail.com) |
+| `EMAIL_SMTPPORT` | No | number | SMTP server port (default: 587 for TLS, 465 for SSL) (default: `587`) |
+| `EMAIL_SMTPUSER` | Yes | string | SMTP username/email |
+| `EMAIL_SMTPPASSWORD` | Yes | string | SMTP password or app-specific password |
+| `EMAIL_SMTPSECURE` | No | boolean | Use SSL (default: false, uses STARTTLS) |
+| `EMAIL_IMAPHOST` | No | string | IMAP server hostname (optional, for receiving) |
+| `EMAIL_IMAPPORT` | No | number | IMAP server port (optional, default: 993) (default: `993`) |
+| `EMAIL_IMAPUSER` | No | string | IMAP username (optional, defaults to smtpUser) |
+| `EMAIL_IMAPPASSWORD` | No | string | IMAP password (optional, defaults to smtpPassword) |
 
 
 
@@ -81,30 +41,21 @@ Gmail Setup:
 
 ## 🔧 Tools
 
-This photon provides **8** tools:
-
 
 ### `send`
 
 Send an email
 
 
-**Parameters:**
-
-
-- **`to`** (any) - Recipient email address or comma-separated addresses
-
-- **`subject`** (any) - Email subject
-
-- **`body`** (any) - Email body (plain text or HTML)
-
-- **`html`** (any, optional) - Set to true if body contains HTML
-
-- **`cc`** (any) - CC recipients (optional, comma-separated)
-
-- **`bcc`** (any) - BCC recipients (optional, comma-separated)
-
-- **`from`** (any) - Sender email (optional, defaults to smtpUser)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `to` | any | Yes | Recipient email address or comma-separated addresses |
+| `subject` | any | Yes | Email subject |
+| `body` | any | Yes | Email body (plain text or HTML) |
+| `html` | any | No | Set to true if body contains HTML |
+| `cc` | any | Yes | CC recipients (optional, comma-separated) |
+| `bcc` | any | Yes | BCC recipients (optional, comma-separated) |
+| `from` | any | Yes | Sender email (optional, defaults to smtpUser) |
 
 
 
@@ -118,18 +69,13 @@ Send an email
 Send an email with attachments
 
 
-**Parameters:**
-
-
-- **`to`** (any) - Recipient email address
-
-- **`subject`** (any) - Email subject
-
-- **`body`** (any) - Email body
-
-- **`attachments`** (any) - Array of attachments with filename and content
-
-- **`html`** (any, optional) - Set to true if body contains HTML
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `to` | any | Yes | Recipient email address |
+| `subject` | any | Yes | Email subject |
+| `body` | any | Yes | Email body |
+| `attachments` | any | Yes | Array of attachments with filename and content |
+| `html` | any | No | Set to true if body contains HTML |
 
 
 
@@ -143,14 +89,11 @@ Send an email with attachments
 List emails from inbox
 
 
-**Parameters:**
-
-
-- **`limit`** (any, optional) - Maximum number of emails to return
-
-- **`unreadOnly`** (any, optional) - Only return unread emails
-
-- **`mailbox`** (any, optional) - Mailbox to check
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `limit` | any | No | Maximum number of emails to return |
+| `unreadOnly` | any | No | Only return unread emails |
+| `mailbox` | any | No | Mailbox to check |
 
 
 
@@ -164,12 +107,10 @@ List emails from inbox
 Get a specific email by sequence number
 
 
-**Parameters:**
-
-
-- **`uid`** (any) - Email sequence number (from listInbox)
-
-- **`mailbox`** (any, optional) - Mailbox to check
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `uid` | any | Yes | Email sequence number (from listInbox) |
+| `mailbox` | any | No | Mailbox to check |
 
 
 
@@ -183,16 +124,12 @@ Get a specific email by sequence number
 Search emails by criteria
 
 
-**Parameters:**
-
-
-- **`query`** (any) - Search query (from, subject, or body text)
-
-- **`searchIn`** (any, optional) - Where to search: from, subject, or body
-
-- **`limit`** (any, optional) - Maximum results
-
-- **`mailbox`** (any, optional) - Mailbox to search
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | any | Yes | Search query (from, subject, or body text) |
+| `searchIn` | any | No | Where to search: from, subject, or body |
+| `limit` | any | No | Maximum results |
+| `mailbox` | any | No | Mailbox to search |
 
 
 
@@ -206,12 +143,10 @@ Search emails by criteria
 Mark an email as read
 
 
-**Parameters:**
-
-
-- **`uid`** (any) - Email sequence number
-
-- **`mailbox`** (any, optional) - Mailbox name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `uid` | any | Yes | Email sequence number |
+| `mailbox` | any | No | Mailbox name |
 
 
 
@@ -225,12 +160,10 @@ Mark an email as read
 Delete an email
 
 
-**Parameters:**
-
-
-- **`uid`** (any) - Email sequence number
-
-- **`mailbox`** (any, optional) - Mailbox name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `uid` | any | Yes | Email sequence number |
+| `mailbox` | any | No | Mailbox name |
 
 
 
@@ -244,14 +177,11 @@ Delete an email
 Move email to another mailbox (archive)
 
 
-**Parameters:**
-
-
-- **`uid`** (any) - Email sequence number
-
-- **`targetMailbox`** (any) - Target mailbox name (e.g., Archive, Trash)
-
-- **`sourceMailbox`** (any, optional) - Source mailbox
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `uid` | any | Yes | Email sequence number |
+| `targetMailbox` | any | Yes | Target mailbox name (e.g., Archive, Trash) |
+| `sourceMailbox` | any | No | Source mailbox |
 
 
 
@@ -263,52 +193,57 @@ Move email to another mailbox (archive)
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph email["📦 Email"]
+        direction TB
+        PHOTON((🎯))
+        T0[📤 send]
+        PHOTON --> T0
+        T1[📤 sendAttachment]
+        PHOTON --> T1
+        T2[🔧 inbox]
+        PHOTON --> T2
+        T3[📖 get]
+        PHOTON --> T3
+        T4[📖 search]
+        PHOTON --> T4
+        T5[🔧 markRead]
+        PHOTON --> T5
+        T6[🗑️ remove]
+        PHOTON --> T6
+        T7[🔧 move]
+        PHOTON --> T7
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 nodemailer]
+        NPM1[📚 imap]
+        NPM2[📚 mailparser]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add email
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./email.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp email.photon.ts ~/.photon/
-
-# Run by name
-photon mcp email
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp email --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get email --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 nodemailer@^6.9.0, imap@^0.8.19, mailparser@^3.6.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.1.0
+MIT · v1.1.0 · Portel

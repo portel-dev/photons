@@ -2,48 +2,20 @@
 
 Database operations for PostgreSQL
 
-## 📋 Overview
+> **11 tools** · API Photon · v1.1.0 · MIT
 
-**Version:** 1.1.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`POSTGRE_S_Q_L_DATABASE`** [REQUIRED]
-  - Type: string
-  - Description: Database name (required)
-  
-
-- **`POSTGRE_S_Q_L_USER`** [REQUIRED]
-  - Type: string
-  - Description: Database user (required)
-  
-
-- **`POSTGRE_S_Q_L_PASSWORD`** [REQUIRED]
-  - Type: string
-  - Description: Database password (required)
-  
-
-- **`POSTGRE_S_Q_L_HOST`** [OPTIONAL]
-  - Type: string
-  - Description: Database host (default: localhost)
-  - Default: `localhost`
-
-- **`POSTGRE_S_Q_L_PORT`** [OPTIONAL]
-  - Type: number
-  - Description: Database port (default: 5432)
-  - Default: `5432`
-
-- **`POSTGRE_S_Q_L_SSL`** [OPTIONAL]
-  - Type: boolean
-  - Description: Enable SSL connection (default: false)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `POSTGRE_S_Q_L_DATABASE` | Yes | string | Database name (required) |
+| `POSTGRE_S_Q_L_USER` | Yes | string | Database user (required) |
+| `POSTGRE_S_Q_L_PASSWORD` | Yes | string | Database password (required) |
+| `POSTGRE_S_Q_L_HOST` | No | string | Database host (default: localhost) (default: `localhost`) |
+| `POSTGRE_S_Q_L_PORT` | No | number | Database port (default: 5432) (default: `5432`) |
+| `POSTGRE_S_Q_L_SSL` | No | boolean | Enable SSL connection (default: false) |
 
 
 
@@ -60,20 +32,16 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **11** tools:
-
 
 ### `query`
 
 Execute a SQL query
 
 
-**Parameters:**
-
-
-- **`sql`** (any) - SQL query to execute (supports $1, $2, etc. for parameters)
-
-- **`params`** (any, optional) - Query parameters array
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sql` | any | Yes | SQL query to execute (supports $1, $2, etc. for parameters) |
+| `params` | any | No | Query parameters array |
 
 
 
@@ -87,10 +55,9 @@ Execute a SQL query
 Execute multiple SQL statements in a transaction
 
 
-**Parameters:**
-
-
-- **`statements`** (any) - Array of SQL statements with optional parameters
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `statements` | any | Yes | Array of SQL statements with optional parameters |
 
 
 
@@ -104,10 +71,9 @@ Execute multiple SQL statements in a transaction
 List all tables in the database
 
 
-**Parameters:**
-
-
-- **`schema`** (any, optional) - Schema name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `schema` | any | No | Schema name |
 
 
 
@@ -121,12 +87,10 @@ List all tables in the database
 Get table schema information
 
 
-**Parameters:**
-
-
-- **`table`** (any) - Table name
-
-- **`schema`** (any, optional) - Schema name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `table` | any | Yes | Table name |
+| `schema` | any | No | Schema name |
 
 
 
@@ -140,12 +104,10 @@ Get table schema information
 List all indexes on a table
 
 
-**Parameters:**
-
-
-- **`table`** (any) - Table name
-
-- **`schema`** (any, optional) - Schema name
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `table` | any | Yes | Table name |
+| `schema` | any | No | Schema name |
 
 
 
@@ -159,14 +121,11 @@ List all indexes on a table
 Execute a SQL INSERT statement
 
 
-**Parameters:**
-
-
-- **`table`** (any) - Table name
-
-- **`data`** (any) - Object with column names as keys
-
-- **`returning`** (any, optional) - Column names to return
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `table` | any | Yes | Table name |
+| `data` | any | Yes | Object with column names as keys |
+| `returning` | any | No | Column names to return |
 
 
 
@@ -233,52 +192,61 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph postgres["📦 Postgres"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 query]
+        PHOTON --> T0
+        T1[🔧 transaction]
+        PHOTON --> T1
+        T2[🔧 tables]
+        PHOTON --> T2
+        T3[🔧 describe]
+        PHOTON --> T3
+        T4[🔧 indexes]
+        PHOTON --> T4
+        T5[✏️ insert]
+        PHOTON --> T5
+        T6[🔧 stats]
+        PHOTON --> T6
+        T7[✅ testQuery]
+        PHOTON --> T7
+        T8[✅ testQueryWithParams]
+        PHOTON --> T8
+        T9[✅ testTables]
+        PHOTON --> T9
+        T10[✅ testStats]
+        PHOTON --> T10
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 pg]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add postgres
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./postgres.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp postgres.photon.ts ~/.photon/
-
-# Run by name
-photon mcp postgres
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp postgres --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get postgres --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 pg@^8.11.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.1.0
+MIT · v1.1.0 · Portel
