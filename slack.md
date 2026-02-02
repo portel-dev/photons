@@ -2,23 +2,15 @@
 
 Send messages and manage Slack workspace
 
-## 📋 Overview
+> **7 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`SLACK_TOKEN`** [REQUIRED]
-  - Type: string
-  - Description: Slack Bot Token (required, starts with xoxb-)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `SLACK_TOKEN` | Yes | string | Slack Bot Token (required, starts with xoxb-) |
 
 
 
@@ -30,24 +22,18 @@ Dependencies are auto-installed on first run.
 
 ## 🔧 Tools
 
-This photon provides **7** tools:
-
 
 ### `post`
 
 Post a message to a channel or user
 
 
-**Parameters:**
-
-
-- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
-
-- **`text`** (any) [min: 1] - Message text (e.g., `Hello team!`)
-
-- **`thread_ts`** (any, optional) - Thread timestamp to reply to
-
-- **`blocks`** (any) - Rich message blocks (optional, JSON string)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `text` | any | Yes | Message text [min: 1] (e.g. `Hello team!`) |
+| `thread_ts` | any | No | Thread timestamp to reply to |
+| `blocks` | any | Yes | Rich message blocks (optional, JSON string) |
 
 
 
@@ -61,12 +47,10 @@ Post a message to a channel or user
 List all channels in the workspace
 
 
-**Parameters:**
-
-
-- **`types`** (any) - Channel types (e.g., `public_channel`)
-
-- **`limit`** (any, optional) [min: 1, max: 1000] - Maximum number of channels to return
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `types` | any | Yes | Channel types (e.g. `public_channel`) |
+| `limit` | any | No | Maximum number of channels to return [min: 1, max: 1000] |
 
 
 
@@ -80,10 +64,9 @@ List all channels in the workspace
 Get channel information
 
 
-**Parameters:**
-
-
-- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
 
 
 
@@ -97,16 +80,12 @@ Get channel information
 Get conversation history from a channel
 
 
-**Parameters:**
-
-
-- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
-
-- **`limit`** (any, optional) [min: 1, max: 100] - Number of messages to retrieve
-
-- **`oldest`** (any) - Start of time range (Unix timestamp)
-
-- **`latest`** (any) - End of time range (Unix timestamp)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `limit` | any | No | Number of messages to retrieve [min: 1, max: 100] |
+| `oldest` | any | Yes | Start of time range (Unix timestamp) |
+| `latest` | any | Yes | End of time range (Unix timestamp) |
 
 
 
@@ -120,14 +99,11 @@ Get conversation history from a channel
 Add a reaction to a message
 
 
-**Parameters:**
-
-
-- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
-
-- **`timestamp`** (any) [min: 1] - Message timestamp
-
-- **`name`** (any) [min: 1] - Reaction emoji name (without colons) (e.g., `thumbsup`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `timestamp` | any | Yes | Message timestamp [min: 1] |
+| `name` | any | Yes | Reaction emoji name (without colons) [min: 1] (e.g. `thumbsup`) |
 
 
 
@@ -141,18 +117,13 @@ Add a reaction to a message
 Upload a file to a channel
 
 
-**Parameters:**
-
-
-- **`channel`** (any) [min: 1] - Channel name or ID (e.g., `#general`)
-
-- **`content`** (any) [min: 1] - File content (text)
-
-- **`filename`** (any) [min: 1] - Filename (e.g., `report.txt`)
-
-- **`title`** (any, optional) - File title
-
-- **`initial_comment`** (any, optional) - Comment to add with the file
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `content` | any | Yes | File content (text) [min: 1] |
+| `filename` | any | Yes | Filename [min: 1] (e.g. `report.txt`) |
+| `title` | any | No | File title |
+| `initial_comment` | any | No | Comment to add with the file |
 
 
 
@@ -166,14 +137,11 @@ Upload a file to a channel
 Search for messages in the workspace
 
 
-**Parameters:**
-
-
-- **`query`** (any) [min: 1] - Search query (e.g., `deployment`)
-
-- **`count`** (any, optional) [min: 1, max: 100] - Number of results to return
-
-- **`sort`** (any) - Sort order (e.g., `score`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | any | Yes | Search query [min: 1] (e.g. `deployment`) |
+| `count` | any | No | Number of results to return [min: 1, max: 100] |
+| `sort` | any | Yes | Sort order (e.g. `score`) |
 
 
 
@@ -185,52 +153,48 @@ Search for messages in the workspace
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph slack["📦 Slack"]
+        direction TB
+        PHOTON((🎯))
+        T0[📤 post]
+        PHOTON --> T0
+        T1[🔧 channels]
+        PHOTON --> T1
+        T2[🔧 channel]
+        PHOTON --> T2
+        T3[🔧 history]
+        PHOTON --> T3
+        T4[🔧 react]
+        PHOTON --> T4
+        T5[📤 upload]
+        PHOTON --> T5
+        T6[📖 search]
+        PHOTON --> T6
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add slack
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./slack.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp slack.photon.ts ~/.photon/
-
-# Run by name
-photon mcp slack
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp slack --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get slack --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @slack/web-api@^7.0.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

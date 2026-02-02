@@ -2,21 +2,13 @@
 
 Kanban Board Photon
 
-## 📋 Overview
+> **33 tools** · API Photon · v2.1.0 · MIT
 
-**Version:** 2.1.0
-**Author:** Portel
-**License:** MIT
+**Platform Features:** `custom-ui` `stateful` `channels`
 
 ## ⚙️ Configuration
 
-### Environment Variables
-
-
-
-
 No configuration required.
-
 
 
 ### Setup Instructions
@@ -56,8 +48,6 @@ No configuration required.
 
 
 ## 🔧 Tools
-
-This photon provides **33** tools:
 
 
 ### `configure`
@@ -474,52 +464,100 @@ Batch move tasks with exclusive lock  Move multiple tasks atomically. Uses distr
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph kanban["📦 Kanban"]
+        direction TB
+        PHOTON((🎯))
+        T0[⚙️ configure]
+        PHOTON --> T0
+        T1[🔧 installHooks]
+        PHOTON --> T1
+        T2[🔧 projects]
+        PHOTON --> T2
+        T3[🔧 boards]
+        PHOTON --> T3
+        T4[🔧 boardCreate]
+        PHOTON --> T4
+        T5[🔧 projectLink]
+        PHOTON --> T5
+        T6[🔧 boardDelete]
+        PHOTON --> T6
+        T7[🔧 main]
+        PHOTON --> T7
+        T8[🔧 tasks]
+        PHOTON --> T8
+        T9[🔧 myTasks]
+        PHOTON --> T9
+        T10[🔧 taskCreate]
+        PHOTON --> T10
+        T11[🔧 taskMove]
+        PHOTON --> T11
+        T12[🔧 taskReorder]
+        PHOTON --> T12
+        T13[🔧 taskUpdate]
+        PHOTON --> T13
+        T14[🔧 taskDelete]
+        PHOTON --> T14
+        T15[📖 search]
+        PHOTON --> T15
+        T16[🔧 commentAdd]
+        PHOTON --> T16
+        T17[🔧 comments]
+        PHOTON --> T17
+        T18[🔧 task]
+        PHOTON --> T18
+        T19[🔧 board]
+        PHOTON --> T19
+        T20[🔧 active]
+        PHOTON --> T20
+        T21[🔧 columnAdd]
+        PHOTON --> T21
+        T22[🔧 columnRemove]
+        PHOTON --> T22
+        T23[🔧 completedClear]
+        PHOTON --> T23
+        T24[🔧 stats]
+        PHOTON --> T24
+        T25[🔧 dependencySet]
+        PHOTON --> T25
+        T26[🔧 reportError]
+        PHOTON --> T26
+        T27[🔧 scheduledArchiveOldTasks]
+        PHOTON --> T27
+        T28[🔧 scheduledMorningPull]
+        PHOTON --> T28
+        T29[🔧 scheduledAutoRelease]
+        PHOTON --> T29
+        T30[🔧 scheduledStaleTaskCheck]
+        PHOTON --> T30
+        T31[🔧 handleGithubIssue]
+        PHOTON --> T31
+        T32[🔧 batchMove]
+        PHOTON --> T32
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add kanban
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./kanban.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp kanban.photon.ts ~/.photon/
-
-# Run by name
-photon mcp kanban
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp kanban --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get kanban --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @portel/photon-core@latest
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 2.1.0
+MIT · v2.1.0 · Portel

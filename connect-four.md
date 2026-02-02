@@ -2,32 +2,22 @@
 
 Play against AI with distributed locks
 
-## 📋 Overview
+> **15 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
+**Platform Features:** `custom-ui` `stateful` `channels`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
 
-This photon provides **8** tools:
 
+### `start`
 
-### `newGame`
-
-Start a new Connect Four game  You play as 🔴 (Red), AI plays as 🟡 (Yellow). Player always goes first.
+Start a new Connect Four game  You play as 🔴 (Red), opponent plays as 🟡 (Yellow). Player always goes first.  In "builtin" mode, a minimax AI responds automatically after each move. In "mcp" mode, the MCP client (you, the AI assistant) plays as 🟡 by calling drop on your turn.
 
 
 
@@ -35,16 +25,16 @@ Start a new Connect Four game  You play as 🔴 (Red), AI plays as 🟡 (Yellow)
 **Example:**
 
 ```typescript
-newGame()
+start()
 ```
 
 
 ---
 
 
-### `dropPiece`
+### `drop`
 
-Drop a piece into a column  Uses a distributed lock to prevent simultaneous moves on the same game. After your move, the AI immediately responds with its move.
+Drop a piece into a column  Uses a distributed lock to prevent simultaneous moves on the same game.  In builtin mode: places your piece, then the built-in AI auto-responds. In MCP mode: places the current player's piece (player or AI) and switches turns. The MCP client calls this on its turn to play as 🟡.
 
 
 
@@ -52,7 +42,7 @@ Drop a piece into a column  Uses a distributed lock to prevent simultaneous move
 **Example:**
 
 ```typescript
-dropPiece({ column: 4 })
+drop({ column: 4 })
 ```
 
 
@@ -137,55 +127,144 @@ Cleanup stale games  Removes active games with no moves for over 7 days and comp
 ---
 
 
+### `testEmptyBoardRendering`
 
+@internal
+
+
+
+
+
+---
+
+
+### `testBoardWithPieces`
+
+@internal
+
+
+
+
+
+---
+
+
+### `testNewGameReturnsValidBoard`
+
+@internal
+
+
+
+
+
+---
+
+
+### `testDropPieceUpdatesBoard`
+
+@internal
+
+
+
+
+
+---
+
+
+### `testInvalidColumn`
+
+@internal
+
+
+
+
+
+---
+
+
+### `testWinDetection`
+
+@internal
+
+
+
+
+
+---
+
+
+### `testStatsTracking`
+
+@internal
+
+
+
+
+
+---
+
+
+
+
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph connect_four["📦 Connect Four"]
+        direction TB
+        PHOTON((🎯))
+        T0[▶️ start]
+        PHOTON --> T0
+        T1[🗑️ drop]
+        PHOTON --> T1
+        T2[🔧 board]
+        PHOTON --> T2
+        T3[🔧 games]
+        PHOTON --> T3
+        T4[🔧 resign]
+        PHOTON --> T4
+        T5[🔧 stats]
+        PHOTON --> T5
+        T6[🔧 replay]
+        PHOTON --> T6
+        T7[🔧 scheduledCleanup]
+        PHOTON --> T7
+        T8[✅ testEmptyBoardRendering]
+        PHOTON --> T8
+        T9[✅ testBoardWithPieces]
+        PHOTON --> T9
+        T10[✅ testNewGameReturnsValidBoard]
+        PHOTON --> T10
+        T11[✅ testDropPieceUpdatesBoard]
+        PHOTON --> T11
+        T12[✅ testInvalidColumn]
+        PHOTON --> T12
+        T13[✅ testWinDetection]
+        PHOTON --> T13
+        T14[✅ testStatsTracking]
+        PHOTON --> T14
+    end
+```
 
 
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add connect-four
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./connect-four.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp connect-four.photon.ts ~/.photon/
-
-# Run by name
-photon mcp connect-four
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp connect-four --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get connect-four --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @portel/photon-core@latest
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

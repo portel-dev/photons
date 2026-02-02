@@ -2,42 +2,29 @@
 
 Data Sync Workflow Synchronizes data between different sources with progress tracking
 
-## 📋 Overview
+> **3 tools** · Workflow Photon · v1.5.1 · MIT
 
-**Version:** 1.4.1
-**Author:** Unknown
-**License:** MIT
+**Platform Features:** `generator` `streaming`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
 
-This photon provides **3** tools:
 
-
-### `exportToJson`
+### `exportToJson` ⚡
 
 Export database query results to a JSON file
 
 
-**Parameters:**
-
-
-- **`query`** (any) - SQL query to execute
-
-- **`outputPath`** (any) - Path to save the JSON file
-
-- **`batchSize`** (any) - Number of rows to process at a time
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | any | Yes | SQL query to execute |
+| `outputPath` | any | Yes | Path to save the JSON file |
+| `batchSize` | any | Yes | Number of rows to process at a time |
 
 
 
@@ -46,19 +33,16 @@ Export database query results to a JSON file
 ---
 
 
-### `importFromJson`
+### `importFromJson` ⚡
 
 Import JSON data into a database table
 
 
-**Parameters:**
-
-
-- **`inputPath`** (any) - Path to the JSON file
-
-- **`tableName`** (any) - Target table name
-
-- **`mode`** (any) - Insert mode: 'append', 'replace', or 'upsert'
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `inputPath` | any | Yes | Path to the JSON file |
+| `tableName` | any | Yes | Target table name |
+| `mode` | any | Yes | Insert mode: 'append', 'replace', or 'upsert' |
 
 
 
@@ -67,19 +51,16 @@ Import JSON data into a database table
 ---
 
 
-### `compare`
+### `compare` ⚡
 
 Compare data between two tables
 
 
-**Parameters:**
-
-
-- **`sourceTable`** (any) - Source table name
-
-- **`targetTable`** (any) - Target table name
-
-- **`keyColumn`** (any) - Column to use as key for comparison
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sourceTable` | any | Yes | Source table name |
+| `targetTable` | any | Yes | Target table name |
+| `keyColumn` | any | Yes | Column to use as key for comparison |
 
 
 
@@ -91,48 +72,68 @@ Compare data between two tables
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    subgraph data_sync["📦 Data Sync"]
+        START([▶ Start])
+        N0[📢 Executing query...]
+        START --> N0
+        N1[⏳ progress]
+        N0 --> N1
+        N2[📢 Processing batch ${i + 1}/$...]
+        N1 --> N2
+        N3[⏳ progress]
+        N2 --> N3
+        N4[📢 Writing to file...]
+        N3 --> N4
+        N5[⏳ progress]
+        N4 --> N5
+        N6[📢 Reading JSON file...]
+        N5 --> N6
+        N7[⏳ progress]
+        N6 --> N7
+        N8[📢 Clearing existing data...]
+        N7 --> N8
+        N9[📢 Inserting batch ${i + 1}/${...]
+        N8 --> N9
+        N10[📝 log]
+        N9 --> N10
+        N11[⏳ progress]
+        N10 --> N11
+        N12[⏳ progress]
+        N11 --> N12
+        N13[📢 Fetching source data...]
+        N12 --> N13
+        N14[⏳ progress]
+        N13 --> N14
+        N15[📢 Fetching target data...]
+        N14 --> N15
+        N16[⏳ progress]
+        N15 --> N16
+        N17[⏳ progress]
+        N16 --> N17
+        SUCCESS([✅ Success])
+        N17 --> SUCCESS
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add data-sync
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./data-sync.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp data-sync.photon.ts ~/.photon/
-
-# Run by name
-photon mcp data-sync
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp data-sync --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get data-sync --mcp
 ```
 
 ## 📦 Dependencies
 
+No external dependencies.
 
-No external dependencies required.
+---
 
-
-## 📄 License
-
-MIT • Version 1.4.1
+MIT · v1.5.1 · Portel

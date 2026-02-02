@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.4.1",
+  "version": "1.5.1",
   "owner": {
     "name": "Portel"
   },
@@ -26,7 +26,9 @@
         "bucket",
         "removeBucket"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "code-diagram",
@@ -41,7 +43,12 @@
         "fromFile",
         "types"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "mcp-bridge",
+        "photon-bridge"
+      ]
     },
     {
       "name": "connect-four",
@@ -50,18 +57,62 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:6dd0786cad7c4d866054daadd097aa160b41292c6814bc917dfeacc5e4a88f1a",
+      "hash": "sha256:025b6b402a81b86e0b9086675efd38b18f82a6ec30cbddf32ca32946cff64fb5",
       "tools": [
-        "newGame",
-        "dropPiece",
+        "start",
+        "drop",
         "board",
         "games",
         "resign",
         "stats",
         "replay",
-        "scheduledCleanup"
+        "scheduledCleanup",
+        "testEmptyBoardRendering",
+        "testBoardWithPieces",
+        "testNewGameReturnsValidBoard",
+        "testDropPieceUpdatesBoard",
+        "testInvalidColumn",
+        "testWinDetection",
+        "testStatsTracking"
       ],
-      "assets": []
+      "assets": [
+        "ui/board.html"
+      ],
+      "photonType": "api",
+      "features": [
+        "custom-ui",
+        "stateful",
+        "channels"
+      ]
+    },
+    {
+      "name": "daemon-features",
+      "version": "1.0.0",
+      "description": "Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../daemon-features.photon.ts",
+      "hash": "sha256:ff0e990aa3e732e364c12290d9e7c15074354394a7712853813072eb4d7be039",
+      "tools": [
+        "scheduledHeartbeat",
+        "handleWebhook",
+        "critical",
+        "protect",
+        "publish",
+        "status",
+        "testWebhookEcho",
+        "testManualLock",
+        "testPublish",
+        "testStatusReads",
+        "testCriticalLocked",
+        "testScheduledHeartbeat"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "webhooks",
+        "channels"
+      ]
     },
     {
       "name": "dashboard",
@@ -83,31 +134,41 @@
         "dashboard/ui/activity.html",
         "dashboard/ui/overview.html",
         "dashboard/ui/tasks.html"
+      ],
+      "photonType": "api",
+      "features": [
+        "custom-ui",
+        "dashboard"
       ]
     },
     {
       "name": "data-sync",
-      "version": "1.4.1",
+      "version": "1.5.1",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
-      "author": "Unknown",
+      "author": "Portel",
       "license": "MIT",
       "source": "../data-sync.photon.ts",
-      "hash": "sha256:b2e0c29d6a3551abd0da73e12b29e7cd024e4b11e6417699ab68094707b9eded",
+      "hash": "sha256:4825f108d4fa47f3d21326234770a2ed44ca80a5365d7d046c574b7d09e1b713",
       "tools": [
         "exportToJson",
         "importFromJson",
         "compare"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "workflow",
+      "features": [
+        "generator",
+        "streaming"
+      ]
     },
     {
       "name": "demo",
       "version": "1.0.0",
       "description": "Demo Photon - Comprehensive feature demonstration",
-      "author": "Unknown",
+      "author": "Portel",
       "license": "MIT",
       "source": "../demo.photon.ts",
-      "hash": "sha256:cbccda43fb421221445eddbf0bd99252d06197bdb25eadb6224750bc0f09b38c",
+      "hash": "sha256:fffd513d8175c5fb3ec50ce529a95c0c3089800f94750b6091e7ff949d927fb1",
       "tools": [
         "getString",
         "getNumber",
@@ -131,7 +192,11 @@
         "getTree",
         "getConfig"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "streaming",
+      "features": [
+        "generator"
+      ]
     },
     {
       "name": "docker",
@@ -153,7 +218,9 @@
         "removeImage",
         "stats"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "email",
@@ -173,7 +240,46 @@
         "remove",
         "move"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
+      "name": "feature-showcase",
+      "version": "1.0.0",
+      "description": "Feature Showcase — Core Runtime Feature Demos",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../feature-showcase.photon.ts",
+      "hash": "sha256:806759cc4ed2835ce43ca20ba00514006d90cde31d2cbb42ccf09359eabccb7d",
+      "tools": [
+        "configure",
+        "getConfig",
+        "emits",
+        "asks",
+        "review",
+        "formatPrimitive",
+        "formatJson",
+        "formatTable",
+        "formatMarkdown",
+        "increment",
+        "count",
+        "broadcast",
+        "testLifecycleHooksRan",
+        "testConfigureRoundtrip",
+        "testEmitTypes",
+        "testPrivateMethodHidden",
+        "testInstanceState",
+        "testFormatAnnotations",
+        "testTemplateMethod",
+        "testBroadcast"
+      ],
+      "assets": [],
+      "photonType": "streaming",
+      "features": [
+        "generator",
+        "channels"
+      ]
     },
     {
       "name": "filesystem",
@@ -208,7 +314,9 @@
         "testMkdir",
         "testGetWorkdir"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "form-inbox",
@@ -232,16 +340,21 @@
         "scheduledDigest",
         "scheduledCleanup"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "stateful",
+        "channels"
+      ]
     },
     {
       "name": "git-box",
       "version": "2.0.0",
-      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads",
-      "author": "Unknown",
+      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads",
+      "author": "Portel",
       "license": "MIT",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:4cbe2f0cf09dc304c49ac4230cb54e830ce919f58d0c9d4334021c2ac2b8ffd4",
+      "hash": "sha256:1e2f4b7ebab90c2753f8b10b59ff368c84ebd84a871b3e0d66612275762183c3",
       "tools": [
         "main",
         "repoAdd",
@@ -303,6 +416,12 @@
       ],
       "assets": [
         "git-box/ui/mailbox.html"
+      ],
+      "photonType": "streaming",
+      "features": [
+        "generator",
+        "custom-ui",
+        "elicitation"
       ]
     },
     {
@@ -330,7 +449,9 @@
         "testDiff",
         "testBranches"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "github-issues",
@@ -349,7 +470,9 @@
         "listComments",
         "searchIssues"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "google-calendar",
@@ -370,7 +493,40 @@
         "search",
         "upcoming"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
+      "name": "integration-demo",
+      "version": "1.0.0",
+      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../integration-demo.photon.ts",
+      "hash": "sha256:5ea6ab366f0e7d18a8ca705334c7e94f57bdabaf852bb7a044796850b2b61f67",
+      "tools": [
+        "info",
+        "workflow",
+        "status",
+        "assets",
+        "report",
+        "testVersionInfo",
+        "testWorkflowSteps",
+        "testAssetDiscovery",
+        "testResourceMethod",
+        "testMarkdownReport"
+      ],
+      "assets": [
+        "integration-demo/ui/result-viewer.html",
+        "ui/result-viewer.html"
+      ],
+      "photonType": "streaming",
+      "features": [
+        "generator",
+        "custom-ui",
+        "stateful"
+      ]
     },
     {
       "name": "jira",
@@ -392,7 +548,9 @@
         "projects",
         "project"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "kanban",
@@ -444,16 +602,22 @@
         "kanban/data.json",
         "kanban/ui/board.html",
         "kanban/ui-errors.log"
+      ],
+      "photonType": "api",
+      "features": [
+        "custom-ui",
+        "stateful",
+        "channels"
       ]
     },
     {
       "name": "kitchen-sink",
       "version": "1.0.0",
       "description": "Kitchen Sink Photon",
-      "author": "Unknown",
+      "author": "Portel",
       "license": "MIT",
       "source": "../kitchen-sink.photon.ts",
-      "hash": "sha256:3e9d7ab8976df51f2de1c3ee27bb663db925e2aecd2496b37054cc32efca52e0",
+      "hash": "sha256:838e24ca24513c2199e5d7602c5a1777548dd50ccb6a0821c440c2869aceb919",
       "tools": [
         "basicStringReturn",
         "basicNumberReturn",
@@ -485,6 +649,11 @@
         "kitchen-sink/ui/dashboard.html",
         "kitchen-sink/ui/search-results.html",
         "kitchen-sink/ui/users.html"
+      ],
+      "photonType": "streaming",
+      "features": [
+        "generator",
+        "custom-ui"
       ]
     },
     {
@@ -505,7 +674,9 @@
         "testComplexExpression",
         "testExternalService"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "mcp-orchestrator",
@@ -527,7 +698,11 @@
         "inspectMCP",
         "findToolsAcrossMCPs"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "mcp-bridge"
+      ]
     },
     {
       "name": "mongodb",
@@ -557,7 +732,9 @@
         "testCount",
         "testDelete"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "postgres",
@@ -580,16 +757,18 @@
         "testTables",
         "testStats"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "preferences",
-      "version": "1.4.1",
+      "version": "1.5.1",
       "description": "Preferences Photon",
-      "author": "Unknown",
+      "author": "Portel",
       "license": "MIT",
       "source": "../preferences.photon.ts",
-      "hash": "sha256:d68295f23720cbb510a1dc66eacaae5219bed74e0dcca44bbe33949a72b36f69",
+      "hash": "sha256:350eec54a309a9eb0db38d7ce8324f2aac165606c0cebc2e45d9df221d919860",
       "tools": [
         "getPreferences",
         "getPreference",
@@ -605,6 +784,13 @@
         "preferences/resources/defaults.json",
         "preferences/ui/settings.html",
         "preferences/ui/theme-preview.html"
+      ],
+      "photonType": "workflow",
+      "features": [
+        "generator",
+        "custom-ui",
+        "elicitation",
+        "streaming"
       ]
     },
     {
@@ -640,7 +826,9 @@
         "testExists",
         "testSetWithTtl"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "slack",
@@ -659,7 +847,9 @@
         "upload",
         "search"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "sqlite",
@@ -686,7 +876,9 @@
         "testInsertQuery",
         "testSchema"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "team-dashboard",
@@ -721,6 +913,11 @@
       "assets": [
         "team-dashboard/config.json",
         "team-dashboard/ui/dashboard.html"
+      ],
+      "photonType": "api",
+      "features": [
+        "custom-ui",
+        "dashboard"
       ]
     },
     {
@@ -742,7 +939,9 @@
         "testTimezonesRegion",
         "testConvert"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "web",
@@ -759,7 +958,11 @@
         "testRead",
         "testReadInvalidUrl"
       ],
-      "assets": []
+      "assets": [],
+      "photonType": "streaming",
+      "features": [
+        "generator"
+      ]
     }
   ]
 }

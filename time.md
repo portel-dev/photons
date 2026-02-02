@@ -2,23 +2,15 @@
 
 Timezone and time conversion operations
 
-## 📋 Overview
+> **9 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`TIME_LOCAL_TIMEZONE`** [OPTIONAL]
-  - Type: string
-  - Description: Override system timezone (optional, IANA timezone name)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `TIME_LOCAL_TIMEZONE` | No | string | Override system timezone (optional, IANA timezone name) |
 
 
 
@@ -29,18 +21,15 @@ Timezone and time conversion operations
 
 ## 🔧 Tools
 
-This photon provides **9** tools:
-
 
 ### `now`
 
 Current time in a specific timezone
 
 
-**Parameters:**
-
-
-- **`timezone`** (any) - IANA timezone name (e.g., `America/New_York`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `timezone` | any | Yes | IANA timezone name (e.g. `America/New_York`) |
 
 
 
@@ -54,16 +43,12 @@ Current time in a specific timezone
 Convert time from one timezone to another
 
 
-**Parameters:**
-
-
-- **`source_timezone`** (any) [min: 1, max: 100] - Source IANA timezone (e.g., `America/New_York`)
-
-- **`time`** (any) [min: 1, max: 10, format: time] - Time in 24-hour format (HH:MM) (e.g., `14:30`)
-
-- **`target_timezone`** (any) [min: 1, max: 100] - Target IANA timezone (e.g., `Europe/London`)
-
-- **`date`** (any) [max: 20, format: date] - Date in YYYY-MM-DD format (optional, default: today) (e.g., `2024-03-15`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `source_timezone` | any | Yes | Source IANA timezone [min: 1, max: 100] (e.g. `America/New_York`) |
+| `time` | any | Yes | Time in 24-hour format (HH:MM) [min: 1, max: 10, format: time] (e.g. `14:30`) |
+| `target_timezone` | any | Yes | Target IANA timezone [min: 1, max: 100] (e.g. `Europe/London`) |
+| `date` | any | Yes | Date in YYYY-MM-DD format (optional, default: today) [max: 20, format: date] (e.g. `2024-03-15`) |
 
 
 
@@ -77,10 +62,9 @@ Convert time from one timezone to another
 List common IANA timezones by region
 
 
-**Parameters:**
-
-
-- **`region`** (any) - Filter by region (e.g., `America`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `region` | any | Yes | Filter by region (e.g. `America`) |
 
 
 
@@ -158,48 +142,49 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph time["📦 Time"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 now]
+        PHOTON --> T0
+        T1[🔧 convert]
+        PHOTON --> T1
+        T2[🔧 timezones]
+        PHOTON --> T2
+        T3[✅ testNow]
+        PHOTON --> T3
+        T4[✅ testNowWithTimezone]
+        PHOTON --> T4
+        T5[✅ testNowInvalidTimezone]
+        PHOTON --> T5
+        T6[✅ testTimezones]
+        PHOTON --> T6
+        T7[✅ testTimezonesRegion]
+        PHOTON --> T7
+        T8[✅ testConvert]
+        PHOTON --> T8
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add time
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./time.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp time.photon.ts ~/.photon/
-
-# Run by name
-photon mcp time
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp time --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get time --mcp
 ```
 
 ## 📦 Dependencies
 
+No external dependencies.
 
-No external dependencies required.
+---
 
-
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

@@ -2,27 +2,17 @@
 
 Team Dashboard Photon
 
-## 📋 Overview
+> **20 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
+**Platform Features:** `custom-ui` `dashboard`
 
 ## ⚙️ Configuration
-
-### Environment Variables
-
-
-
 
 No configuration required.
 
 
 
-
 ## 🔧 Tools
-
-This photon provides **20** tools:
 
 
 ### `main`
@@ -195,10 +185,9 @@ Set team name displayed on dashboard
 Add a GitHub repository to track
 
 
-**Parameters:**
-
-
-- **`repo`** (any) - - Repository in "owner/repo" format (e.g., "facebook/react")
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `repo` | any | Yes | - Repository in "owner/repo" format (e.g., "facebook/react") |
 
 
 
@@ -212,10 +201,9 @@ Add a GitHub repository to track
 Remove a GitHub repository from tracking
 
 
-**Parameters:**
-
-
-- **`repo`** (any) - - Repository in "owner/repo" format
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `repo` | any | Yes | - Repository in "owner/repo" format |
 
 
 
@@ -251,10 +239,9 @@ List available Kanban boards  Scans the kanban/boards directory for available bo
 Set the Kanban board to display
 
 
-**Parameters:**
-
-
-- **`board`** (any) - - Board name (without .json extension)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `board` | any | Yes | - Board name (without .json extension) |
 
 
 
@@ -266,52 +253,74 @@ Set the Kanban board to display
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph team_dashboard["📦 Team Dashboard"]
+        direction TB
+        PHOTON((🎯))
+        T0[🔧 main]
+        PHOTON --> T0
+        T1[📖 getDashboardData]
+        PHOTON --> T1
+        T2[📖 getDebugPaths]
+        PHOTON --> T2
+        T3[📖 getKanbanStats]
+        PHOTON --> T3
+        T4[📖 getRecentCommits]
+        PHOTON --> T4
+        T5[✅ checkServices]
+        PHOTON --> T5
+        T6[📖 getGitHubStats]
+        PHOTON --> T6
+        T7[📖 getTodaysFocus]
+        PHOTON --> T7
+        T8[📖 getSummary]
+        PHOTON --> T8
+        T9[📖 getConfig]
+        PHOTON --> T9
+        T10[🔄 updateConfig]
+        PHOTON --> T10
+        T11[✏️ addService]
+        PHOTON --> T11
+        T12[🗑️ removeService]
+        PHOTON --> T12
+        T13[✏️ setGitRepo]
+        PHOTON --> T13
+        T14[✏️ setTeamName]
+        PHOTON --> T14
+        T15[✏️ addGitHubRepo]
+        PHOTON --> T15
+        T16[🗑️ removeGitHubRepo]
+        PHOTON --> T16
+        T17[📖 listGitHubRepos]
+        PHOTON --> T17
+        T18[📖 listKanbanBoards]
+        PHOTON --> T18
+        T19[✏️ setKanbanBoard]
+        PHOTON --> T19
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add team-dashboard
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./team-dashboard.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp team-dashboard.photon.ts ~/.photon/
-
-# Run by name
-photon mcp team-dashboard
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp team-dashboard --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get team-dashboard --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 @portel/photon-core@latest
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

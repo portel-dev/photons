@@ -2,33 +2,17 @@
 
 Project management and issue tracking
 
-## 📋 Overview
+> **10 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`JIRA_HOST`** [REQUIRED]
-  - Type: string
-  - Description: Jira instance URL (e.g., "your-domain.atlassian.net")
-  
-
-- **`JIRA_EMAIL`** [REQUIRED]
-  - Type: string
-  - Description: User email for authentication
-  
-
-- **`JIRA_APITOKEN`** [REQUIRED]
-  - Type: string
-  - Description: API token from Jira (required)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `JIRA_HOST` | Yes | string | Jira instance URL (e.g., "your-domain.atlassian.net") |
+| `JIRA_EMAIL` | Yes | string | User email for authentication |
+| `JIRA_APITOKEN` | Yes | string | API token from Jira (required) |
 
 
 
@@ -41,22 +25,17 @@ Project management and issue tracking
 
 ## 🔧 Tools
 
-This photon provides **10** tools:
-
 
 ### `search`
 
 List issues with JQL query
 
 
-**Parameters:**
-
-
-- **`jql`** (any) [min: 1, max: 1000] - JQL query string (e.g., `project = PROJ AND status = Open`)
-
-- **`maxResults`** (any, optional) [min: 1, max: 100] - Maximum number of results
-
-- **`fields`** (any) [max: 500] - Fields to return (optional, comma-separated) (e.g., `summary,status,assignee`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `jql` | any | Yes | JQL query string [min: 1, max: 1000] (e.g. `project = PROJ AND status = Open`) |
+| `maxResults` | any | No | Maximum number of results [min: 1, max: 100] |
+| `fields` | any | Yes | Fields to return (optional, comma-separated) [max: 500] (e.g. `summary,status,assignee`) |
 
 
 
@@ -70,10 +49,9 @@ List issues with JQL query
 Get issue details
 
 
-**Parameters:**
-
-
-- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issueKey` | any | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
 
 
 
@@ -87,20 +65,14 @@ Get issue details
 Create a new issue
 
 
-**Parameters:**
-
-
-- **`project`** (any) [min: 1, max: 50] - Project key (e.g., `PROJ`)
-
-- **`summary`** (any) [min: 1, max: 200] - Issue title (e.g., `Login authentication fails for users`)
-
-- **`issueType`** (any) [min: 1, max: 50] - Issue type (e.g., `Bug`)
-
-- **`description`** (any, optional) [max: 5000] - Issue description (e.g., `Steps to reproduce: 1. Navigate to login 2. Enter credentials`)
-
-- **`priority`** (any, optional) [max: 50] - Priority name (e.g., `High`)
-
-- **`assignee`** (any, optional) [max: 100] - Assignee account ID (e.g., `5b10a2844c20165700ede21g`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `project` | any | Yes | Project key [min: 1, max: 50] (e.g. `PROJ`) |
+| `summary` | any | Yes | Issue title [min: 1, max: 200] (e.g. `Login authentication fails for users`) |
+| `issueType` | any | Yes | Issue type [min: 1, max: 50] (e.g. `Bug`) |
+| `description` | any | No | Issue description [max: 5000] (e.g. `Steps to reproduce: 1. Navigate to login 2. Enter credentials`) |
+| `priority` | any | No | Priority name [max: 50] (e.g. `High`) |
+| `assignee` | any | No | Assignee account ID [max: 100] (e.g. `5b10a2844c20165700ede21g`) |
 
 
 
@@ -114,18 +86,13 @@ Create a new issue
 Update an issue
 
 
-**Parameters:**
-
-
-- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
-
-- **`summary`** (any, optional) [min: 1, max: 200] - New summary (e.g., `Updated: Login authentication fixed`)
-
-- **`description`** (any, optional) [max: 5000] - New description (e.g., `Fixed by updating OAuth configuration`)
-
-- **`priority`** (any, optional) [max: 50] - New priority (e.g., `Medium`)
-
-- **`assignee`** (any, optional) [max: 100] - New assignee account ID (e.g., `5b10a2844c20165700ede21g`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issueKey` | any | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
+| `summary` | any | No | New summary [min: 1, max: 200] (e.g. `Updated: Login authentication fixed`) |
+| `description` | any | No | New description [max: 5000] (e.g. `Fixed by updating OAuth configuration`) |
+| `priority` | any | No | New priority [max: 50] (e.g. `Medium`) |
+| `assignee` | any | No | New assignee account ID [max: 100] (e.g. `5b10a2844c20165700ede21g`) |
 
 
 
@@ -139,12 +106,10 @@ Update an issue
 Transition issue to new status
 
 
-**Parameters:**
-
-
-- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
-
-- **`transitionId`** (any) [min: 1, max: 50] - Transition ID or name (e.g., `21`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issueKey` | any | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
+| `transitionId` | any | Yes | Transition ID or name [min: 1, max: 50] (e.g. `21`) |
 
 
 
@@ -158,10 +123,9 @@ Transition issue to new status
 Get available transitions for issue
 
 
-**Parameters:**
-
-
-- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issueKey` | any | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
 
 
 
@@ -175,12 +139,10 @@ Get available transitions for issue
 Add comment to issue
 
 
-**Parameters:**
-
-
-- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
-
-- **`comment`** (any) [min: 1, max: 5000] - Comment text (e.g., `This issue has been resolved in the latest deployment`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issueKey` | any | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
+| `comment` | any | Yes | Comment text [min: 1, max: 5000] (e.g. `This issue has been resolved in the latest deployment`) |
 
 
 
@@ -194,12 +156,10 @@ Add comment to issue
 Get comments for issue
 
 
-**Parameters:**
-
-
-- **`issueKey`** (any) [min: 1, max: 50] - Issue key (e.g., `PROJ-123`)
-
-- **`maxResults`** (any, optional) [min: 1, max: 100] - Maximum number of comments
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issueKey` | any | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
+| `maxResults` | any | No | Maximum number of comments [min: 1, max: 100] |
 
 
 
@@ -224,10 +184,9 @@ List all projects
 Get project details
 
 
-**Parameters:**
-
-
-- **`projectKey`** (any) [min: 1, max: 50] - Project key (e.g., `PROJ`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `projectKey` | any | Yes | Project key [min: 1, max: 50] (e.g. `PROJ`) |
 
 
 
@@ -239,52 +198,59 @@ Get project details
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph jira["📦 Jira"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 search]
+        PHOTON --> T0
+        T1[📖 get]
+        PHOTON --> T1
+        T2[✏️ create]
+        PHOTON --> T2
+        T3[🔄 update]
+        PHOTON --> T3
+        T4[🔧 transition]
+        PHOTON --> T4
+        T5[🔧 transitions]
+        PHOTON --> T5
+        T6[🔧 comment]
+        PHOTON --> T6
+        T7[🔧 comments]
+        PHOTON --> T7
+        T8[🔧 projects]
+        PHOTON --> T8
+        T9[🔧 project]
+        PHOTON --> T9
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 axios]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add jira
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./jira.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp jira.photon.ts ~/.photon/
-
-# Run by name
-photon mcp jira
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp jira --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get jira --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 axios@^1.6.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

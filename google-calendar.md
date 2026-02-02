@@ -2,33 +2,17 @@
 
 Calendar integration
 
-## 📋 Overview
+> **9 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`GOOGLE_CALENDAR_CLIENTID`** [REQUIRED]
-  - Type: string
-  - Description: OAuth2 client ID from Google Cloud Console
-  
-
-- **`GOOGLE_CALENDAR_CLIENTSECRET`** [REQUIRED]
-  - Type: string
-  - Description: OAuth2 client secret
-  
-
-- **`GOOGLE_CALENDAR_REFRESHTOKEN`** [REQUIRED]
-  - Type: string
-  - Description: OAuth2 refresh token (obtain via OAuth flow)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `GOOGLE_CALENDAR_CLIENTID` | Yes | string | OAuth2 client ID from Google Cloud Console |
+| `GOOGLE_CALENDAR_CLIENTSECRET` | Yes | string | OAuth2 client secret |
+| `GOOGLE_CALENDAR_REFRESHTOKEN` | Yes | string | OAuth2 refresh token (obtain via OAuth flow) |
 
 
 
@@ -41,24 +25,18 @@ Calendar integration
 
 ## 🔧 Tools
 
-This photon provides **9** tools:
-
 
 ### `list`
 
 List upcoming events
 
 
-**Parameters:**
-
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
-
-- **`maxResults`** (any, optional) [min: 1, max: 100] - Maximum number of events to return
-
-- **`timeMin`** (any) [format: date-time] - Start time (ISO 8601, default: now) (e.g., `2024-03-15T09:00:00Z`)
-
-- **`timeMax`** (any) [format: date-time] - End time (ISO 8601, optional) (e.g., `2024-03-20T18:00:00Z`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `maxResults` | any | No | Maximum number of events to return [min: 1, max: 100] |
+| `timeMin` | any | Yes | Start time (ISO 8601, default: now) [format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
+| `timeMax` | any | Yes | End time (ISO 8601, optional) [format: date-time] (e.g. `2024-03-20T18:00:00Z`) |
 
 
 
@@ -72,12 +50,10 @@ List upcoming events
 Get a specific event
 
 
-**Parameters:**
-
-
-- **`eventId`** (any) [min: 1, max: 200] - Event ID (e.g., `abc123def456ghi789`)
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventId` | any | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -91,22 +67,15 @@ Get a specific event
 Create a new event
 
 
-**Parameters:**
-
-
-- **`summary`** (any) [min: 1, max: 200] - Event title (e.g., `Team Meeting`)
-
-- **`start`** (any) [min: 1, format: date-time] - Start time (ISO 8601) (e.g., `2024-03-15T14:00:00Z`)
-
-- **`end`** (any) [min: 1, format: date-time] - End time (ISO 8601) (e.g., `2024-03-15T15:00:00Z`)
-
-- **`description`** (any, optional) [max: 5000] - Event description (e.g., `Quarterly planning session`)
-
-- **`location`** (any, optional) [max: 500] - Event location (e.g., `Conference Room A`)
-
-- **`attendees`** (any, optional) [min: 1] - Array of attendee email addresses (e.g., `["user@example.com","colleague@company.com"]`)
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `summary` | any | Yes | Event title [min: 1, max: 200] (e.g. `Team Meeting`) |
+| `start` | any | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T14:00:00Z`) |
+| `end` | any | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T15:00:00Z`) |
+| `description` | any | No | Event description [max: 5000] (e.g. `Quarterly planning session`) |
+| `location` | any | No | Event location [max: 500] (e.g. `Conference Room A`) |
+| `attendees` | any | No | Array of attendee email addresses [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -120,14 +89,11 @@ Create a new event
 Update an existing event
 
 
-**Parameters:**
-
-
-- **`eventId`** (any) [min: 1, max: 200] - Event ID (e.g., `abc123def456ghi789`)
-
-- **`updates`** (any) - Object containing fields to update
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventId` | any | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
+| `updates` | any | Yes | Object containing fields to update |
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -141,12 +107,10 @@ Update an existing event
 Delete an event
 
 
-**Parameters:**
-
-
-- **`eventId`** (any) [min: 1, max: 200] - Event ID (e.g., `abc123def456ghi789`)
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `eventId` | any | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -171,14 +135,11 @@ List all calendars
 Check free/busy status
 
 
-**Parameters:**
-
-
-- **`emails`** (any) [min: 1] - Array of email addresses to check (e.g., `["user@example.com","colleague@company.com"]`)
-
-- **`timeMin`** (any) [min: 1, format: date-time] - Start time (ISO 8601) (e.g., `2024-03-15T09:00:00Z`)
-
-- **`timeMax`** (any) [min: 1, format: date-time] - End time (ISO 8601) (e.g., `2024-03-15T18:00:00Z`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `emails` | any | Yes | Array of email addresses to check [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
+| `timeMin` | any | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
+| `timeMax` | any | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T18:00:00Z`) |
 
 
 
@@ -192,14 +153,11 @@ Check free/busy status
 Search for events
 
 
-**Parameters:**
-
-
-- **`query`** (any) [min: 1, max: 500] - Search query (e.g., `team meeting`)
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
-
-- **`maxResults`** (any, optional) [min: 1, max: 100] - Maximum number of results
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | any | Yes | Search query [min: 1, max: 500] (e.g. `team meeting`) |
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `maxResults` | any | No | Maximum number of results [min: 1, max: 100] |
 
 
 
@@ -213,12 +171,10 @@ Search for events
 Get upcoming events within specified hours
 
 
-**Parameters:**
-
-
-- **`hours`** (any, optional) [min: 1, max: 720] - Number of hours from now (e.g., `48`)
-
-- **`calendarId`** (any, optional) [max: 200] - Calendar ID (e.g., `primary`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `hours` | any | No | Number of hours from now [min: 1, max: 720] (e.g. `48`) |
+| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -230,52 +186,57 @@ Get upcoming events within specified hours
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph google_calendar["📦 Google Calendar"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 list]
+        PHOTON --> T0
+        T1[📖 get]
+        PHOTON --> T1
+        T2[✏️ create]
+        PHOTON --> T2
+        T3[🔄 update]
+        PHOTON --> T3
+        T4[🗑️ remove]
+        PHOTON --> T4
+        T5[🔧 calendars]
+        PHOTON --> T5
+        T6[🔧 freeBusy]
+        PHOTON --> T6
+        T7[📖 search]
+        PHOTON --> T7
+        T8[🔧 upcoming]
+        PHOTON --> T8
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 googleapis]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add google-calendar
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./google-calendar.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp google-calendar.photon.ts ~/.photon/
-
-# Run by name
-photon mcp google-calendar
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp google-calendar --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get google-calendar --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 googleapis@^128.0.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

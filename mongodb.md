@@ -2,28 +2,16 @@
 
 NoSQL database operations
 
-## 📋 Overview
+> **18 tools** · API Photon · v1.0.0 · MIT
 
-**Version:** 1.0.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`MONGO_D_B_URI`** [REQUIRED]
-  - Type: string
-  - Description: MongoDB connection URI (required)
-  
-
-- **`MONGO_D_B_DATABASE`** [REQUIRED]
-  - Type: string
-  - Description: Default database name (required)
-  
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `MONGO_D_B_URI` | Yes | string | MongoDB connection URI (required) |
+| `MONGO_D_B_DATABASE` | Yes | string | Default database name (required) |
 
 
 
@@ -35,24 +23,18 @@ NoSQL database operations
 
 ## 🔧 Tools
 
-This photon provides **18** tools:
-
 
 ### `find`
 
 Find documents in a collection
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) - Query filter (MongoDB query object) (e.g., `{"age":{"$gt":25}}`)
-
-- **`limit`** (any, optional) [min: 1, max: 1000] - Maximum number of documents to return
-
-- **`sort`** (any) - Sort specification (e.g., `{"age":-1}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter (MongoDB query object) (e.g. `{"age":{"$gt":25}}`) |
+| `limit` | any | No | Maximum number of documents to return [min: 1, max: 1000] |
+| `sort` | any | Yes | Sort specification (e.g. `{"age":-1}`) |
 
 
 
@@ -66,12 +48,10 @@ Find documents in a collection
 Find a single document
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) [min: 1] - Query filter (MongoDB query object) (e.g., `{"email":"user@example.com"}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter (MongoDB query object) [min: 1] (e.g. `{"email":"user@example.com"}`) |
 
 
 
@@ -85,12 +65,10 @@ Find a single document
 Insert a document
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`document`** (any) [min: 1] - Document to insert (e.g., `{"name":"John","email":"john@example.com","age":30}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `document` | any | Yes | Document to insert [min: 1] (e.g. `{"name":"John","email":"john@example.com","age":30}`) |
 
 
 
@@ -104,12 +82,10 @@ Insert a document
 Insert multiple documents
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`documents`** (any) [min: 1] - Array of documents to insert (e.g., `[{"name":"John"},{"name":"Jane"}]`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `documents` | any | Yes | Array of documents to insert [min: 1] (e.g. `[{"name":"John"},{"name":"Jane"}]`) |
 
 
 
@@ -123,16 +99,12 @@ Insert multiple documents
 Update a document
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) [min: 1] - Query filter to match documents (e.g., `{"email":"user@example.com"}`)
-
-- **`update`** (any) [min: 1] - Update operations (e.g., `{"$set":{"name":"John"}}`)
-
-- **`upsert`** (any, optional) - Create document if it doesn't exist
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter to match documents [min: 1] (e.g. `{"email":"user@example.com"}`) |
+| `update` | any | Yes | Update operations [min: 1] (e.g. `{"$set":{"name":"John"}}`) |
+| `upsert` | any | No | Create document if it doesn't exist |
 
 
 
@@ -146,14 +118,11 @@ Update a document
 Update multiple documents
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) [min: 1] - Query filter to match documents (e.g., `{"age":{"$gt":25}}`)
-
-- **`update`** (any) [min: 1] - Update operations (e.g., `{"$inc":{"loginCount":1}}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter to match documents [min: 1] (e.g. `{"age":{"$gt":25}}`) |
+| `update` | any | Yes | Update operations [min: 1] (e.g. `{"$inc":{"loginCount":1}}`) |
 
 
 
@@ -167,12 +136,10 @@ Update multiple documents
 Delete a document
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) [min: 1] - Query filter to match document (e.g., `{"email":"user@example.com"}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter to match document [min: 1] (e.g. `{"email":"user@example.com"}`) |
 
 
 
@@ -186,12 +153,10 @@ Delete a document
 Delete multiple documents
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) [min: 1] - Query filter to match documents (e.g., `{"status":"inactive"}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter to match documents [min: 1] (e.g. `{"status":"inactive"}`) |
 
 
 
@@ -205,12 +170,10 @@ Delete multiple documents
 Run aggregation pipeline
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `orders`)
-
-- **`pipeline`** (any) [min: 1] - Aggregation pipeline array (e.g., `[{"$match":{"status":"completed"}},{"$group":{"_id":"$customerId","total":{"$sum":"$amount"}}}]`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `orders`) |
+| `pipeline` | any | Yes | Aggregation pipeline array [min: 1] (e.g. `[{"$match":{"status":"completed"}},{"$group":{"_id":"$customerId","total":{"$sum":"$amount"}}}]`) |
 
 
 
@@ -224,12 +187,10 @@ Run aggregation pipeline
 Count documents matching filter
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`filter`** (any) - Query filter (optional, counts all if omitted) (e.g., `{"status":"active"}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | any | Yes | Query filter (optional, counts all if omitted) (e.g. `{"status":"active"}`) |
 
 
 
@@ -254,14 +215,11 @@ List all collections in database
 Create an index on a collection
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`keys`** (any) [min: 1] - Index specification (e.g., `{"email":1}`)
-
-- **`unique`** (any, optional) - Create unique index
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `keys` | any | Yes | Index specification [min: 1] (e.g. `{"email":1}`) |
+| `unique` | any | No | Create unique index |
 
 
 
@@ -275,14 +233,11 @@ Create an index on a collection
 Get distinct values for a field
 
 
-**Parameters:**
-
-
-- **`collection`** (any) [min: 1, max: 120] - Collection name (e.g., `users`)
-
-- **`field`** (any) [min: 1, max: 200] - Field name to get distinct values from (e.g., `country`)
-
-- **`filter`** (any) - Optional query filter (e.g., `{"status":"active"}`)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `field` | any | Yes | Field name to get distinct values from [min: 1, max: 200] (e.g. `country`) |
+| `filter` | any | Yes | Optional query filter (e.g. `{"status":"active"}`) |
 
 
 
@@ -349,52 +304,75 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph mongodb["📦 Mongodb"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 find]
+        PHOTON --> T0
+        T1[📖 findOne]
+        PHOTON --> T1
+        T2[✏️ insertOne]
+        PHOTON --> T2
+        T3[✏️ insertMany]
+        PHOTON --> T3
+        T4[🔄 updateOne]
+        PHOTON --> T4
+        T5[🔄 updateMany]
+        PHOTON --> T5
+        T6[🗑️ removeOne]
+        PHOTON --> T6
+        T7[🗑️ removeMany]
+        PHOTON --> T7
+        T8[🔧 aggregate]
+        PHOTON --> T8
+        T9[🔧 count]
+        PHOTON --> T9
+        T10[🔧 collections]
+        PHOTON --> T10
+        T11[🔧 index]
+        PHOTON --> T11
+        T12[🔧 distinct]
+        PHOTON --> T12
+        T13[✅ testAfterAll]
+        PHOTON --> T13
+        T14[✅ testCollections]
+        PHOTON --> T14
+        T15[✅ testInsertFind]
+        PHOTON --> T15
+        T16[✅ testCount]
+        PHOTON --> T16
+        T17[✅ testDelete]
+        PHOTON --> T17
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 mongodb]
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add mongodb
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./mongodb.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp mongodb.photon.ts ~/.photon/
-
-# Run by name
-photon mcp mongodb
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp mongodb --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get mongodb --mcp
 ```
 
 ## 📦 Dependencies
 
 
-This photon automatically installs the following dependencies:
-
 ```
 mongodb@^6.3.0
 ```
 
+---
 
-## 📄 License
-
-MIT • Version 1.0.0
+MIT · v1.0.0 · Portel

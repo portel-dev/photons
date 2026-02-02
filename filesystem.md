@@ -2,33 +2,17 @@
 
 File and directory operations
 
-## 📋 Overview
+> **23 tools** · API Photon · v1.1.0 · MIT
 
-**Version:** 1.1.0
-**Author:** Portel
-**License:** MIT
 
 ## ⚙️ Configuration
 
-### Environment Variables
 
-
-- **`FILESYSTEM_WORKDIR`** [OPTIONAL]
-  - Type: string
-  - Description: Working directory base path (default: ~/Documents)
-  - Default: `path.join(homedir(), '.photon')`
-
-- **`FILESYSTEM_MAXFILESIZE`** [OPTIONAL]
-  - Type: number
-  - Description: Maximum file size in bytes (default: 10MB)
-  - Default: `10485760`
-
-- **`FILESYSTEM_ALLOWHIDDEN`** [OPTIONAL]
-  - Type: boolean
-  - Description: Allow access to hidden files/directories (default: false)
-  - Default: `true`
-
-
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `FILESYSTEM_WORKDIR` | No | string | Working directory base path (default: ~/Documents) (default: `path.join(homedir(), '.photon')`) |
+| `FILESYSTEM_MAXFILESIZE` | No | number | Maximum file size in bytes (default: 10MB) (default: `10485760`) |
+| `FILESYSTEM_ALLOWHIDDEN` | No | boolean | Allow access to hidden files/directories (default: false) (default: `true`) |
 
 
 
@@ -41,20 +25,16 @@ File and directory operations
 
 ## 🔧 Tools
 
-This photon provides **23** tools:
-
 
 ### `read`
 
 Read file contents
 
 
-**Parameters:**
-
-
-- **`path`** (any) - File path (relative to workdir or absolute)
-
-- **`encoding`** (any, optional) - File encoding
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | File path (relative to workdir or absolute) |
+| `encoding` | any | No | File encoding |
 
 
 
@@ -68,14 +48,11 @@ Read file contents
 Write content to file
 
 
-**Parameters:**
-
-
-- **`path`** (any) - File path (relative to workdir or absolute)
-
-- **`content`** (any) - File content
-
-- **`encoding`** (any, optional) - File encoding
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | File path (relative to workdir or absolute) |
+| `content` | any | Yes | File content |
+| `encoding` | any | No | File encoding |
 
 
 
@@ -89,14 +66,11 @@ Write content to file
 Append content to file
 
 
-**Parameters:**
-
-
-- **`path`** (any) - File path (relative to workdir or absolute)
-
-- **`content`** (any) - Content to append
-
-- **`encoding`** (any, optional) - File encoding
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | File path (relative to workdir or absolute) |
+| `content` | any | Yes | Content to append |
+| `encoding` | any | No | File encoding |
 
 
 
@@ -110,10 +84,9 @@ Append content to file
 Remove a file
 
 
-**Parameters:**
-
-
-- **`path`** (any) - File path (relative to workdir or absolute)
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | File path (relative to workdir or absolute) |
 
 
 
@@ -127,12 +100,10 @@ Remove a file
 Copy a file
 
 
-**Parameters:**
-
-
-- **`source`** (any) - Source file path
-
-- **`destination`** (any) - Destination file path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `source` | any | Yes | Source file path |
+| `destination` | any | Yes | Destination file path |
 
 
 
@@ -146,12 +117,10 @@ Copy a file
 Move/rename a file
 
 
-**Parameters:**
-
-
-- **`source`** (any) - Source file path
-
-- **`destination`** (any) - Destination file path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `source` | any | Yes | Source file path |
+| `destination` | any | Yes | Destination file path |
 
 
 
@@ -165,12 +134,10 @@ Move/rename a file
 List files in a directory
 
 
-**Parameters:**
-
-
-- **`path`** (any) - Directory path (relative to workdir or absolute, default: current workdir)
-
-- **`recursive`** (any, optional) - List files recursively
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | Directory path (relative to workdir or absolute, default: current workdir) |
+| `recursive` | any | No | List files recursively |
 
 
 
@@ -184,12 +151,10 @@ List files in a directory
 Create a directory
 
 
-**Parameters:**
-
-
-- **`path`** (any) - Directory path (relative to workdir or absolute)
-
-- **`recursive`** (any, optional) - Create parent directories if needed
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | Directory path (relative to workdir or absolute) |
+| `recursive` | any | No | Create parent directories if needed |
 
 
 
@@ -203,12 +168,10 @@ Create a directory
 Remove a directory
 
 
-**Parameters:**
-
-
-- **`path`** (any) - Directory path (relative to workdir or absolute)
-
-- **`recursive`** (any, optional) - Remove directory and all contents
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | Directory path (relative to workdir or absolute) |
+| `recursive` | any | No | Remove directory and all contents |
 
 
 
@@ -222,10 +185,9 @@ Remove a directory
 Get file or directory information
 
 
-**Parameters:**
-
-
-- **`path`** (any) - File or directory path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | File or directory path |
 
 
 
@@ -239,10 +201,9 @@ Get file or directory information
 Check if file or directory exists
 
 
-**Parameters:**
-
-
-- **`path`** (any) - File or directory path
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | any | Yes | File or directory path |
 
 
 
@@ -256,12 +217,10 @@ Check if file or directory exists
 Search for files matching a pattern
 
 
-**Parameters:**
-
-
-- **`pattern`** (any) - File name pattern (glob-style: *.txt, **\/*.js)
-
-- **`path`** (any, optional) - Directory to search
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `pattern` | any | Yes | File name pattern (glob-style: *.txt, **\/*.js) |
+| `path` | any | No | Directory to search |
 
 
 
@@ -394,48 +353,77 @@ No description available
 
 
 
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph filesystem["📦 Filesystem"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 read]
+        PHOTON --> T0
+        T1[✏️ write]
+        PHOTON --> T1
+        T2[🔧 append]
+        PHOTON --> T2
+        T3[🗑️ remove]
+        PHOTON --> T3
+        T4[🔧 copy]
+        PHOTON --> T4
+        T5[🔧 move]
+        PHOTON --> T5
+        T6[📖 list]
+        PHOTON --> T6
+        T7[🔧 mkdir]
+        PHOTON --> T7
+        T8[🔧 rmdir]
+        PHOTON --> T8
+        T9[🔧 info]
+        PHOTON --> T9
+        T10[🔧 exists]
+        PHOTON --> T10
+        T11[📖 search]
+        PHOTON --> T11
+        T12[🔧 workdir]
+        PHOTON --> T12
+        T13[✅ testBeforeAll]
+        PHOTON --> T13
+        T14[✅ testAfterAll]
+        PHOTON --> T14
+        T15[✅ testRead]
+        PHOTON --> T15
+        T16[✅ testWrite]
+        PHOTON --> T16
+        T17[✅ testExists]
+        PHOTON --> T17
+        T18[✅ testInfo]
+        PHOTON --> T18
+        T19[✅ testList]
+        PHOTON --> T19
+        T20[✅ testCopy]
+        PHOTON --> T20
+        T21[✅ testMkdir]
+        PHOTON --> T21
+        T22[✅ testGetWorkdir]
+        PHOTON --> T22
+    end
+```
+
+
 ## 📥 Usage
 
-### Install Photon CLI
-
 ```bash
-npm install -g @portel/photon
-```
+# Install from marketplace
+photon add filesystem
 
-### Run This Photon
-
-**Option 1: Run directly from file**
-
-```bash
-# Clone/download the photon file
-photon mcp ./filesystem.photon.ts
-```
-
-**Option 2: Install to ~/.photon/ (recommended)**
-
-```bash
-# Copy to photon directory
-cp filesystem.photon.ts ~/.photon/
-
-# Run by name
-photon mcp filesystem
-```
-
-**Option 3: Use with Claude Desktop**
-
-```bash
-# Generate MCP configuration
-photon mcp filesystem --config
-
-# Add the output to ~/Library/Application Support/Claude/claude_desktop_config.json
+# Get MCP config for your client
+photon get filesystem --mcp
 ```
 
 ## 📦 Dependencies
 
+No external dependencies.
 
-No external dependencies required.
+---
 
-
-## 📄 License
-
-MIT • Version 1.1.0
+MIT · v1.1.0 · Portel

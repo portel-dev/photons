@@ -32,39 +32,42 @@ We welcome contributions! Submit pull requests for:
 
 ## 📦 Available Photons
 
-| Photon | Focus | Tools | Details |
-|--------|-------|-------|---------|
-| **AWS S3** | Cloud object storage operations | 11 | [View →](aws-s3.md) |
-| **Code Diagram** | Generate a Mermaid diagram from a file | 3 | [View →](code-diagram.md) |
-| **Connect Four** | Play against AI with distributed locks | 8 | [View →](connect-four.md) |
-| **Dashboard** | Dashboard Photon | 6 | [View →](dashboard.md) |
-| **Data Sync** | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | [View →](data-sync.md) |
-| **Demo Photon** | Comprehensive feature demonstration | 21 | [View →](demo.md) |
-| **Docker** | Container management operations | 10 | [View →](docker.md) |
-| **Email** | Send and receive emails via SMTP and IMAP | 8 | [View →](email.md) |
-| **Filesystem** | File and directory operations | 23 | [View →](filesystem.md) |
-| **Form Inbox** | Webhook-powered form submission collector | 12 | [View →](form-inbox.md) |
-| **@name git-box @icon 📬 @description Mailbox-style Git interface** | manage repos like an inbox @version 2.0.0 @cli git - https://git-scm.com/downloads | 57 | [View →](git-box.md) |
-| **Git** | Local git repository operations | 15 | [View →](git.md) |
-| **GitHub Issues** | Manage GitHub repository issues | 7 | [View →](github-issues.md) |
-| **Google Calendar** | Calendar integration | 9 | [View →](google-calendar.md) |
-| **Jira** | Project management and issue tracking | 10 | [View →](jira.md) |
-| **Kanban** | Kanban Board Photon | 33 | [View →](kanban.md) |
-| **Kitchen Sink** | Kitchen Sink Photon | 25 | [View →](kitchen-sink.md) |
-| **Math Photon MCP** | Advanced math expression evaluator | 8 | [View →](math.md) |
-| **Mcp Orchestrator** | MCP Orchestrator Photon | 10 | [View →](mcp-orchestrator.md) |
-| **MongoDB** | NoSQL database operations | 18 | [View →](mongodb.md) |
-| **PostgreSQL** | Database operations for PostgreSQL | 11 | [View →](postgres.md) |
-| **Preferences** | Preferences Photon | 7 | [View →](preferences.md) |
-| **Redis** | In-memory data store and cache | 23 | [View →](redis.md) |
-| **Slack** | Send messages and manage Slack workspace | 7 | [View →](slack.md) |
-| **SQLite Photon MCP** | SQLite database operations | 15 | [View →](sqlite.md) |
-| **Team Dashboard** | Team Dashboard Photon | 20 | [View →](team-dashboard.md) |
-| **Time** | Timezone and time conversion operations | 9 | [View →](time.md) |
-| **Web** | Web Agent Photon (Search + Read) | 5 | [View →](web.md) |
+| Photon | Focus | Tools | Features |
+|--------|-------|-------|----------|
+| [**AWS S3**](aws-s3.md) | Cloud object storage operations | 11 | - |
+| [**Code Diagram**](code-diagram.md) | Generate a Mermaid diagram from a file | 3 | 🔌📦 |
+| [**Connect Four**](connect-four.md) | Play against AI with distributed locks | 15 | 🎨📡 |
+| [**Daemon Features**](daemon-features.md) | Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub | 12 | 📡 |
+| [**Dashboard**](dashboard.md) | Dashboard Photon | 6 | 🎨🎨 |
+| [**Data Sync**](data-sync.md) | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | ⚡⚡ |
+| [**Demo Photon**](demo.md) | Comprehensive feature demonstration | 21 | ⚡ |
+| [**Docker**](docker.md) | Container management operations | 10 | - |
+| [**Email**](email.md) | Send and receive emails via SMTP and IMAP | 8 | - |
+| [**Feature Showcase**](feature-showcase.md) | Feature Showcase — Core Runtime Feature Demos | 20 | ⚡📡 |
+| [**Filesystem**](filesystem.md) | File and directory operations | 23 | - |
+| [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
+| [**@name git-box @icon 📬 @description Mailbox-style Git interface**](git-box.md) | manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads | 57 | ⚡🎨💬 |
+| [**Git**](git.md) | Local git repository operations | 15 | - |
+| [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |
+| [**Google Calendar**](google-calendar.md) | Calendar integration | 9 | - |
+| [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 10 | ⚡🎨 |
+| [**Jira**](jira.md) | Project management and issue tracking | 10 | - |
+| [**Kanban**](kanban.md) | Kanban Board Photon | 33 | 🎨📡 |
+| [**Kitchen Sink**](kitchen-sink.md) | Kitchen Sink Photon | 25 | ⚡🎨 |
+| [**Math Photon MCP**](math.md) | Advanced math expression evaluator | 8 | - |
+| [**Mcp Orchestrator**](mcp-orchestrator.md) | MCP Orchestrator Photon | 10 | 🔌 |
+| [**MongoDB**](mongodb.md) | NoSQL database operations | 18 | - |
+| [**PostgreSQL**](postgres.md) | Database operations for PostgreSQL | 11 | - |
+| [**Preferences**](preferences.md) | Preferences Photon | 7 | ⚡🎨💬⚡ |
+| [**Redis**](redis.md) | In-memory data store and cache | 23 | - |
+| [**Slack**](slack.md) | Send messages and manage Slack workspace | 7 | - |
+| [**SQLite Photon MCP**](sqlite.md) | SQLite database operations | 15 | - |
+| [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon | 20 | 🎨🎨 |
+| [**Time**](time.md) | Timezone and time conversion operations | 9 | - |
+| [**Web**](web.md) | Web Agent Photon (Search + Read) | 5 | ⚡ |
 
 
-**Total:** 28 photons ready to use
+**Total:** 31 photons ready to use
 
 ---
 
@@ -108,7 +111,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 28 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 31 focused tools at its fingertips.
 
 ---
 
@@ -174,7 +177,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 28 production-ready photons available
+- 📦 31 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
