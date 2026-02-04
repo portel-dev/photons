@@ -729,9 +729,9 @@
 
     .action-main-btn {
       padding: 8px 16px;
-      background: var(--accent);
-      color: white;
-      border: none;
+      background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
       border-radius: 6px 0 0 6px;
       font-size: 12px;
       font-weight: 500;
@@ -739,7 +739,7 @@
     }
 
     .action-main-btn:hover:not(:disabled) {
-      background: var(--accent-hover);
+      background: linear-gradient(to bottom, var(--btn-hover-from), var(--btn-hover-to));
     }
 
     .action-main-btn:disabled {
@@ -749,17 +749,17 @@
 
     .action-dropdown-btn {
       padding: 8px 8px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-left: 1px solid rgba(255,255,255,0.2);
+      background: linear-gradient(to bottom, var(--btn-bg-from), var(--btn-bg-to));
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-left: 1px solid var(--border-color);
       border-radius: 0 6px 6px 0;
       font-size: 12px;
       cursor: pointer;
     }
 
     .action-dropdown-btn:hover {
-      background: var(--accent-hover);
+      background: linear-gradient(to bottom, var(--btn-hover-from), var(--btn-hover-to));
     }
 
     .action-menu {
