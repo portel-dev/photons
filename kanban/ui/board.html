@@ -2268,11 +2268,23 @@
       await fetchWipConfig();
     });
 
+    // Listen for MCP Apps tool result (data arrives after DOMContentLoaded in Claude Desktop)
+    window.addEventListener('photon:data-ready', (e) => {
+      const data = e.detail;
+      if (data && (data.columns || data.tasks || data.name)) {
+        board = data;
+        currentBoardName = data.name || currentBoardName;
+        renderBoard();
+        updateStats();
+        notifyViewingBoard();
+      }
+    });
+
     // Load boards and restore saved preference (or default to Auto)
     async function loadBoardListAndRestore() {
       if (!window.photon) return;
       try {
-        const boards = await window.photon.invoke('listBoards', {});
+        const boards = await window.photon.invoke('boards', {});
         const savedBoard = localStorage.getItem(BOARD_PREF_KEY);
         const useAutoMode = !savedBoard || savedBoard === '__auto__';
 
@@ -2281,7 +2293,7 @@
           enableAutoMode();
         } else if (boards.some(b => b.name === savedBoard)) {
           // Saved board exists, load it
-          const newBoard = await window.photon.invoke('getBoard', { board: savedBoard });
+          const newBoard = await window.photon.invoke('board', { board: savedBoard });
           board = newBoard;
           currentBoardName = savedBoard;
           notifyViewingBoard();
@@ -2499,7 +2511,7 @@
       try {
         if (autoMode) {
           // In Auto mode, check if we should switch to a different board
-          const boards = await window.photon.invoke('listBoards', {});
+          const boards = await window.photon.invoke('boards', {});
           if (boards.length > 0) {
             boards.sort((a, b) =>
               new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
@@ -2512,7 +2524,7 @@
             }
           }
         }
-        const fullBoard = await window.photon.invoke('getBoard', { board: currentBoardName });
+        const fullBoard = await window.photon.invoke('board', { board: currentBoardName });
         board = fullBoard;
         renderBoard();
         updateStats();
@@ -2592,7 +2604,7 @@
     async function loadBoardList() {
       if (!window.photon) return;
       try {
-        const boards = await window.photon.invoke('listBoards', {});
+        const boards = await window.photon.invoke('boards', {});
         updateBoardMenu(boards);
       } catch (err) {
         console.error('Failed to load boards:', err);
@@ -2694,7 +2706,7 @@
 
       if (!value || value === currentBoardName) return;
       try {
-        const newBoard = await window.photon.invoke('getBoard', { board: value });
+        const newBoard = await window.photon.invoke('board', { board: value });
         board = newBoard;
         currentBoardName = value;
         notifyViewingBoard();
@@ -2736,7 +2748,7 @@
       if (!window.photon || !autoMode) return;
       try {
         // Get all boards and find the most recently updated one
-        const boards = await window.photon.invoke('listBoards', {});
+        const boards = await window.photon.invoke('boards', {});
         if (boards.length === 0) return;
 
         // Sort by updatedAt descending
@@ -2753,7 +2765,7 @@
         const boardUpdated = activeBoardUpdatedAt !== lastBoardUpdatedAt;
 
         if (boardChanged || boardUpdated) {
-          const fullBoard = await window.photon.invoke('getBoard', { board: activeBoardName });
+          const fullBoard = await window.photon.invoke('board', { board: activeBoardName });
           board = fullBoard;
           if (boardChanged) {
             currentBoardName = activeBoardName;
@@ -2967,7 +2979,7 @@
       // Persist via MCP
       try {
         if (window.photon) {
-          await window.photon.invoke('updateTask', {
+          await window.photon.invoke('taskUpdate', {
             board: currentBoardName,
             id: taskId,
             description: newDescription
@@ -3255,7 +3267,7 @@
       try {
         if (window.photon) {
           pendingMoveOperation = true;
-          await window.photon.invoke('reorderTask', {
+          await window.photon.invoke('taskReorder', {
             board: currentBoardName,
             id: movedTaskId,
             column: columnName,
@@ -3533,11 +3545,11 @@
         }
 
         // Save the task
-        await window.photon.invoke('updateTask', updates);
+        await window.photon.invoke('taskUpdate', updates);
 
         // Move task if column changed
         if (newColumn !== task.column) {
-          await window.photon.invoke('moveTask', {
+          await window.photon.invoke('taskMove', {
             board: currentBoardName,
             id: currentDetailTaskId,
             column: newColumn
@@ -3664,7 +3676,7 @@
       if (!content) return;
 
       try {
-        const result = await window.photon.invoke('addComment', {
+        const result = await window.photon.invoke('commentAdd', {
           board: currentBoardName,
           id: currentDetailTaskId,
           content: content,
@@ -3724,7 +3736,7 @@
       }
 
       try {
-        await window.photon.invoke('createBoard', { name });
+        await window.photon.invoke('boardCreate', { name });
         closeNewBoardModal();
 
         // Refresh board list and switch to new board
@@ -3874,7 +3886,7 @@
       // Persist via MCP
       try {
         if (window.photon) {
-          await window.photon.invoke('addComment', { board: currentBoardName, id: taskId, content, author: 'human' });
+          await window.photon.invoke('commentAdd', { board: currentBoardName, id: taskId, content, author: 'human' });
         }
       } catch (err) {
         console.error('Failed to add comment:', err);
@@ -3918,7 +3930,7 @@
           }
 
           if (window.photon) {
-            await window.photon.invoke('updateTask', {
+            await window.photon.invoke('taskUpdate', {
               board: currentBoardName,
               id,
               title,
@@ -3947,7 +3959,7 @@
           board.tasks.push(newTask);
 
           if (window.photon) {
-            await window.photon.invoke('createTask', {
+            await window.photon.invoke('taskCreate', {
               board: currentBoardName,
               title,
               description: description || undefined,
@@ -4012,7 +4024,7 @@
 
       try {
         if (window.photon) {
-          await window.photon.invoke('deleteTask', { board: currentBoardName, id });
+          await window.photon.invoke('taskDelete', { board: currentBoardName, id });
         }
       } catch (err) {
         console.error('Failed to delete task:', err);
@@ -4031,14 +4043,14 @@
       if (!window.photon) return;
       try {
         // Get stats for WIP info
-        const stats = await window.photon.invoke('getStats', { board: currentBoardName });
+        const stats = await window.photon.invoke('stats', { board: currentBoardName });
         if (stats && stats.wip) {
           wipLimit = stats.wip.limit || 3;
           wipEnabled = stats.wip.enabled !== false;
         }
 
         // Get full config for other settings
-        const config = await window.photon.invoke('getConfig', {});
+        const config = await window.photon.invoke('configure', {});
         if (config) {
           autoPullEnabled = config.autoPullEnabled || false;
           morningPullCount = config.morningPullCount || 3;
