@@ -2,7 +2,7 @@
 
 Feature Showcase — Core Runtime Feature Demos
 
-> **20 tools** · Streaming Photon · v1.0.0 · MIT
+> **12 tools** · Streaming Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator` `channels`
 
@@ -22,9 +22,9 @@ Set configuration values
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `theme` | any | Yes | UI theme preference |
-| `maxItems` | any | Yes | Maximum items to display {@default 10} [min: 1, max: 100] |
-| `verbose` | any | Yes | Enable verbose logging |
+| `theme` | 'light' | 'dark' | 'auto' | No | UI theme preference |
+| `maxItems` | number | No | Maximum items to display {@default 10} [min: 1, max: 100] |
+| `verbose` | boolean | No | Enable verbose logging |
 
 
 
@@ -73,8 +73,8 @@ A code review prompt template  Returns a structured prompt for code review assis
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `language` | any | Yes | Programming language |
-| `code` | any | Yes | Code snippet to review |
+| `language` | string | Yes | Programming language |
+| `code` | string | Yes | Code snippet to review |
 
 
 
@@ -156,96 +156,8 @@ Broadcast an event on a named channel
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name |
-| `message` | any | Yes | Message to broadcast |
-
-
-
-
-
----
-
-
-### `testLifecycleHooksRan`
-
-Verify onInitialize lifecycle hook ran
-
-
-
-
-
----
-
-
-### `testConfigureRoundtrip`
-
-Verify configure/getConfig roundtrip
-
-
-
-
-
----
-
-
-### `testEmitTypes`
-
-Verify all emit types work in the generator
-
-
-
-
-
----
-
-
-### `testPrivateMethodHidden`
-
-Verify private methods are not in getToolMethods()
-
-
-
-
-
----
-
-
-### `testInstanceState`
-
-Verify instance state persists across calls
-
-
-
-
-
----
-
-
-### `testFormatAnnotations`
-
-Verify format annotation methods return correct types
-
-
-
-
-
----
-
-
-### `testTemplateMethod`
-
-Verify template method returns prompt structure
-
-
-
-
-
----
-
-
-### `testBroadcast`
-
-Verify broadcast sends to channel
+| `channel` | string | Yes | Channel name |
+| `message` | string | Yes | Message to broadcast |
 
 
 
@@ -288,22 +200,6 @@ flowchart LR
         PHOTON --> T10
         T11[🔧 broadcast]
         PHOTON --> T11
-        T12[✅ testLifecycleHooksRan]
-        PHOTON --> T12
-        T13[✅ testConfigureRoundtrip]
-        PHOTON --> T13
-        T14[✅ testEmitTypes]
-        PHOTON --> T14
-        T15[✅ testPrivateMethodHidden]
-        PHOTON --> T15
-        T16[✅ testInstanceState]
-        PHOTON --> T16
-        T17[✅ testFormatAnnotations]
-        PHOTON --> T17
-        T18[✅ testTemplateMethod]
-        PHOTON --> T18
-        T19[✅ testBroadcast]
-        PHOTON --> T19
     end
 ```
 
@@ -315,7 +211,7 @@ flowchart LR
 photon add feature-showcase
 
 # Get MCP config for your client
-photon get feature-showcase --mcp
+photon info feature-showcase --mcp
 ```
 
 ## 📦 Dependencies

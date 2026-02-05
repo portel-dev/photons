@@ -22,9 +22,9 @@ Export database query results to a JSON file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | any | Yes | SQL query to execute |
-| `outputPath` | any | Yes | Path to save the JSON file |
-| `batchSize` | any | Yes | Number of rows to process at a time |
+| `query` | string | Yes | SQL query to execute |
+| `outputPath` | string | Yes | Path to save the JSON file |
+| `batchSize` | number | No | Number of rows to process at a time |
 
 
 
@@ -40,9 +40,9 @@ Import JSON data into a database table
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `inputPath` | any | Yes | Path to the JSON file |
-| `tableName` | any | Yes | Target table name |
-| `mode` | any | Yes | Insert mode: 'append', 'replace', or 'upsert' |
+| `inputPath` | string | Yes | Path to the JSON file |
+| `tableName` | string | Yes | Target table name |
+| `mode` | 'append' | 'replace' | 'upsert' | No | Insert mode: 'append', 'replace', or 'upsert' |
 
 
 
@@ -58,9 +58,9 @@ Compare data between two tables
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sourceTable` | any | Yes | Source table name |
-| `targetTable` | any | Yes | Target table name |
-| `keyColumn` | any | Yes | Column to use as key for comparison |
+| `sourceTable` | string | Yes | Source table name |
+| `targetTable` | string | Yes | Target table name |
+| `keyColumn` | string | Yes | Column to use as key for comparison |
 
 
 
@@ -127,7 +127,7 @@ flowchart TD
 photon add data-sync
 
 # Get MCP config for your client
-photon get data-sync --mcp
+photon info data-sync --mcp
 ```
 
 ## 📦 Dependencies

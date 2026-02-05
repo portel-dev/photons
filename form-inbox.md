@@ -210,7 +210,7 @@ flowchart LR
 photon add form-inbox
 
 # Get MCP config for your client
-photon get form-inbox --mcp
+photon info form-inbox --mcp
 ```
 
 ## 📦 Dependencies

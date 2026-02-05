@@ -30,10 +30,10 @@ Post a message to a channel or user
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `text` | any | Yes | Message text [min: 1] (e.g. `Hello team!`) |
-| `thread_ts` | any | No | Thread timestamp to reply to |
-| `blocks` | any | Yes | Rich message blocks (optional, JSON string) |
+| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `text` | string | Yes | Message text [min: 1] (e.g. `Hello team!`) |
+| `thread_ts` | string | No | Thread timestamp to reply to |
+| `blocks` | string | No | Rich message blocks (optional, JSON string) |
 
 
 
@@ -50,7 +50,7 @@ List all channels in the workspace
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `types` | any | Yes | Channel types (e.g. `public_channel`) |
-| `limit` | any | No | Maximum number of channels to return [min: 1, max: 1000] |
+| `limit` | number | No | Maximum number of channels to return [min: 1, max: 1000] |
 
 
 
@@ -66,7 +66,7 @@ Get channel information
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
 
 
 
@@ -82,10 +82,10 @@ Get conversation history from a channel
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `limit` | any | No | Number of messages to retrieve [min: 1, max: 100] |
-| `oldest` | any | Yes | Start of time range (Unix timestamp) |
-| `latest` | any | Yes | End of time range (Unix timestamp) |
+| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `limit` | number | No | Number of messages to retrieve [min: 1, max: 100] |
+| `oldest` | string | No | Start of time range (Unix timestamp) |
+| `latest` | string | No | End of time range (Unix timestamp) |
 
 
 
@@ -101,9 +101,9 @@ Add a reaction to a message
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `timestamp` | any | Yes | Message timestamp [min: 1] |
-| `name` | any | Yes | Reaction emoji name (without colons) [min: 1] (e.g. `thumbsup`) |
+| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `timestamp` | string | Yes | Message timestamp [min: 1] |
+| `name` | string | Yes | Reaction emoji name (without colons) [min: 1] (e.g. `thumbsup`) |
 
 
 
@@ -119,11 +119,11 @@ Upload a file to a channel
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `content` | any | Yes | File content (text) [min: 1] |
-| `filename` | any | Yes | Filename [min: 1] (e.g. `report.txt`) |
-| `title` | any | No | File title |
-| `initial_comment` | any | No | Comment to add with the file |
+| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `content` | string | Yes | File content (text) [min: 1] |
+| `filename` | string | Yes | Filename [min: 1] (e.g. `report.txt`) |
+| `title` | string | No | File title |
+| `initial_comment` | string | No | Comment to add with the file |
 
 
 
@@ -139,9 +139,9 @@ Search for messages in the workspace
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | any | Yes | Search query [min: 1] (e.g. `deployment`) |
-| `count` | any | No | Number of results to return [min: 1, max: 100] |
-| `sort` | any | Yes | Sort order (e.g. `score`) |
+| `query` | string | Yes | Search query [min: 1] (e.g. `deployment`) |
+| `count` | number | No | Number of results to return [min: 1, max: 100] |
+| `sort` | 'score' | 'timestamp' | No | Sort order (e.g. `score`) |
 
 
 
@@ -185,7 +185,7 @@ flowchart LR
 photon add slack
 
 # Get MCP config for your client
-photon get slack --mcp
+photon info slack --mcp
 ```
 
 ## 📦 Dependencies

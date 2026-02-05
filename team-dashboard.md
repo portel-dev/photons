@@ -187,7 +187,7 @@ Add a GitHub repository to track
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repo` | any | Yes | - Repository in "owner/repo" format (e.g., "facebook/react") |
+| `repo` | string | Yes | - Repository in "owner/repo" format (e.g., "facebook/react") |
 
 
 
@@ -203,7 +203,7 @@ Remove a GitHub repository from tracking
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repo` | any | Yes | - Repository in "owner/repo" format |
+| `repo` | string | Yes | - Repository in "owner/repo" format |
 
 
 
@@ -241,7 +241,7 @@ Set the Kanban board to display
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `board` | any | Yes | - Board name (without .json extension) |
+| `board` | string | Yes | - Board name (without .json extension) |
 
 
 
@@ -311,7 +311,7 @@ flowchart LR
 photon add team-dashboard
 
 # Get MCP config for your client
-photon get team-dashboard --mcp
+photon info team-dashboard --mcp
 ```
 
 ## 📦 Dependencies

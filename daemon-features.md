@@ -2,7 +2,7 @@
 
 Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub
 
-> **12 tools** · API Photon · v1.0.0 · MIT
+> **6 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `webhooks` `channels`
 
@@ -33,8 +33,8 @@ Receive a webhook payload and echo it back with metadata  In daemon mode, this i
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `payload` | any | Yes | The webhook body (any JSON) |
-| `source` | any | Yes | Optional source identifier |
+| `payload` | Record<string | Yes | The webhook body (any JSON) |
+| `source` | string | No | Optional source identifier |
 
 
 
@@ -50,7 +50,7 @@ A critical operation protected by a distributed lock  The @locked annotation ens
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `operation` | any | Yes | Name of the operation |
+| `operation` | string | Yes | Name of the operation |
 
 
 
@@ -66,8 +66,8 @@ Demonstrates manual distributed locking with this.withLock()  Unlike @locked whi
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `resource` | any | Yes | Resource identifier to lock on |
-| `value` | any | Yes | Value to process inside the lock |
+| `resource` | string | Yes | Resource identifier to lock on |
+| `value` | number | Yes | Value to process inside the lock |
 
 
 
@@ -83,9 +83,9 @@ Publish a message to a named channel  Other photons or clients subscribed to thi
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | any | Yes | Channel name to publish to |
-| `message` | any | Yes | Message content |
-| `priority` | any | Yes | Priority level |
+| `channel` | string | Yes | Channel name to publish to |
+| `message` | string | Yes | Message content |
+| `priority` | 'low' | 'normal' | 'high' | No | Priority level |
 
 
 
@@ -97,72 +97,6 @@ Publish a message to a named channel  Other photons or clients subscribed to thi
 ### `status`
 
 Show daemon feature status  Reads the heartbeat state file to show when the scheduled job last ran and how many times it has executed.
-
-
-
-
-
----
-
-
-### `testWebhookEcho`
-
-Verify webhook echo returns correct structure
-
-
-
-
-
----
-
-
-### `testManualLock`
-
-Verify manual lock executes and returns result
-
-
-
-
-
----
-
-
-### `testPublish`
-
-Verify publish returns confirmation
-
-
-
-
-
----
-
-
-### `testStatusReads`
-
-Verify status method returns valid structure
-
-
-
-
-
----
-
-
-### `testCriticalLocked`
-
-Verify critical (locked) method executes
-
-
-
-
-
----
-
-
-### `testScheduledHeartbeat`
-
-Verify scheduled heartbeat writes state
 
 
 
@@ -193,18 +127,6 @@ flowchart LR
         PHOTON --> T4
         T5[🔧 status]
         PHOTON --> T5
-        T6[✅ testWebhookEcho]
-        PHOTON --> T6
-        T7[✅ testManualLock]
-        PHOTON --> T7
-        T8[✅ testPublish]
-        PHOTON --> T8
-        T9[✅ testStatusReads]
-        PHOTON --> T9
-        T10[✅ testCriticalLocked]
-        PHOTON --> T10
-        T11[✅ testScheduledHeartbeat]
-        PHOTON --> T11
     end
 ```
 
@@ -216,7 +138,7 @@ flowchart LR
 photon add daemon-features
 
 # Get MCP config for your client
-photon get daemon-features --mcp
+photon info daemon-features --mcp
 ```
 
 ## 📦 Dependencies

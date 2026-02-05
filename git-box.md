@@ -2,7 +2,7 @@
 
 manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads
 
-> **57 tools** · Streaming Photon · v2.0.0 · MIT
+> **58 tools** · Streaming Photon · v2.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `elicitation`
 
@@ -15,7 +15,31 @@ No configuration required.
 ## 🔧 Tools
 
 
-### `main`
+### `configure` ⚡
+
+Configure the Git Box photon  Call this before using repository methods. Three behaviors: 1. **AI with known values**: Pass params directly to skip elicitation 2. **Already configured**: Loads existing config from disk 3. **First-time human**: Prompts user to enter values via elicitation
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `projectsRoot` | any | Yes | Root folder containing git repositories (e.g., ~/Projects)
+   * |
+
+
+
+
+**Example:**
+
+```typescript
+// AI knows the values - skip elicitation
+await configure({ projectsRoot: '/home/user/Projects' })
+```
+
+
+---
+
+
+### `main` ⚡
 
 Opens the mailbox interface for managing git repositories. Displays tracked repos with their status, commit history, and working changes.
 
@@ -33,7 +57,7 @@ Add a repository to track — prompts interactively if the folder isn't a git re
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to git repository |
+| `repoPath` | string | Yes | Path to git repository |
 
 
 
@@ -49,8 +73,8 @@ Initialize a new git repository
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `folderPath` | any | Yes | Path to folder |
-| `force` | any | Yes | Skip safety checks |
+| `folderPath` | string | Yes | Path to folder |
+| `force` | boolean | No | Skip safety checks |
 
 
 
@@ -77,7 +101,7 @@ Set the projects root folder
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `rootPath` | any | Yes | Path to folder containing git repositories |
+| `rootPath` | string | Yes | Path to folder containing git repositories |
 
 
 
@@ -93,7 +117,7 @@ Remove a repository from tracking
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to git repository |
+| `repoPath` | string | Yes | Path to git repository |
 
 
 
@@ -120,9 +144,9 @@ Get commit history for a repository (like inbox messages)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `limit` | any | Yes | Number of commits to fetch |
-| `branch` | any | Yes | Branch to show commits from |
+| `repoPath` | string | Yes | Path to repository |
+| `limit` | number | No | Number of commits to fetch |
+| `branch` | string | No | Branch to show commits from |
 
 
 
@@ -138,8 +162,8 @@ Get files changed in a specific commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `hash` | any | Yes | Commit hash |
+| `repoPath` | string | Yes | Path to repository |
+| `hash` | string | Yes | Commit hash |
 
 
 
@@ -155,7 +179,7 @@ Get current working tree status (staged and unstaged changes)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -171,8 +195,8 @@ Stage a file for commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to stage (or "." for all) |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to stage (or "." for all) |
 
 
 
@@ -188,8 +212,8 @@ Unstage a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to unstage |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to unstage |
 
 
 
@@ -205,8 +229,8 @@ Create a commit with staged changes
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `message` | any | Yes | Commit message |
+| `repoPath` | string | Yes | Path to repository |
+| `message` | string | Yes | Commit message |
 
 
 
@@ -222,8 +246,8 @@ Pull changes from remote
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `remote` | any | No | Remote name |
+| `repoPath` | string | Yes | Path to repository |
+| `remote` | string | No | Remote name |
 
 
 
@@ -239,8 +263,8 @@ Push changes to remote
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `remote` | any | No | Remote name |
+| `repoPath` | string | Yes | Path to repository |
+| `remote` | string | No | Remote name |
 
 
 
@@ -256,9 +280,9 @@ Fetch updates from remote without merging
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `remote` | any | No | Remote name |
-| `prune` | any | Yes | Remove remote-tracking references that no longer exist |
+| `repoPath` | string | Yes | Path to repository |
+| `remote` | string | No | Remote name |
+| `prune` | boolean | No | Remove remote-tracking references that no longer exist |
 
 
 
@@ -274,7 +298,7 @@ Get list of branches
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -290,8 +314,8 @@ Switch to a different branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `branch` | any | Yes | Branch name to switch to |
+| `repoPath` | string | Yes | Path to repository |
+| `branch` | string | Yes | Branch name to switch to |
 
 
 
@@ -307,9 +331,9 @@ Get diff for a file with syntax-highlighted output
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to diff |
-| `staged` | any | Yes | Whether to show staged diff |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to diff |
+| `staged` | boolean | No | Whether to show staged diff |
 
 
 
@@ -325,8 +349,8 @@ Discard changes in a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to discard changes |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to discard changes |
 
 
 
@@ -342,9 +366,9 @@ Get diff for a specific file in a commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `hash` | any | Yes | Commit hash |
-| `filePath` | any | Yes | File to get diff for |
+| `repoPath` | string | Yes | Path to repository |
+| `hash` | string | Yes | Commit hash |
+| `filePath` | string | Yes | File to get diff for |
 
 
 
@@ -360,9 +384,9 @@ Get file content (current version or from a specific commit)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to read |
-| `hash` | any | Yes | Optional commit hash (omit for working tree version) |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to read |
+| `hash` | string | No | Optional commit hash (omit for working tree version) |
 
 
 
@@ -378,9 +402,9 @@ Create a new branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `branchName` | any | Yes | Name for the new branch |
-| `startPoint` | any | No | Optional commit/branch to start from |
+| `repoPath` | string | Yes | Path to repository |
+| `branchName` | string | Yes | Name for the new branch |
+| `startPoint` | string | No | Optional commit/branch to start from |
 
 
 
@@ -396,9 +420,9 @@ Create and switch to a new branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `branchName` | any | Yes | Name for the new branch |
-| `startPoint` | any | Yes | Optional commit/branch to start from |
+| `repoPath` | string | Yes | Path to repository |
+| `branchName` | string | Yes | Name for the new branch |
+| `startPoint` | string | No | Optional commit/branch to start from |
 
 
 
@@ -414,9 +438,9 @@ Delete a branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `branchName` | any | Yes | Branch to delete |
-| `force` | any | Yes | Force delete even if not merged |
+| `repoPath` | string | Yes | Path to repository |
+| `branchName` | string | Yes | Branch to delete |
+| `force` | boolean | No | Force delete even if not merged |
 
 
 
@@ -432,9 +456,9 @@ Merge a branch into the current branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `branchName` | any | Yes | Branch to merge |
-| `noFastForward` | any | Yes | Create merge commit even if fast-forward is possible |
+| `repoPath` | string | Yes | Path to repository |
+| `branchName` | string | Yes | Branch to merge |
+| `noFastForward` | boolean | No | Create merge commit even if fast-forward is possible |
 
 
 
@@ -450,7 +474,7 @@ Abort an in-progress merge
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -466,8 +490,8 @@ Get reflog - history of all git operations (undo stack)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `limit` | any | Yes | Number of entries to fetch |
+| `repoPath` | string | Yes | Path to repository |
+| `limit` | number | No | Number of entries to fetch |
 
 
 
@@ -483,7 +507,7 @@ Undo the last git operation (soft reset to previous HEAD)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -499,9 +523,9 @@ Reset to a specific commit (from reflog or commit history)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `hash` | any | Yes | Commit hash to reset to |
-| `mode` | any | Yes | Reset mode: soft (keep changes staged), mixed (keep changes unstaged), hard (discard all) |
+| `repoPath` | string | Yes | Path to repository |
+| `hash` | string | Yes | Commit hash to reset to |
+| `mode` | 'soft' | 'mixed' | 'hard' | No | Reset mode: soft (keep changes staged), mixed (keep changes unstaged), hard (discard all) |
 
 
 
@@ -517,9 +541,9 @@ Recover a "lost" commit using reflog
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `hash` | any | Yes | Commit hash to recover (create a branch pointing to it) |
-| `branchName` | any | Yes | Name for the recovery branch |
+| `repoPath` | string | Yes | Path to repository |
+| `hash` | string | Yes | Commit hash to recover (create a branch pointing to it) |
+| `branchName` | string | No | Name for the recovery branch |
 
 
 
@@ -535,7 +559,7 @@ List all stashes
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -551,9 +575,9 @@ Create a new stash
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `message` | any | Yes | Optional stash message |
-| `includeUntracked` | any | Yes | Include untracked files |
+| `repoPath` | string | Yes | Path to repository |
+| `message` | string | No | Optional stash message |
+| `includeUntracked` | boolean | No | Include untracked files |
 
 
 
@@ -569,8 +593,8 @@ Apply a stash (keep the stash)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `stashRef` | any | Yes | Stash reference (e.g., "stash@{0}") - defaults to latest |
+| `repoPath` | string | Yes | Path to repository |
+| `stashRef` | string | No | Stash reference (e.g., "stash@{0}") - defaults to latest |
 
 
 
@@ -586,8 +610,8 @@ Pop a stash (apply and remove)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `stashRef` | any | Yes | Stash reference - defaults to latest |
+| `repoPath` | string | Yes | Path to repository |
+| `stashRef` | string | No | Stash reference - defaults to latest |
 
 
 
@@ -603,8 +627,8 @@ Drop (delete) a stash
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `stashRef` | any | Yes | Stash reference to drop |
+| `repoPath` | string | Yes | Path to repository |
+| `stashRef` | string | Yes | Stash reference to drop |
 
 
 
@@ -620,8 +644,8 @@ Show diff of a stash
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `stashRef` | any | Yes | Stash reference |
+| `repoPath` | string | Yes | Path to repository |
+| `stashRef` | string | No | Stash reference |
 
 
 
@@ -637,8 +661,8 @@ Clear all stashes (dangerous!)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `confirm` | any | Yes | Must be true to proceed |
+| `repoPath` | string | Yes | Path to repository |
+| `confirm` | boolean | Yes | Must be true to proceed |
 
 
 
@@ -654,9 +678,9 @@ Squash multiple commits into one
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `baseCommit` | any | Yes | The commit BEFORE the range to squash (commits after this get squashed) |
-| `message` | any | Yes | New commit message for the squashed commit |
+| `repoPath` | string | Yes | Path to repository |
+| `baseCommit` | string | Yes | The commit BEFORE the range to squash (commits after this get squashed) |
+| `message` | string | Yes | New commit message for the squashed commit |
 
 
 
@@ -672,9 +696,9 @@ Amend an older commit's message using automated rebase
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `commitHash` | any | Yes | The commit whose message to change |
-| `newMessage` | any | Yes | The new commit message |
+| `repoPath` | string | Yes | Path to repository |
+| `commitHash` | string | Yes | The commit whose message to change |
+| `newMessage` | string | Yes | The new commit message |
 
 
 
@@ -690,9 +714,9 @@ Remove a file from the entire git history (dangerous!)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to remove from history |
-| `confirm` | any | Yes | Must be true to proceed |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to remove from history |
+| `confirm` | boolean | Yes | Must be true to proceed |
 
 
 
@@ -708,9 +732,9 @@ Cherry-pick one or more commits from another branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `commits` | any | Yes | Array of commit hashes to cherry-pick (in order) |
-| `noCommit` | any | Yes | If true, stage changes without committing |
+| `repoPath` | string | Yes | Path to repository |
+| `commits` | string[] | Yes | Array of commit hashes to cherry-pick (in order) |
+| `noCommit` | boolean | No | If true, stage changes without committing |
 
 
 
@@ -726,7 +750,7 @@ Abort an in-progress cherry-pick
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -742,7 +766,7 @@ Continue cherry-pick after resolving conflicts
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -758,9 +782,9 @@ Revert a specific commit (creates a new commit that undoes it)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `commitHash` | any | Yes | Commit to revert |
-| `noCommit` | any | Yes | If true, stage the revert without committing |
+| `repoPath` | string | Yes | Path to repository |
+| `commitHash` | string | Yes | Commit to revert |
+| `noCommit` | boolean | No | If true, stage the revert without committing |
 
 
 
@@ -776,7 +800,7 @@ Abort an in-progress revert
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -792,8 +816,8 @@ Fixup - amend staged changes into an older commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `targetCommit` | any | Yes | The commit to amend the staged changes into |
+| `repoPath` | string | Yes | Path to repository |
+| `targetCommit` | string | Yes | The commit to amend the staged changes into |
 
 
 
@@ -809,8 +833,8 @@ Interactive rebase preview - shows what commits would be affected
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `baseCommit` | any | Yes | The commit to rebase onto (commits after this are affected) |
+| `repoPath` | string | Yes | Path to repository |
+| `baseCommit` | string | Yes | The commit to rebase onto (commits after this are affected) |
 
 
 
@@ -826,9 +850,9 @@ Perform a scripted rebase with custom actions for each commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `baseCommit` | any | Yes | The commit to rebase onto |
-| `actions` | any | Yes | Array of actions: { hash, action: 'pick'|'reword'|'squash'|'fixup'|'drop', message? } |
+| `repoPath` | string | Yes | Path to repository |
+| `baseCommit` | string | Yes | The commit to rebase onto |
+| `actions` | Array<{ hash: string | Yes | Array of actions: { hash, action: 'pick'|'reword'|'squash'|'fixup'|'drop', message? } |
 
 
 
@@ -844,7 +868,7 @@ Continue an in-progress rebase
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -860,7 +884,7 @@ Abort an in-progress rebase
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -876,7 +900,7 @@ Get conflicts in current merge/rebase/cherry-pick
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
+| `repoPath` | string | Yes | Path to repository |
 
 
 
@@ -892,8 +916,8 @@ Mark a conflicted file as resolved
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to mark as resolved |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to mark as resolved |
 
 
 
@@ -909,9 +933,9 @@ Use ours or theirs version for a conflicted file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | Conflicted file |
-| `version` | any | Yes | Which version to use: 'ours' or 'theirs' |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | Conflicted file |
+| `version` | 'ours' | 'theirs' | Yes | Which version to use: 'ours' or 'theirs' |
 
 
 
@@ -927,10 +951,10 @@ Get blame information for a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `filePath` | any | Yes | File to blame |
-| `startLine` | any | Yes | Optional start line |
-| `endLine` | any | Yes | Optional end line |
+| `repoPath` | string | Yes | Path to repository |
+| `filePath` | string | Yes | File to blame |
+| `startLine` | number | No | Optional start line |
+| `endLine` | number | No | Optional end line |
 
 
 
@@ -946,10 +970,10 @@ Search for commits by message, author, or content
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `query` | any | Yes | Search query |
-| `type` | any | Yes | Type of search: 'message', 'author', 'content', 'all' |
-| `limit` | any | Yes | Max results |
+| `repoPath` | string | Yes | Path to repository |
+| `query` | string | Yes | Search query |
+| `type` | 'message' | 'author' | 'content' | 'all' | No | Type of search: 'message', 'author', 'content', 'all' |
+| `limit` | number | No | Max results |
 
 
 
@@ -965,9 +989,9 @@ Find which commit introduced a specific line or change (pickaxe)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repoPath` | any | Yes | Path to repository |
-| `searchText` | any | Yes | Text to search for |
-| `filePath` | any | Yes | Optional file to limit search to |
+| `repoPath` | string | Yes | Path to repository |
+| `searchText` | string | Yes | Text to search for |
+| `filePath` | string | No | Optional file to limit search to |
 
 
 
@@ -986,120 +1010,122 @@ flowchart LR
     subgraph git_box["📦 Git Box"]
         direction TB
         PHOTON((🎯))
-        T0[🔧 main]
+        T0[🌊 configure (stream)]
         PHOTON --> T0
-        T1[🌊 repoAdd (stream)]
+        T1[🌊 main (stream)]
         PHOTON --> T1
-        T2[🔧 repoInit]
+        T2[🌊 repoAdd (stream)]
         PHOTON --> T2
-        T3[🔧 availableRepos]
+        T3[🔧 repoInit]
         PHOTON --> T3
-        T4[🔧 projectsRootSet]
+        T4[🔧 availableRepos]
         PHOTON --> T4
-        T5[🔧 repoRemove]
+        T5[🔧 projectsRootSet]
         PHOTON --> T5
-        T6[🔧 repos]
+        T6[🔧 repoRemove]
         PHOTON --> T6
-        T7[🔧 commits]
+        T7[🔧 repos]
         PHOTON --> T7
-        T8[🔧 commitFiles]
+        T8[🔧 commits]
         PHOTON --> T8
-        T9[🔧 status]
+        T9[🔧 commitFiles]
         PHOTON --> T9
-        T10[🔧 fileStage]
+        T10[🔧 status]
         PHOTON --> T10
-        T11[🔧 fileUnstage]
+        T11[🔧 fileStage]
         PHOTON --> T11
-        T12[🔧 commit]
+        T12[🔧 fileUnstage]
         PHOTON --> T12
-        T13[🔧 pull]
+        T13[🔧 commit]
         PHOTON --> T13
-        T14[📤 push]
+        T14[🔧 pull]
         PHOTON --> T14
-        T15[📖 fetch]
+        T15[📤 push]
         PHOTON --> T15
-        T16[🔧 branches]
+        T16[📖 fetch]
         PHOTON --> T16
-        T17[🔧 branchSwitch]
+        T17[🔧 branches]
         PHOTON --> T17
-        T18[🔧 diff]
+        T18[🔧 branchSwitch]
         PHOTON --> T18
-        T19[🔧 changesDiscard]
+        T19[🔧 diff]
         PHOTON --> T19
-        T20[🔧 commitDiff]
+        T20[🔧 changesDiscard]
         PHOTON --> T20
-        T21[🔧 fileContent]
+        T21[🔧 commitDiff]
         PHOTON --> T21
-        T22[🔧 branchCreate]
+        T22[🔧 fileContent]
         PHOTON --> T22
-        T23[🔧 branchCreateSwitch]
+        T23[🔧 branchCreate]
         PHOTON --> T23
-        T24[🔧 branchDelete]
+        T24[🔧 branchCreateSwitch]
         PHOTON --> T24
-        T25[🔧 branchMerge]
+        T25[🔧 branchDelete]
         PHOTON --> T25
-        T26[🔧 mergeAbort]
+        T26[🔧 branchMerge]
         PHOTON --> T26
-        T27[🔧 reflog]
+        T27[🔧 mergeAbort]
         PHOTON --> T27
-        T28[🔧 undoLast]
+        T28[🔧 reflog]
         PHOTON --> T28
-        T29[🔧 commitReset]
+        T29[🔧 undoLast]
         PHOTON --> T29
-        T30[🔧 commitRecover]
+        T30[🔧 commitReset]
         PHOTON --> T30
-        T31[🔧 stashes]
+        T31[🔧 commitRecover]
         PHOTON --> T31
-        T32[🔧 stashCreate]
+        T32[🔧 stashes]
         PHOTON --> T32
-        T33[🔧 stashApply]
+        T33[🔧 stashCreate]
         PHOTON --> T33
-        T34[🔧 stashPop]
+        T34[🔧 stashApply]
         PHOTON --> T34
-        T35[🔧 stashDrop]
+        T35[🔧 stashPop]
         PHOTON --> T35
-        T36[🔧 stashShow]
+        T36[🔧 stashDrop]
         PHOTON --> T36
-        T37[🔧 stashesClear]
+        T37[🔧 stashShow]
         PHOTON --> T37
-        T38[🔧 commitsSquash]
+        T38[🔧 stashesClear]
         PHOTON --> T38
-        T39[🔧 commitMessageAmend]
+        T39[🔧 commitsSquash]
         PHOTON --> T39
-        T40[🔧 fileRemoveFromHistory]
+        T40[🔧 commitMessageAmend]
         PHOTON --> T40
-        T41[🔧 cherryPick]
+        T41[🔧 fileRemoveFromHistory]
         PHOTON --> T41
-        T42[🔧 cherryPickAbort]
+        T42[🔧 cherryPick]
         PHOTON --> T42
-        T43[🔧 cherryPickContinue]
+        T43[🔧 cherryPickAbort]
         PHOTON --> T43
-        T44[🔧 commitRevert]
+        T44[🔧 cherryPickContinue]
         PHOTON --> T44
-        T45[🔧 revertAbort]
+        T45[🔧 commitRevert]
         PHOTON --> T45
-        T46[🔧 commitFixup]
+        T46[🔧 revertAbort]
         PHOTON --> T46
-        T47[🔧 rebasePreview]
+        T47[🔧 commitFixup]
         PHOTON --> T47
-        T48[🔧 rebaseScripted]
+        T48[🔧 rebasePreview]
         PHOTON --> T48
-        T49[🔧 rebaseContinue]
+        T49[🔧 rebaseScripted]
         PHOTON --> T49
-        T50[🔧 rebaseAbort]
+        T50[🔧 rebaseContinue]
         PHOTON --> T50
-        T51[🔧 conflicts]
+        T51[🔧 rebaseAbort]
         PHOTON --> T51
-        T52[🔧 conflictMarkResolved]
+        T52[🔧 conflicts]
         PHOTON --> T52
-        T53[🔧 conflictResolve]
+        T53[🔧 conflictMarkResolved]
         PHOTON --> T53
-        T54[🔧 blame]
+        T54[🔧 conflictResolve]
         PHOTON --> T54
-        T55[🔧 commitsSearch]
+        T55[🔧 blame]
         PHOTON --> T55
-        T56[🔧 changeFind]
+        T56[🔧 commitsSearch]
         PHOTON --> T56
+        T57[🔧 changeFind]
+        PHOTON --> T57
     end
 ```
 
@@ -1111,7 +1137,7 @@ flowchart LR
 photon add git-box
 
 # Get MCP config for your client
-photon get git-box --mcp
+photon info git-box --mcp
 ```
 
 ## 📦 Dependencies

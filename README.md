@@ -36,35 +36,35 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|----------|
 | [**AWS S3**](aws-s3.md) | Cloud object storage operations | 11 | - |
 | [**Code Diagram**](code-diagram.md) | Generate a Mermaid diagram from a file | 3 | 🔌📦 |
-| [**Connect Four**](connect-four.md) | Play against AI with distributed locks | 15 | 🎨📡 |
-| [**Daemon Features**](daemon-features.md) | Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub | 12 | 📡 |
+| [**Connect Four**](connect-four.md) | Play against AI with distributed locks | 8 | 🎨📡 |
+| [**Daemon Features**](daemon-features.md) | Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub | 6 | 📡 |
 | [**Dashboard**](dashboard.md) | Dashboard Photon | 6 | 🎨🎨 |
 | [**Data Sync**](data-sync.md) | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | ⚡⚡ |
 | [**Demo Photon**](demo.md) | Comprehensive feature demonstration | 21 | ⚡ |
 | [**Docker**](docker.md) | Container management operations | 10 | - |
 | [**Email**](email.md) | Send and receive emails via SMTP and IMAP | 8 | - |
-| [**Feature Showcase**](feature-showcase.md) | Feature Showcase — Core Runtime Feature Demos | 20 | ⚡📡 |
-| [**Filesystem**](filesystem.md) | File and directory operations | 23 | - |
+| [**Feature Showcase**](feature-showcase.md) | Feature Showcase — Core Runtime Feature Demos | 12 | ⚡📡 |
+| [**Filesystem**](filesystem.md) | File and directory operations | 13 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
-| [**@name git-box @icon 📬 @description Mailbox-style Git interface**](git-box.md) | manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads | 57 | ⚡🎨💬 |
-| [**Git**](git.md) | Local git repository operations | 15 | - |
+| [**@name git-box @icon 📬 @description Mailbox-style Git interface**](git-box.md) | manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads | 58 | ⚡🎨💬 |
+| [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |
 | [**Google Calendar**](google-calendar.md) | Calendar integration | 9 | - |
-| [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 10 | ⚡🎨 |
+| [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 5 | ⚡🎨 |
 | [**Jira**](jira.md) | Project management and issue tracking | 10 | - |
-| [**Kanban**](kanban.md) | Kanban Board Photon | 33 | 🎨📡 |
+| [**Kanban**](kanban.md) | Kanban Board Photon | 33 | ⚡🎨💬📡 |
 | [**Kitchen Sink**](kitchen-sink.md) | Kitchen Sink Photon | 25 | ⚡🎨 |
-| [**Math Photon MCP**](math.md) | Advanced math expression evaluator | 8 | - |
+| [**Math Photon MCP**](math.md) | Advanced math expression evaluator | 1 | - |
 | [**Mcp Orchestrator**](mcp-orchestrator.md) | MCP Orchestrator Photon | 10 | 🔌 |
-| [**MongoDB**](mongodb.md) | NoSQL database operations | 18 | - |
-| [**PostgreSQL**](postgres.md) | Database operations for PostgreSQL | 11 | - |
+| [**MongoDB**](mongodb.md) | NoSQL database operations | 13 | - |
+| [**PostgreSQL**](postgres.md) | Database operations for PostgreSQL | 7 | - |
 | [**Preferences**](preferences.md) | Preferences Photon | 7 | ⚡🎨💬⚡ |
-| [**Redis**](redis.md) | In-memory data store and cache | 23 | - |
+| [**Redis**](redis.md) | In-memory data store and cache | 18 | - |
 | [**Slack**](slack.md) | Send messages and manage Slack workspace | 7 | - |
-| [**SQLite Photon MCP**](sqlite.md) | SQLite database operations | 15 | - |
+| [**SQLite Photon MCP**](sqlite.md) | SQLite database operations | 9 | - |
 | [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon | 20 | 🎨🎨 |
-| [**Time**](time.md) | Timezone and time conversion operations | 9 | - |
-| [**Web**](web.md) | Web Agent Photon (Search + Read) | 5 | ⚡ |
+| [**Time**](time.md) | Timezone and time conversion operations | 3 | - |
+| [**Web**](web.md) | Web Agent Photon (Search + Read) | 2 | ⚡ |
 
 
 **Total:** 31 photons ready to use

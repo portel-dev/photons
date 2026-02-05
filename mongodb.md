@@ -2,7 +2,7 @@
 
 NoSQL database operations
 
-> **18 tools** · API Photon · v1.0.0 · MIT
+> **13 tools** · API Photon · v1.0.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -31,10 +31,10 @@ Find documents in a collection
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter (MongoDB query object) (e.g. `{"age":{"$gt":25}}`) |
-| `limit` | any | No | Maximum number of documents to return [min: 1, max: 1000] |
-| `sort` | any | Yes | Sort specification (e.g. `{"age":-1}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | No | Query filter (MongoDB query object) (e.g. `{"age":{"$gt":25}}`) |
+| `limit` | number | No | Maximum number of documents to return [min: 1, max: 1000] |
+| `sort` | object | No | Sort specification (e.g. `{"age":-1}`) |
 
 
 
@@ -50,8 +50,8 @@ Find a single document
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter (MongoDB query object) [min: 1] (e.g. `{"email":"user@example.com"}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | Yes | Query filter (MongoDB query object) [min: 1] (e.g. `{"email":"user@example.com"}`) |
 
 
 
@@ -67,8 +67,8 @@ Insert a document
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `document` | any | Yes | Document to insert [min: 1] (e.g. `{"name":"John","email":"john@example.com","age":30}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `document` | object | Yes | Document to insert [min: 1] (e.g. `{"name":"John","email":"john@example.com","age":30}`) |
 
 
 
@@ -84,8 +84,8 @@ Insert multiple documents
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `documents` | any | Yes | Array of documents to insert [min: 1] (e.g. `[{"name":"John"},{"name":"Jane"}]`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `documents` | object[] | Yes | Array of documents to insert [min: 1] (e.g. `[{"name":"John"},{"name":"Jane"}]`) |
 
 
 
@@ -101,10 +101,10 @@ Update a document
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter to match documents [min: 1] (e.g. `{"email":"user@example.com"}`) |
-| `update` | any | Yes | Update operations [min: 1] (e.g. `{"$set":{"name":"John"}}`) |
-| `upsert` | any | No | Create document if it doesn't exist |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | Yes | Query filter to match documents [min: 1] (e.g. `{"email":"user@example.com"}`) |
+| `update` | object | Yes | Update operations [min: 1] (e.g. `{"$set":{"name":"John"}}`) |
+| `upsert` | boolean | No | Create document if it doesn't exist |
 
 
 
@@ -120,9 +120,9 @@ Update multiple documents
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter to match documents [min: 1] (e.g. `{"age":{"$gt":25}}`) |
-| `update` | any | Yes | Update operations [min: 1] (e.g. `{"$inc":{"loginCount":1}}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | Yes | Query filter to match documents [min: 1] (e.g. `{"age":{"$gt":25}}`) |
+| `update` | object | Yes | Update operations [min: 1] (e.g. `{"$inc":{"loginCount":1}}`) |
 
 
 
@@ -138,8 +138,8 @@ Delete a document
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter to match document [min: 1] (e.g. `{"email":"user@example.com"}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | Yes | Query filter to match document [min: 1] (e.g. `{"email":"user@example.com"}`) |
 
 
 
@@ -155,8 +155,8 @@ Delete multiple documents
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter to match documents [min: 1] (e.g. `{"status":"inactive"}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | Yes | Query filter to match documents [min: 1] (e.g. `{"status":"inactive"}`) |
 
 
 
@@ -172,8 +172,8 @@ Run aggregation pipeline
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `orders`) |
-| `pipeline` | any | Yes | Aggregation pipeline array [min: 1] (e.g. `[{"$match":{"status":"completed"}},{"$group":{"_id":"$customerId","total":{"$sum":"$amount"}}}]`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `orders`) |
+| `pipeline` | object[] | Yes | Aggregation pipeline array [min: 1] (e.g. `[{"$match":{"status":"completed"}},{"$group":{"_id":"$customerId","total":{"$sum":"$amount"}}}]`) |
 
 
 
@@ -189,8 +189,8 @@ Count documents matching filter
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `filter` | any | Yes | Query filter (optional, counts all if omitted) (e.g. `{"status":"active"}`) |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `filter` | object | No | Query filter (optional, counts all if omitted) (e.g. `{"status":"active"}`) |
 
 
 
@@ -217,9 +217,9 @@ Create an index on a collection
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `keys` | any | Yes | Index specification [min: 1] (e.g. `{"email":1}`) |
-| `unique` | any | No | Create unique index |
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `keys` | object | Yes | Index specification [min: 1] (e.g. `{"email":1}`) |
+| `unique` | boolean | No | Create unique index |
 
 
 
@@ -235,64 +235,9 @@ Get distinct values for a field
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `collection` | any | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
-| `field` | any | Yes | Field name to get distinct values from [min: 1, max: 200] (e.g. `country`) |
-| `filter` | any | Yes | Optional query filter (e.g. `{"status":"active"}`) |
-
-
-
-
-
----
-
-
-### `testAfterAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testCollections`
-
-No description available
-
-
-
-
-
----
-
-
-### `testInsertFind`
-
-No description available
-
-
-
-
-
----
-
-
-### `testCount`
-
-No description available
-
-
-
-
-
----
-
-
-### `testDelete`
-
-No description available
+| `collection` | string | Yes | Collection name [min: 1, max: 120] (e.g. `users`) |
+| `field` | string | Yes | Field name to get distinct values from [min: 1, max: 200] (e.g. `country`) |
+| `filter` | object | No | Optional query filter (e.g. `{"status":"active"}`) |
 
 
 
@@ -337,16 +282,6 @@ flowchart LR
         PHOTON --> T11
         T12[🔧 distinct]
         PHOTON --> T12
-        T13[✅ testAfterAll]
-        PHOTON --> T13
-        T14[✅ testCollections]
-        PHOTON --> T14
-        T15[✅ testInsertFind]
-        PHOTON --> T15
-        T16[✅ testCount]
-        PHOTON --> T16
-        T17[✅ testDelete]
-        PHOTON --> T17
     end
 
     subgraph deps["Dependencies"]
@@ -363,7 +298,7 @@ flowchart LR
 photon add mongodb
 
 # Get MCP config for your client
-photon get mongodb --mcp
+photon info mongodb --mcp
 ```
 
 ## 📦 Dependencies

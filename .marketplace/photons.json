@@ -66,14 +66,7 @@
         "resign",
         "stats",
         "replay",
-        "scheduledCleanup",
-        "testEmptyBoardRendering",
-        "testBoardWithPieces",
-        "testNewGameReturnsValidBoard",
-        "testDropPieceUpdatesBoard",
-        "testInvalidColumn",
-        "testWinDetection",
-        "testStatsTracking"
+        "scheduledCleanup"
       ],
       "assets": [
         "ui/board.html"
@@ -99,13 +92,7 @@
         "critical",
         "protect",
         "publish",
-        "status",
-        "testWebhookEcho",
-        "testManualLock",
-        "testPublish",
-        "testStatusReads",
-        "testCriticalLocked",
-        "testScheduledHeartbeat"
+        "status"
       ],
       "assets": [],
       "photonType": "api",
@@ -264,15 +251,7 @@
         "formatMarkdown",
         "increment",
         "count",
-        "broadcast",
-        "testLifecycleHooksRan",
-        "testConfigureRoundtrip",
-        "testEmitTypes",
-        "testPrivateMethodHidden",
-        "testInstanceState",
-        "testFormatAnnotations",
-        "testTemplateMethod",
-        "testBroadcast"
+        "broadcast"
       ],
       "assets": [],
       "photonType": "streaming",
@@ -302,17 +281,7 @@
         "info",
         "exists",
         "search",
-        "workdir",
-        "testBeforeAll",
-        "testAfterAll",
-        "testRead",
-        "testWrite",
-        "testExists",
-        "testInfo",
-        "testList",
-        "testCopy",
-        "testMkdir",
-        "testGetWorkdir"
+        "workdir"
       ],
       "assets": [],
       "photonType": "api",
@@ -354,8 +323,9 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:1e2f4b7ebab90c2753f8b10b59ff368c84ebd84a871b3e0d66612275762183c3",
+      "hash": "sha256:b098a81c61dcb26f4352f683b1d772dfbe9d6692a53e8fd33b2153639968d908",
       "tools": [
+        "configure",
         "main",
         "repoAdd",
         "repoInit",
@@ -443,11 +413,7 @@
         "add",
         "commit",
         "push",
-        "pull",
-        "testStatus",
-        "testLog",
-        "testDiff",
-        "testBranches"
+        "pull"
       ],
       "assets": [],
       "photonType": "api",
@@ -510,12 +476,7 @@
         "workflow",
         "status",
         "assets",
-        "report",
-        "testVersionInfo",
-        "testWorkflowSteps",
-        "testAssetDiscovery",
-        "testResourceMethod",
-        "testMarkdownReport"
+        "report"
       ],
       "assets": [
         "integration-demo/ui/result-viewer.html",
@@ -559,7 +520,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:f349998851008d100bade43d52af0c7d8f5930edd8f6e3d18cc70dc02bb69fc4",
+      "hash": "sha256:6c99feef9513303bf70617fa03207fb1415295367b5f747108b0f02669b4030a",
       "tools": [
         "configure",
         "installHooks",
@@ -599,13 +560,16 @@
         "kanban/boards/default.json",
         "kanban/boards/photon.json",
         "kanban/boards/test-columns.json",
+        "kanban/config.json",
         "kanban/data.json",
         "kanban/ui/board.html",
         "kanban/ui-errors.log"
       ],
-      "photonType": "api",
+      "photonType": "streaming",
       "features": [
+        "generator",
         "custom-ui",
+        "elicitation",
         "stateful",
         "channels"
       ]
@@ -665,14 +629,7 @@
       "source": "../math.photon.ts",
       "hash": "sha256:3483976c636de7ad88824c4695a0492364c2961e363f237ae9f5259ab2d26f4d",
       "tools": [
-        "calculate",
-        "testBasicArithmetic",
-        "testSqrt",
-        "testPower",
-        "testAbs",
-        "testMean",
-        "testComplexExpression",
-        "testExternalService"
+        "calculate"
       ],
       "assets": [],
       "photonType": "api",
@@ -725,12 +682,7 @@
         "count",
         "collections",
         "index",
-        "distinct",
-        "testAfterAll",
-        "testCollections",
-        "testInsertFind",
-        "testCount",
-        "testDelete"
+        "distinct"
       ],
       "assets": [],
       "photonType": "api",
@@ -751,11 +703,7 @@
         "describe",
         "indexes",
         "insert",
-        "stats",
-        "testQuery",
-        "testQueryWithParams",
-        "testTables",
-        "testStats"
+        "stats"
       ],
       "assets": [],
       "photonType": "api",
@@ -819,12 +767,7 @@
         "hget",
         "hset",
         "hgetall",
-        "flush",
-        "testAfterAll",
-        "testSetGet",
-        "testDel",
-        "testExists",
-        "testSetWithTtl"
+        "flush"
       ],
       "assets": [],
       "photonType": "api",
@@ -868,13 +811,7 @@
         "listTables",
         "schema",
         "close",
-        "backup",
-        "testBeforeAll",
-        "testAfterAll",
-        "testOpen",
-        "testTables",
-        "testInsertQuery",
-        "testSchema"
+        "backup"
       ],
       "assets": [],
       "photonType": "api",
@@ -931,13 +868,7 @@
       "tools": [
         "now",
         "convert",
-        "timezones",
-        "testNow",
-        "testNowWithTimezone",
-        "testNowInvalidTimezone",
-        "testTimezones",
-        "testTimezonesRegion",
-        "testConvert"
+        "timezones"
       ],
       "assets": [],
       "photonType": "api",
@@ -953,10 +884,7 @@
       "hash": "sha256:9507dc79ae689770a8a05850a7e6c5aa32be93d1e50f095cf953f670f26245a2",
       "tools": [
         "search",
-        "read",
-        "testSearch",
-        "testRead",
-        "testReadInvalidUrl"
+        "read"
       ],
       "assets": [],
       "photonType": "streaming",

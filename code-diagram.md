@@ -22,10 +22,10 @@ Generate a Mermaid diagram from code string
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `code` | any | Yes | The TypeScript/JavaScript code to analyze |
-| `type` | any | Yes | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
-| `style` | any | Yes | Diagram style {@default linear} [choice: linear,branching,structure] |
-| `name` | any | Yes | Optional name for the diagram {@default Code} |
+| `code` | string | Yes | The TypeScript/JavaScript code to analyze |
+| `type` | DiagramType | No | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
+| `style` | DiagramStyle | No | Diagram style {@default linear} [choice: linear,branching,structure] |
+| `name` | string | No | Optional name for the diagram {@default Code} |
 
 
 
@@ -41,9 +41,9 @@ Generate a Mermaid diagram from a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | Path to the TypeScript/JavaScript file |
-| `type` | any | Yes | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
-| `style` | any | Yes | Diagram style {@default linear} [choice: linear,branching,structure] |
+| `path` | string | Yes | Path to the TypeScript/JavaScript file |
+| `type` | DiagramType | No | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
+| `style` | DiagramStyle | No | Diagram style {@default linear} [choice: linear,branching,structure] |
 
 
 
@@ -95,7 +95,7 @@ flowchart LR
 photon add code-diagram
 
 # Get MCP config for your client
-photon get code-diagram --mcp
+photon info code-diagram --mcp
 ```
 
 ## 📦 Dependencies

@@ -55,8 +55,8 @@ Add a new task
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `title` | any | Yes | Task title |
-| `priority` | any | Yes | Task priority |
+| `title` | string | Yes | Task title |
+| `priority` | 'low' | 'medium' | 'high' | No | Task priority |
 
 
 
@@ -72,8 +72,8 @@ Update task status
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Task ID |
-| `status` | any | Yes | New status |
+| `id` | string | Yes | Task ID |
+| `status` | 'pending' | 'in_progress' | 'completed' | Yes | New status |
 
 
 
@@ -89,7 +89,7 @@ Delete a task
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Task ID to delete |
+| `id` | string | Yes | Task ID to delete |
 
 
 
@@ -131,7 +131,7 @@ flowchart LR
 photon add dashboard
 
 # Get MCP config for your client
-photon get dashboard --mcp
+photon info dashboard --mcp
 ```
 
 ## 📦 Dependencies

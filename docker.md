@@ -45,7 +45,7 @@ Start a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
 
 
 
@@ -61,8 +61,8 @@ Stop a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `timeout` | any | No | Seconds to wait before killing [min: 0, max: 300] |
+| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `timeout` | number | No | Seconds to wait before killing [min: 0, max: 300] |
 
 
 
@@ -78,8 +78,8 @@ Restart a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `timeout` | any | No | Seconds to wait before killing [min: 0, max: 300] |
+| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `timeout` | number | No | Seconds to wait before killing [min: 0, max: 300] |
 
 
 
@@ -95,8 +95,8 @@ Remove a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `force` | any | No | Force remove even if running |
+| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `force` | boolean | No | Force remove even if running |
 
 
 
@@ -112,9 +112,9 @@ Get container logs
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `tail` | any | No | Number of lines from the end of logs [min: 1, max: 10000] |
-| `timestamps` | any | No | Show timestamps |
+| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `tail` | number | No | Number of lines from the end of logs [min: 1, max: 10000] |
+| `timestamps` | boolean | No | Show timestamps |
 
 
 
@@ -141,8 +141,8 @@ Pull an image
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | any | Yes | Image name [min: 1, max: 200] (e.g. `nginx`) |
-| `tag` | any | No | Image tag [max: 50] (e.g. `alpine`) |
+| `name` | string | Yes | Image name [min: 1, max: 200] (e.g. `nginx`) |
+| `tag` | string | No | Image tag [max: 50] (e.g. `alpine`) |
 
 
 
@@ -158,8 +158,8 @@ Remove an image
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Image ID or name [min: 1, max: 200] (e.g. `nginx:alpine`) |
-| `force` | any | No | Force removal even if used by containers |
+| `id` | string | Yes | Image ID or name [min: 1, max: 200] (e.g. `nginx:alpine`) |
+| `force` | boolean | No | Force removal even if used by containers |
 
 
 
@@ -175,7 +175,7 @@ Get container stats
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | any | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
 
 
 
@@ -230,7 +230,7 @@ flowchart LR
 photon add docker
 
 # Get MCP config for your client
-photon get docker --mcp
+photon info docker --mcp
 ```
 
 ## 📦 Dependencies

@@ -81,7 +81,7 @@ Echo back a message
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `message` | any | Yes | The message to echo |
+| `message` | string | Yes | The message to echo |
 
 
 
@@ -97,8 +97,8 @@ Add two numbers
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `a` | any | Yes | First number |
-| `b` | any | Yes | Second number |
+| `a` | number | Yes | First number |
+| `b` | number | Yes | Second number |
 
 
 
@@ -114,7 +114,7 @@ Greet with optional name
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | any | No | Optional name |
+| `name` | string | No | Optional name |
 
 
 
@@ -130,7 +130,7 @@ Set log level
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `level` | any | Yes | Log level to set |
+| `level` | 'debug' | 'info' | 'warn' | 'error' | Yes | Log level to set |
 
 
 
@@ -146,7 +146,7 @@ Demonstrates progress indicators
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `steps` | any | Yes | Number of steps to execute |
+| `steps` | number | No | Number of steps to execute |
 
 
 
@@ -217,7 +217,7 @@ Counter with persistent state
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `action` | any | Yes | Action to perform |
+| `action` | 'increment' | 'decrement' | 'reset' | 'get' | Yes | Action to perform |
 
 
 
@@ -233,8 +233,8 @@ Todo list manager
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `action` | any | Yes | Action to perform |
-| `item` | any | Yes | Todo item text |
+| `action` | 'add' | 'remove' | 'list' | 'clear' | Yes | Action to perform |
+| `item` | string | No | Todo item text |
 
 
 
@@ -350,7 +350,7 @@ flowchart LR
 photon add demo
 
 # Get MCP config for your client
-photon get demo --mcp
+photon info demo --mcp
 ```
 
 ## 📦 Dependencies

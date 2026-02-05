@@ -33,7 +33,7 @@ Get a specific preference value
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | - The preference key to retrieve |
+| `key` | keyof UserPreferences | Yes | - The preference key to retrieve |
 
 
 
@@ -82,7 +82,7 @@ Import preferences from JSON
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `preferences` | any | Yes | - JSON object with preference values |
+| `preferences` | Partial<UserPreferences> | Yes | - JSON object with preference values |
 
 
 
@@ -160,7 +160,7 @@ flowchart TD
 photon add preferences
 
 # Get MCP config for your client
-photon get preferences --mcp
+photon info preferences --mcp
 ```
 
 ## 📦 Dependencies

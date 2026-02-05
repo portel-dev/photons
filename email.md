@@ -49,13 +49,13 @@ Send an email
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `to` | any | Yes | Recipient email address or comma-separated addresses |
-| `subject` | any | Yes | Email subject |
-| `body` | any | Yes | Email body (plain text or HTML) |
-| `html` | any | No | Set to true if body contains HTML |
-| `cc` | any | Yes | CC recipients (optional, comma-separated) |
-| `bcc` | any | Yes | BCC recipients (optional, comma-separated) |
-| `from` | any | Yes | Sender email (optional, defaults to smtpUser) |
+| `to` | string | Yes | Recipient email address or comma-separated addresses |
+| `subject` | string | Yes | Email subject |
+| `body` | string | Yes | Email body (plain text or HTML) |
+| `html` | boolean | No | Set to true if body contains HTML |
+| `cc` | string | No | CC recipients (optional, comma-separated) |
+| `bcc` | string | No | BCC recipients (optional, comma-separated) |
+| `from` | string | No | Sender email (optional, defaults to smtpUser) |
 
 
 
@@ -71,10 +71,10 @@ Send an email with attachments
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `to` | any | Yes | Recipient email address |
-| `subject` | any | Yes | Email subject |
-| `body` | any | Yes | Email body |
-| `attachments` | any | Yes | Array of attachments with filename and content |
+| `to` | string | Yes | Recipient email address |
+| `subject` | string | Yes | Email subject |
+| `body` | string | Yes | Email body |
+| `attachments` | Array<{ filename: string | Yes | Array of attachments with filename and content |
 | `html` | any | No | Set to true if body contains HTML |
 
 
@@ -92,8 +92,8 @@ List emails from inbox
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `limit` | any | No | Maximum number of emails to return |
-| `unreadOnly` | any | No | Only return unread emails |
-| `mailbox` | any | No | Mailbox to check |
+| `unreadOnly` | boolean | No | Only return unread emails |
+| `mailbox` | string } | No | Mailbox to check |
 
 
 
@@ -109,8 +109,8 @@ Get a specific email by sequence number
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | any | Yes | Email sequence number (from listInbox) |
-| `mailbox` | any | No | Mailbox to check |
+| `uid` | number | Yes | Email sequence number (from listInbox) |
+| `mailbox` | string | No | Mailbox to check |
 
 
 
@@ -126,10 +126,10 @@ Search emails by criteria
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | any | Yes | Search query (from, subject, or body text) |
-| `searchIn` | any | No | Where to search: from, subject, or body |
-| `limit` | any | No | Maximum results |
-| `mailbox` | any | No | Mailbox to search |
+| `query` | string | Yes | Search query (from, subject, or body text) |
+| `searchIn` | 'from' | 'subject' | 'body' | No | Where to search: from, subject, or body |
+| `limit` | number | No | Maximum results |
+| `mailbox` | string | No | Mailbox to search |
 
 
 
@@ -145,8 +145,8 @@ Mark an email as read
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | any | Yes | Email sequence number |
-| `mailbox` | any | No | Mailbox name |
+| `uid` | number | Yes | Email sequence number |
+| `mailbox` | string | No | Mailbox name |
 
 
 
@@ -162,8 +162,8 @@ Delete an email
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | any | Yes | Email sequence number |
-| `mailbox` | any | No | Mailbox name |
+| `uid` | number | Yes | Email sequence number |
+| `mailbox` | string | No | Mailbox name |
 
 
 
@@ -179,9 +179,9 @@ Move email to another mailbox (archive)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | any | Yes | Email sequence number |
-| `targetMailbox` | any | Yes | Target mailbox name (e.g., Archive, Trash) |
-| `sourceMailbox` | any | No | Source mailbox |
+| `uid` | number | Yes | Email sequence number |
+| `targetMailbox` | string | Yes | Target mailbox name (e.g., Archive, Trash) |
+| `sourceMailbox` | string | No | Source mailbox |
 
 
 
@@ -234,7 +234,7 @@ flowchart LR
 photon add email
 
 # Get MCP config for your client
-photon get email --mcp
+photon info email --mcp
 ```
 
 ## 📦 Dependencies

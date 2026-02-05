@@ -2,7 +2,7 @@
 
 Integration Demo — Dependencies, Assets, Stateful Workflows
 
-> **10 tools** · Streaming Photon · v1.0.0 · MIT
+> **5 tools** · Streaming Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `stateful`
 
@@ -33,8 +33,8 @@ A multi-step stateful workflow with checkpoint yields  Each checkpoint persists 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `input` | any | Yes | Input data to process |
-| `steps` | any | Yes | Number of processing steps {@default 3} [min: 2, max: 10] |
+| `input` | string | Yes | Input data to process |
+| `steps` | number | No | Number of processing steps {@default 3} [min: 2, max: 10] |
 
 
 
@@ -76,61 +76,6 @@ Render platform details as a markdown report
 ---
 
 
-### `testVersionInfo`
-
-Verify info returns valid structure
-
-
-
-
-
----
-
-
-### `testWorkflowSteps`
-
-Verify workflow generator yields checkpoints and completes
-
-
-
-
-
----
-
-
-### `testAssetDiscovery`
-
-Verify asset folder structure
-
-
-
-
-
----
-
-
-### `testResourceMethod`
-
-Verify resource method returns valid data
-
-
-
-
-
----
-
-
-### `testMarkdownReport`
-
-Verify report returns markdown
-
-
-
-
-
----
-
-
 
 
 
@@ -151,16 +96,6 @@ flowchart LR
         PHOTON --> T3
         T4[🔧 report]
         PHOTON --> T4
-        T5[✅ testVersionInfo]
-        PHOTON --> T5
-        T6[✅ testWorkflowSteps]
-        PHOTON --> T6
-        T7[✅ testAssetDiscovery]
-        PHOTON --> T7
-        T8[✅ testResourceMethod]
-        PHOTON --> T8
-        T9[✅ testMarkdownReport]
-        PHOTON --> T9
     end
 ```
 
@@ -172,7 +107,7 @@ flowchart LR
 photon add integration-demo
 
 # Get MCP config for your client
-photon get integration-demo --mcp
+photon info integration-demo --mcp
 ```
 
 ## 📦 Dependencies
