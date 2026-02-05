@@ -526,12 +526,22 @@ export class GitBoxPhoton extends PhotonMCP {
             // No upstream configured
           }
 
+          // Count total commits
+          let totalCommits = 0;
+          try {
+            const count = await this._runGit(repoPath, 'rev-list --count HEAD');
+            totalCommits = parseInt(count) || 0;
+          } catch {
+            // Empty repo or other issue
+          }
+
           return {
             path: repoPath,
             name,
             branch,
             uncommitted,
             unpushed,
+            totalCommits,
             badge: uncommitted + unpushed,
           };
         } catch {

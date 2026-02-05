@@ -323,7 +323,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:b098a81c61dcb26f4352f683b1d772dfbe9d6692a53e8fd33b2153639968d908",
+      "hash": "sha256:deb678917464642a064f3b70f517223b1720fda834bc77240908f3d331610266",
       "tools": [
         "configure",
         "main",

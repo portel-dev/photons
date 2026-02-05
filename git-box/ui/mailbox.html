@@ -259,10 +259,6 @@
       color: var(--text-primary);
     }
 
-    .repo-badge.clean::before {
-      content: "✓";
-    }
-
     /* Main Content */
     .main-content {
       flex: 1;
@@ -2365,7 +2361,7 @@
           <button class="repo-overflow-btn" onclick="event.stopPropagation(); showRepoContextMenu(event, '${repo.path.replace(/'/g, "\\'")}')" title="More actions">···</button>
           ${repo.badge > 0
             ? `<span class="repo-badge">${repo.badge}</span>`
-            : `<span class="repo-badge clean"></span>`
+            : `<span class="repo-badge clean">${repo.totalCommits || 0}</span>`
           }
         </div>
       `).join('');
