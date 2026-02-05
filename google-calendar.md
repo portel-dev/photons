@@ -34,9 +34,9 @@ List upcoming events
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
-| `maxResults` | any | No | Maximum number of events to return [min: 1, max: 100] |
-| `timeMin` | any | Yes | Start time (ISO 8601, default: now) [format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
-| `timeMax` | any | Yes | End time (ISO 8601, optional) [format: date-time] (e.g. `2024-03-20T18:00:00Z`) |
+| `maxResults` | number | No | Maximum number of events to return [min: 1, max: 100] |
+| `timeMin` | string | No | Start time (ISO 8601, default: now) [format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
+| `timeMax` | string | No | End time (ISO 8601, optional) [format: date-time] (e.g. `2024-03-20T18:00:00Z`) |
 
 
 
@@ -52,8 +52,8 @@ Get a specific event
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `eventId` | any | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `eventId` | string | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
+| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -69,13 +69,13 @@ Create a new event
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `summary` | any | Yes | Event title [min: 1, max: 200] (e.g. `Team Meeting`) |
-| `start` | any | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T14:00:00Z`) |
-| `end` | any | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T15:00:00Z`) |
-| `description` | any | No | Event description [max: 5000] (e.g. `Quarterly planning session`) |
-| `location` | any | No | Event location [max: 500] (e.g. `Conference Room A`) |
-| `attendees` | any | No | Array of attendee email addresses [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `summary` | string | Yes | Event title [min: 1, max: 200] (e.g. `Team Meeting`) |
+| `start` | string | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T14:00:00Z`) |
+| `end` | string | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T15:00:00Z`) |
+| `description` | string | No | Event description [max: 5000] (e.g. `Quarterly planning session`) |
+| `location` | string | No | Event location [max: 500] (e.g. `Conference Room A`) |
+| `attendees` | string[] | No | Array of attendee email addresses [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
+| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -91,7 +91,7 @@ Update an existing event
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `eventId` | any | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
+| `eventId` | string | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
 | `updates` | any | Yes | Object containing fields to update |
 | `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
 
@@ -109,8 +109,8 @@ Delete an event
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `eventId` | any | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `eventId` | string | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
+| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -137,9 +137,9 @@ Check free/busy status
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `emails` | any | Yes | Array of email addresses to check [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
-| `timeMin` | any | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
-| `timeMax` | any | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T18:00:00Z`) |
+| `emails` | string[] | Yes | Array of email addresses to check [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
+| `timeMin` | string | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
+| `timeMax` | string | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T18:00:00Z`) |
 
 
 
@@ -155,9 +155,9 @@ Search for events
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | any | Yes | Search query [min: 1, max: 500] (e.g. `team meeting`) |
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
-| `maxResults` | any | No | Maximum number of results [min: 1, max: 100] |
+| `query` | string | Yes | Search query [min: 1, max: 500] (e.g. `team meeting`) |
+| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `maxResults` | number | No | Maximum number of results [min: 1, max: 100] |
 
 
 
@@ -174,7 +174,7 @@ Get upcoming events within specified hours
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `hours` | any | No | Number of hours from now [min: 1, max: 720] (e.g. `48`) |
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `calendarId` | string } | No | Calendar ID [max: 200] (e.g. `primary`) |
 
 
 
@@ -227,7 +227,7 @@ flowchart LR
 photon add google-calendar
 
 # Get MCP config for your client
-photon get google-calendar --mcp
+photon info google-calendar --mcp
 ```
 
 ## 📦 Dependencies

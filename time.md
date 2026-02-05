@@ -2,7 +2,7 @@
 
 Timezone and time conversion operations
 
-> **9 tools** · API Photon · v1.0.0 · MIT
+> **3 tools** · API Photon · v1.0.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -45,10 +45,10 @@ Convert time from one timezone to another
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `source_timezone` | any | Yes | Source IANA timezone [min: 1, max: 100] (e.g. `America/New_York`) |
-| `time` | any | Yes | Time in 24-hour format (HH:MM) [min: 1, max: 10, format: time] (e.g. `14:30`) |
-| `target_timezone` | any | Yes | Target IANA timezone [min: 1, max: 100] (e.g. `Europe/London`) |
-| `date` | any | Yes | Date in YYYY-MM-DD format (optional, default: today) [max: 20, format: date] (e.g. `2024-03-15`) |
+| `source_timezone` | string | Yes | Source IANA timezone [min: 1, max: 100] (e.g. `America/New_York`) |
+| `time` | string | Yes | Time in 24-hour format (HH:MM) [min: 1, max: 10, format: time] (e.g. `14:30`) |
+| `target_timezone` | string | Yes | Target IANA timezone [min: 1, max: 100] (e.g. `Europe/London`) |
+| `date` | string | No | Date in YYYY-MM-DD format (optional, default: today) [max: 20, format: date] (e.g. `2024-03-15`) |
 
 
 
@@ -73,72 +73,6 @@ List common IANA timezones by region
 ---
 
 
-### `testNow`
-
-No description available
-
-
-
-
-
----
-
-
-### `testNowWithTimezone`
-
-No description available
-
-
-
-
-
----
-
-
-### `testNowInvalidTimezone`
-
-No description available
-
-
-
-
-
----
-
-
-### `testTimezones`
-
-No description available
-
-
-
-
-
----
-
-
-### `testTimezonesRegion`
-
-No description available
-
-
-
-
-
----
-
-
-### `testConvert`
-
-No description available
-
-
-
-
-
----
-
-
 
 
 
@@ -155,18 +89,6 @@ flowchart LR
         PHOTON --> T1
         T2[🔧 timezones]
         PHOTON --> T2
-        T3[✅ testNow]
-        PHOTON --> T3
-        T4[✅ testNowWithTimezone]
-        PHOTON --> T4
-        T5[✅ testNowInvalidTimezone]
-        PHOTON --> T5
-        T6[✅ testTimezones]
-        PHOTON --> T6
-        T7[✅ testTimezonesRegion]
-        PHOTON --> T7
-        T8[✅ testConvert]
-        PHOTON --> T8
     end
 ```
 
@@ -178,7 +100,7 @@ flowchart LR
 photon add time
 
 # Get MCP config for your client
-photon get time --mcp
+photon info time --mcp
 ```
 
 ## 📦 Dependencies

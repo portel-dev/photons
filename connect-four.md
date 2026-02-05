@@ -2,7 +2,7 @@
 
 Play against AI with distributed locks
 
-> **15 tools** · API Photon · v1.0.0 · MIT
+> **8 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful` `channels`
 
@@ -127,83 +127,6 @@ Cleanup stale games  Removes active games with no moves for over 7 days and comp
 ---
 
 
-### `testEmptyBoardRendering`
-
-@internal
-
-
-
-
-
----
-
-
-### `testBoardWithPieces`
-
-@internal
-
-
-
-
-
----
-
-
-### `testNewGameReturnsValidBoard`
-
-@internal
-
-
-
-
-
----
-
-
-### `testDropPieceUpdatesBoard`
-
-@internal
-
-
-
-
-
----
-
-
-### `testInvalidColumn`
-
-@internal
-
-
-
-
-
----
-
-
-### `testWinDetection`
-
-@internal
-
-
-
-
-
----
-
-
-### `testStatsTracking`
-
-@internal
-
-
-
-
-
----
-
-
 
 
 
@@ -230,20 +153,6 @@ flowchart LR
         PHOTON --> T6
         T7[🔧 scheduledCleanup]
         PHOTON --> T7
-        T8[✅ testEmptyBoardRendering]
-        PHOTON --> T8
-        T9[✅ testBoardWithPieces]
-        PHOTON --> T9
-        T10[✅ testNewGameReturnsValidBoard]
-        PHOTON --> T10
-        T11[✅ testDropPieceUpdatesBoard]
-        PHOTON --> T11
-        T12[✅ testInvalidColumn]
-        PHOTON --> T12
-        T13[✅ testWinDetection]
-        PHOTON --> T13
-        T14[✅ testStatsTracking]
-        PHOTON --> T14
     end
 ```
 
@@ -255,7 +164,7 @@ flowchart LR
 photon add connect-four
 
 # Get MCP config for your client
-photon get connect-four --mcp
+photon info connect-four --mcp
 ```
 
 ## 📦 Dependencies

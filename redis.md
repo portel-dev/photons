@@ -2,7 +2,7 @@
 
 In-memory data store and cache
 
-> **23 tools** · API Photon · v1.0.0 · MIT
+> **18 tools** · API Photon · v1.0.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -33,7 +33,7 @@ Get value by key
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `user:123:session`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `user:123:session`) |
 
 
 
@@ -49,9 +49,9 @@ Set key-value pair
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `user:123:name`) |
-| `value` | any | Yes | Value to store [min: 1] (e.g. `John`) |
-| `ttl` | any | Yes | Time to live in seconds (optional, max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `user:123:name`) |
+| `value` | string | Yes | Value to store [min: 1] (e.g. `John`) |
+| `ttl` | number | No | Time to live in seconds (optional, max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
 
 
 
@@ -67,7 +67,7 @@ Delete one or more keys
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `keys` | any | Yes | Key name(s) to delete (string or array) [min: 1] (e.g. `["user:123","user:124"]`) |
+| `keys` | string[] | Yes | Key name(s) to delete (string or array) [min: 1] (e.g. `["user:123","user:124"]`) |
 
 
 
@@ -83,7 +83,7 @@ Check if key exists
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `user:123`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `user:123`) |
 
 
 
@@ -99,7 +99,7 @@ Get all keys matching pattern
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `pattern` | any | Yes | Key pattern [min: 1, max: 200] (e.g. `user:*`) |
+| `pattern` | string | Yes | Key pattern [min: 1, max: 200] (e.g. `user:*`) |
 
 
 
@@ -115,8 +115,8 @@ Increment numeric value
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `counter:page_views`) |
-| `amount` | any | No | Amount to increment by [min: 1] (e.g. `5`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `counter:page_views`) |
+| `amount` | number | No | Amount to increment by [min: 1] (e.g. `5`) |
 
 
 
@@ -132,8 +132,8 @@ Decrement numeric value
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `counter:stock`) |
-| `amount` | any | No | Amount to decrement by [min: 1] (e.g. `3`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `counter:stock`) |
+| `amount` | number | No | Amount to decrement by [min: 1] (e.g. `3`) |
 
 
 
@@ -149,8 +149,8 @@ Set expiration time on key
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
-| `seconds` | any | Yes | Seconds until expiration (max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
+| `seconds` | number | Yes | Seconds until expiration (max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
 
 
 
@@ -166,7 +166,7 @@ Get time to live for key
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
+| `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
 
 
 
@@ -182,8 +182,8 @@ Push value to list (left side)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
-| `values` | any | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
+| `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `values` | string[] | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
 
 
 
@@ -199,8 +199,8 @@ Push value to list (right side)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
-| `values` | any | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
+| `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `values` | string[] | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
 
 
 
@@ -216,7 +216,7 @@ Pop value from list (left side)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
 
 
 
@@ -232,7 +232,7 @@ Pop value from list (right side)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
 
 
 
@@ -248,7 +248,7 @@ Get list length
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
+| `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
 
 
 
@@ -264,8 +264,8 @@ Get hash field value
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
-| `field` | any | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
+| `key` | string | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
+| `field` | string | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
 
 
 
@@ -281,9 +281,9 @@ Set hash field value
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
-| `field` | any | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
-| `value` | any | Yes | Value to set [min: 1] (e.g. `John`) |
+| `key` | string | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
+| `field` | string | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
+| `value` | string | Yes | Value to set [min: 1] (e.g. `John`) |
 
 
 
@@ -299,7 +299,7 @@ Get all fields and values in hash
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `key` | any | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
+| `key` | string | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
 
 
 
@@ -311,61 +311,6 @@ Get all fields and values in hash
 ### `flush`
 
 Flush all data from current database
-
-
-
-
-
----
-
-
-### `testAfterAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testSetGet`
-
-No description available
-
-
-
-
-
----
-
-
-### `testDel`
-
-No description available
-
-
-
-
-
----
-
-
-### `testExists`
-
-No description available
-
-
-
-
-
----
-
-
-### `testSetWithTtl`
-
-No description available
 
 
 
@@ -420,16 +365,6 @@ flowchart LR
         PHOTON --> T16
         T17[🔧 flush]
         PHOTON --> T17
-        T18[✅ testAfterAll]
-        PHOTON --> T18
-        T19[✅ testSetGet]
-        PHOTON --> T19
-        T20[✅ testDel]
-        PHOTON --> T20
-        T21[✅ testExists]
-        PHOTON --> T21
-        T22[✅ testSetWithTtl]
-        PHOTON --> T22
     end
 
     subgraph deps["Dependencies"]
@@ -446,7 +381,7 @@ flowchart LR
 photon add redis
 
 # Get MCP config for your client
-photon get redis --mcp
+photon info redis --mcp
 ```
 
 ## 📦 Dependencies

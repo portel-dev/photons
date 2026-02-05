@@ -2,7 +2,7 @@
 
 SQLite database operations
 
-> **15 tools** · API Photon · v1.1.0 · MIT
+> **9 tools** · API Photon · v1.1.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -25,8 +25,8 @@ Open a SQLite database
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | Database file path (use ":memory:" for in-memory database) |
-| `readonly` | any | No | Open in readonly mode |
+| `path` | string | Yes | Database file path (use ":memory:" for in-memory database) |
+| `readonly` | boolean | No | Open in readonly mode |
 
 
 
@@ -42,8 +42,8 @@ Execute a SELECT query
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | any | Yes | SQL query string |
-| `params` | any | Yes | Query parameters (for prepared statements) |
+| `sql` | string | Yes | SQL query string |
+| `params` | any[] | No | Query parameters (for prepared statements) |
 
 
 
@@ -59,8 +59,8 @@ Execute a single SELECT query and return first row
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | any | Yes | SQL query string |
-| `params` | any | Yes | Query parameters (for prepared statements) |
+| `sql` | string | Yes | SQL query string |
+| `params` | any[] | No | Query parameters (for prepared statements) |
 
 
 
@@ -76,8 +76,8 @@ Execute an INSERT, UPDATE, or DELETE statement
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | any | Yes | SQL statement string |
-| `params` | any | Yes | Statement parameters (for prepared statements) |
+| `sql` | string | Yes | SQL statement string |
+| `params` | any[] | No | Statement parameters (for prepared statements) |
 
 
 
@@ -93,7 +93,7 @@ Execute multiple SQL statements in a transaction
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `statements` | any | Yes | Array of SQL statements with optional parameters |
+| `statements` | Array<{ sql: string | Yes | Array of SQL statements with optional parameters |
 
 
 
@@ -120,7 +120,7 @@ Get schema information for a table
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | any | Yes | Table name |
+| `table` | string | Yes | Table name |
 
 
 
@@ -147,73 +147,7 @@ Create a backup of the database
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `destination` | any | Yes | Path to backup file |
-
-
-
-
-
----
-
-
-### `testBeforeAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testAfterAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testOpen`
-
-No description available
-
-
-
-
-
----
-
-
-### `testTables`
-
-No description available
-
-
-
-
-
----
-
-
-### `testInsertQuery`
-
-No description available
-
-
-
-
-
----
-
-
-### `testSchema`
-
-No description available
+| `destination` | string | Yes | Path to backup file |
 
 
 
@@ -250,18 +184,6 @@ flowchart LR
         PHOTON --> T7
         T8[🔧 backup]
         PHOTON --> T8
-        T9[✅ testBeforeAll]
-        PHOTON --> T9
-        T10[✅ testAfterAll]
-        PHOTON --> T10
-        T11[✅ testOpen]
-        PHOTON --> T11
-        T12[✅ testTables]
-        PHOTON --> T12
-        T13[✅ testInsertQuery]
-        PHOTON --> T13
-        T14[✅ testSchema]
-        PHOTON --> T14
     end
 
     subgraph deps["Dependencies"]
@@ -278,7 +200,7 @@ flowchart LR
 photon add sqlite
 
 # Get MCP config for your client
-photon get sqlite --mcp
+photon info sqlite --mcp
 ```
 
 ## 📦 Dependencies

@@ -32,12 +32,12 @@ List issues in a repository
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `owner` | any | Yes | Repository owner (username or organization) |
-| `repo` | any | Yes | Repository name |
-| `state` | any | No | Issue state filter |
-| `labels` | any | Yes | Comma-separated label names to filter by |
-| `sort` | any | No | Sort by created, updated, or comments |
-| `per_page` | any | No | Number of results per page |
+| `owner` | string | Yes | Repository owner (username or organization) |
+| `repo` | string | Yes | Repository name |
+| `state` | 'open' | 'closed' | 'all' | No | Issue state filter |
+| `labels` | string | No | Comma-separated label names to filter by |
+| `sort` | 'created' | 'updated' | 'comments' | No | Sort by created, updated, or comments |
+| `per_page` | number | No | Number of results per page |
 
 
 
@@ -53,9 +53,9 @@ Get a single issue by number
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `owner` | any | Yes | Repository owner |
-| `repo` | any | Yes | Repository name |
-| `issue_number` | any | Yes | Issue number |
+| `owner` | string | Yes | Repository owner |
+| `repo` | string | Yes | Repository name |
+| `issue_number` | number | Yes | Issue number |
 
 
 
@@ -71,12 +71,12 @@ Create a new issue
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `owner` | any | Yes | Repository owner |
-| `repo` | any | Yes | Repository name |
-| `title` | any | Yes | Issue title |
-| `body` | any | Yes | Issue description/body |
-| `labels` | any | Yes | Array of label names |
-| `assignees` | any | Yes | Array of usernames to assign |
+| `owner` | string | Yes | Repository owner |
+| `repo` | string | Yes | Repository name |
+| `title` | string | Yes | Issue title |
+| `body` | string | No | Issue description/body |
+| `labels` | string[] | No | Array of label names |
+| `assignees` | string[] | No | Array of usernames to assign |
 
 
 
@@ -92,13 +92,13 @@ Update an existing issue
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `owner` | any | Yes | Repository owner |
-| `repo` | any | Yes | Repository name |
-| `issue_number` | any | Yes | Issue number to update |
-| `title` | any | No | New title |
-| `body` | any | No | New body |
-| `state` | any | No | New state: open or closed |
-| `labels` | any | No | New labels |
+| `owner` | string | Yes | Repository owner |
+| `repo` | string | Yes | Repository name |
+| `issue_number` | number | Yes | Issue number to update |
+| `title` | string | No | New title |
+| `body` | string | No | New body |
+| `state` | 'open' | 'closed' | No | New state: open or closed |
+| `labels` | string[] | No | New labels |
 
 
 
@@ -114,10 +114,10 @@ Add a comment to an issue
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `owner` | any | Yes | Repository owner |
-| `repo` | any | Yes | Repository name |
-| `issue_number` | any | Yes | Issue number |
-| `body` | any | Yes | Comment text |
+| `owner` | string | Yes | Repository owner |
+| `repo` | string | Yes | Repository name |
+| `issue_number` | number | Yes | Issue number |
+| `body` | string | Yes | Comment text |
 
 
 
@@ -133,9 +133,9 @@ List comments on an issue
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `owner` | any | Yes | Repository owner |
-| `repo` | any | Yes | Repository name |
-| `issue_number` | any | Yes | Issue number |
+| `owner` | string | Yes | Repository owner |
+| `repo` | string | Yes | Repository name |
+| `issue_number` | number | Yes | Issue number |
 
 
 
@@ -151,10 +151,10 @@ Search issues across repositories
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | any | Yes | Search query (e.g., "is:open label:bug") |
-| `sort` | any | No | Sort by created, updated, or comments |
-| `order` | any | No | Sort order: asc or desc |
-| `per_page` | any | No | Number of results per page |
+| `query` | string | Yes | Search query (e.g., "is:open label:bug") |
+| `sort` | 'created' | 'updated' | 'comments' | No | Sort by created, updated, or comments |
+| `order` | 'asc' | 'desc' | No | Sort order: asc or desc |
+| `per_page` | number | No | Number of results per page |
 
 
 
@@ -198,7 +198,7 @@ flowchart LR
 photon add github-issues
 
 # Get MCP config for your client
-photon get github-issues --mcp
+photon info github-issues --mcp
 ```
 
 ## 📦 Dependencies

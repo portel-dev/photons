@@ -1,4 +1,5 @@
 import { PhotonMCP, io } from '@portel/photon-core';
+
 import { execSync, exec } from 'child_process';
 import { promisify } from 'util';
 // Fix: use trimEnd() instead of trim() to preserve git status leading whitespace
@@ -116,6 +117,7 @@ const execAsync = promisify(exec);
  */
 export class GitBoxPhoton extends PhotonMCP {
   private configPath = path.join(os.homedir(), '.photon', 'git-box.json');
+  private defaultProjectsRoot = path.join(os.homedir(), 'Projects');
 
   /**
    * Escape a string for safe shell usage
@@ -152,12 +154,70 @@ export class GitBoxPhoton extends PhotonMCP {
     return true;
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CONFIGURATION
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Configure the Git Box photon
+   *
+   * Call this before using repository methods. Three behaviors:
+   * 1. **AI with known values**: Pass params directly to skip elicitation
+   * 2. **Already configured**: Loads existing config from disk
+   * 3. **First-time human**: Prompts user to enter values via elicitation
+   *
+   * @param projectsRoot Root folder containing git repositories (e.g., ~/Projects)
+   *
+   * @example
+   * // AI knows the values - skip elicitation
+   * await configure({ projectsRoot: '/home/user/Projects' })
+   *
+   * @example
+   * // Ensure config exists (will elicit if needed)
+   * await configure()
+   */
+  async *configure(params?: {
+    projectsRoot?: string;
+  }): AsyncGenerator<any, { configured: boolean; config?: { repos: string[]; projectsRoot?: string } }> {
+    // AI provided values directly - use them
+    if (params?.projectsRoot) {
+      const config = this._loadConfig();
+      config.projectsRoot = params.projectsRoot;
+      this._saveConfig(config);
+      return { configured: true, config };
+    }
+
+    // Already configured - just return existing config
+    if (fs.existsSync(this.configPath)) {
+      return { configured: true, config: this._loadConfig() };
+    }
+
+    // Human user - elicit values
+    const values: Record<string, any> = yield io.ask.form('Configure Git Box', {
+      type: 'object',
+      properties: {
+        projectsRoot: { type: 'string', title: 'Projects Root', default: this.defaultProjectsRoot },
+      },
+      required: ['projectsRoot'],
+    });
+
+    const config = {
+      repos: [],
+      projectsRoot: values.projectsRoot || this.defaultProjectsRoot,
+    };
+    this._saveConfig(config);
+    return { configured: true, config };
+  }
+
   /**
    * Opens the mailbox interface for managing git repositories.
    * Displays tracked repos with their status, commit history, and working changes.
    * @ui mailbox
    */
-  async main() {
+  async *main() {
+    // Ensure configuration exists (will elicit if needed)
+    yield* this.configure();
+
     const repos = await this.repos();
     return { repos };
   }
@@ -175,7 +235,7 @@ export class GitBoxPhoton extends PhotonMCP {
         return config;
       }
     } catch {}
-    return { repos: [], projectsRoot: path.join(os.homedir(), 'Projects') };
+    return { repos: [], projectsRoot: this.defaultProjectsRoot };
   }
 
   private _saveConfig(config: { repos: string[]; projectsRoot?: string }) {

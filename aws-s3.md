@@ -33,11 +33,11 @@ Upload object to bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-| `content` | any | Yes | Content to upload (string or base64) [min: 1] (e.g. `Hello World`) |
-| `contentType` | any | No | MIME type [max: 100] (e.g. `text/plain`) |
-| `encoding` | any | No | Content encoding [max: 20] (e.g. `base64`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `content` | string | Yes | Content to upload (string or base64) [min: 1] (e.g. `Hello World`) |
+| `contentType` | string | No | MIME type [max: 100] (e.g. `text/plain`) |
+| `encoding` | string | No | Content encoding [max: 20] (e.g. `base64`) |
 
 
 
@@ -53,9 +53,9 @@ Download object from bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-| `encoding` | any | Yes | Return encoding (optional, "base64" for binary files) [max: 20] (e.g. `base64`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `encoding` | string | No | Return encoding (optional, "base64" for binary files) [max: 20] (e.g. `base64`) |
 
 
 
@@ -71,9 +71,9 @@ List objects in bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `prefix` | any | No | Filter by key prefix [max: 1024] (e.g. `documents/`) |
-| `maxKeys` | any | No | Maximum number of objects to return [min: 1, max: 1000] |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `prefix` | string | No | Filter by key prefix [max: 1024] (e.g. `documents/`) |
+| `maxKeys` | number | No | Maximum number of objects to return [min: 1, max: 1000] |
 
 
 
@@ -89,8 +89,8 @@ Delete object from bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/old-report.pdf`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/old-report.pdf`) |
 
 
 
@@ -106,8 +106,8 @@ Delete multiple objects from bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `keys` | any | Yes | Array of object keys to delete [min: 1] (e.g. `["old/file1.txt","old/file2.txt"]`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `keys` | string[] | Yes | Array of object keys to delete [min: 1] (e.g. `["old/file1.txt","old/file2.txt"]`) |
 
 
 
@@ -123,8 +123,8 @@ Get object metadata
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
 
 
 
@@ -140,10 +140,10 @@ Copy object within S3
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sourceBucket` | any | Yes | Source bucket name [min: 1, max: 63] (e.g. `my-source-bucket`) |
-| `sourceKey` | any | Yes | Source object key [min: 1, max: 1024] (e.g. `documents/original.pdf`) |
-| `destinationBucket` | any | Yes | Destination bucket name [min: 1, max: 63] (e.g. `my-dest-bucket`) |
-| `destinationKey` | any | Yes | Destination object key [min: 1, max: 1024] (e.g. `backups/copy.pdf`) |
+| `sourceBucket` | string | Yes | Source bucket name [min: 1, max: 63] (e.g. `my-source-bucket`) |
+| `sourceKey` | string | Yes | Source object key [min: 1, max: 1024] (e.g. `documents/original.pdf`) |
+| `destinationBucket` | string | Yes | Destination bucket name [min: 1, max: 63] (e.g. `my-dest-bucket`) |
+| `destinationKey` | string | Yes | Destination object key [min: 1, max: 1024] (e.g. `backups/copy.pdf`) |
 
 
 
@@ -159,10 +159,10 @@ Generate presigned URL for object access
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | any | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-| `expiresIn` | any | No | Expiration time in seconds [min: 1, max: 604800] |
-| `operation` | any | No | Operation type [max: 10] (e.g. `get`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
+| `expiresIn` | number | No | Expiration time in seconds [min: 1, max: 604800] |
+| `operation` | string | No | Operation type [max: 10] (e.g. `get`) |
 
 
 
@@ -189,7 +189,7 @@ Create a new bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name (must be globally unique) [min: 1, max: 63] (e.g. `my-new-app-bucket-2024`) |
+| `bucket` | string | Yes | Bucket name (must be globally unique) [min: 1, max: 63] (e.g. `my-new-app-bucket-2024`) |
 
 
 
@@ -205,7 +205,7 @@ Delete a bucket (must be empty)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | any | Yes | Bucket name [min: 1, max: 63] (e.g. `my-old-bucket`) |
+| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-old-bucket`) |
 
 
 
@@ -257,7 +257,7 @@ flowchart LR
 photon add aws-s3
 
 # Get MCP config for your client
-photon get aws-s3 --mcp
+photon info aws-s3 --mcp
 ```
 
 ## 📦 Dependencies

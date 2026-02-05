@@ -55,8 +55,8 @@ Call a tool on any MCP  Generic method to call any tool on any configured MCP. T
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `mcpName` | any | Yes | Name of the MCP server |
-| `toolName` | any | Yes | Name of the tool to call |
-| `params` | any | Yes | JSON parameters for the tool |
+| `toolName` | string | Yes | Name of the tool to call |
+| `params` | string | No | JSON parameters for the tool |
 
 
 
@@ -73,8 +73,8 @@ Research Workflow - Combine search and browser MCPs  Demonstrates orchestrating 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `query` | any | Yes | Search query |
-| `fetchContent` | any | Yes | Whether to fetch full page content for top result |
-| `maxResults` | any | Yes | Maximum number of search results |
+| `fetchContent` | boolean | No | Whether to fetch full page content for top result |
+| `maxResults` | number | No | Maximum number of search results |
 
 
 
@@ -91,7 +91,7 @@ Multi-Step Reasoning Workflow  Uses sequential-thinking MCP (if available) to br
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `problem` | any | Yes | The problem to analyze |
-| `steps` | any | Yes | Number of reasoning steps |
+| `steps` | number | No | Number of reasoning steps |
 
 
 
@@ -108,7 +108,7 @@ Shell Command Workflow  Demonstrates using the Shell MCP to execute system comma
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `command` | any | Yes | Shell command to execute |
-| `workingDir` | any | No | Working directory |
+| `workingDir` | string | No | Working directory |
 
 
 
@@ -173,7 +173,7 @@ Find tools across multiple MCPs  Search for tools by keyword across all configur
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `query` | any | Yes | Search keyword |
-| `mcpNames` | any | No | Comma-separated list of MCPs to search |
+| `mcpNames` | string | No | Comma-separated list of MCPs to search |
 
 
 
@@ -223,7 +223,7 @@ flowchart LR
 photon add mcp-orchestrator
 
 # Get MCP config for your client
-photon get mcp-orchestrator --mcp
+photon info mcp-orchestrator --mcp
 ```
 
 ## 📦 Dependencies

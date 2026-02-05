@@ -2,7 +2,7 @@
 
 File and directory operations
 
-> **23 tools** · API Photon · v1.1.0 · MIT
+> **13 tools** · API Photon · v1.1.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -33,8 +33,8 @@ Read file contents
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | File path (relative to workdir or absolute) |
-| `encoding` | any | No | File encoding |
+| `path` | string | Yes | File path (relative to workdir or absolute) |
+| `encoding` | string | No | File encoding |
 
 
 
@@ -50,9 +50,9 @@ Write content to file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | File path (relative to workdir or absolute) |
-| `content` | any | Yes | File content |
-| `encoding` | any | No | File encoding |
+| `path` | string | Yes | File path (relative to workdir or absolute) |
+| `content` | string | Yes | File content |
+| `encoding` | string | No | File encoding |
 
 
 
@@ -68,9 +68,9 @@ Append content to file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | File path (relative to workdir or absolute) |
-| `content` | any | Yes | Content to append |
-| `encoding` | any | No | File encoding |
+| `path` | string | Yes | File path (relative to workdir or absolute) |
+| `content` | string | Yes | Content to append |
+| `encoding` | string | No | File encoding |
 
 
 
@@ -86,7 +86,7 @@ Remove a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | File path (relative to workdir or absolute) |
+| `path` | string | Yes | File path (relative to workdir or absolute) |
 
 
 
@@ -102,8 +102,8 @@ Copy a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `source` | any | Yes | Source file path |
-| `destination` | any | Yes | Destination file path |
+| `source` | string | Yes | Source file path |
+| `destination` | string | Yes | Destination file path |
 
 
 
@@ -119,8 +119,8 @@ Move/rename a file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `source` | any | Yes | Source file path |
-| `destination` | any | Yes | Destination file path |
+| `source` | string | Yes | Source file path |
+| `destination` | string | Yes | Destination file path |
 
 
 
@@ -137,7 +137,7 @@ List files in a directory
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `path` | any | Yes | Directory path (relative to workdir or absolute, default: current workdir) |
-| `recursive` | any | No | List files recursively |
+| `recursive` | boolean } | No | List files recursively |
 
 
 
@@ -153,8 +153,8 @@ Create a directory
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | Directory path (relative to workdir or absolute) |
-| `recursive` | any | No | Create parent directories if needed |
+| `path` | string | Yes | Directory path (relative to workdir or absolute) |
+| `recursive` | boolean | No | Create parent directories if needed |
 
 
 
@@ -170,8 +170,8 @@ Remove a directory
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | Directory path (relative to workdir or absolute) |
-| `recursive` | any | No | Remove directory and all contents |
+| `path` | string | Yes | Directory path (relative to workdir or absolute) |
+| `recursive` | boolean | No | Remove directory and all contents |
 
 
 
@@ -187,7 +187,7 @@ Get file or directory information
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | File or directory path |
+| `path` | string | Yes | File or directory path |
 
 
 
@@ -203,7 +203,7 @@ Check if file or directory exists
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | File or directory path |
+| `path` | string | Yes | File or directory path |
 
 
 
@@ -219,8 +219,8 @@ Search for files matching a pattern
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `pattern` | any | Yes | File name pattern (glob-style: *.txt, **\/*.js) |
-| `path` | any | No | Directory to search |
+| `pattern` | string | Yes | File name pattern (glob-style: *.txt, **\/*.js) |
+| `path` | string | No | Directory to search |
 
 
 
@@ -232,116 +232,6 @@ Search for files matching a pattern
 ### `workdir`
 
 Get current working directory
-
-
-
-
-
----
-
-
-### `testBeforeAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testAfterAll`
-
-No description available
-
-
-
-
-
----
-
-
-### `testRead`
-
-No description available
-
-
-
-
-
----
-
-
-### `testWrite`
-
-No description available
-
-
-
-
-
----
-
-
-### `testExists`
-
-No description available
-
-
-
-
-
----
-
-
-### `testInfo`
-
-No description available
-
-
-
-
-
----
-
-
-### `testList`
-
-No description available
-
-
-
-
-
----
-
-
-### `testCopy`
-
-No description available
-
-
-
-
-
----
-
-
-### `testMkdir`
-
-No description available
-
-
-
-
-
----
-
-
-### `testGetWorkdir`
-
-No description available
 
 
 
@@ -386,26 +276,6 @@ flowchart LR
         PHOTON --> T11
         T12[🔧 workdir]
         PHOTON --> T12
-        T13[✅ testBeforeAll]
-        PHOTON --> T13
-        T14[✅ testAfterAll]
-        PHOTON --> T14
-        T15[✅ testRead]
-        PHOTON --> T15
-        T16[✅ testWrite]
-        PHOTON --> T16
-        T17[✅ testExists]
-        PHOTON --> T17
-        T18[✅ testInfo]
-        PHOTON --> T18
-        T19[✅ testList]
-        PHOTON --> T19
-        T20[✅ testCopy]
-        PHOTON --> T20
-        T21[✅ testMkdir]
-        PHOTON --> T21
-        T22[✅ testGetWorkdir]
-        PHOTON --> T22
     end
 ```
 
@@ -417,7 +287,7 @@ flowchart LR
 photon add filesystem
 
 # Get MCP config for your client
-photon get filesystem --mcp
+photon info filesystem --mcp
 ```
 
 ## 📦 Dependencies

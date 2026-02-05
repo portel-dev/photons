@@ -2,7 +2,7 @@
 
 Database operations for PostgreSQL
 
-> **11 tools** · API Photon · v1.1.0 · MIT
+> **7 tools** · API Photon · v1.1.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -40,8 +40,8 @@ Execute a SQL query
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | any | Yes | SQL query to execute (supports $1, $2, etc. for parameters) |
-| `params` | any | No | Query parameters array |
+| `sql` | string | Yes | SQL query to execute (supports $1, $2, etc. for parameters) |
+| `params` | any[] | No | Query parameters array |
 
 
 
@@ -57,7 +57,7 @@ Execute multiple SQL statements in a transaction
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `statements` | any | Yes | Array of SQL statements with optional parameters |
+| `statements` | Array<{ sql: string | Yes | Array of SQL statements with optional parameters |
 
 
 
@@ -89,8 +89,8 @@ Get table schema information
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | any | Yes | Table name |
-| `schema` | any | No | Schema name |
+| `table` | string | Yes | Table name |
+| `schema` | string | No | Schema name |
 
 
 
@@ -106,8 +106,8 @@ List all indexes on a table
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | any | Yes | Table name |
-| `schema` | any | No | Schema name |
+| `table` | string | Yes | Table name |
+| `schema` | string | No | Schema name |
 
 
 
@@ -123,9 +123,9 @@ Execute a SQL INSERT statement
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | any | Yes | Table name |
-| `data` | any | Yes | Object with column names as keys |
-| `returning` | any | No | Column names to return |
+| `table` | string | Yes | Table name |
+| `data` | Record<string | Yes | Object with column names as keys |
+| `returning` | string[] | No | Column names to return |
 
 
 
@@ -137,50 +137,6 @@ Execute a SQL INSERT statement
 ### `stats`
 
 Get database statistics
-
-
-
-
-
----
-
-
-### `testQuery`
-
-No description available
-
-
-
-
-
----
-
-
-### `testQueryWithParams`
-
-No description available
-
-
-
-
-
----
-
-
-### `testTables`
-
-No description available
-
-
-
-
-
----
-
-
-### `testStats`
-
-No description available
 
 
 
@@ -213,14 +169,6 @@ flowchart LR
         PHOTON --> T5
         T6[🔧 stats]
         PHOTON --> T6
-        T7[✅ testQuery]
-        PHOTON --> T7
-        T8[✅ testQueryWithParams]
-        PHOTON --> T8
-        T9[✅ testTables]
-        PHOTON --> T9
-        T10[✅ testStats]
-        PHOTON --> T10
     end
 
     subgraph deps["Dependencies"]
@@ -237,7 +185,7 @@ flowchart LR
 photon add postgres
 
 # Get MCP config for your client
-photon get postgres --mcp
+photon info postgres --mcp
 ```
 
 ## 📦 Dependencies

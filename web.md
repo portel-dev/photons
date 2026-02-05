@@ -2,7 +2,7 @@
 
 Web Agent Photon (Search + Read)
 
-> **5 tools** · Streaming Photon · v1.0.0 · MIT
+> **2 tools** · Streaming Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator`
 
@@ -37,39 +37,6 @@ Read a webpage and extract its main content as Markdown. Uses Mozilla Readabilit
 ---
 
 
-### `testSearch`
-
-No description available
-
-
-
-
-
----
-
-
-### `testRead`
-
-No description available
-
-
-
-
-
----
-
-
-### `testReadInvalidUrl`
-
-No description available
-
-
-
-
-
----
-
-
 
 
 
@@ -84,12 +51,6 @@ flowchart LR
         PHOTON --> T0
         T1[🌊 read (stream)]
         PHOTON --> T1
-        T2[✅ testSearch]
-        PHOTON --> T2
-        T3[✅ testRead]
-        PHOTON --> T3
-        T4[✅ testReadInvalidUrl]
-        PHOTON --> T4
     end
 ```
 
@@ -101,7 +62,7 @@ flowchart LR
 photon add web
 
 # Get MCP config for your client
-photon get web --mcp
+photon info web --mcp
 ```
 
 ## 📦 Dependencies

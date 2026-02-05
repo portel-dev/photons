@@ -2,57 +2,29 @@
 
 Kanban Board Photon
 
-> **33 tools** · API Photon · v2.1.0 · MIT
+> **33 tools** · Streaming Photon · v2.1.0 · MIT
 
-**Platform Features:** `custom-ui` `stateful` `channels`
+**Platform Features:** `generator` `custom-ui` `elicitation` `stateful` `channels`
 
 ## ⚙️ Configuration
 
 No configuration required.
 
 
-### Setup Instructions
-
-*
-- `configure()` - Get/set config (no params = get, with params = set)
-**Boards:**
-- `boards()` - List all boards
-- `board()` - Get board details
-- `boardCreate()` - Create new board
-- `boardDelete()` - Delete a board
-- `projectLink()` - Link board to project folder
-- `projects()` - List available project folders
-**Tasks:**
-- `tasks()` - List tasks (with filters)
-- `task()` - Get single task with comments
-- `myTasks()` - Get tasks assigned to AI
-- `taskCreate()` - Create new task
-- `taskMove()` - Move task to column
-- `taskUpdate()` - Update task details
-- `taskDelete()` - Delete a task
-- `taskReorder()` - Reorder within column
-- `search()` - Search tasks by keyword
-**Comments & Dependencies:**
-- `commentAdd()` - Add comment to task
-- `comments()` - Get task comments
-- `dependencySet()` - Set/remove task dependencies
-**Columns & Stats:**
-- `columnAdd()` - Add new column
-- `columnRemove()` - Remove column
-- `stats()` - Get board statistics
-- `completedClear()` - Archive completed tasks
-**Batch & Utility:**
-- `main()` - Entry point (shows board UI)
-- `active()` - Get most recently updated board
-- `batchMove()` - Move multiple tasks at once
-
 
 ## 🔧 Tools
 
 
-### `configure`
+### `configure` ⚡
 
-Configure the kanban photon  Set the projects root folder and automation settings. This is stored persistently so all instances (Claude Code MCP, Beam UI, etc.) use the same configuration.  Call without params to get current config, or with params to set.
+Configure the Kanban photon  Call this before using any board methods. Three behaviors: 1. **AI with known values**: Pass params directly to skip elicitation 2. **Already configured**: Loads existing config from disk 3. **First-time human**: Prompts user to enter values via elicitation
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `projectsRoot` | any | Yes | Root folder containing project directories (e.g., ~/Projects) |
+| `wipLimit` | number | No | Maximum cards allowed in "In Progress" column
+   * |
 
 
 
@@ -60,7 +32,8 @@ Configure the kanban photon  Set the projects root folder and automation setting
 **Example:**
 
 ```typescript
-configure() // get current config
+// AI knows the values - skip elicitation
+await configure({ projectsRoot: '/home/user/Projects', wipLimit: 5 })
 ```
 
 
@@ -139,7 +112,7 @@ Delete a board  Permanently remove a board and all its tasks. Use with caution!
 ---
 
 
-### `main`
+### `main` ⚡
 
 Open the Kanban board  Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods.  ## AI Workflow (IMPORTANT)  When working on tasks as an AI assistant:  1. **Check assigned tasks**: Use `myTasks` to find tasks assigned to you 2. **Work in "In Progress"**: Tasks you're actively working on should be here 3. **Move to "Review" when done**: Do NOT move directly to "Done"! - "Review" means: AI finished, waiting for human verification - Only humans should move tasks from "Review" to "Done" 4. **Add comments**: Document what you did for the reviewer  This keeps humans in the loop and ensures quality control.
 
@@ -471,7 +444,7 @@ flowchart LR
     subgraph kanban["📦 Kanban"]
         direction TB
         PHOTON((🎯))
-        T0[⚙️ configure]
+        T0[🌊 configure (stream)]
         PHOTON --> T0
         T1[🔧 installHooks]
         PHOTON --> T1
@@ -485,7 +458,7 @@ flowchart LR
         PHOTON --> T5
         T6[🔧 boardDelete]
         PHOTON --> T6
-        T7[🔧 main]
+        T7[🌊 main (stream)]
         PHOTON --> T7
         T8[🔧 tasks]
         PHOTON --> T8
@@ -548,7 +521,7 @@ flowchart LR
 photon add kanban
 
 # Get MCP config for your client
-photon get kanban --mcp
+photon info kanban --mcp
 ```
 
 ## 📦 Dependencies

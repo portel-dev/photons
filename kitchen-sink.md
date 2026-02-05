@@ -83,7 +83,7 @@ Demonstrates string parameter
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `message` | any | Yes | The message to echo back |
+| `message` | string | Yes | The message to echo back |
 
 
 
@@ -99,7 +99,7 @@ Demonstrates number parameter
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `value` | any | Yes | A numeric value to double |
+| `value` | number | Yes | A numeric value to double |
 
 
 
@@ -115,7 +115,7 @@ Demonstrates boolean parameter
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `enabled` | any | Yes | Whether the feature is enabled |
+| `enabled` | boolean | Yes | Whether the feature is enabled |
 
 
 
@@ -131,7 +131,7 @@ Demonstrates enum parameter (string literals)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `level` | any | Yes | Log level to use |
+| `level` | 'debug' | 'info' | 'warn' | 'error' | Yes | Log level to use |
 
 
 
@@ -147,8 +147,8 @@ Demonstrates optional parameter with default
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | any | Yes | Name to greet (optional, defaults to "World") |
-| `excited` | any | Yes | Add exclamation marks |
+| `name` | string | No | Name to greet (optional, defaults to "World") |
+| `excited` | boolean | No | Add exclamation marks |
 
 
 
@@ -164,7 +164,7 @@ Demonstrates array parameter
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `items` | any | Yes | List of items to process |
+| `items` | string[] | Yes | List of items to process |
 
 
 
@@ -180,7 +180,7 @@ Demonstrates object parameter
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `user` | any | Yes | User object with name and age |
+| `user` | { name: string | Yes | User object with name and age |
 
 
 
@@ -196,9 +196,9 @@ Demonstrates multiple required parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `firstName` | any | Yes | First name (required) |
-| `lastName` | any | Yes | Last name (required) |
-| `age` | any | Yes | Age (required) |
+| `firstName` | string | Yes | First name (required) |
+| `lastName` | string | Yes | Last name (required) |
+| `age` | number | Yes | Age (required) |
 
 
 
@@ -225,7 +225,7 @@ Streams numbered items
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `count` | any | Yes | Number of items to stream |
+| `count` | number | Yes | Number of items to stream |
 
 
 
@@ -252,7 +252,7 @@ Demonstrates progress reporting using io helper  Uses async generator with `io.e
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `duration` | any | Yes | Duration in seconds (default 5) |
+| `duration` | number | No | Duration in seconds (default 5) |
 
 
 
@@ -268,7 +268,7 @@ Simple counter with in-memory state  State persists during the server session bu
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `action` | any | Yes | What to do with the counter |
+| `action` | 'increment' | 'decrement' | 'reset' | 'get' | Yes | What to do with the counter |
 
 
 
@@ -284,8 +284,8 @@ In-memory todo list
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `action` | any | Yes | What to do |
-| `item` | any | Yes | Item to add or remove |
+| `action` | 'add' | 'remove' | 'list' | 'clear' | Yes | What to do |
+| `item` | string | No | Item to add or remove |
 
 
 
@@ -323,7 +323,7 @@ Search results with rich display
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | any | Yes | Search query string |
+| `query` | string | Yes | Search query string |
 
 
 
@@ -339,7 +339,7 @@ Demonstrates proper error handling  Thrown errors are caught and returned as MCP
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `shouldFail` | any | Yes | Whether to simulate a failure |
+| `shouldFail` | boolean | Yes | Whether to simulate a failure |
 
 
 
@@ -355,7 +355,7 @@ Demonstrates validation errors
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `value` | any | Yes | Must be between 1 and 100 |
+| `value` | number | Yes | Must be between 1 and 100 |
 
 
 
@@ -446,7 +446,7 @@ flowchart LR
 photon add kitchen-sink
 
 # Get MCP config for your client
-photon get kitchen-sink --mcp
+photon info kitchen-sink --mcp
 ```
 
 ## 📦 Dependencies
