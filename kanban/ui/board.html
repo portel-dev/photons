@@ -2212,12 +2212,14 @@
       jsErrors.push(errorInfo);
       console.error('[Kanban UI Error]', errorInfo);
 
-      // Report to parent (Beam) for logging
-      window.parent.postMessage({
-        type: 'photon:js-error',
-        photon: 'kanban',
-        error: errorInfo
-      }, '*');
+      // Report to parent (Beam) for logging - skip in MCP Apps context
+      if (!window.__MCP_APPS_CONTEXT__) {
+        window.parent.postMessage({
+          type: 'photon:js-error',
+          photon: 'kanban',
+          error: errorInfo
+        }, '*');
+      }
 
       // Also try to report via MCP if available
       if (window.photon) {
@@ -2252,7 +2254,9 @@
     // Notify parent about which board we're viewing (for on-demand subscriptions)
     // Parent will use photonId from selected photon, we just provide the itemId
     // Includes lastEventId for replay of missed events on reconnect
+    // Note: Skip in MCP Apps context (Claude Desktop) - only needed for Beam
     function notifyViewingBoard() {
+      if (window.__MCP_APPS_CONTEXT__) return;
       window.parent.postMessage({
         type: 'photon:viewing',
         itemId: currentBoardName,
