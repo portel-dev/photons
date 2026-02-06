@@ -171,13 +171,14 @@
     .board-menu {
       position: absolute;
       top: 100%;
-      right: 0;
+      left: 0;
       margin-top: 4px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       min-width: 220px;
+      max-height: calc(100vh - 80px);
       z-index: 100;
       display: none;
       overflow: hidden;
@@ -2279,6 +2280,10 @@
       if (data && (data.columns || data.tasks || data.name)) {
         board = data;
         currentBoardName = data.name || currentBoardName;
+        // Immediately sync title
+        const titleEl = document.getElementById('board-title');
+        const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
+        titleEl.textContent = savedTitle || currentBoardName;
         renderBoard();
         updateStats();
         notifyViewingBoard();
@@ -2790,6 +2795,10 @@
           board = fullBoard;
           if (boardChanged) {
             currentBoardName = activeBoardName;
+            // Immediately sync title with board content (don't wait for async updateAutoModeUI)
+            const titleEl = document.getElementById('board-title');
+            const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
+            titleEl.textContent = savedTitle || currentBoardName;
             notifyViewingBoard();
             fetchWipConfig(); // Fetch WIP settings for new board
           }
