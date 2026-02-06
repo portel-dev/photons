@@ -2317,39 +2317,34 @@
       }
     }
 
-    // Listen for messages from BEAM (theme changes, board updates)
-    window.addEventListener('message', async (event) => {
-      // Handle theme change from BEAM settings
-      if (event.data?.type === 'photon:theme-change') {
-        const { theme } = event.data;
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Real-time event handling via unified bridge API (works in Beam AND Claude Desktop)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Set up event listeners once window.photon is available
+    function setupPhotonEventListeners() {
+      if (!window.photon) {
+        // Retry after a short delay (bridge may not be loaded yet)
+        setTimeout(setupPhotonEventListeners, 100);
+        return;
+      }
+
+      // Theme changes via unified API
+      window.photon.onThemeChange((theme) => {
         if (theme === 'light') {
           document.documentElement.classList.add('light');
         } else {
           document.documentElement.classList.remove('light');
         }
-        return;
-      }
+      });
 
-      if (event.data?.type === 'photon:board-update') {
-        const { photon, board: updatedBoard } = event.data;
-        // Only refresh if we're showing a kanban board
-        if (photon === 'kanban') {
-          // Skip if we have a pending move operation (our own event echoing back)
-          if (pendingMoveOperation) {
-            return;
-          }
-          // In auto mode, always refresh (might need to switch boards)
-          // Otherwise, only refresh if it's the current board
-          if (autoMode || updatedBoard === currentBoardName) {
-            await refreshCurrentBoard();
-          }
-        }
-      }
+      // All emit events via unified API (channel events, board updates, status)
+      window.photon.onEmit(async (params) => {
+        if (!params) return;
 
-      // Handle channel events (task-moved, task-updated, etc.) - apply delta directly
-      if (event.data?.type === 'photon:channel-event') {
-        const { photon, channel, event: eventType, data, _eventId } = event.data;
-        if (photon === 'kanban') {
+        // Handle channel events (task-moved, task-updated, etc.) - apply delta directly
+        if (params.channel && params.event) {
+          const { channel, event: eventType, data, _eventId } = params;
           // Track last received event ID for replay on reconnect
           if (_eventId !== undefined && (_eventId > lastEventId || lastEventId === null)) {
             lastEventId = _eventId;
@@ -2359,16 +2354,37 @@
           if (boardName === currentBoardName && data) {
             applyBoardEvent(eventType, data);
           }
+          return;
         }
-      }
 
-      // Handle refresh-needed signal (lastEventId was too old, full sync required)
-      if (event.data?.type === 'photon:refresh-needed') {
-        console.log('📡 Refresh needed - lastEventId too old, reloading board');
-        lastEventId = null; // Reset so we start fresh
-        await refreshCurrentBoard();
-      }
-    });
+        // Handle board-update (general refresh signal)
+        if (params.emit === 'board-update') {
+          const updatedBoard = params.board;
+          // Skip if we have a pending move operation (our own event echoing back)
+          if (pendingMoveOperation) {
+            return;
+          }
+          // In auto mode, always refresh (might need to switch boards)
+          // Otherwise, only refresh if it's the current board
+          if (autoMode || updatedBoard === currentBoardName) {
+            await refreshCurrentBoard();
+          }
+          return;
+        }
+
+        // Handle refresh-needed signal (lastEventId was too old, full sync required)
+        if (params.emit === 'refresh-needed') {
+          console.log('📡 Refresh needed - lastEventId too old, reloading board');
+          lastEventId = null; // Reset so we start fresh
+          await refreshCurrentBoard();
+        }
+      });
+
+      console.log('📡 Kanban: Real-time event listeners registered via window.photon API');
+    }
+
+    // Initialize event listeners
+    setupPhotonEventListeners();
 
     // Apply a specific event to the local board state (event sourcing)
     async function applyBoardEvent(eventType, data) {
