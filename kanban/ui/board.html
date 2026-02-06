@@ -171,7 +171,6 @@
     .board-menu {
       position: absolute;
       top: 100%;
-      left: 0;
       margin-top: 4px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -2707,6 +2706,19 @@
       const btn = document.querySelector('.board-switcher-btn');
       const isVisible = menu.classList.toggle('visible');
       btn.setAttribute('aria-expanded', isVisible);
+
+      if (isVisible) {
+        // Position based on available space: open left or right
+        const btnRect = btn.getBoundingClientRect();
+        const menuWidth = Math.max(220, menu.offsetWidth);
+        if (btnRect.left + menuWidth > window.innerWidth) {
+          menu.style.left = 'auto';
+          menu.style.right = '0';
+        } else {
+          menu.style.left = '0';
+          menu.style.right = 'auto';
+        }
+      }
     }
 
     // Close board menu
