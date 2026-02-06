@@ -8,7 +8,6 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
- * @dependencies @portel/photon-core@latest
  * @tags dashboard, team, monitoring, tv-display
  * @icon 📺
  */

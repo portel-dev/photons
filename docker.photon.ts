@@ -18,6 +18,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 🐳
+ * @tags docker, containers, devops
  */
 
 import Docker from 'dockerode';

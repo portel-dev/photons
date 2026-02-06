@@ -14,9 +14,12 @@
  *     resources/
  *       defaults.json     - Default configuration
  *
- * @dependencies @portel/photon-core@latest
  *
+ * @version 1.0.0
+ * @license MIT
  * @author Portel
+ * @icon ⚙️
+ * @tags preferences, settings, ui-templates
  */
 
 import { PhotonMCP } from '@portel/photon-core';

@@ -47,7 +47,6 @@
  * @version 2.1.0
  * @author Portel
  * @license MIT
- * @dependencies @portel/photon-core@latest
  * @tags kanban, tasks, collaboration, project-management, memory
  * @icon 📋
  * @stateful

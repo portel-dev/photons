@@ -12,7 +12,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../aws-s3.photon.ts",
-      "hash": "sha256:86252f54192c14f5e13798ff73581073aaf5bff2150ffea800d46644895f1c06",
+      "hash": "sha256:5fdc0259c3670f675f9fa842f33bcb34addc0ae1b425b2c5001c5f5c2a5c96cf",
       "tools": [
         "upload",
         "download",
@@ -37,7 +37,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../code-diagram.photon.ts",
-      "hash": "sha256:19c8da8fd525728bc3b319185aa7cc46dc620b5422f2d6626312647943e7eea5",
+      "hash": "sha256:36d0945b4e9bc512922fa6b052b044fa9222aad6340b5a1bf5df6aedbd2033e2",
       "tools": [
         "generate",
         "fromFile",
@@ -57,7 +57,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:025b6b402a81b86e0b9086675efd38b18f82a6ec30cbddf32ca32946cff64fb5",
+      "hash": "sha256:3bf743ebe01f17bc103a483669afa5fb73acb16f50fff97b85f34aa6ff9d7996",
       "tools": [
         "start",
         "drop",
@@ -81,11 +81,11 @@
     {
       "name": "daemon-features",
       "version": "1.0.0",
-      "description": "Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub",
+      "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub",
       "author": "Portel",
       "license": "MIT",
       "source": "../daemon-features.photon.ts",
-      "hash": "sha256:ff0e990aa3e732e364c12290d9e7c15074354394a7712853813072eb4d7be039",
+      "hash": "sha256:f06046845433e25b293b7674094d8befa7b67e208906dcf2cff3d2c5f683aad8",
       "tools": [
         "scheduledHeartbeat",
         "handleWebhook",
@@ -108,7 +108,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../dashboard.photon.ts",
-      "hash": "sha256:3ba265a8927ed8e0a4e07eab1976cf6976fb95eb840575fb6259bf0fefb73ed3",
+      "hash": "sha256:343bd7e47dd3913b16602f7d4c95c41050124670aafe81caf7cab132adf08a65",
       "tools": [
         "overview",
         "main",
@@ -130,12 +130,12 @@
     },
     {
       "name": "data-sync",
-      "version": "1.5.1",
+      "version": "1.0.0",
       "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking",
       "author": "Portel",
       "license": "MIT",
       "source": "../data-sync.photon.ts",
-      "hash": "sha256:4825f108d4fa47f3d21326234770a2ed44ca80a5365d7d046c574b7d09e1b713",
+      "hash": "sha256:b23983900826259dfe1a07134a732bbd326e7c11b4ca887d5a9b0b1b45130533",
       "tools": [
         "exportToJson",
         "importFromJson",
@@ -155,7 +155,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../demo.photon.ts",
-      "hash": "sha256:fffd513d8175c5fb3ec50ce529a95c0c3089800f94750b6091e7ff949d927fb1",
+      "hash": "sha256:df1770f78261c56666f392a4aa08be636c620e2f9aeb53a6db43279206b5dd9f",
       "tools": [
         "getString",
         "getNumber",
@@ -192,7 +192,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../docker.photon.ts",
-      "hash": "sha256:72af0b3309e2ef6754a31acc0a2bcc3554b2780212eebf720e773e00647fdc5c",
+      "hash": "sha256:aa02e43ffe3295d498957265dc81049a5cea7aee6598294b54ac8b3dc0507fd3",
       "tools": [
         "containers",
         "start",
@@ -216,7 +216,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../email.photon.ts",
-      "hash": "sha256:cbab8eb92576292f5cf083343430b12b26158191e56919cc678ee2e3634f3c7d",
+      "hash": "sha256:f1fc79547ca8d85541aa8726389d3f68323ea3e1bd1fd0deabe500f8a1f9d33d",
       "tools": [
         "send",
         "sendAttachment",
@@ -234,11 +234,11 @@
     {
       "name": "feature-showcase",
       "version": "1.0.0",
-      "description": "Feature Showcase — Core Runtime Feature Demos",
+      "description": "Feature Showcase - Core Runtime Feature Demos",
       "author": "Portel",
       "license": "MIT",
       "source": "../feature-showcase.photon.ts",
-      "hash": "sha256:806759cc4ed2835ce43ca20ba00514006d90cde31d2cbb42ccf09359eabccb7d",
+      "hash": "sha256:d321364598b07e4ca734cc75340654a372b782b012e316b684931390eedefb23",
       "tools": [
         "configure",
         "getConfig",
@@ -267,7 +267,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:805a1dd650780faf24ca09b2b2c5e609407a537b72f71a47021cb2fbea00f867",
+      "hash": "sha256:daf2b7af6687a54c4736550a5297e968d8178394a46fa3d046eddeead6432018",
       "tools": [
         "read",
         "write",
@@ -294,7 +294,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../form-inbox.photon.ts",
-      "hash": "sha256:7384cb0610e4a2a42c85aedaecaff6933c21f91efdc2b91c310fd15aa1fa9c5b",
+      "hash": "sha256:f3b8ee952f2dc6f922881f35a6f1ae0122fe0460171ba8cef5da86294075a468",
       "tools": [
         "forms",
         "formCreate",
@@ -319,11 +319,11 @@
     {
       "name": "git-box",
       "version": "2.0.0",
-      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads",
+      "description": "Git Box - Mailbox-style Git interface, manage repos like an inbox",
       "author": "Portel",
       "license": "MIT",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:deb678917464642a064f3b70f517223b1720fda834bc77240908f3d331610266",
+      "hash": "sha256:f81f5d85c6d1300a1ae32fc89d064919481c4fdf373bb3d9212f3117350cdacd",
       "tools": [
         "configure",
         "main",
@@ -401,7 +401,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../git.photon.ts",
-      "hash": "sha256:947c4456dd7593f6f4e268969d20dcea74984b2ee3e44ba50a1f58dd3fdb4d40",
+      "hash": "sha256:16b6f5917009dc86c742068ac4b19ea22e58262342518e4f1927cab2203136f3",
       "tools": [
         "status",
         "log",
@@ -426,7 +426,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../github-issues.photon.ts",
-      "hash": "sha256:fce353220061b56dc8cf09606fe23b2d849adacc87d5faafcb23f3aafa27d678",
+      "hash": "sha256:1c8dd1502b926de892ec61cb432ba8fa1a3ed06d46cda7abbb517a2742bfe6a2",
       "tools": [
         "listIssues",
         "getIssue",
@@ -447,7 +447,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../google-calendar.photon.ts",
-      "hash": "sha256:8915b6efedfa85a68ceba999ac2a5c798744c4121164c398f65e25c79d7a0ac5",
+      "hash": "sha256:e6e172e63afba21eb2d72e14fb69c771ea8380b64117b42d67d6189fff915c8a",
       "tools": [
         "list",
         "get",
@@ -496,7 +496,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../jira.photon.ts",
-      "hash": "sha256:80240d486ac9fc8397e302692ed1b9f6dcbb9030f595948e82a8bbca007d2109",
+      "hash": "sha256:cccbf1fd7ae9dcee4c830cf64ac79aa3dd20565419f912ac90ee088992dd00b0",
       "tools": [
         "search",
         "get",
@@ -520,7 +520,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:6c99feef9513303bf70617fa03207fb1415295367b5f747108b0f02669b4030a",
+      "hash": "sha256:f12427063639033361f6edaf6947464faf6d00e49b61537ddc9e50a0a44b53e8",
       "tools": [
         "configure",
         "installHooks",
@@ -581,7 +581,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../kitchen-sink.photon.ts",
-      "hash": "sha256:838e24ca24513c2199e5d7602c5a1777548dd50ccb6a0821c440c2869aceb919",
+      "hash": "sha256:3e9d69baa4017fbc7d6506dd92b2e6e38c838d613afb7e6f2ee9599e2a2941fa",
       "tools": [
         "basicStringReturn",
         "basicNumberReturn",
@@ -627,7 +627,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../math.photon.ts",
-      "hash": "sha256:3483976c636de7ad88824c4695a0492364c2961e363f237ae9f5259ab2d26f4d",
+      "hash": "sha256:b923b4b2d8bd0545ab71efe33fd13aec5104b70b37cddf77949372c38b3a9aa1",
       "tools": [
         "calculate"
       ],
@@ -668,7 +668,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../mongodb.photon.ts",
-      "hash": "sha256:bc2636e9459d810193e5560fa2dc4d8ac7d3a59665ee684f51b4eae2d19507ba",
+      "hash": "sha256:abafcb89ae7c2882ba9fe18a86c302420b96d9dca0de1e69eaa7e35e359234a5",
       "tools": [
         "find",
         "findOne",
@@ -695,7 +695,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:9e9bce19b63f4900cf92c1bdc40e4da1ee3dc5a085c27a437fae7c3f930990fa",
+      "hash": "sha256:19eafafa900d232bdd298177c1b3b845f2461195b489b35cdde9584770f7fba0",
       "tools": [
         "query",
         "transaction",
@@ -711,12 +711,12 @@
     },
     {
       "name": "preferences",
-      "version": "1.5.1",
+      "version": "1.0.0",
       "description": "Preferences Photon",
       "author": "Portel",
       "license": "MIT",
       "source": "../preferences.photon.ts",
-      "hash": "sha256:350eec54a309a9eb0db38d7ce8324f2aac165606c0cebc2e45d9df221d919860",
+      "hash": "sha256:860efc4bae09dc6701ac2a5f0ab8039c138262499bfde7b5027519d89200e6f6",
       "tools": [
         "getPreferences",
         "getPreference",
@@ -748,7 +748,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../redis.photon.ts",
-      "hash": "sha256:0e1e953d0b494c7717990ed5a430ca39474d8573b2391f01c1254b331dfaeffe",
+      "hash": "sha256:6419f41d6432d7510ad38dc66a0ae73386cb8424a502905d418e351799171097",
       "tools": [
         "get",
         "set",
@@ -780,7 +780,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../slack.photon.ts",
-      "hash": "sha256:71d3eb9931ab7e87dabb8f1eb7e047ba7122247ad7ac7b92e8274b7e0007b7d9",
+      "hash": "sha256:dd71e28742bafc59d43affaea068eaae0ea346e76696914e1bb027b525af8973",
       "tools": [
         "post",
         "channels",
@@ -801,7 +801,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:42904c699b46e8f4988a097b9e1ca19b43a6f411b28fad9c74289b252fd080d9",
+      "hash": "sha256:ff5794c41c099e30575fe9897c7b6047ad7fe0fb4f96ebcfa90d2f69c9839550",
       "tools": [
         "open",
         "query",
@@ -824,7 +824,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../team-dashboard.photon.ts",
-      "hash": "sha256:3b52b21e544020db58ee3e439cdd377d70ff9d82199b92c30c2f1252a0d68020",
+      "hash": "sha256:4259d9b30f92c83f32547fcc83ae5d075d04bbbee79f6c57a17552688b98b953",
       "tools": [
         "main",
         "getDashboardData",
@@ -864,7 +864,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../time.photon.ts",
-      "hash": "sha256:f073133732b51adc2d538d7eb82e999477a84b30afa007185890fd96150deda3",
+      "hash": "sha256:2270c7491ccb0e8ac2f1c4981a33b260b035fe69212c51e8d0ea498580aebdd3",
       "tools": [
         "now",
         "convert",
@@ -881,7 +881,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../web.photon.ts",
-      "hash": "sha256:9507dc79ae689770a8a05850a7e6c5aa32be93d1e50f095cf953f670f26245a2",
+      "hash": "sha256:d32ce2f8078c572a31babe648f762d8755308770b7803e73d94a678bdce88f92",
       "tools": [
         "search",
         "read"

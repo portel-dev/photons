@@ -1,6 +1,6 @@
-# @name git-box @icon 📬 @description Mailbox-style Git interface
+# Git Box
 
-manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads
+Mailbox-style Git interface, manage repos like an inbox
 
 > **58 tools** · Streaming Photon · v2.0.0 · MIT
 

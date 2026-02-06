@@ -21,6 +21,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 💬
+ * @tags slack, messaging, notifications
  */
 
 import { WebClient } from '@slack/web-api';

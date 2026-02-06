@@ -136,10 +136,7 @@ photon info dashboard --mcp
 
 ## 📦 Dependencies
 
-
-```
-@portel/photon-core@latest
-```
+No external dependencies.
 
 ---
 

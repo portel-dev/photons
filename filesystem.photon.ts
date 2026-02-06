@@ -20,6 +20,8 @@
  * @version 1.1.0
  * @author Portel
  * @license MIT
+ * @icon 📁
+ * @tags filesystem, files, directories
  */
 
 import * as fs from 'fs/promises';

@@ -9,6 +9,8 @@
  * @author Portel
  * @license MIT
  * @dependencies typescript@^5.0.0
+ * @icon 📊
+ * @tags diagram, mermaid, visualization, code
  */
 
 import * as fs from 'fs/promises';

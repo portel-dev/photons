@@ -64,7 +64,7 @@
     },
     {
       "name": "daemon-features",
-      "description": "Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub",
+      "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -172,7 +172,7 @@
     },
     {
       "name": "feature-showcase",
-      "description": "Feature Showcase — Core Runtime Feature Demos",
+      "description": "Feature Showcase - Core Runtime Feature Demos",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -226,7 +226,7 @@
     },
     {
       "name": "git-box",
-      "description": "@name git-box @icon 📬 @description Mailbox-style Git interface - manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads",
+      "description": "Git Box - Mailbox-style Git interface, manage repos like an inbox",
       "source": "./",
       "strict": false,
       "hooks": [

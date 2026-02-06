@@ -2,7 +2,7 @@
 
 Preferences Photon
 
-> **7 tools** · Workflow Photon · v1.5.1 · MIT
+> **7 tools** · Workflow Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `elicitation` `streaming`
 
@@ -165,11 +165,8 @@ photon info preferences --mcp
 
 ## 📦 Dependencies
 
-
-```
-@portel/photon-core@latest
-```
+No external dependencies.
 
 ---
 
-MIT · v1.5.1 · Portel
+MIT · v1.0.0 · Portel

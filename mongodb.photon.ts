@@ -19,6 +19,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 🍃
+ * @tags mongodb, nosql, database
  */
 
 import { MongoClient, Db, ObjectId } from 'mongodb';

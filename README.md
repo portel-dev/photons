@@ -37,16 +37,16 @@ We welcome contributions! Submit pull requests for:
 | [**AWS S3**](aws-s3.md) | Cloud object storage operations | 11 | - |
 | [**Code Diagram**](code-diagram.md) | Generate a Mermaid diagram from a file | 3 | 🔌📦 |
 | [**Connect Four**](connect-four.md) | Play against AI with distributed locks | 8 | 🎨📡 |
-| [**Daemon Features**](daemon-features.md) | Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub | 6 | 📡 |
+| [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 6 | 📡 |
 | [**Dashboard**](dashboard.md) | Dashboard Photon | 6 | 🎨🎨 |
 | [**Data Sync**](data-sync.md) | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | ⚡⚡ |
 | [**Demo Photon**](demo.md) | Comprehensive feature demonstration | 21 | ⚡ |
 | [**Docker**](docker.md) | Container management operations | 10 | - |
 | [**Email**](email.md) | Send and receive emails via SMTP and IMAP | 8 | - |
-| [**Feature Showcase**](feature-showcase.md) | Feature Showcase — Core Runtime Feature Demos | 12 | ⚡📡 |
+| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 13 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
-| [**@name git-box @icon 📬 @description Mailbox-style Git interface**](git-box.md) | manage repos like an inbox @version 2.0.0 @author Portel @cli git - https://git-scm.com/downloads | 58 | ⚡🎨💬 |
+| [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 58 | ⚡🎨💬 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |
 | [**Google Calendar**](google-calendar.md) | Calendar integration | 9 | - |

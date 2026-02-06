@@ -10,7 +10,11 @@
  * @mcp postgres anthropics/mcp-server-postgres
  * @mcp filesystem anthropics/mcp-server-filesystem
  *
+ * @version 1.0.0
+ * @license MIT
  * @author Portel
+ * @icon 🔄
+ * @tags sync, workflow, database
  */
 export default class DataSync {
   /**

@@ -19,6 +19,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 🔀
+ * @tags git, version-control, repository
  */
 
 import simpleGit, { SimpleGit, LogResult, StatusResult, BranchSummary } from 'simple-git';

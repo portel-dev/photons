@@ -1,5 +1,5 @@
 /**
- * Feature Showcase — Core Runtime Feature Demos
+ * Feature Showcase - Core Runtime Feature Demos
  *
  * Demonstrates every major Photon runtime feature with test methods
  * to prove each one works. Run `photon test feature-showcase` to verify.
@@ -89,7 +89,7 @@ export default class FeatureShowcasePhoton extends PhotonMCP {
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // EMIT TYPES — Generator yielding all io.emit variants
+  // EMIT TYPES - Generator yielding all io.emit variants
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
@@ -129,7 +129,7 @@ export default class FeatureShowcasePhoton extends PhotonMCP {
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // ASK TYPES — Generator yielding all io.ask variants
+  // ASK TYPES - Generator yielding all io.ask variants
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
@@ -330,7 +330,7 @@ All features are operational.
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // TEST METHODS — run with: photon test feature-showcase
+  // TEST METHODS - run with: photon test feature-showcase
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**

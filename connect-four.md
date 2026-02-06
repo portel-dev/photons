@@ -169,10 +169,7 @@ photon info connect-four --mcp
 
 ## 📦 Dependencies
 
-
-```
-@portel/photon-core@latest
-```
+No external dependencies.
 
 ---
 
