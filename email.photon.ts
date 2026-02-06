@@ -33,6 +33,8 @@
  * @version 1.1.0
  * @author Portel
  * @license MIT
+ * @icon 📧
+ * @tags email, smtp, imap, messaging
  */
 
 import nodemailer from 'nodemailer';

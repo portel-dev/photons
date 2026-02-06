@@ -26,6 +26,8 @@
  * @version 1.1.0
  * @author Portel
  * @license MIT
+ * @icon 🐘
+ * @tags postgresql, database, sql
  */
 
 import pg from 'pg';

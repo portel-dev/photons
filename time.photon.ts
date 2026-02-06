@@ -17,6 +17,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 🕐
+ * @tags time, timezone, conversion
  */
 
 export default class Time {

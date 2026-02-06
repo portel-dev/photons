@@ -9,6 +9,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 🌐
+ * @tags web, search, scraping, readability
  */
 
 import axios from 'axios';

@@ -2,7 +2,7 @@
 
 Data Sync Workflow Synchronizes data between different sources with progress tracking
 
-> **3 tools** · Workflow Photon · v1.5.1 · MIT
+> **3 tools** · Workflow Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator` `streaming`
 
@@ -136,4 +136,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.5.1 · Portel
+MIT · v1.0.0 · Portel

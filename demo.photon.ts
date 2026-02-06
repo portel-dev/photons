@@ -5,7 +5,10 @@
  * This version avoids TypeScript parameter properties for compatibility.
  *
  * @version 1.0.0
+ * @license MIT
  * @author Portel
+ * @icon 🎪
+ * @tags demo, testing, features
  */
 
 import { io } from '@portel/photon-core';

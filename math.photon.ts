@@ -17,6 +17,8 @@
  * @version 1.1.0
  * @author Portel
  * @license MIT
+ * @icon 🧮
+ * @tags math, calculator, expressions
  */
 
 export default class Math {

@@ -20,6 +20,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 📅
+ * @tags google, calendar, scheduling
  */
 
 import { google, calendar_v3 } from 'googleapis';

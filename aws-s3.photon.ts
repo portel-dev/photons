@@ -20,6 +20,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon ☁️
+ * @tags aws, s3, storage, cloud
  */
 
 import {

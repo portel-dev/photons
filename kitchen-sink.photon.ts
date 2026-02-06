@@ -5,7 +5,10 @@
  * Use this as a reference for building your own photons.
  *
  * @version 1.0.0
+ * @license MIT
  * @author Portel
+ * @icon 🍳
+ * @tags demo, reference, features, showcase
  */
 
 import { PhotonMCP, io } from '@portel/photon-core';

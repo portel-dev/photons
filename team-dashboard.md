@@ -316,10 +316,7 @@ photon info team-dashboard --mcp
 
 ## 📦 Dependencies
 
-
-```
-@portel/photon-core@latest
-```
+No external dependencies.
 
 ---
 

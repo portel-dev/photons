@@ -13,6 +13,8 @@
  * @version 1.1.0
  * @author Portel
  * @license MIT
+ * @icon 🗄️
+ * @tags sqlite, database, sql
  */
 
 import Database from 'better-sqlite3';

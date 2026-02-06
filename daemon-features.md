@@ -1,6 +1,6 @@
 # Daemon Features
 
-Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub
+Scheduled Jobs, Webhooks, Locks, Pub/Sub
 
 > **6 tools** · API Photon · v1.0.0 · MIT
 
@@ -17,7 +17,7 @@ No configuration required.
 
 ### `scheduledHeartbeat`
 
-Heartbeat — writes timestamp to state file every minute  When the daemon runs this photon, the heartbeat proves scheduled execution works. Check with `status()` to see last run time.
+Heartbeat - writes timestamp to state file every minute  When the daemon runs this photon, the heartbeat proves scheduled execution works. Check with `status()` to see last run time.
 
 
 

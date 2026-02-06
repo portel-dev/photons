@@ -1,5 +1,5 @@
 /**
- * Daemon Features — Scheduled Jobs, Webhooks, Locks, Pub/Sub
+ * Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub
  *
  * Demonstrates daemon-specific Photon features. These features require
  * the photon daemon to be running for full functionality, but test methods
@@ -82,7 +82,7 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Heartbeat — writes timestamp to state file every minute
+   * Heartbeat - writes timestamp to state file every minute
    *
    * When the daemon runs this photon, the heartbeat proves scheduled
    * execution works. Check with `status()` to see last run time.
@@ -267,7 +267,7 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // STATUS — Check heartbeat state
+  // STATUS - Check heartbeat state
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
@@ -293,7 +293,7 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // TEST METHODS — run with: photon test daemon-features
+  // TEST METHODS - run with: photon test daemon-features
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**

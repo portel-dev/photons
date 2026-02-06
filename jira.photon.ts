@@ -20,6 +20,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon 🎫
+ * @tags jira, project-management, issues
  */
 
 import axios, { AxiosInstance } from 'axios';

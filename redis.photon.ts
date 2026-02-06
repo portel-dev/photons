@@ -21,6 +21,8 @@
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @icon ⚡
+ * @tags redis, cache, key-value
  */
 
 import { createClient, RedisClientType } from 'redis';
