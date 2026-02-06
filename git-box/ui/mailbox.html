@@ -2361,7 +2361,7 @@
           <button class="repo-overflow-btn" onclick="event.stopPropagation(); showRepoContextMenu(event, '${repo.path.replace(/'/g, "\\'")}')" title="More actions">···</button>
           ${repo.badge > 0
             ? `<span class="repo-badge">${repo.badge}</span>`
-            : `<span class="repo-badge clean">${repo.totalCommits || 0}</span>`
+            : ''
           }
         </div>
       `).join('');
@@ -2999,7 +2999,7 @@
     function renderCommits() {
       const container = document.getElementById('commits-list');
       const totalChanges = (workingFiles.staged?.length || 0) + (workingFiles.unstaged?.length || 0) + (workingFiles.untracked?.length || 0);
-      document.getElementById('commits-count').textContent = commits.length + (totalChanges > 0 ? 1 : 0);
+      document.getElementById('commits-count').textContent = (selectedRepo?.totalCommits || commits.length) + (totalChanges > 0 ? 1 : 0);
 
       let html = '';
 
