@@ -30,6 +30,20 @@ We welcome contributions! Submit pull requests for:
 
 **Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
 
+## 🎓 Start Here
+
+New to Photon? These three photons teach you the fundamentals:
+
+| # | Photon | What You'll Learn |
+|---|--------|-------------------|
+| 1 | **[Hello World](hello-world.photon.ts)** | A class = an MCP server. Each method = a tool. |
+| 2 | **[Todo List](todo.photon.ts)** | Reactive arrays — mutate state, UIs update automatically. |
+| 3 | **[Weather](weather.photon.ts)** | Wrap any API into MCP tools in 20 lines. |
+
+Then explore **Kitchen Sink** for every feature, or **Kanban** / **Git Box** for production app patterns.
+
+---
+
 ## 📦 Available Photons
 
 | Photon | Focus | Tools | Features |
