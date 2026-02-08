@@ -1,0 +1,49 @@
+# Todo List
+
+Reactive collections in action
+
+> **0 tools** · API Photon · v1.0.0 · MIT
+
+
+## ⚙️ Configuration
+
+No configuration required.
+
+
+
+## 🔧 Tools
+
+
+
+
+No tools defined.
+
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph todo["📦 Todo"]
+        direction TB
+        PHOTON((🎯))
+    end
+```
+
+
+## 📥 Usage
+
+```bash
+# Install from marketplace
+photon add todo
+
+# Get MCP config for your client
+photon info todo --mcp
+```
+
+## 📦 Dependencies
+
+No external dependencies.
+
+---
+
+MIT · v1.0.0 · Portel

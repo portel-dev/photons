@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official photons MCP servers",
-    "version": "1.5.1"
+    "version": "1.6.1"
   },
   "plugins": [
     {
@@ -297,6 +297,24 @@
       }
     },
     {
+      "name": "hello-world",
+      "description": "Hello World - The simplest possible photon",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "hello-world": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "hello-world"
+          ]
+        }
+      }
+    },
+    {
       "name": "integration-demo",
       "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
       "source": "./",
@@ -477,6 +495,24 @@
       }
     },
     {
+      "name": "serum",
+      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt serums that force specific cognitive behaviors @icon 💉 /\nexport default class Serum {\n  /",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "serum": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "serum"
+          ]
+        }
+      }
+    },
+    {
       "name": "slack",
       "description": "Slack - Send messages and manage Slack workspace",
       "source": "./",
@@ -544,6 +580,42 @@
           "args": [
             "mcp",
             "time"
+          ]
+        }
+      }
+    },
+    {
+      "name": "todo",
+      "description": "Todo List - Reactive collections in action",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "todo": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "todo"
+          ]
+        }
+      }
+    },
+    {
+      "name": "weather",
+      "description": "Weather - Wrap any API in 20 lines",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "weather": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "weather"
           ]
         }
       }

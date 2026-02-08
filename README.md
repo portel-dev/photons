@@ -50,6 +50,7 @@ We welcome contributions! Submit pull requests for:
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |
 | [**Google Calendar**](google-calendar.md) | Calendar integration | 9 | - |
+| [**Hello World**](hello-world.md) | The simplest possible photon | 0 | - |
 | [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 5 | ⚡🎨 |
 | [**Jira**](jira.md) | Project management and issue tracking | 10 | - |
 | [**Kanban**](kanban.md) | Kanban Board Photon | 33 | ⚡🎨💬📡 |
@@ -60,14 +61,19 @@ We welcome contributions! Submit pull requests for:
 | [**PostgreSQL**](postgres.md) | Database operations for PostgreSQL | 7 | - |
 | [**Preferences**](preferences.md) | Preferences Photon | 7 | ⚡🎨💬⚡ |
 | [**Redis**](redis.md) | In-memory data store and cache | 18 | - |
+| [**Truth Serum**](serum.md) | Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt serums that force specific cognitive behaviors @icon 💉 /
+export default class Serum {
+  / | 10 | - |
 | [**Slack**](slack.md) | Send messages and manage Slack workspace | 7 | - |
 | [**SQLite Photon MCP**](sqlite.md) | SQLite database operations | 9 | - |
 | [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon | 20 | 🎨🎨 |
 | [**Time**](time.md) | Timezone and time conversion operations | 3 | - |
+| [**Todo List**](todo.md) | Reactive collections in action | 0 | - |
+| [**Weather**](weather.md) | Wrap any API in 20 lines | 2 | - |
 | [**Web**](web.md) | Web Agent Photon (Search + Read) | 2 | ⚡ |
 
 
-**Total:** 31 photons ready to use
+**Total:** 35 photons ready to use
 
 ---
 
@@ -111,7 +117,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 31 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 35 focused tools at its fingertips.
 
 ---
 
@@ -177,7 +183,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 31 production-ready photons available
+- 📦 35 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

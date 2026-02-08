@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.5.1",
+  "version": "1.6.1",
   "owner": {
     "name": "Portel"
   },
@@ -464,6 +464,19 @@
       "features": []
     },
     {
+      "name": "hello-world",
+      "version": "1.0.0",
+      "description": "Hello World - The simplest possible photon",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../hello-world.photon.ts",
+      "hash": "sha256:58409a63d063d32791242a9b920ad4329b43f779b962c6c3a8a23a2a33ed288d",
+      "tools": [],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
       "name": "integration-demo",
       "version": "1.0.0",
       "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
@@ -774,6 +787,30 @@
       "features": []
     },
     {
+      "name": "serum",
+      "version": "1.6.1",
+      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt serums that force specific cognitive behaviors @icon 💉 /\nexport default class Serum {\n  /",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../serum.photon.ts",
+      "hash": "sha256:84cab982d704f2b18d1d71285d993661551ee772bb3fb23f973cc9dfa27ecbb3",
+      "tools": [
+        "truth",
+        "clarity",
+        "challenger",
+        "focus",
+        "perspective",
+        "creative",
+        "action",
+        "simplify",
+        "empathy",
+        "custom"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
       "name": "slack",
       "version": "1.0.0",
       "description": "Slack - Send messages and manage Slack workspace",
@@ -869,6 +906,35 @@
         "now",
         "convert",
         "timezones"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
+      "name": "todo",
+      "version": "1.0.0",
+      "description": "Todo List - Reactive collections in action",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../todo.photon.ts",
+      "hash": "sha256:70aee9d62991ccd9537284a0a48b5ecca2bb198b25c38cf34b5e17b852e34b51",
+      "tools": [],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
+      "name": "weather",
+      "version": "1.0.0",
+      "description": "Weather - Wrap any API in 20 lines",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../weather.photon.ts",
+      "hash": "sha256:786917d28882a4c6d0d96cc7da05cbb8b08f9376262091a468fcb6817f8473de",
+      "tools": [
+        "current",
+        "forecast"
       ],
       "assets": [],
       "photonType": "api",
