@@ -4,7 +4,7 @@ Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt 
 export default class Serum {
   /
 
-> **10 tools** · API Photon · v1.6.1 · MIT
+> **10 tools** · API Photon · v1.7.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -176,4 +176,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.6.1
+MIT · v1.7.0

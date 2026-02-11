@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official photons MCP servers",
-    "version": "1.6.1"
+    "version": "1.7.0"
   },
   "plugins": [
     {
@@ -220,6 +220,24 @@
           "args": [
             "mcp",
             "form-inbox"
+          ]
+        }
+      }
+    },
+    {
+      "name": "format-showcase",
+      "description": "Format Showcase - Auto-UI Format Demos",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "format-showcase": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "format-showcase"
           ]
         }
       }

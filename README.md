@@ -30,20 +30,6 @@ We welcome contributions! Submit pull requests for:
 
 **Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
 
-## 🎓 Start Here
-
-New to Photon? These three photons teach you the fundamentals:
-
-| # | Photon | What You'll Learn |
-|---|--------|-------------------|
-| 1 | **[Hello World](hello-world.photon.ts)** | A class = an MCP server. Each method = a tool. |
-| 2 | **[Todo List](todo.photon.ts)** | Reactive arrays — mutate state, UIs update automatically. |
-| 3 | **[Weather](weather.photon.ts)** | Wrap any API into MCP tools in 20 lines. |
-
-Then explore **Kitchen Sink** for every feature, or **Kanban** / **Git Box** for production app patterns.
-
----
-
 ## 📦 Available Photons
 
 | Photon | Focus | Tools | Features |
@@ -60,6 +46,7 @@ Then explore **Kitchen Sink** for every feature, or **Kanban** / **Git Box** for
 | [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 13 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
+| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos | 15 | - |
 | [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 58 | ⚡🎨💬 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |
@@ -87,7 +74,7 @@ export default class Serum {
 | [**Web**](web.md) | Web Agent Photon (Search + Read) | 2 | ⚡ |
 
 
-**Total:** 35 photons ready to use
+**Total:** 36 photons ready to use
 
 ---
 
@@ -131,7 +118,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 35 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 36 focused tools at its fingertips.
 
 ---
 
@@ -197,7 +184,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 35 production-ready photons available
+- 📦 36 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

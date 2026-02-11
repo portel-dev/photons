@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "owner": {
     "name": "Portel"
   },
@@ -315,6 +315,35 @@
         "stateful",
         "channels"
       ]
+    },
+    {
+      "name": "format-showcase",
+      "version": "1.0.0",
+      "description": "Format Showcase - Auto-UI Format Demos",
+      "author": "Portel",
+      "license": "MIT",
+      "source": "../format-showcase.photon.ts",
+      "hash": "sha256:bd63251773fe64756f7b81b231bd22cbfd8420652783d5eb655bed06cca5b85c",
+      "tools": [
+        "list",
+        "card",
+        "table",
+        "bars",
+        "pie",
+        "metric",
+        "gauge",
+        "timeline",
+        "dashboard",
+        "cart",
+        "panels",
+        "tabs",
+        "accordion",
+        "stack",
+        "columns"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "git-box",
@@ -788,7 +817,7 @@
     },
     {
       "name": "serum",
-      "version": "1.6.1",
+      "version": "1.7.0",
       "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt serums that force specific cognitive behaviors @icon 💉 /\nexport default class Serum {\n  /",
       "author": "Unknown",
       "license": "MIT",
