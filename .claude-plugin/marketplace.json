@@ -135,6 +135,24 @@
       }
     },
     {
+      "name": "deploy",
+      "description": "Deploy Pipeline — Stateful Workflows + Elicitation + Progress",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "deploy": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "deploy"
+          ]
+        }
+      }
+    },
+    {
       "name": "docker",
       "description": "Docker - Container management operations",
       "source": "./",
@@ -166,6 +184,24 @@
           "args": [
             "mcp",
             "email"
+          ]
+        }
+      }
+    },
+    {
+      "name": "expenses",
+      "description": "Expense Tracker — Memory + Collection + Typed Fields",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "expenses": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "expenses"
           ]
         }
       }
@@ -634,6 +670,24 @@
           "args": [
             "mcp",
             "team-dashboard"
+          ]
+        }
+      }
+    },
+    {
+      "name": "team-pulse",
+      "description": "Team Pulse — Async Standup with Memory + Channels + Locking",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "team-pulse": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "team-pulse"
           ]
         }
       }

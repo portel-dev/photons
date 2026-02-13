@@ -186,6 +186,27 @@
       ]
     },
     {
+      "name": "deploy",
+      "version": "1.7.0",
+      "description": "Deploy Pipeline — Stateful Workflows + Elicitation + Progress",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../deploy.photon.ts",
+      "hash": "sha256:34e3d7d688e9383ae3ed439cf7e26584e910bf87aa303a44b235ed0f4c294b06",
+      "tools": [
+        "run",
+        "status",
+        "history"
+      ],
+      "assets": [],
+      "photonType": "streaming",
+      "features": [
+        "generator",
+        "stateful",
+        "channels"
+      ]
+    },
+    {
       "name": "docker",
       "version": "1.0.0",
       "description": "Docker - Container management operations",
@@ -226,6 +247,24 @@
         "markRead",
         "remove",
         "move"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
+      "name": "expenses",
+      "version": "1.7.0",
+      "description": "Expense Tracker — Memory + Collection + Typed Fields",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../expenses.photon.ts",
+      "hash": "sha256:528b9c2467cf9a0832bda8fa7b4864dc1f87072dd990d00fd7fffd22d0a2fd75",
+      "tools": [
+        "add",
+        "list",
+        "summary",
+        "budget"
       ],
       "assets": [],
       "photonType": "api",
@@ -936,7 +975,7 @@
       "author": "Unknown",
       "license": "MIT",
       "source": "../tasks-live.photon.ts",
-      "hash": "sha256:5def58989003ba18c81b339239bcde42715b3d223f56886aeae0f1e88972551e",
+      "hash": "sha256:4c005ae7ac03d40a2291cb8364b27cd98bd330f6e46870014a26f87fa3a9c614",
       "tools": [
         "list",
         "add",
@@ -987,6 +1026,26 @@
       "features": [
         "custom-ui",
         "dashboard"
+      ]
+    },
+    {
+      "name": "team-pulse",
+      "version": "1.7.0",
+      "description": "Team Pulse — Async Standup with Memory + Channels + Locking",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../team-pulse.photon.ts",
+      "hash": "sha256:0a616cb058b39c7c52794772057fd4ffe397a514b9d2fa0adb751499bf536fe2",
+      "tools": [
+        "post",
+        "today",
+        "history",
+        "search"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "channels"
       ]
     },
     {

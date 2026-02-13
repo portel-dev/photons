@@ -41,8 +41,10 @@ We welcome contributions! Submit pull requests for:
 | [**Dashboard**](dashboard.md) | Dashboard Photon | 6 | 🎨🎨 |
 | [**Data Sync**](data-sync.md) | Data Sync Workflow Synchronizes data between different sources with progress tracking | 3 | ⚡⚡ |
 | [**Demo Photon**](demo.md) | Comprehensive feature demonstration | 21 | ⚡ |
+| [**Deploy**](deploy.md) | Deploy Pipeline — Stateful Workflows + Elicitation + Progress | 3 | ⚡📡 |
 | [**Docker**](docker.md) | Container management operations | 10 | - |
 | [**Email**](email.md) | Send and receive emails via SMTP and IMAP | 8 | - |
+| [**Expenses**](expenses.md) | Expense Tracker — Memory + Collection + Typed Fields | 4 | - |
 | [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 13 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
@@ -71,13 +73,14 @@ export default class Serum {
 | [**Tasks Basic**](tasks-basic.md) | Basic Task List — stateless, in-memory | 4 | - |
 | [**Tasks Live**](tasks-live.md) | Live Task List — stateful, reactive, persistent | 4 | - |
 | [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon | 20 | 🎨🎨 |
+| [**Team Pulse**](team-pulse.md) | Team Pulse — Async Standup with Memory + Channels + Locking | 4 | 📡 |
 | [**Time**](time.md) | Timezone and time conversion operations | 3 | - |
 | [**Todo List**](todo.md) | Reactive collections in action | 0 | - |
 | [**Weather**](weather.md) | Wrap any API in 20 lines | 2 | - |
 | [**Web**](web.md) | Web Agent Photon (Search + Read) | 2 | ⚡ |
 
 
-**Total:** 39 photons ready to use
+**Total:** 42 photons ready to use
 
 ---
 
@@ -121,7 +124,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 39 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 42 focused tools at its fingertips.
 
 ---
 
@@ -187,7 +190,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 39 production-ready photons available
+- 📦 42 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
