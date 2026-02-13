@@ -15,6 +15,10 @@
 
 import { PhotonMCP, Table, Chart, Stats, Cards, Progress } from '@portel/photon-core';
 
+// Module-level timers survive instance recreation on hot-reload
+let _liveTimerGlobal: ReturnType<typeof setInterval> | null = null;
+let _diagramTimerGlobal: ReturnType<typeof setInterval> | null = null;
+
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
 // ════════════════════════════════════════════════════════════════════════════════
@@ -675,8 +679,8 @@ export default class Hello extends PhotonMCP {
   // LIVE STREAMING DEMO
   // ══════════════════════════════════════════════════════════════════════════════
 
-  private _liveTimer: ReturnType<typeof setInterval> | null = null;
-  private _diagramTimer: ReturnType<typeof setInterval> | null = null;
+  // Timers are module-level (_liveTimerGlobal, _diagramTimerGlobal)
+  // so clearInterval works across hot-reloads
 
   /**
    * **Live streaming** — gauge updates every second via `this.emit()`.
@@ -687,12 +691,12 @@ export default class Hello extends PhotonMCP {
    */
   async live(): Promise<{ value: number; max: number; label: string; unit: string }> {
     // Stop any previous timer
-    if (this._liveTimer) clearInterval(this._liveTimer);
+    if (_liveTimerGlobal) clearInterval(_liveTimerGlobal);
 
     let value = 45 + Math.random() * 30;
 
     // Pump new values every second via collection events
-    this._liveTimer = setInterval(() => {
+    _liveTimerGlobal = setInterval(() => {
       // Random walk: drift ±5, clamped to 10-95
       value += (Math.random() - 0.5) * 10;
       value = Math.max(10, Math.min(95, value));
@@ -725,7 +729,7 @@ export default class Hello extends PhotonMCP {
    * Demonstrates streaming mermaid rendering with smooth SVG transitions.
    */
   async live_diagram(): Promise<string> {
-    if (this._diagramTimer) clearInterval(this._diagramTimer);
+    if (_diagramTimerGlobal) clearInterval(_diagramTimerGlobal);
 
     const h = 'flowchart TD';
     const steps = [
@@ -764,7 +768,7 @@ export default class Hello extends PhotonMCP {
 
     let step = 0;
 
-    this._diagramTimer = setInterval(() => {
+    _diagramTimerGlobal = setInterval(() => {
       this.emit({
         channel: 'format-showcase',
         event: 'live_diagram:changed',
@@ -782,14 +786,14 @@ export default class Hello extends PhotonMCP {
    */
   async stop(): Promise<{ stopped: boolean }> {
     let stopped = false;
-    if (this._liveTimer) {
-      clearInterval(this._liveTimer);
-      this._liveTimer = null;
+    if (_liveTimerGlobal) {
+      clearInterval(_liveTimerGlobal);
+      _liveTimerGlobal = null;
       stopped = true;
     }
-    if (this._diagramTimer) {
-      clearInterval(this._diagramTimer);
-      this._diagramTimer = null;
+    if (_diagramTimerGlobal) {
+      clearInterval(_diagramTimerGlobal);
+      _diagramTimerGlobal = null;
       stopped = true;
     }
     return { stopped };
