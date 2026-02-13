@@ -362,7 +362,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../format-showcase.photon.ts",
-      "hash": "sha256:eb0454dc24ce9d5b450ab3ebcb5004899f6bdbbd585cc92751dcd363ab059451",
+      "hash": "sha256:2a65364281dc815e2546313b52a34ac64d29faa0281662715f1d0f664ed9da53",
       "tools": [
         "list",
         "card",

@@ -70,7 +70,12 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * iOS-style list with title, subtitle, and badge
+   * Uses **`@format list`** — the declarative approach.
+   *
+   * Maps fields to roles via `@title`, `@subtitle`, `@icon`, `@badge`.
+   * The auto-UI renders an iOS-style list with no code overhead.
+   *
+   * Compare with `rich_cards()` for the programmatic approach.
    * @autorun
    * @format list {@title name, @subtitle role, @icon avatar, @badge status}
    */
@@ -85,7 +90,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Single object displayed as a card
+   * Uses **`@format card`** — renders a single object as a detail card.
+   *
+   * Each key becomes a labeled field. No column definitions needed.
+   * Best for profile pages, detail views, or single-record displays.
    * @autorun
    * @format card
    */
@@ -108,7 +116,12 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Array of objects displayed as a sortable table
+   * Uses **`@format table`** — the declarative approach.
+   *
+   * Returns raw data; auto-UI infers column types from the data shape.
+   * Best when your data is simple and needs zero code overhead.
+   *
+   * Compare with `rich_table()` for the programmatic approach with typed columns.
    * @autorun
    * @format table
    */
@@ -127,7 +140,12 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Bar chart showing monthly revenue
+   * Uses **`@format chart:bar`** — the declarative approach.
+   *
+   * Maps `@label` and `@value` to axis roles. Single-series only.
+   * Best for quick visualizations of simple label→value data.
+   *
+   * Compare with `rich_chart()` for multi-series and axis control.
    * @autorun
    * @format chart:bar {@label month, @value revenue}
    */
@@ -143,7 +161,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Pie chart showing budget breakdown
+   * Uses **`@format chart:pie`** — declarative pie chart.
+   *
+   * Maps `@label` and `@value` for slice names and sizes.
+   * Great for proportional breakdowns with minimal code.
    * @autorun
    * @format chart:pie {@label category, @value amount}
    */
@@ -162,7 +183,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Single KPI metric with delta
+   * Uses **`@format metric`** — a single KPI with trend indicator.
+   *
+   * Returns `label`, `value`, `unit`, and `delta` fields.
+   * The auto-UI renders a prominent number with up/down trend arrow.
    * @autorun
    * @format metric
    */
@@ -183,7 +207,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Circular gauge showing CPU usage
+   * Uses **`@format gauge`** — a circular gauge with min/max bounds.
+   *
+   * Renders a radial progress indicator. Use `@min` and `@max` to set the range.
+   * Best for single values within a known range (CPU, battery, score).
    * @autorun
    * @format gauge {@min 0, @max 100}
    */
@@ -206,7 +233,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Vertical timeline of project milestones
+   * Uses **`@format timeline`** — a vertical event sequence.
+   *
+   * Maps `@date`, `@title`, and `@description` to timeline nodes.
+   * Ideal for project milestones, changelogs, or activity feeds.
    * @autorun
    * @format timeline {@date date, @title title, @description description}
    */
@@ -225,7 +255,11 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Composite dashboard with mixed data types
+   * Uses **`@format dashboard`** — a composite layout for mixed data.
+   *
+   * Returns an object with metrics, gauges, tables, and charts as fields.
+   * The auto-UI detects each sub-shape and renders the appropriate widget.
+   * One annotation, multiple visualizations.
    * @autorun
    * @format dashboard
    */
@@ -258,7 +292,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Shopping cart with items and totals
+   * Uses **`@format cart`** — a shopping cart with line items and totals.
+   *
+   * Expects `items[]` with `name`, `price`, `quantity`, and optional `image`.
+   * Auto-renders item list, subtotal, tax, and total with formatting.
    * @autorun
    * @format cart
    */
@@ -287,7 +324,11 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * CSS grid of titled panels rendering inner content as cards
+   * Uses **`@format panels`** — a CSS grid of titled panels.
+   *
+   * Each top-level key becomes a panel title; the value renders via `@inner`.
+   * Here `@inner card` renders each department as a detail card.
+   * Use `@columns` to control the grid.
    * @autorun
    * @format panels {@inner card, @columns 3}
    */
@@ -304,7 +345,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Tab bar switching between categorized lists
+   * Uses **`@format tabs`** — a tab bar switching between groups.
+   *
+   * Each top-level key becomes a tab; `@inner list` renders the tab content.
+   * Great for categorized data where each category has similar structure.
    * @autorun
    * @format tabs {@inner list}
    */
@@ -333,7 +377,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Collapsible FAQ sections
+   * Uses **`@format accordion`** — collapsible sections.
+   *
+   * Each top-level key becomes a section header; `@inner kv` renders key-value pairs inside.
+   * Perfect for FAQs, settings groups, or categorized reference data.
    * @autorun
    * @format accordion {@inner kv}
    */
@@ -362,7 +409,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Vertical stack of KPI metrics
+   * Uses **`@format stack`** — vertical stack of metrics.
+   *
+   * Each key becomes a stacked widget rendered via `@inner metric`.
+   * Use for KPI dashboards where metrics should read top-to-bottom.
    * @autorun
    * @format stack {@inner metric}
    */
@@ -379,7 +429,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Side-by-side pie charts comparing plans
+   * Uses **`@format columns`** — side-by-side layout.
+   *
+   * Each key becomes a column; `@inner chart:pie` renders pie charts.
+   * Use `@columns` to control how many fit per row.
    * @autorun
    * @format columns {@inner chart:pie, @columns 2}
    */
@@ -408,7 +461,12 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   /**
-   * Table using the Table UI type class with column definitions
+   * Uses the **`Table`** class — the programmatic approach.
+   *
+   * Explicit column types (`number`, `badge`, `currency`), custom headers, and a title.
+   * Note the `currency` column on budget — something `@format table` can't express.
+   *
+   * Compare with `table()` for the declarative `@format` approach.
    * @autorun
    */
   async rich_table(): Promise<Table> {
@@ -419,30 +477,42 @@ export default class FormatShowcasePhoton extends PhotonMCP {
       .column('disk', 'Disk %', 'number')
       .column('status', 'Status', 'badge')
       .column('uptime', 'Uptime')
+      .column('budget', 'Monthly Cost', 'currency')
       .title('Server Metrics')
       .rows([
-        { host: 'web-01', cpu: 42, memory: 68, disk: 55, status: 'healthy', uptime: '45d 12h' },
-        { host: 'web-02', cpu: 78, memory: 82, disk: 61, status: 'warning', uptime: '12d 3h' },
-        { host: 'db-01', cpu: 35, memory: 91, disk: 72, status: 'warning', uptime: '90d 7h' },
-        { host: 'db-02', cpu: 22, memory: 45, disk: 38, status: 'healthy', uptime: '90d 7h' },
-        { host: 'cache-01', cpu: 95, memory: 88, disk: 15, status: 'critical', uptime: '2d 1h' },
+        { host: 'web-01', cpu: 42, memory: 68, disk: 55, status: 'healthy', uptime: '45d 12h', budget: 1200 },
+        { host: 'web-02', cpu: 78, memory: 82, disk: 61, status: 'warning', uptime: '12d 3h', budget: 1200 },
+        { host: 'db-01', cpu: 35, memory: 91, disk: 72, status: 'warning', uptime: '90d 7h', budget: 3500 },
+        { host: 'db-02', cpu: 22, memory: 45, disk: 38, status: 'healthy', uptime: '90d 7h', budget: 3500 },
+        { host: 'cache-01', cpu: 95, memory: 88, disk: 15, status: 'critical', uptime: '2d 1h', budget: 800 },
       ]);
   }
 
   /**
-   * Bar chart using the Chart UI type class
+   * Uses the **`Chart`** class — the programmatic approach.
+   *
+   * Supports **multiple series** (revenue vs cost), axis labels, and titles.
+   * The `@format chart:bar` annotation is single-series only.
+   *
+   * Compare with `bars()` for the declarative `@format` approach.
    * @autorun
    */
   async rich_chart(): Promise<Chart> {
     return new Chart('bar')
-      .title('Monthly Revenue')
+      .title('Revenue vs Cost')
       .labels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
       .series('Revenue', [42000, 38000, 55000, 47000, 62000, 58000])
+      .series('Cost', [28000, 31000, 33000, 29000, 35000, 32000])
       .yAxis('USD');
   }
 
   /**
-   * Stats dashboard using the Stats UI type class
+   * Uses the **`Stats`** class — the programmatic approach.
+   *
+   * Typed formatters: `.currency()`, `.count()`, `.percent()` auto-format values.
+   * Each stat gets trend indicators and labels — no manual formatting needed.
+   *
+   * Compare with `metric()` for the declarative single-KPI `@format` approach.
    * @autorun
    */
   async rich_stats(): Promise<Stats> {
@@ -455,7 +525,12 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Cards layout using the Cards UI type class
+   * Uses the **`Cards`** class — the programmatic approach.
+   *
+   * Explicit field roles: `.heading()`, `.subtitle()`, `.badge()`, `.image()`.
+   * Gives you control over which fields render and how — without annotations.
+   *
+   * Compare with `list()` for the declarative `@format list` approach.
    * @autorun
    */
   async rich_cards(): Promise<Cards> {
@@ -474,7 +549,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Progress bars using the Progress UI type class
+   * Uses the **`Progress`** class — multi-bar progress display.
+   *
+   * Each `.bar()` gets a label, percentage, and color.
+   * Use for project phases, skill levels, or any multi-track progress.
    * @autorun
    */
   async rich_progress(): Promise<Progress> {
@@ -486,7 +564,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Step indicator using the Progress UI type class in steps mode
+   * Uses the **`Progress`** class in `steps` mode — a step indicator.
+   *
+   * Each `.step()` has a status: `completed`, `current`, or `pending`.
+   * Perfect for checkout flows, onboarding wizards, or multi-stage processes.
    * @autorun
    */
   async rich_steps(): Promise<Progress> {
@@ -504,7 +585,10 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   private _liveTimer: ReturnType<typeof setInterval> | null = null;
 
   /**
-   * Live gauge that updates every second with simulated CPU usage
+   * **Live streaming** — gauge updates every second via `this.emit()`.
+   *
+   * Combines `@format gauge` with real-time channel events.
+   * The initial return renders immediately; subsequent `emit()` calls update the value.
    * @format gauge {@min 0, @max 100}
    */
   async live(): Promise<{ value: number; max: number; label: string; unit: string }> {
@@ -540,7 +624,7 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   /**
-   * Stop the live gauge stream
+   * Stops the live gauge stream started by `live()`.
    */
   async stop(): Promise<{ stopped: boolean }> {
     if (this._liveTimer) {
