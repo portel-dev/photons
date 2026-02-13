@@ -2,8 +2,9 @@
 
 Auto-UI Format Demos
 
-> **21 tools** · API Photon · v1.0.0 · MIT
+> **23 tools** · API Photon · v1.0.0 · MIT
 
+**Platform Features:** `channels`
 
 ## ⚙️ Configuration
 
@@ -245,6 +246,28 @@ Step indicator using the Progress UI type class in steps mode
 ---
 
 
+### `live`
+
+Live gauge that updates every second with simulated CPU usage
+
+
+
+
+
+---
+
+
+### `stop`
+
+Stop the live gauge stream
+
+
+
+
+
+---
+
+
 
 
 
@@ -297,6 +320,10 @@ flowchart LR
         PHOTON --> T19
         T20[🔧 rich_steps]
         PHOTON --> T20
+        T21[🔧 live]
+        PHOTON --> T21
+        T22[⏹️ stop]
+        PHOTON --> T22
     end
 ```
 

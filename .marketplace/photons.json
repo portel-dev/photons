@@ -362,7 +362,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../format-showcase.photon.ts",
-      "hash": "sha256:2ae5fc7975252c861cacc4b4f4a304a3079db26ac7d452380c0ee51e46d546a1",
+      "hash": "sha256:eb0454dc24ce9d5b450ab3ebcb5004899f6bdbbd585cc92751dcd363ab059451",
       "tools": [
         "list",
         "card",
@@ -384,11 +384,15 @@
         "rich_stats",
         "rich_cards",
         "rich_progress",
-        "rich_steps"
+        "rich_steps",
+        "live",
+        "stop"
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [
+        "channels"
+      ]
     },
     {
       "name": "git-box",

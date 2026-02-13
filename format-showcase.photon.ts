@@ -13,7 +13,7 @@
  * @icon 🎨
  */
 
-import { PhotonMCP } from '@portel/photon-core';
+import { PhotonMCP, Table, Chart, Stats, Cards, Progress } from '@portel/photon-core';
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -401,5 +401,153 @@ export default class FormatShowcasePhoton extends PhotonMCP {
         { feature: 'Planning', hours: 20 },
       ],
     };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // PURPOSE-DRIVEN UI TYPES (no @format — driven by _photonType)
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Table using the Table UI type class with column definitions
+   * @autorun
+   */
+  async rich_table(): Promise<Table> {
+    return new Table()
+      .column('host', 'Host')
+      .column('cpu', 'CPU %', 'number')
+      .column('memory', 'Memory %', 'number')
+      .column('disk', 'Disk %', 'number')
+      .column('status', 'Status', 'badge')
+      .column('uptime', 'Uptime')
+      .title('Server Metrics')
+      .rows([
+        { host: 'web-01', cpu: 42, memory: 68, disk: 55, status: 'healthy', uptime: '45d 12h' },
+        { host: 'web-02', cpu: 78, memory: 82, disk: 61, status: 'warning', uptime: '12d 3h' },
+        { host: 'db-01', cpu: 35, memory: 91, disk: 72, status: 'warning', uptime: '90d 7h' },
+        { host: 'db-02', cpu: 22, memory: 45, disk: 38, status: 'healthy', uptime: '90d 7h' },
+        { host: 'cache-01', cpu: 95, memory: 88, disk: 15, status: 'critical', uptime: '2d 1h' },
+      ]);
+  }
+
+  /**
+   * Bar chart using the Chart UI type class
+   * @autorun
+   */
+  async rich_chart(): Promise<Chart> {
+    return new Chart('bar')
+      .title('Monthly Revenue')
+      .labels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
+      .series('Revenue', [42000, 38000, 55000, 47000, 62000, 58000])
+      .yAxis('USD');
+  }
+
+  /**
+   * Stats dashboard using the Stats UI type class
+   * @autorun
+   */
+  async rich_stats(): Promise<Stats> {
+    return new Stats()
+      .title('Key Metrics')
+      .currency('Revenue', 58000, { trend: '+12.5%', trendUp: true })
+      .count('Users', 12450, { trend: '+3.2%', trendUp: true })
+      .stat('NPS', 72, { trend: '+5.0', trendUp: true })
+      .percent('Conversion', 3.7, { trend: '-0.2%', trendUp: false });
+  }
+
+  /**
+   * Cards layout using the Cards UI type class
+   * @autorun
+   */
+  async rich_cards(): Promise<Cards> {
+    return new Cards()
+      .heading('name')
+      .subtitle('role')
+      .badge('status')
+      .image('avatar')
+      .items([
+        { name: 'Alice Chen', role: 'Engineering Lead', status: 'active', avatar: 'https://i.pravatar.cc/40?u=alice', email: 'alice@example.com' },
+        { name: 'Bob Kumar', role: 'Senior Designer', status: 'active', avatar: 'https://i.pravatar.cc/40?u=bob', email: 'bob@example.com' },
+        { name: 'Carol Wang', role: 'Product Manager', status: 'away', avatar: 'https://i.pravatar.cc/40?u=carol', email: 'carol@example.com' },
+        { name: 'Dan Osei', role: 'Backend Engineer', status: 'active', avatar: 'https://i.pravatar.cc/40?u=dan', email: 'dan@example.com' },
+        { name: 'Eve Martinez', role: 'QA Engineer', status: 'offline', avatar: 'https://i.pravatar.cc/40?u=eve', email: 'eve@example.com' },
+      ]);
+  }
+
+  /**
+   * Progress bars using the Progress UI type class
+   * @autorun
+   */
+  async rich_progress(): Promise<Progress> {
+    return new Progress()
+      .bar('Design', 100, { color: 'green' })
+      .bar('Development', 65, { color: 'blue' })
+      .bar('Testing', 20, { color: 'yellow' })
+      .bar('Deployment', 0, { color: 'gray' });
+  }
+
+  /**
+   * Step indicator using the Progress UI type class in steps mode
+   * @autorun
+   */
+  async rich_steps(): Promise<Progress> {
+    return new Progress('steps')
+      .step('Cart', 'completed', { description: 'Items selected' })
+      .step('Shipping', 'completed', { description: 'Address confirmed' })
+      .step('Payment', 'current', { description: 'Enter payment details' })
+      .step('Confirm', 'pending', { description: 'Review and place order' });
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // LIVE STREAMING DEMO
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  private _liveTimer: ReturnType<typeof setInterval> | null = null;
+
+  /**
+   * Live gauge that updates every second with simulated CPU usage
+   * @format gauge {@min 0, @max 100}
+   */
+  async live(): Promise<{ value: number; max: number; label: string; unit: string }> {
+    // Stop any previous timer
+    if (this._liveTimer) clearInterval(this._liveTimer);
+
+    let value = 45 + Math.random() * 30;
+
+    // Pump new values every second via collection events
+    this._liveTimer = setInterval(() => {
+      // Random walk: drift ±5, clamped to 10-95
+      value += (Math.random() - 0.5) * 10;
+      value = Math.max(10, Math.min(95, value));
+
+      this.emit({
+        channel: 'format-showcase',
+        event: 'live:changed',
+        data: {
+          value: Math.round(value),
+          max: 100,
+          label: 'CPU Usage',
+          unit: '%',
+        },
+      });
+    }, 1000);
+
+    return {
+      value: Math.round(value),
+      max: 100,
+      label: 'CPU Usage',
+      unit: '%',
+    };
+  }
+
+  /**
+   * Stop the live gauge stream
+   */
+  async stop(): Promise<{ stopped: boolean }> {
+    if (this._liveTimer) {
+      clearInterval(this._liveTimer);
+      this._liveTimer = null;
+      return { stopped: true };
+    }
+    return { stopped: false };
   }
 }
