@@ -343,14 +343,15 @@ async function testTeamPulse() {
     assert.equal(result.posted.blockers, null);
   });
 
-  await test('today shows all updates posted today', async () => {
+  await test('today shows all updates newest-first', async () => {
     const { result } = await exec(photon, 'today');
     assert.ok(Array.isArray(result), 'should be array');
     assert.equal(result.length, 3);
-    const names = result.map((r: any) => r.name).sort();
-    assert.deepEqual(names, ['Alice', 'Bob', 'Carol']);
-    const alice = result.find((r: any) => r.name === 'Alice');
-    assert.equal(alice.blockers, 'Waiting on API keys');
+    // Sorted by seq desc — newest first
+    assert.equal(result[0].name, 'Carol');
+    assert.equal(result[1].name, 'Bob');
+    assert.equal(result[2].name, 'Alice');
+    assert.equal(result[2].blockers, 'Waiting on API keys');
   });
 
   await test('history returns grouped data', async () => {

@@ -14,6 +14,7 @@ import { PhotonMCP, Collection, Table } from '@portel/photon-core';
 
 interface Update {
   id: string;
+  seq: number;
   name: string;
   update: string;
   blockers: string | null;
@@ -46,8 +47,10 @@ export default class TeamPulse extends PhotonMCP {
     return this.withLock('pulse:post', async () => {
       const updates = await this.loadUpdates();
       const now = new Date();
+      const maxSeq = updates.count() > 0 ? updates.max('seq')!.seq : 0;
       const entry: Update = {
         id: crypto.randomUUID(),
+        seq: maxSeq + 1,
         name: params.name,
         update: params.update,
         blockers: params.blockers || null,
@@ -78,7 +81,7 @@ export default class TeamPulse extends PhotonMCP {
     const todayStr = new Date().toISOString().slice(0, 10);
     const todayUpdates = updates
       .where('date', todayStr)
-      .sortBy('timestamp', 'desc');
+      .sortBy('seq', 'desc');
 
     if (todayUpdates.isEmpty()) {
       return { message: 'No updates posted today yet.' };
@@ -105,7 +108,7 @@ export default class TeamPulse extends PhotonMCP {
 
     const recent = updates
       .query(u => u.date >= cutoffStr)
-      .sortBy('timestamp', 'desc');
+      .sortBy('seq', 'desc');
 
     const groups = recent.groupBy('date');
     const result: Record<string, any[]> = {};
@@ -135,7 +138,7 @@ export default class TeamPulse extends PhotonMCP {
       u.update.toLowerCase().includes(q) ||
       u.name.toLowerCase().includes(q) ||
       (u.blockers?.toLowerCase().includes(q) ?? false)
-    ).sortBy('timestamp', 'desc');
+    ).sortBy('seq', 'desc');
 
     return new Table(Array.from(matches))
       .text('name')
