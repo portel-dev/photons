@@ -630,6 +630,47 @@ export default class FormatShowcasePhoton extends PhotonMCP {
     };
   }
 
+  /**
+   * Returns **markdown with YAML frontmatter** — the metadata block between
+   * `---` fences is extracted and rendered as a table above the body.
+   *
+   * This mirrors how static-site generators (Jekyll, Hugo) handle frontmatter.
+   * The auto-UI detects the `---` opener and converts key-value pairs to a table.
+   * @autorun
+   */
+  async markdown_frontmatter(): Promise<string> {
+    return `---
+title: Photon Architecture Overview
+author: Arul
+version: 2.5.4
+status: Draft
+---
+
+## Overview
+
+Photon is a **reactive MCP framework** that turns TypeScript classes into
+full-featured tools with auto-generated UIs.
+
+### Key Concepts
+
+- \`PhotonMCP\` — base class that provides \`emit()\`, lifecycle hooks, and tool registration
+- \`@format\` — declarative annotation for output rendering (table, chart, gauge, etc.)
+- **Rich classes** — \`Table\`, \`Chart\`, \`Card\` for programmatic control
+
+### Getting Started
+
+\`\`\`typescript
+import { PhotonMCP } from '@portel/photon-core';
+
+export default class Hello extends PhotonMCP {
+  async greet(name: string) {
+    return \`Hello, \${name}!\`;
+  }
+}
+\`\`\`
+`;
+  }
+
   // ══════════════════════════════════════════════════════════════════════════════
   // LIVE STREAMING DEMO
   // ══════════════════════════════════════════════════════════════════════════════

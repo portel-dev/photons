@@ -2,7 +2,7 @@
 
 Auto-UI Format Demos
 
-> **25 tools** · API Photon · v1.0.0 · MIT
+> **26 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `channels`
 
@@ -268,6 +268,17 @@ Returns an object with a **mermaid diagram embedded** in a field.  When the auto
 ---
 
 
+### `markdown_frontmatter`
+
+Returns **markdown with YAML frontmatter** — the metadata block between `---` fences is extracted and rendered as a table above the body.  This mirrors how static-site generators (Jekyll, Hugo) handle frontmatter. The auto-UI detects the `---` opener and converts key-value pairs to a table.
+
+
+
+
+
+---
+
+
 ### `live`
 
 *Live streaming** — gauge updates every second via `this.emit()`.  Combines `@format gauge` with real-time channel events. The initial return renders immediately; subsequent `emit()` calls update the value.
@@ -346,10 +357,12 @@ flowchart LR
         PHOTON --> T21
         T22[🔧 mermaid_card]
         PHOTON --> T22
-        T23[🔧 live]
+        T23[🔧 markdown_frontmatter]
         PHOTON --> T23
-        T24[⏹️ stop]
+        T24[🔧 live]
         PHOTON --> T24
+        T25[⏹️ stop]
+        PHOTON --> T25
     end
 ```
 
