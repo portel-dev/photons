@@ -755,20 +755,22 @@ export default class Hello extends PhotonMCP {
       `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]\n  H --> K[Aggregator]\n  I --> K\n  J --> K\n  K --> L[Response Builder]\n  L --> A`,
     ];
 
+    // Build the full sequence: forward → pause at peak → reverse → pause at start
+    const forward = steps.slice(1); // skip 0, it's the initial return
+    const peakPause = [steps[steps.length - 1], steps[steps.length - 1]]; // hold 2 ticks
+    const reverse = steps.slice(0, -1).reverse(); // unwind back to single node
+    const startPause = [steps[0]]; // hold 1 tick before restarting
+    const sequence = [...forward, ...peakPause, ...reverse, ...startPause];
+
     let step = 0;
 
     this._diagramTimer = setInterval(() => {
-      step++;
-      // Loop: restart from the beginning after completing
-      if (step >= steps.length) {
-        step = 0;
-      }
-
       this.emit({
         channel: 'format-showcase',
         event: 'live_diagram:changed',
-        data: steps[step],
+        data: sequence[step],
       });
+      step = (step + 1) % sequence.length;
     }, 1500);
 
     return steps[0];
