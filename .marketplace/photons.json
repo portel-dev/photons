@@ -362,7 +362,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../format-showcase.photon.ts",
-      "hash": "sha256:7e4c36adf16309fa0037bcb6be01784b4887f780bceec61214a73885b2dc08e0",
+      "hash": "sha256:f6fb7d0b0a43a44b6ebde44e1a795a0a14eb4db732f65b154eaa4e6f751e4c22",
       "tools": [
         "list",
         "card",
@@ -389,6 +389,7 @@
         "mermaid_card",
         "markdown_frontmatter",
         "live",
+        "live_diagram",
         "stop"
       ],
       "assets": [],

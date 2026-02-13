@@ -2,7 +2,7 @@
 
 Auto-UI Format Demos
 
-> **26 tools** · API Photon · v1.0.0 · MIT
+> **27 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `channels`
 
@@ -290,9 +290,20 @@ Returns **markdown with YAML frontmatter** — the metadata block between `---` 
 ---
 
 
+### `live_diagram`
+
+*Animated diagram** — a flowchart that builds itself step by step.  Emits progressively larger mermaid strings via `this.emit()`. Each update adds a new node or connection, so you see the diagram grow in real time. Demonstrates streaming mermaid rendering with smooth SVG transitions.
+
+
+
+
+
+---
+
+
 ### `stop`
 
-Stops the live gauge stream started by `live()`.
+Stops the live gauge stream started by `live()` or the diagram animation started by `live_diagram()`.
 
 
 
@@ -361,8 +372,10 @@ flowchart LR
         PHOTON --> T23
         T24[🔧 live]
         PHOTON --> T24
-        T25[⏹️ stop]
+        T25[🔧 live_diagram]
         PHOTON --> T25
+        T26[⏹️ stop]
+        PHOTON --> T26
     end
 ```
 

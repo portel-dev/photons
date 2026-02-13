@@ -676,6 +676,7 @@ export default class Hello extends PhotonMCP {
   // ══════════════════════════════════════════════════════════════════════════════
 
   private _liveTimer: ReturnType<typeof setInterval> | null = null;
+  private _diagramTimer: ReturnType<typeof setInterval> | null = null;
 
   /**
    * **Live streaming** — gauge updates every second via `this.emit()`.
@@ -717,14 +718,65 @@ export default class Hello extends PhotonMCP {
   }
 
   /**
-   * Stops the live gauge stream started by `live()`.
+   * **Animated diagram** — a flowchart that builds itself step by step.
+   *
+   * Emits progressively larger mermaid strings via `this.emit()`.
+   * Each update adds a new node or connection, so you see the diagram grow in real time.
+   * Demonstrates streaming mermaid rendering with smooth SVG transitions.
+   */
+  async live_diagram(): Promise<string> {
+    if (this._diagramTimer) clearInterval(this._diagramTimer);
+
+    const steps = [
+      'flowchart TD\n  A[User Request]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]\n  G --> H',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]\n  G --> H\n  H --> I[Response]',
+      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]\n  G --> H\n  H --> I[Response]\n  I --> A',
+    ];
+
+    let step = 0;
+
+    this._diagramTimer = setInterval(() => {
+      step++;
+      if (step >= steps.length) {
+        clearInterval(this._diagramTimer!);
+        this._diagramTimer = null;
+        return;
+      }
+
+      this.emit({
+        channel: 'format-showcase',
+        event: 'live_diagram:changed',
+        data: steps[step],
+      });
+    }, 1500);
+
+    return steps[0];
+  }
+
+  /**
+   * Stops the live gauge stream started by `live()` or the diagram animation
+   * started by `live_diagram()`.
    */
   async stop(): Promise<{ stopped: boolean }> {
+    let stopped = false;
     if (this._liveTimer) {
       clearInterval(this._liveTimer);
       this._liveTimer = null;
-      return { stopped: true };
+      stopped = true;
     }
-    return { stopped: false };
+    if (this._diagramTimer) {
+      clearInterval(this._diagramTimer);
+      this._diagramTimer = null;
+      stopped = true;
+    }
+    return { stopped };
   }
 }
