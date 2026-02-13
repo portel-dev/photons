@@ -727,28 +727,41 @@ export default class Hello extends PhotonMCP {
   async live_diagram(): Promise<string> {
     if (this._diagramTimer) clearInterval(this._diagramTimer);
 
+    const h = 'flowchart TD';
     const steps = [
-      'flowchart TD\n  A[User Request]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]\n  G --> H',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]\n  G --> H\n  H --> I[Response]',
-      'flowchart TD\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Valid| D[Load Balancer]\n  C -->|Invalid| E[401 Unauthorized]\n  D --> F[Service A]\n  D --> G[Service B]\n  F --> H[(Database)]\n  G --> H\n  H --> I[Response]\n  I --> A',
+      // Phase 1: Main trunk
+      `${h}\n  A[User Request]`,
+      `${h}\n  A[User Request] --> B[API Gateway]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}`,
+      // Phase 2: Auth branch
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A`,
+      // Phase 3: Valid path continues
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]`,
+      // Phase 4: Fan out to services
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]`,
+      // Phase 5: Build on Service branches — each hits its own store
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]`,
+      // Phase 6: Converge back
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]\n  H --> K[Aggregator]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]\n  H --> K[Aggregator]\n  I --> K`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]\n  H --> K[Aggregator]\n  I --> K\n  J --> K`,
+      // Phase 7: Response path back to user
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]\n  H --> K[Aggregator]\n  I --> K\n  J --> K\n  K --> L[Response Builder]`,
+      `${h}\n  A[User Request] --> B[API Gateway]\n  B --> C{Auth Check}\n  C -->|Invalid| X[401 Unauthorized]\n  X -->|Retry| A\n  C -->|Valid| D[Load Balancer]\n  D --> E[Auth Service]\n  D --> F[User Service]\n  D --> G[Data Service]\n  E --> H[(Redis Cache)]\n  F --> I[(PostgreSQL)]\n  G --> J[(S3 Bucket)]\n  H --> K[Aggregator]\n  I --> K\n  J --> K\n  K --> L[Response Builder]\n  L --> A`,
     ];
 
     let step = 0;
 
     this._diagramTimer = setInterval(() => {
       step++;
+      // Loop: restart from the beginning after completing
       if (step >= steps.length) {
-        clearInterval(this._diagramTimer!);
-        this._diagramTimer = null;
-        return;
+        step = 0;
       }
 
       this.emit({
