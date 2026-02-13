@@ -362,7 +362,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../format-showcase.photon.ts",
-      "hash": "sha256:2a65364281dc815e2546313b52a34ac64d29faa0281662715f1d0f664ed9da53",
+      "hash": "sha256:59bdc1c97b26adcb5829bb0d2e7733c3baed712eb2cb7f2279d305be95dd2bb0",
       "tools": [
         "list",
         "card",
@@ -385,6 +385,8 @@
         "rich_cards",
         "rich_progress",
         "rich_steps",
+        "mermaid",
+        "mermaid_card",
         "live",
         "stop"
       ],

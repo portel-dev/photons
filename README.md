@@ -48,7 +48,7 @@ We welcome contributions! Submit pull requests for:
 | [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 13 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
-| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos | 23 | 📡 |
+| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos | 25 | 📡 |
 | [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 58 | ⚡🎨💬 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |

@@ -2,7 +2,7 @@
 
 Auto-UI Format Demos
 
-> **23 tools** · API Photon · v1.0.0 · MIT
+> **25 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `channels`
 
@@ -246,6 +246,28 @@ Uses the **`Progress`** class in `steps` mode — a step indicator.  Each `.step
 ---
 
 
+### `mermaid`
+
+Returns a **mermaid flowchart** as a plain string.  The auto-UI detects mermaid syntax and renders the diagram visually. No `@format` needed — detection is automatic from the string content.
+
+
+
+
+
+---
+
+
+### `mermaid_card`
+
+Returns an object with a **mermaid diagram embedded** in a field.  When the auto-UI renders this as a card, the `diagram` field is detected as mermaid and rendered visually — other fields render normally.
+
+
+
+
+
+---
+
+
 ### `live`
 
 *Live streaming** — gauge updates every second via `this.emit()`.  Combines `@format gauge` with real-time channel events. The initial return renders immediately; subsequent `emit()` calls update the value.
@@ -320,10 +342,14 @@ flowchart LR
         PHOTON --> T19
         T20[🔧 rich_steps]
         PHOTON --> T20
-        T21[🔧 live]
+        T21[🔧 mermaid]
         PHOTON --> T21
-        T22[⏹️ stop]
+        T22[🔧 mermaid_card]
         PHOTON --> T22
+        T23[🔧 live]
+        PHOTON --> T23
+        T24[⏹️ stop]
+        PHOTON --> T24
     end
 ```
 

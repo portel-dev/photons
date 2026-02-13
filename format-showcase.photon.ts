@@ -579,6 +579,58 @@ export default class FormatShowcasePhoton extends PhotonMCP {
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
+  // MERMAID DIAGRAMS (inline rendering in cards and as top-level results)
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Returns a **mermaid flowchart** as a plain string.
+   *
+   * The auto-UI detects mermaid syntax and renders the diagram visually.
+   * No `@format` needed — detection is automatic from the string content.
+   * @autorun
+   */
+  async mermaid(): Promise<string> {
+    return `flowchart TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> E[Fix the code]
+    E --> B`;
+  }
+
+  /**
+   * Returns an object with a **mermaid diagram embedded** in a field.
+   *
+   * When the auto-UI renders this as a card, the `diagram` field is detected
+   * as mermaid and rendered visually — other fields render normally.
+   * @autorun
+   */
+  async mermaid_card(): Promise<{
+    title: string;
+    description: string;
+    diagram: string;
+    type: string;
+  }> {
+    return {
+      title: 'User Authentication Flow',
+      description: 'Login sequence with OAuth and fallback',
+      diagram: `sequenceDiagram
+    participant U as User
+    participant A as App
+    participant O as OAuth Provider
+    U->>A: Click Login
+    A->>O: Redirect to OAuth
+    O->>U: Show consent screen
+    U->>O: Grant access
+    O->>A: Authorization code
+    A->>O: Exchange for token
+    O->>A: Access token
+    A->>U: Logged in`,
+      type: 'sequence',
+    };
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
   // LIVE STREAMING DEMO
   // ══════════════════════════════════════════════════════════════════════════════
 
