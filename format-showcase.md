@@ -2,7 +2,7 @@
 
 Auto-UI Format Demos
 
-> **15 tools** · API Photon · v1.0.0 · MIT
+> **21 tools** · API Photon · v1.0.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -179,6 +179,72 @@ Side-by-side pie charts comparing plans
 ---
 
 
+### `rich_table`
+
+Table using the Table UI type class with column definitions
+
+
+
+
+
+---
+
+
+### `rich_chart`
+
+Bar chart using the Chart UI type class
+
+
+
+
+
+---
+
+
+### `rich_stats`
+
+Stats dashboard using the Stats UI type class
+
+
+
+
+
+---
+
+
+### `rich_cards`
+
+Cards layout using the Cards UI type class
+
+
+
+
+
+---
+
+
+### `rich_progress`
+
+Progress bars using the Progress UI type class
+
+
+
+
+
+---
+
+
+### `rich_steps`
+
+Step indicator using the Progress UI type class in steps mode
+
+
+
+
+
+---
+
+
 
 
 
@@ -219,6 +285,18 @@ flowchart LR
         PHOTON --> T13
         T14[🔧 columns]
         PHOTON --> T14
+        T15[🔧 rich_table]
+        PHOTON --> T15
+        T16[🔧 rich_chart]
+        PHOTON --> T16
+        T17[🔧 rich_stats]
+        PHOTON --> T17
+        T18[🔧 rich_cards]
+        PHOTON --> T18
+        T19[🔧 rich_progress]
+        PHOTON --> T19
+        T20[🔧 rich_steps]
+        PHOTON --> T20
     end
 ```
 

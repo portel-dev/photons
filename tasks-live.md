@@ -1,0 +1,100 @@
+# Tasks Live
+
+Live Task List — stateful, reactive, persistent
+
+> **4 tools** · API Photon · v1.7.0 · MIT
+
+**Platform Features:** `stateful`
+
+## ⚙️ Configuration
+
+No configuration required.
+
+
+
+## 🔧 Tools
+
+
+### `list`
+
+List all tasks with visual status
+
+
+
+
+
+---
+
+
+### `add`
+
+No description available
+
+
+
+
+
+---
+
+
+### `complete`
+
+No description available
+
+
+
+
+
+---
+
+
+### `clean`
+
+No description available
+
+
+
+
+
+---
+
+
+
+
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart LR
+    subgraph tasks_live["📦 Tasks Live"]
+        direction TB
+        PHOTON((🎯))
+        T0[📖 list]
+        PHOTON --> T0
+        T1[✏️ add]
+        PHOTON --> T1
+        T2[🔧 complete]
+        PHOTON --> T2
+        T3[🔧 clean]
+        PHOTON --> T3
+    end
+```
+
+
+## 📥 Usage
+
+```bash
+# Install from marketplace
+photon add tasks-live
+
+# Get MCP config for your client
+photon info tasks-live --mcp
+```
+
+## 📦 Dependencies
+
+No external dependencies.
+
+---
+
+MIT · v1.7.0

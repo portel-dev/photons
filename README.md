@@ -46,7 +46,7 @@ We welcome contributions! Submit pull requests for:
 | [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 13 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
-| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos | 15 | - |
+| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos | 21 | - |
 | [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 58 | ⚡🎨💬 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage GitHub repository issues | 7 | - |
@@ -61,12 +61,15 @@ We welcome contributions! Submit pull requests for:
 | [**MongoDB**](mongodb.md) | NoSQL database operations | 13 | - |
 | [**PostgreSQL**](postgres.md) | Database operations for PostgreSQL | 7 | - |
 | [**Preferences**](preferences.md) | Preferences Photon | 7 | ⚡🎨💬⚡ |
+| [**Progressive Rendering**](progressive-rendering.md) | Progressive Rendering — Same Data, Better Display | 6 | - |
 | [**Redis**](redis.md) | In-memory data store and cache | 18 | - |
 | [**Truth Serum**](serum.md) | Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt serums that force specific cognitive behaviors @icon 💉 /
 export default class Serum {
   / | 10 | - |
 | [**Slack**](slack.md) | Send messages and manage Slack workspace | 7 | - |
 | [**SQLite Photon MCP**](sqlite.md) | SQLite database operations | 9 | - |
+| [**Tasks Basic**](tasks-basic.md) | Basic Task List — stateless, in-memory | 4 | - |
+| [**Tasks Live**](tasks-live.md) | Live Task List — stateful, reactive, persistent | 4 | - |
 | [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon | 20 | 🎨🎨 |
 | [**Time**](time.md) | Timezone and time conversion operations | 3 | - |
 | [**Todo List**](todo.md) | Reactive collections in action | 0 | - |
@@ -74,7 +77,7 @@ export default class Serum {
 | [**Web**](web.md) | Web Agent Photon (Search + Read) | 2 | ⚡ |
 
 
-**Total:** 36 photons ready to use
+**Total:** 39 photons ready to use
 
 ---
 
@@ -118,7 +121,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 36 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 39 focused tools at its fingertips.
 
 ---
 
@@ -184,7 +187,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 36 production-ready photons available
+- 📦 39 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

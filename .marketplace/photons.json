@@ -323,7 +323,7 @@
       "author": "Portel",
       "license": "MIT",
       "source": "../format-showcase.photon.ts",
-      "hash": "sha256:bd63251773fe64756f7b81b231bd22cbfd8420652783d5eb655bed06cca5b85c",
+      "hash": "sha256:2ae5fc7975252c861cacc4b4f4a304a3079db26ac7d452380c0ee51e46d546a1",
       "tools": [
         "list",
         "card",
@@ -339,7 +339,13 @@
         "tabs",
         "accordion",
         "stack",
-        "columns"
+        "columns",
+        "rich_table",
+        "rich_chart",
+        "rich_stats",
+        "rich_cards",
+        "rich_progress",
+        "rich_steps"
       ],
       "assets": [],
       "photonType": "api",
@@ -784,6 +790,26 @@
       ]
     },
     {
+      "name": "progressive-rendering",
+      "version": "1.7.0",
+      "description": "Progressive Rendering — Same Data, Better Display",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../progressive-rendering.photon.ts",
+      "hash": "sha256:3d74e09b18ebe1faac26a7ac1b56727ddc93cf8ee6d1457c8e6031f5457cec28",
+      "tools": [
+        "v1_raw",
+        "v2_described",
+        "v3_format_basic",
+        "v4_format_rich",
+        "v5_ui_type",
+        "v6_table_fields"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
       "name": "redis",
       "version": "1.0.0",
       "description": "Redis - In-memory data store and cache",
@@ -882,6 +908,46 @@
       "assets": [],
       "photonType": "api",
       "features": []
+    },
+    {
+      "name": "tasks-basic",
+      "version": "1.7.0",
+      "description": "Basic Task List — stateless, in-memory",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../tasks-basic.photon.ts",
+      "hash": "sha256:fe28c365bf95108c2d8674ea5ab3d5bcca827e3a08101771f2595ccedefa9179",
+      "tools": [
+        "list",
+        "add",
+        "complete",
+        "clean"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "stateful"
+      ]
+    },
+    {
+      "name": "tasks-live",
+      "version": "1.7.0",
+      "description": "Live Task List — stateful, reactive, persistent",
+      "author": "Unknown",
+      "license": "MIT",
+      "source": "../tasks-live.photon.ts",
+      "hash": "sha256:5def58989003ba18c81b339239bcde42715b3d223f56886aeae0f1e88972551e",
+      "tools": [
+        "list",
+        "add",
+        "complete",
+        "clean"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": [
+        "stateful"
+      ]
     },
     {
       "name": "team-dashboard",

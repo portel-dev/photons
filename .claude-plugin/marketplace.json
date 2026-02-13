@@ -495,6 +495,24 @@
       }
     },
     {
+      "name": "progressive-rendering",
+      "description": "Progressive Rendering — Same Data, Better Display",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "progressive-rendering": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "progressive-rendering"
+          ]
+        }
+      }
+    },
+    {
       "name": "redis",
       "description": "Redis - In-memory data store and cache",
       "source": "./",
@@ -562,6 +580,42 @@
           "args": [
             "mcp",
             "sqlite"
+          ]
+        }
+      }
+    },
+    {
+      "name": "tasks-basic",
+      "description": "Basic Task List — stateless, in-memory",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "tasks-basic": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "tasks-basic"
+          ]
+        }
+      }
+    },
+    {
+      "name": "tasks-live",
+      "description": "Live Task List — stateful, reactive, persistent",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "tasks-live": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "tasks-live"
           ]
         }
       }
