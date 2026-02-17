@@ -1,6 +1,6 @@
-# Kanban
+# Kanban Board Photon Multi-tenant task management for humans and AI. Each project/conversation can have its own board. Perfect for:
 
-Kanban Board Photon
+Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks ## Quick Reference **Boards:** - `boards()` - List all boards - `board()` - Get board details - `boardCreate()` - Create new board - `boardDelete()` - Delete a board - `projectLink()` - Link board to project folder - `projects()` - List available project folders **Tasks:** - `tasks()` - List tasks (with filters) - `task()` - Get single task with comments - `myTasks()` - Get tasks assigned to AI - `taskCreate()` - Create new task - `taskMove()` - Move task to column - `taskUpdate()` - Update task details - `taskDelete()` - Delete a task - `taskReorder()` - Reorder within column - `search()` - Search tasks by keyword **Comments & Dependencies:** - `commentAdd()` - Add comment to task - `comments()` - Get task comments - `dependencySet()` - Set/remove task dependencies **Columns & Stats:** - `columnAdd()` - Add new column - `columnRemove()` - Remove column - `stats()` - Get board statistics - `completedClear()` - Archive completed tasks **Batch & Utility:** - `main()` - Entry point (shows board UI) - `active()` - Get most recently updated board - `batchMove()` - Move multiple tasks at once
 
 > **33 tools** · Streaming Photon · v2.1.0 · MIT
 

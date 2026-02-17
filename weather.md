@@ -1,6 +1,6 @@
 # Weather
 
-Wrap any API in 20 lines
+Wrap any API in 20 lines Shows how a photon turns an external API into MCP tools with zero boilerplate. Uses the free Open-Meteo API (no API key needed).
 
 > **2 tools** · API Photon · v1.0.0 · MIT
 

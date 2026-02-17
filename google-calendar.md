@@ -1,6 +1,6 @@
 # Google Calendar
 
-Calendar integration
+Calendar integration Provides calendar operations using Google Calendar API (OAuth2). Supports event management, calendar listing, and free/busy queries. Common use cases: - Event management: "Schedule a meeting tomorrow at 2pm", "What's on my calendar today?" - Availability: "Check when John is free this week" - Search: "Find all meetings with Sarah" Example: list({ maxResults: 10 }) Configuration: - clientId: OAuth2 client ID from Google Cloud Console - clientSecret: OAuth2 client secret - refreshToken: OAuth2 refresh token (obtain via OAuth flow)
 
 > **9 tools** · API Photon · v1.0.0 · MIT
 

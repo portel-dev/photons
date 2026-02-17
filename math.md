@@ -1,6 +1,6 @@
 # Math Photon MCP
 
-Advanced math expression evaluator
+Advanced math expression evaluator Exposes a single, robust `calculate` method for AI/agent use. Supports arithmetic, power, sqrt, log, trig, min, max, sum, mean, median, std, abs, floor, ceil, round, random, and constants (PI, E). Example: calculate({ expression: "mean([1,2,3,4]) + max(5, 10) - abs(-7)" }) Run with: npx @portel/photon math --dev or install globally with: npm install -g @portel/photon photon math --dev
 
 > **1 tools** · API Photon · v1.1.0 · MIT
 

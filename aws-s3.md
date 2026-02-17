@@ -1,6 +1,6 @@
 # AWS S3
 
-Cloud object storage operations
+Cloud object storage operations Provides AWS S3 operations using the AWS SDK v3. Supports object upload/download, bucket management, and presigned URLs. Common use cases: - Object storage: "Upload file to bucket", "Download object from S3" - File management: "List all files in bucket", "Delete old backups" - Sharing: "Generate presigned URL for private object" Example: uploadObject({ bucket: "my-bucket", key: "file.txt", content: "Hello" }) Configuration: - accessKeyId: AWS access key ID (required) - secretAccessKey: AWS secret access key (required) - region: AWS region (default: us-east-1)
 
 > **11 tools** · API Photon · v1.0.0 · MIT
 

@@ -1,6 +1,6 @@
-# Code Diagram
+# Generate a Mermaid diagram from a file Visualize any code as flowcharts, API surfaces, dependency graphs, or call graphs. Works on raw code strings or files
 
-Generate a Mermaid diagram from a file
+no AI required, pure static analysis.
 
 > **3 tools** · API Photon · v1.0.0 · MIT
 

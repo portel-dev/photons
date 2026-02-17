@@ -1,6 +1,6 @@
 # Connect Four
 
-Play against AI with distributed locks
+Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. ## Quick Reference - `start` - Start a new game - `drop` - Drop your disc into a column (1-7) - `board` - View current board state - `games` - List your games - `stats` - Win/loss statistics
 
 > **8 tools** · API Photon · v1.0.0 · MIT
 

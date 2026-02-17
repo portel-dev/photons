@@ -1,6 +1,6 @@
 # Dashboard
 
-Dashboard Photon
+Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json
 
 > **6 tools** · API Photon · v1.0.0 · MIT
 

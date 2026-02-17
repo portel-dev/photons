@@ -1,6 +1,6 @@
-# Integration Demo
+# Integration Demo — Dependencies, Assets, Stateful Workflows Demonstrates dependency management, asset discovery, stateful workflows with checkpoint/resume, and resource methods. Features covered:
 
-Integration Demo — Dependencies, Assets, Stateful Workflows
+Runtime version constraint (>=1.0.0) - CLI dependency check (node) - Stateful class annotation for resumable workflows - Checkpoint yields for workflow resumption - UI asset linking - Asset folder discovery (integration-demo/ui/) - @resource method (MCP resource) - @format annotations
 
 > **5 tools** · Streaming Photon · v1.0.0 · MIT
 

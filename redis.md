@@ -1,6 +1,6 @@
 # Redis
 
-In-memory data store and cache
+In-memory data store and cache Provides Redis operations using the official Redis client. Supports key-value operations, lists, hashes, sets, and pub/sub patterns. Common use cases: - Caching: "Cache user session for 1 hour", "Get cached API response" - Counters: "Increment page view counter", "Get current visitor count" - Lists/Queues: "Add job to queue", "Get next job from queue" - Pub/Sub: "Publish message to channel", "Subscribe to events" Example: set({ key: "user:123", value: "John", ttl: 3600 }) Configuration: - url: Redis connection URL (default: redis://localhost:6379) - password: Redis password (optional) - database: Database number (default: 0)
 
 > **18 tools** · API Photon · v1.0.0 · MIT
 

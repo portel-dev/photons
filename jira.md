@@ -1,6 +1,6 @@
 # Jira
 
-Project management and issue tracking
+Project management and issue tracking Provides Jira operations using the official Jira REST API v3. Supports issue management, projects, transitions, and comments. Common use cases: - Issue tracking: "Create bug report", "Update issue status to In Progress" - Project management: "List all projects", "Get project details" - Collaboration: "Add comment to issue", "Assign issue to developer" Example: createIssue({ project: "PROJ", summary: "Bug in login", issueType: "Bug" }) Configuration: - host: Jira instance URL (e.g., "your-domain.atlassian.net") - email: User email for authentication - apiToken: API token from Jira (required)
 
 > **10 tools** · API Photon · v1.0.0 · MIT
 

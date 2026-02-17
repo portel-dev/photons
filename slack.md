@@ -1,6 +1,6 @@
 # Slack
 
-Send messages and manage Slack workspace
+Send messages and manage Slack workspace Provides tools to send messages, list channels, and interact with Slack workspace. Requires a Slack Bot Token with appropriate scopes. Common use cases: - Notifications: "Send a deployment notification to #engineering" - Team updates: "Post the daily standup summary to #team" - Channel management: "List all public channels" Example: postMessage({ channel: "#general", text: "Hello team!" }) Configuration: - token: Slack Bot Token (required, starts with xoxb-) Dependencies are auto-installed on first run.
 
 > **7 tools** · API Photon · v1.0.0 · MIT
 

@@ -1,8 +1,8 @@
 # Expenses
 
-Expense Tracker — Memory + Collection + Typed Fields
+Expense Tracker — Memory + Collection + Typed Fields Track personal expenses with category breakdowns and budget alerts. Uses `this.memory` for zero-boilerplate persistence, `Collection` for rich querying (groupBy, sum, where), and `Table` with typed fields for polished rendering (currency, badges, dates). Use named instances (`_use`) to keep personal vs work expenses separate.
 
-> **4 tools** · API Photon · v1.7.0 · MIT
+> **4 tools** · API Photon · v1.8.4 · MIT
 
 
 ## ⚙️ Configuration
@@ -120,4 +120,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.7.0
+MIT · v1.8.4

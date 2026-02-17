@@ -1,8 +1,8 @@
 # Team Pulse
 
-Team Pulse — Async Standup with Memory + Channels + Locking
+Team Pulse — Async Standup with Memory + Channels + Locking Post daily updates, see what the team posted, search past standups. Updates persist via `this.memory`, broadcast to all sessions via channels, and use distributed locking to prevent duplicate rapid-fire posts.
 
-> **4 tools** · API Photon · v1.7.0 · MIT
+> **4 tools** · API Photon · v1.8.4 · MIT
 
 **Platform Features:** `channels`
 
@@ -114,4 +114,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.7.0
+MIT · v1.8.4

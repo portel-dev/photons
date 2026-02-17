@@ -1,6 +1,6 @@
 # Demo Photon
 
-Comprehensive feature demonstration
+Comprehensive feature demonstration Demonstrates all Photon runtime features with Node.js compatible syntax. This version avoids TypeScript parameter properties for compatibility.
 
 > **21 tools** · Streaming Photon · v1.0.0 · MIT
 

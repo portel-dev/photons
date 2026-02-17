@@ -1,6 +1,6 @@
 # GitHub Issues
 
-Manage GitHub repository issues
+Manage GitHub repository issues Provides tools to list, create, update, and comment on GitHub issues. Requires a GitHub personal access token with repo scope. Common use cases: - Issue tracking: "List all open issues in my repo" - Bug reporting: "Create a new bug issue with details" - Issue management: "Close issue #123 and add a comment" Example: listIssues({ owner: "user", repo: "project", state: "open" }) Configuration: - token: GitHub personal access token (required) - baseUrl: GitHub API base URL (default: https://api.github.com) Dependencies are auto-installed on first run.
 
 > **7 tools** · API Photon · v1.1.0 · MIT
 

@@ -1,10 +1,8 @@
 # Truth Serum
 
-Forces unfiltered honesty, no hedging or diplomacy @description Powerful prompt serums that force specific cognitive behaviors @icon 💉 /
-export default class Serum {
-  /
+Forces unfiltered honesty, no hedging or diplomacy
 
-> **10 tools** · API Photon · v1.7.0 · MIT
+> **10 tools** · API Photon · v1.8.4 · MIT
 
 
 ## ⚙️ Configuration
@@ -176,4 +174,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.7.0
+MIT · v1.8.4

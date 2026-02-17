@@ -1,6 +1,6 @@
 # Email
 
-Send and receive emails via SMTP and IMAP
+Send and receive emails via SMTP and IMAP Provides email operations for sending, receiving, and managing emails. Supports SMTP for sending and IMAP for receiving/managing messages. Common use cases: - Send notifications: "Email me the daily report" - Check inbox: "Show me my unread emails" - Send with attachments: "Email this file to the team" - Search emails: "Find emails from john@example.com" Example: sendEmail({ to: "user@example.com", subject: "Report", body: "..." }) Configuration: - smtpHost: SMTP server hostname (e.g., smtp.gmail.com) - smtpPort: SMTP server port (default: 587 for TLS, 465 for SSL) - smtpUser: SMTP username/email - smtpPassword: SMTP password or app-specific password - smtpSecure: Use SSL (default: false, uses STARTTLS) - imapHost: IMAP server hostname (optional, for receiving) - imapPort: IMAP server port (optional, default: 993) - imapUser: IMAP username (optional, defaults to smtpUser) - imapPassword: IMAP password (optional, defaults to smtpPassword) Gmail Setup: 1. Enable 2FA in Google Account 2. Generate App Password: https://myaccount.google.com/apppasswords 3. Use: smtpHost=smtp.gmail.com, smtpUser=your@gmail.com, smtpPassword=app_password
 
 > **8 tools** · API Photon · v1.1.0 · MIT
 

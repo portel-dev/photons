@@ -1,6 +1,6 @@
 # MongoDB
 
-NoSQL database operations
+NoSQL database operations Provides MongoDB database operations using the official MongoDB driver. Supports document CRUD, aggregation pipelines, and collection management. Common use cases: - Document operations: "Find users where age > 25", "Insert new product" - Aggregation: "Group orders by customer and sum totals" - Collection management: "List all collections", "Create index on email field" Example: find({ collection: "users", filter: { age: { $gt: 25 } } }) Configuration: - uri: MongoDB connection URI (required) - database: Default database name (required)
 
 > **13 tools** · API Photon · v1.0.0 · MIT
 

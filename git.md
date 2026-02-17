@@ -1,6 +1,6 @@
 # Git
 
-Local git repository operations
+Local git repository operations Provides git version control operations for local repositories using simple-git. Supports branch management, commits, staging, and remote operations. Common use cases: - Version control: "Show git status", "Commit these changes" - Branch management: "Create a feature branch", "Switch to main" - History: "Show recent commits", "Show diff of changes" - Remote operations: "Push to origin", "Pull latest changes" Example: status({ path: "/path/to/repo" }) Configuration: - repoPath: Default repository path (default: current directory)
 
 > **11 tools** · API Photon · v1.0.0 · MIT
 

@@ -1,6 +1,6 @@
 # Docker
 
-Container management operations
+Container management operations Provides Docker container and image operations using Dockerode. Supports container lifecycle, logs, stats, and image management. Common use cases: - Container management: "List running containers", "Start the database container" - Monitoring: "Show container logs", "Get container stats" - Image management: "Pull nginx image", "List all images" Example: listContainers({ all: true }) Configuration: - socketPath: Docker socket path (default: /var/run/docker.sock)
 
 > **10 tools** · API Photon · v1.0.0 · MIT
 

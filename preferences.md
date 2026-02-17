@@ -1,6 +1,6 @@
-# Preferences
+# Preferences Photon Demonstrates MCP Apps with UI assets, prompts, and resources. Assets are auto-discovered from the preferences/ folder by convention. Asset folder structure (auto-served): preferences/ ui/ settings.html    
 
-Preferences Photon
+Main settings form theme-preview.html - Theme preview component prompts/ welcome.md        - Welcome message template resources/ defaults.json     - Default configuration
 
 > **7 tools** · Workflow Photon · v1.0.0 · MIT
 

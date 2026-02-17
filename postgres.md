@@ -1,6 +1,6 @@
 # PostgreSQL
 
-Database operations for PostgreSQL
+Database operations for PostgreSQL Provides tools to query, insert, update, and manage PostgreSQL databases. Supports parameterized queries, transactions, and schema introspection. Common use cases: - Data analysis: "Query user statistics from the database" - Data management: "Insert a new user record" - Schema exploration: "List all tables in the database" Example: query({ sql: "SELECT * FROM users WHERE active = $1", params: [true] }) Configuration: - host: Database host (default: localhost) - port: Database port (default: 5432) - database: Database name (required) - user: Database user (required) - password: Database password (required) - ssl: Enable SSL connection (default: false) Dependencies are auto-installed on first run.
 
 > **7 tools** · API Photon · v1.1.0 · MIT
 

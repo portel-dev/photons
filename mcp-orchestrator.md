@@ -1,6 +1,6 @@
-# Mcp Orchestrator
+# MCP Orchestrator Photon Demonstrates how to consume multiple MCPs (written in any language) as dependencies and orchestrate workflows that combine their capabilities. This photon shows how to: 1. Use this.mcp('name') to access external MCPs 2. Call tools on MCPs written in Python, Rust, Node.js, etc. 3. Combine data from multiple sources into unified workflows 4. Handle errors gracefully when MCPs are unavailable ## MCP Dependencies This photon can work with any MCPs configured in NCP:
 
-MCP Orchestrator Photon
+`tavily` - Search API (Node.js MCP) - `browser` - Web automation (Node.js MCP) - `whatsapp` - Messaging (Python MCP via uv) - `sequential-thinking` - Reasoning (Node.js MCP) - Any other MCP configured in your NCP profile ## How it Works The `this.mcp('name')` method returns a proxy that: - Calls tools directly: `await this.mcp('tavily').search({ query: '...' })` - Lists tools: `await this.mcp('tavily').list()` - Finds tools: `await this.mcp('tavily').find('search')`
 
 > **10 tools** · API Photon · v1.0.0 · MIT
 

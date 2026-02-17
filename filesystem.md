@@ -1,6 +1,6 @@
 # Filesystem
 
-File and directory operations
+File and directory operations Provides safe, cross-platform file system operations using Node.js native APIs. All paths are validated and restricted to the working directory for security. Common use cases: - Reading files: "Read my project README.md" - Writing files: "Save this data to report.json" - Directory operations: "List all files in my Downloads folder" - File management: "Copy config.json to config.backup.json" Example: read({ path: "README.md" }) Configuration: - workdir: Working directory base path (default: ~/Documents) - maxFileSize: Maximum file size in bytes (default: 10MB) - allowHidden: Allow access to hidden files/directories (default: false)
 
 > **13 tools** · API Photon · v1.1.0 · MIT
 

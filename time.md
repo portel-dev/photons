@@ -1,6 +1,6 @@
 # Time
 
-Timezone and time conversion operations
+Timezone and time conversion operations Provides timezone-aware time operations using native Node.js Intl API. Zero dependencies, uses JavaScript's built-in timezone support. Common use cases: - Current time queries: "What time is it in Tokyo?" - Time conversion: "Convert 2pm EST to PST" - Meeting scheduling: "What's 9am in New York in London time?" Example: getCurrentTime({ timezone: "America/New_York" }) Configuration: - local_timezone: Override system timezone (optional, IANA timezone name)
 
 > **3 tools** · API Photon · v1.0.0 · MIT
 

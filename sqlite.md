@@ -1,6 +1,6 @@
 # SQLite Photon MCP
 
-SQLite database operations
+SQLite database operations Provides SQLite database utilities: query, execute, insert, update, delete, and schema operations. Supports both in-memory and file-based databases. Example: query({ sql: "SELECT * FROM users WHERE id = ?", params: [1] }) Dependencies are auto-installed on first run.
 
 > **9 tools** · API Photon · v1.1.0 · MIT
 

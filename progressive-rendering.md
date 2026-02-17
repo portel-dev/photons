@@ -1,8 +1,8 @@
 # Progressive Rendering
 
-Progressive Rendering — Same Data, Better Display
+Progressive Rendering — Same Data, Better Display Six methods return the same team data, each progressively enhanced. Run them side-by-side in Beam to see how Photon features improve rendering.
 
-> **6 tools** · API Photon · v1.7.0 · MIT
+> **6 tools** · API Photon · v1.8.4 · MIT
 
 
 ## ⚙️ Configuration
@@ -122,4 +122,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.7.0
+MIT · v1.8.4

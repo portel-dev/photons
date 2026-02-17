@@ -1,6 +1,6 @@
 # Web
 
-Web Agent Photon (Search + Read)
+Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes DuckDuckGo for results. 2. Read: Uses Mozilla Readability to extract main article content.
 
 > **2 tools** · Streaming Photon · v1.0.0 · MIT
 
