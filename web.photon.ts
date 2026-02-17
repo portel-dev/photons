@@ -42,8 +42,10 @@ export default class Web {
 
     /**
      * Search the web using DuckDuckGo.
+     * @param query Search query
+     * @param limit Maximum number of results to return {@default 10} {@min 1} {@max 50}
      */
-    async *search(params: { query: string }): AsyncGenerator<any, string[]> {
+    async *search(params: { query: string; limit?: number }): AsyncGenerator<any, string[]> {
         const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(params.query)}`;
 
         try {
@@ -69,7 +71,8 @@ export default class Web {
                 }
             });
 
-            return results.length > 0 ? results : ["*No results found.*"];
+            const limited = params.limit ? results.slice(0, params.limit) : results;
+            return limited.length > 0 ? limited : ["*No results found.*"];
         } catch (error: any) {
             return [`**Search Error:** ${error.message}`];
         }

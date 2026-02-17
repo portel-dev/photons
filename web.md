@@ -20,6 +20,12 @@ No configuration required.
 Search the web using DuckDuckGo.
 
 
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | string | Yes | Search query |
+| `limit` | number | No | Maximum number of results to return {@default 10} [min: 1, max: 50] |
+
+
 
 
 

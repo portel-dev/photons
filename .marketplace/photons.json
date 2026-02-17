@@ -1151,7 +1151,7 @@
       "license": "MIT",
       "icon": "🌐",
       "source": "../web.photon.ts",
-      "hash": "sha256:d32ce2f8078c572a31babe648f762d8755308770b7803e73d94a678bdce88f92",
+      "hash": "sha256:7d0fd58780ca3b3d5b4a80eeb6b07b0a7d2fe1a851dcffa895d1323e6f1b64b7",
       "tools": [
         "search",
         "read"
