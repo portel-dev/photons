@@ -1,0 +1,67 @@
+name: Verify Manifest Hashes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify manifest hashes match source files
+        run: |
+          MANIFEST=".marketplace/photons.json"
+          if [ ! -f "$MANIFEST" ]; then
+            echo "No manifest found — skipping"
+            exit 0
+          fi
+
+          ERRORS=0
+
+          # Extract each photon's name, source path, and expected hash
+          python3 -c "
+          import json, hashlib, sys, os
+
+          with open('$MANIFEST') as f:
+              data = json.load(f)
+
+          errors = 0
+          for photon in data.get('photons', []):
+              name = photon['name']
+              source = photon.get('source', '')
+              expected = photon.get('hash', '')
+
+              if not source or not expected:
+                  print(f'SKIP {name}: no source or hash')
+                  continue
+
+              # source is relative to .marketplace/
+              filepath = os.path.normpath(os.path.join('.marketplace', source))
+              if not os.path.exists(filepath):
+                  print(f'FAIL {name}: source file not found: {filepath}')
+                  errors += 1
+                  continue
+
+              with open(filepath, 'rb') as f:
+                  content = f.read()
+              actual = 'sha256:' + hashlib.sha256(content).hexdigest()
+
+              if actual != expected:
+                  print(f'FAIL {name}:')
+                  print(f'  expected: {expected}')
+                  print(f'  actual:   {actual}')
+                  errors += 1
+              else:
+                  print(f'OK   {name}')
+
+          if errors:
+              print(f'\n{errors} hash mismatch(es) found.')
+              print('Run the manifest generator to update hashes.')
+              sys.exit(1)
+          else:
+              print(f'\nAll {len(data.get(\"photons\", []))} photon hashes verified.')
+          "
