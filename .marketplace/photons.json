@@ -1104,13 +1104,13 @@
     },
     {
       "name": "web",
-      "version": "1.0.0",
-      "description": "Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes DuckDuckGo for results. 2. Read: Uses Mozilla Readability to extract main article content.",
+      "version": "1.1.0",
+      "description": "Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🌐",
       "source": "../web.photon.ts",
-      "hash": "sha256:7d0fd58780ca3b3d5b4a80eeb6b07b0a7d2fe1a851dcffa895d1323e6f1b64b7",
+      "hash": "sha256:24e1dc52f7797686fd8a88155b53b194943db751c00733f624e4e7fe79cd9d5f",
       "tools": [
         "search",
         "read"

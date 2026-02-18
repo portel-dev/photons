@@ -730,7 +730,7 @@
     },
     {
       "name": "web",
-      "description": "Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes DuckDuckGo for results. 2. Read: Uses Mozilla Readability to extract main article content.",
+      "description": "Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions.",
       "source": "./",
       "strict": false,
       "hooks": [

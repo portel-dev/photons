@@ -2,11 +2,14 @@
  * Web Agent Photon (Search + Read)
  *
  * A complete web research toolkit.
- * 1. Search: Scrapes DuckDuckGo for results.
+ * 1. Search: Scrapes Brave Search for web results (no API key required).
  * 2. Read: Uses Mozilla Readability to extract main article content.
  *
+ * Note: Previously used DuckDuckGo, but they now block automated requests
+ * with CAPTCHA challenges. Brave Search works without such restrictions.
+ *
  * @dependencies axios@^1.6.0, cheerio@^1.0.0, turndown@^7.1.2, @mozilla/readability@^0.5.0, jsdom@^23.0.0, js-yaml@^4.1.0
- * @version 1.0.0
+ * @version 1.1.0
  * @author Portel
  * @license MIT
  * @icon 🌐
@@ -31,7 +34,7 @@ export default class Web {
             codeBlockStyle: 'fenced',
             hr: '---'
         });
-        
+
         // Remove scripts, styles, and other noise from conversion
         this.turndown.remove(['script', 'style', 'iframe', 'nav', 'footer']);
     }
@@ -41,18 +44,19 @@ export default class Web {
     }
 
     /**
-     * Search the web using DuckDuckGo.
+     * Search the web using Brave Search (HTML scraping, no API key needed).
      * @param query Search query
      * @param limit Maximum number of results to return {@default 10} {@min 1} {@max 50}
      */
     async *search(params: { query: string; limit?: number }): AsyncGenerator<any, string[]> {
-        const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(params.query)}`;
+        const url = `https://search.brave.com/search?q=${encodeURIComponent(params.query)}`;
 
         try {
-            yield io.emit.status('Searching DuckDuckGo...');
+            yield io.emit.status('Searching Brave...');
 
             const { data } = await axios.get(url, {
-                headers: { 'User-Agent': this.userAgent }
+                headers: { 'User-Agent': this.userAgent },
+                timeout: 10000
             });
 
             yield io.emit.status('Parsing results...');
@@ -60,13 +64,31 @@ export default class Web {
             const $ = cheerio.load(data);
             const results: string[] = [];
 
-            $('.result').each((i, element) => {
-                const title = $(element).find('.result__title .result__a').text().trim();
-                const link = $(element).find('.result__title .result__a').attr('href');
-                const snippet = $(element).find('.result__snippet').text().trim();
+            // Brave Search uses data-type="web" for search results
+            $('[data-type="web"]').each((i, element) => {
+                // Get title and link from the first anchor
+                const titleEl = $(element).find('a').first();
+                const rawTitle = titleEl.text().trim();
+                const link = titleEl.attr('href');
 
-                if (title && link) {
-                    const cleanSnippet = snippet.replace(/\s+/g, ' ');
+                // Clean up title: remove URL breadcrumbs that appear before the actual title
+                // Format is usually: "Site domain › path   Actual Title"
+                const titleParts = rawTitle.split(/\s{2,}/);
+                const title = titleParts.length > 1 ? titleParts[titleParts.length - 1] : rawTitle;
+
+                // Get snippet text - try multiple approaches
+                let snippet = $(element).find('.snippet-description').text().trim();
+                if (!snippet) {
+                    snippet = $(element).find('[class*="snippet-content"]').text().trim();
+                }
+                if (!snippet) {
+                    // Fallback: get all text and remove title portion
+                    const allText = $(element).text().trim();
+                    snippet = allText.replace(rawTitle, '').trim().substring(0, 200);
+                }
+
+                if (title && link && link.startsWith('http')) {
+                    const cleanSnippet = snippet.replace(/\s+/g, ' ').substring(0, 250);
                     results.push(`**[${title}](${link})**\n> ${cleanSnippet}`);
                 }
             });
@@ -81,6 +103,7 @@ export default class Web {
     /**
      * Read a webpage and extract its main content as Markdown.
      * Uses Mozilla Readability to remove ads/navbars.
+     * @param url URL to read
      */
     async *read(params: { url: string }): AsyncGenerator<any, string> {
         try {

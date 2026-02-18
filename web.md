@@ -1,8 +1,8 @@
 # Web
 
-Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes DuckDuckGo for results. 2. Read: Uses Mozilla Readability to extract main article content.
+Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions.
 
-> **2 tools** · Streaming Photon · v1.0.0 · MIT
+> **2 tools** · Streaming Photon · v1.1.0 · MIT
 
 **Platform Features:** `generator`
 
@@ -17,7 +17,7 @@ No configuration required.
 
 ### `search` ⚡
 
-Search the web using DuckDuckGo.
+Search the web using Brave Search (HTML scraping, no API key needed).
 
 
 | Parameter | Type | Required | Description |
@@ -35,6 +35,11 @@ Search the web using DuckDuckGo.
 ### `read` ⚡
 
 Read a webpage and extract its main content as Markdown. Uses Mozilla Readability to remove ads/navbars.
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | string | Yes | URL to read |
 
 
 
@@ -80,4 +85,4 @@ axios@^1.6.0, cheerio@^1.0.0, turndown@^7.1.2, @mozilla/readability@^0.5.0, jsdo
 
 ---
 
-MIT · v1.0.0 · Portel
+MIT · v1.1.0 · Portel

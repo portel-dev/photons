@@ -74,7 +74,7 @@ We welcome contributions! Submit pull requests for:
 | [**Time**](time.md) | Timezone and time conversion operations Provides timezone-aware time operations using native Node.js Intl API. Zero dependencies, uses JavaScript's built-in timezone support. Common use cases: - Current time queries: "What time is it in Tokyo?" - Time conversion: "Convert 2pm EST to PST" - Meeting scheduling: "What's 9am in New York in London time?" Example: getCurrentTime({ timezone: "America/New_York" }) Configuration: - local_timezone: Override system timezone (optional, IANA timezone name) | 3 | - |
 | [**Todo List**](todo.md) | Reactive collections in action This photon demonstrates Photon's killer feature: reactive arrays. Just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time. | 0 | - |
 | [**Weather**](weather.md) | Wrap any API in 20 lines Shows how a photon turns an external API into MCP tools with zero boilerplate. Uses the free Open-Meteo API (no API key needed). | 2 | - |
-| [**Web**](web.md) | Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes DuckDuckGo for results. 2. Read: Uses Mozilla Readability to extract main article content. | 2 | ⚡ |
+| [**Web**](web.md) | Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions. | 2 | ⚡ |
 
 
 **Total:** 41 photons ready to use
