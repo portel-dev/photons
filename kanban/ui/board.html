@@ -146,109 +146,6 @@
       overflow: visible;
     }
 
-    .board-switcher {
-      position: relative;
-    }
-
-    .board-switcher-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 4px;
-      color: var(--text-muted);
-      transition: all 0.15s ease;
-    }
-
-    .board-switcher-btn:hover {
-      color: var(--text-secondary);
-      background: var(--bg-tertiary);
-    }
-
-    .board-menu {
-      position: absolute;
-      top: 100%;
-      margin-top: 4px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      min-width: 220px;
-      max-height: calc(100vh - 80px);
-      z-index: 100;
-      display: none;
-      overflow: hidden;
-    }
-
-    .board-menu.visible {
-      display: block;
-    }
-
-    .board-menu-header {
-      padding: 8px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .board-menu-list {
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
-    .board-menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 10px 12px;
-      background: none;
-      border: none;
-      color: var(--text-primary);
-      font-size: 14px;
-      cursor: pointer;
-      text-align: left;
-      transition: background 0.1s ease;
-    }
-
-    .board-menu-item:hover {
-      background: var(--bg-tertiary);
-    }
-
-    .board-menu-item.active {
-      background: rgba(59, 130, 246, 0.15);
-      color: var(--accent);
-    }
-
-    .board-menu-item .task-count {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .board-menu-item.active .task-count {
-      color: var(--accent);
-      opacity: 0.7;
-    }
-
-    .board-menu-divider {
-      height: 1px;
-      background: var(--border-color);
-    }
-
-    .board-menu-new {
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .board-menu-auto {
-      font-style: italic;
-    }
-
     .search-container {
       position: relative;
       flex: 1;
@@ -1791,10 +1688,6 @@
         font-size: 18px;
       }
 
-      .board-switcher {
-        margin-left: auto;
-      }
-
       .stats {
         display: flex;
         flex-wrap: wrap;
@@ -1832,8 +1725,7 @@
 
       /* Make settings button touch-friendly */
       .settings-btn,
-      .add-task-btn,
-      .board-switcher-btn {
+      .add-task-btn {
         min-width: 44px;
         min-height: 44px;
       }
@@ -1887,24 +1779,6 @@
   <div class="header">
     <div class="board-header-left">
       <h1 class="board-title" id="board-title" contenteditable="true" spellcheck="false" onclick="selectTitle()" onblur="saveTitle()" onkeydown="handleTitleKey(event)">Loading...</h1>
-      <div class="board-switcher">
-        <button class="board-switcher-btn" onclick="toggleBoardMenu()" title="Switch board">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-          </svg>
-        </button>
-        <div class="board-menu" id="board-menu">
-          <div class="board-menu-header">Switch Board</div>
-          <div class="board-menu-list" id="board-menu-list"></div>
-          <div class="board-menu-divider"></div>
-          <button class="board-menu-item board-menu-new" onclick="showNewBoardModal(); closeBoardMenu();">
-            <span>+ New Board</span>
-          </button>
-        </div>
-      </div>
     </div>
     <div class="search-container">
       <input type="text" class="search-input" id="search-input" placeholder="Search tasks..." oninput="filterTasks(this.value)">
@@ -2025,27 +1899,6 @@
           <button type="button" class="btn btn-danger" id="delete-btn" style="display: none; margin-right: auto;" onclick="deleteTask()">Delete</button>
           <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
           <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- New Board Modal -->
-  <div class="modal-overlay" id="new-board-modal">
-    <div class="modal" style="max-width: 400px;">
-      <div class="modal-header">
-        <h2 class="modal-title">Create New Board</h2>
-        <button class="modal-close" onclick="closeNewBoardModal()">&times;</button>
-      </div>
-      <form id="new-board-form" onsubmit="createNewBoard(event)">
-        <div class="form-group">
-          <label class="form-label" for="new-board-name">Board Name *</label>
-          <input type="text" class="form-input" id="new-board-name" required placeholder="e.g., my-project" pattern="[a-zA-Z0-9-_]+" title="Only letters, numbers, hyphens and underscores allowed">
-          <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">Only letters, numbers, hyphens and underscores</small>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" onclick="closeNewBoardModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Board</button>
         </div>
       </form>
     </div>
@@ -2225,7 +2078,6 @@
       // Also try to report via MCP if available
       if (window.photon) {
         window.photon.invoke('reportError', {
-          board: currentBoardName,
           error: errorInfo
         }).catch(() => {}); // Ignore if method doesn't exist
       }
@@ -2233,13 +2085,7 @@
 
     // Board state
     let board = window.__PHOTON_DATA__ || { columns: [], tasks: [] };
-    let currentBoardName = board.name || 'default';
     let draggedTask = null;
-    let autoMode = false;
-    let autoModeInterval = null;
-    let lastBoardUpdatedAt = null; // Track when board was last updated
-    const AUTO_MODE_POLL_MS = 10000; // Check for active board every 10 seconds (real-time updates via push)
-    const BOARD_PREF_KEY = 'kanban:selectedBoard'; // localStorage key for remembering board selection
 
     // WIP and auto-pull state (fetched from getConfig/getStats)
     let wipLimit = 3;
@@ -2260,7 +2106,7 @@
       if (window.__MCP_APPS_CONTEXT__) return;
       window.parent.postMessage({
         type: 'photon:viewing',
-        itemId: currentBoardName,
+        itemId: board.name,
         lastEventId: lastEventId
       }, '*');
     }
@@ -2269,7 +2115,6 @@
     document.addEventListener('DOMContentLoaded', async () => {
       renderBoard();
       updateStats();
-      await loadBoardListAndRestore();
       await fetchWipConfig();
     });
 
@@ -2278,48 +2123,13 @@
       const data = e.detail;
       if (data && (data.columns || data.tasks || data.name)) {
         board = data;
-        currentBoardName = data.name || currentBoardName;
-        // Immediately sync title
         const titleEl = document.getElementById('board-title');
-        const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
-        titleEl.textContent = savedTitle || currentBoardName;
+        titleEl.textContent = board.name || 'Kanban';
         renderBoard();
         updateStats();
         notifyViewingBoard();
       }
     });
-
-    // Load boards and restore saved preference (or default to Auto)
-    async function loadBoardListAndRestore() {
-      if (!window.photon) return;
-      try {
-        const boards = await window.photon.invoke('boards', {});
-        const savedBoard = localStorage.getItem(BOARD_PREF_KEY);
-        const useAutoMode = !savedBoard || savedBoard === '__auto__';
-
-        // Restore saved board or enable auto mode
-        if (useAutoMode) {
-          enableAutoMode();
-        } else if (boards.some(b => b.name === savedBoard)) {
-          // Saved board exists, load it
-          const newBoard = await window.photon.invoke('board', { board: savedBoard });
-          board = newBoard;
-          currentBoardName = savedBoard;
-          notifyViewingBoard();
-          renderBoard();
-          updateStats();
-        } else {
-          // Saved board no longer exists, fall back to auto mode
-          localStorage.removeItem(BOARD_PREF_KEY);
-          enableAutoMode();
-        }
-
-        // Populate board menu
-        updateBoardMenu(boards);
-      } catch (err) {
-        console.error('Failed to load boards:', err);
-      }
-    }
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Real-time event handling via unified bridge API (works in Beam AND Claude Desktop)
@@ -2355,7 +2165,7 @@
           }
           // Extract board name from channel (e.g., "kanban:photon" -> "photon")
           const boardName = channel?.split(':')[1];
-          if (boardName === currentBoardName && data) {
+          if (boardName === board.name && data) {
             applyBoardEvent(eventType, data);
           }
           return;
@@ -2368,9 +2178,8 @@
           if (pendingMoveOperation) {
             return;
           }
-          // In auto mode, always refresh (might need to switch boards)
-          // Otherwise, only refresh if it's the current board
-          if (autoMode || updatedBoard === currentBoardName) {
+          // Only refresh if it's the current board
+          if (updatedBoard === board.name) {
             await refreshCurrentBoard();
           }
           return;
@@ -2530,30 +2339,13 @@
       });
     }
 
-    // Refresh the currently displayed board (or switch to most active in Auto mode)
     async function refreshCurrentBoard() {
       if (!window.photon) return;
       try {
-        if (autoMode) {
-          // In Auto mode, check if we should switch to a different board
-          const boards = await window.photon.invoke('boards', {});
-          if (boards.length > 0) {
-            boards.sort((a, b) =>
-              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-            );
-            const activeBoardName = boards[0].name;
-            if (activeBoardName !== currentBoardName) {
-              currentBoardName = activeBoardName;
-              notifyViewingBoard();
-              updateAutoModeUI();
-            }
-          }
-        }
-        const fullBoard = await window.photon.invoke('board', { board: currentBoardName });
+        const fullBoard = await window.photon.invoke('board', {});
         board = fullBoard;
         renderBoard();
         updateStats();
-        await loadBoardList();
 
         // Update detail modal if it's open
         if (currentDetailTaskId) {
@@ -2625,46 +2417,6 @@
       columnSelect.value = task.column;
     }
 
-    // Load available boards and populate menu
-    async function loadBoardList() {
-      if (!window.photon) return;
-      try {
-        const boards = await window.photon.invoke('boards', {});
-        updateBoardMenu(boards);
-      } catch (err) {
-        console.error('Failed to load boards:', err);
-      }
-    }
-
-    // Update board menu with list of boards
-    function updateBoardMenu(boards) {
-      const menuList = document.getElementById('board-menu-list');
-      const titleEl = document.getElementById('board-title');
-
-      // Update display title from localStorage or use board name
-      const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
-      titleEl.textContent = savedTitle || currentBoardName;
-
-      // Build menu items
-      let html = `
-        <button class="board-menu-item board-menu-auto ${autoMode ? 'active' : ''}" onclick="switchBoard('__auto__'); closeBoardMenu();">
-          <span>🔄 Auto${autoMode ? ` (${currentBoardName})` : ''}</span>
-        </button>
-      `;
-
-      boards.forEach(b => {
-        const isActive = !autoMode && b.name === currentBoardName;
-        html += `
-          <button class="board-menu-item ${isActive ? 'active' : ''}" onclick="switchBoard('${b.name}'); closeBoardMenu();">
-            <span>${b.name}</span>
-            <span class="task-count">${b.taskCount}</span>
-          </button>
-        `;
-      });
-
-      menuList.innerHTML = html;
-    }
-
     // Title editing functions
     function selectTitle() {
       const titleEl = document.getElementById('board-title');
@@ -2679,11 +2431,11 @@
       const titleEl = document.getElementById('board-title');
       const newTitle = titleEl.textContent.trim();
       if (newTitle) {
-        localStorage.setItem(`kanban:title:${currentBoardName}`, newTitle);
+        localStorage.setItem(`kanban:title:${board.name}`, newTitle);
       } else {
         // Reset to board name if empty
-        titleEl.textContent = currentBoardName;
-        localStorage.removeItem(`kanban:title:${currentBoardName}`);
+        titleEl.textContent = board.name;
+        localStorage.removeItem(`kanban:title:${board.name}`);
       }
     }
 
@@ -2694,140 +2446,10 @@
       } else if (e.key === 'Escape') {
         e.preventDefault();
         // Restore saved title
-        const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
-        document.getElementById('board-title').textContent = savedTitle || currentBoardName;
+        const savedTitle = localStorage.getItem(`kanban:title:${board.name}`);
+        document.getElementById('board-title').textContent = savedTitle || board.name;
         document.getElementById('board-title').blur();
       }
-    }
-
-    // Toggle board menu visibility
-    function toggleBoardMenu() {
-      const menu = document.getElementById('board-menu');
-      const btn = document.querySelector('.board-switcher-btn');
-      const isVisible = menu.classList.toggle('visible');
-      btn.setAttribute('aria-expanded', isVisible);
-
-      if (isVisible) {
-        // Position based on available space: open left or right
-        const btnRect = btn.getBoundingClientRect();
-        const menuWidth = Math.max(220, menu.offsetWidth);
-        if (btnRect.left + menuWidth > window.innerWidth) {
-          menu.style.left = 'auto';
-          menu.style.right = '0';
-        } else {
-          menu.style.left = '0';
-          menu.style.right = 'auto';
-        }
-      }
-    }
-
-    // Close board menu
-    function closeBoardMenu() {
-      const menu = document.getElementById('board-menu');
-      const btn = document.querySelector('.board-switcher-btn');
-      menu.classList.remove('visible');
-      btn?.setAttribute('aria-expanded', 'false');
-    }
-
-    // Switch to a different board or enable auto mode
-    async function switchBoard(value) {
-      if (!window.photon) return;
-
-      if (value === '__auto__') {
-        enableAutoMode();
-        localStorage.setItem(BOARD_PREF_KEY, '__auto__');
-        return;
-      }
-
-      // Disable auto mode if manually selecting a board
-      disableAutoMode();
-
-      if (!value || value === currentBoardName) return;
-      try {
-        const newBoard = await window.photon.invoke('board', { board: value });
-        board = newBoard;
-        currentBoardName = value;
-        notifyViewingBoard();
-        localStorage.setItem(BOARD_PREF_KEY, value);
-        renderBoard();
-        updateStats();
-        await loadBoardList(); // Update title and menu
-        await fetchWipConfig(); // Fetch WIP settings for new board
-      } catch (err) {
-        console.error('Failed to switch board:', err);
-        // Refresh to restore correct state
-        await loadBoardList();
-      }
-    }
-
-    // Enable auto mode - follows the most recently active board
-    function enableAutoMode() {
-      if (autoMode) return;
-      autoMode = true;
-      checkActiveBoard(); // Check immediately
-      autoModeInterval = setInterval(checkActiveBoard, AUTO_MODE_POLL_MS);
-      updateAutoModeUI();
-    }
-
-    // Disable auto mode
-    function disableAutoMode() {
-      if (!autoMode) return;
-      autoMode = false;
-      lastBoardUpdatedAt = null; // Reset timestamp tracking
-      if (autoModeInterval) {
-        clearInterval(autoModeInterval);
-        autoModeInterval = null;
-      }
-      updateAutoModeUI();
-    }
-
-    // Check for the most recently active board and switch/reload if changed
-    async function checkActiveBoard() {
-      if (!window.photon || !autoMode) return;
-      try {
-        // Get all boards and find the most recently updated one
-        const boards = await window.photon.invoke('boards', {});
-        if (boards.length === 0) return;
-
-        // Sort by updatedAt descending
-        boards.sort((a, b) =>
-          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-        );
-
-        const activeBoard = boards[0];
-        const activeBoardName = activeBoard.name;
-        const activeBoardUpdatedAt = activeBoard.updatedAt;
-
-        // Reload if board changed OR if same board was updated
-        const boardChanged = activeBoardName !== currentBoardName;
-        const boardUpdated = activeBoardUpdatedAt !== lastBoardUpdatedAt;
-
-        if (boardChanged || boardUpdated) {
-          const fullBoard = await window.photon.invoke('board', { board: activeBoardName });
-          board = fullBoard;
-          if (boardChanged) {
-            currentBoardName = activeBoardName;
-            // Immediately sync title with board content (don't wait for async updateAutoModeUI)
-            const titleEl = document.getElementById('board-title');
-            const savedTitle = localStorage.getItem(`kanban:title:${currentBoardName}`);
-            titleEl.textContent = savedTitle || currentBoardName;
-            notifyViewingBoard();
-            fetchWipConfig(); // Fetch WIP settings for new board
-          }
-          lastBoardUpdatedAt = activeBoardUpdatedAt;
-          renderBoard();
-          updateStats();
-          updateAutoModeUI();
-        }
-      } catch (err) {
-        console.error('Failed to check active board:', err);
-      }
-    }
-
-    // Update UI to reflect auto mode state
-    function updateAutoModeUI() {
-      // Reload board list to update title and menu
-      loadBoardList();
     }
 
     // Render the entire board
@@ -3021,8 +2643,7 @@
       // Persist via MCP
       try {
         if (window.photon) {
-          await window.photon.invoke('taskUpdate', {
-            board: currentBoardName,
+          await window.photon.invoke('edit', {
             id: taskId,
             description: newDescription
           });
@@ -3309,8 +2930,7 @@
       try {
         if (window.photon) {
           pendingMoveOperation = true;
-          await window.photon.invoke('taskReorder', {
-            board: currentBoardName,
+          await window.photon.invoke('reorder', {
             id: movedTaskId,
             column: columnName,
             beforeId: dropTargetId || undefined
@@ -3569,7 +3189,6 @@
       try {
         // Prepare update payload
         const updates = {
-          board: currentBoardName,
           id: currentDetailTaskId,
           description: detailEditState.description,
           blockedBy: detailEditState.blockedBy,
@@ -3587,12 +3206,11 @@
         }
 
         // Save the task
-        await window.photon.invoke('taskUpdate', updates);
+        await window.photon.invoke('edit', updates);
 
         // Move task if column changed
         if (newColumn !== task.column) {
-          await window.photon.invoke('taskMove', {
-            board: currentBoardName,
+          await window.photon.invoke('move', {
             id: currentDetailTaskId,
             column: newColumn
           });
@@ -3718,8 +3336,7 @@
       if (!content) return;
 
       try {
-        const result = await window.photon.invoke('commentAdd', {
-          board: currentBoardName,
+        const result = await window.photon.invoke('comment', {
           id: currentDetailTaskId,
           content: content,
           author: 'human'
@@ -3753,39 +3370,6 @@
         textarea.value = '';
       } catch (err) {
         console.error('Failed to add comment:', err);
-      }
-    }
-
-    // New Board Modal
-    function showNewBoardModal() {
-      document.getElementById('new-board-name').value = '';
-      document.getElementById('new-board-modal').classList.add('visible');
-      document.getElementById('new-board-name').focus();
-    }
-
-    function closeNewBoardModal() {
-      document.getElementById('new-board-modal').classList.remove('visible');
-    }
-
-    async function createNewBoard(e) {
-      e.preventDefault();
-      const name = document.getElementById('new-board-name').value.trim();
-      if (!name) return;
-
-      if (!window.photon) {
-        alert('Photon connection not available');
-        return;
-      }
-
-      try {
-        await window.photon.invoke('boardCreate', { name });
-        closeNewBoardModal();
-
-        // Refresh board list and switch to new board
-        await loadBoardList();
-        await switchBoard(name);
-      } catch (err) {
-        alert('Failed to create board: ' + err.message);
       }
     }
 
@@ -3928,7 +3512,7 @@
       // Persist via MCP
       try {
         if (window.photon) {
-          await window.photon.invoke('commentAdd', { board: currentBoardName, id: taskId, content, author: 'human' });
+          await window.photon.invoke('comment', { id: taskId, content, author: 'human' });
         }
       } catch (err) {
         console.error('Failed to add comment:', err);
@@ -3972,9 +3556,8 @@
           }
 
           if (window.photon) {
-            await window.photon.invoke('taskUpdate', {
-              board: currentBoardName,
-              id,
+            await window.photon.invoke('edit', {
+                id,
               title,
               description: description || undefined,
               priority,
@@ -4001,9 +3584,8 @@
           board.tasks.push(newTask);
 
           if (window.photon) {
-            await window.photon.invoke('taskCreate', {
-              board: currentBoardName,
-              title,
+            await window.photon.invoke('add', {
+                title,
               description: description || undefined,
               column,
               priority,
@@ -4066,7 +3648,7 @@
 
       try {
         if (window.photon) {
-          await window.photon.invoke('taskDelete', { board: currentBoardName, id });
+          await window.photon.invoke('drop', { id });
         }
       } catch (err) {
         console.error('Failed to delete task:', err);
@@ -4085,7 +3667,7 @@
       if (!window.photon) return;
       try {
         // Get stats for WIP info
-        const stats = await window.photon.invoke('stats', { board: currentBoardName });
+        const stats = await window.photon.invoke('stats', {});
         if (stats && stats.wip) {
           wipLimit = stats.wip.limit || 3;
           wipEnabled = stats.wip.enabled !== false;
@@ -4128,8 +3710,6 @@
           searchInput.blur();
         } else {
           closeModal();
-          closeNewBoardModal();
-          closeBoardMenu();
         }
       }
 
@@ -4140,27 +3720,9 @@
       }
     });
 
-    // Click outside to close menus/modals
-    document.addEventListener('click', (e) => {
-      // Close board menu when clicking outside
-      const boardMenu = document.getElementById('board-menu');
-      const boardSwitcherBtn = document.querySelector('.board-switcher-btn');
-      if (boardMenu.classList.contains('visible') &&
-          !boardMenu.contains(e.target) &&
-          !boardSwitcherBtn.contains(e.target)) {
-        closeBoardMenu();
-      }
-    });
-
     document.getElementById('task-modal').addEventListener('click', (e) => {
       if (e.target.id === 'task-modal') {
         closeModal();
-      }
-    });
-
-    document.getElementById('new-board-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'new-board-modal') {
-        closeNewBoardModal();
       }
     });
 

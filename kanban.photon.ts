@@ -1,50 +1,40 @@
 /**
  * Kanban Board Photon
  *
- * Multi-tenant task management for humans and AI. Each project/conversation
- * can have its own board. Perfect for:
+ * Task management for humans and AI. Use named instances (`_use('project-name')`)
+ * for per-project boards. Perfect for:
  * - Project planning and task tracking
  * - AI working memory across sessions
  * - Human-AI collaboration on shared tasks
  *
  * ## Quick Reference
  *
- * **Boards:**
- * - `boards()` - List all boards
- * - `board()` - Get board details
- * - `boardCreate()` - Create new board
- * - `boardDelete()` - Delete a board
- * - `projectLink()` - Link board to project folder
- * - `projects()` - List available project folders
- *
  * **Tasks:**
- * - `tasks()` - List tasks (with filters)
- * - `task()` - Get single task with comments
- * - `myTasks()` - Get tasks assigned to AI
- * - `taskCreate()` - Create new task
- * - `taskMove()` - Move task to column
- * - `taskUpdate()` - Update task details
- * - `taskDelete()` - Delete a task
- * - `taskReorder()` - Reorder within column
+ * - `add()` - Create new task
+ * - `list()` - List tasks (with filters)
+ * - `show()` - Get single task with comments
+ * - `mine()` - Get tasks assigned to AI
+ * - `edit()` - Update task details
+ * - `move()` - Move task to column
+ * - `drop()` - Delete a task
+ * - `reorder()` - Reorder within column
  * - `search()` - Search tasks by keyword
+ * - `sweep()` - Move multiple tasks at once
  *
  * **Comments & Dependencies:**
- * - `commentAdd()` - Add comment to task
+ * - `comment()` - Add comment to task
  * - `comments()` - Get task comments
- * - `dependencySet()` - Set/remove task dependencies
+ * - `block()` - Set/remove task dependencies
  *
- * **Columns & Stats:**
- * - `columnAdd()` - Add new column
- * - `columnRemove()` - Remove column
+ * **Board Management:**
+ * - `board()` - Get full board state
+ * - `column()` - Add or remove a column
  * - `stats()` - Get board statistics
- * - `completedClear()` - Archive completed tasks
+ * - `clear()` - Archive completed tasks
+ * - `hooks()` - Install Claude Code hooks
+ * - `configure()` - Configure settings
  *
- * **Batch & Utility:**
- * - `main()` - Entry point (shows board UI)
- * - `active()` - Get most recently updated board
- * - `batchMove()` - Move multiple tasks at once
- *
- * @version 2.1.0
+ * @version 3.0.0
  * @author Portel
  * @license MIT
  * @tags kanban, tasks, collaboration, project-management, memory
@@ -104,14 +94,6 @@ interface Board {
   projectRoot?: string; // Linked project folder path
   columns: string[];
   tasks: Task[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface BoardMeta {
-  name: string;
-  projectRoot?: string;
-  taskCount: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -185,6 +167,16 @@ export default class KanbanPhoton extends PhotonMCP {
     super();
     this.boardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
     this.dataDir = path.join(PHOTONS_DIR, 'kanban');
+  }
+
+  private get boardName(): string {
+    return this.instanceName || 'default';
+  }
+
+  private async allBoardNames(): Promise<string[]> {
+    await fs.mkdir(this.boardsDir, { recursive: true });
+    const files = await fs.readdir(this.boardsDir);
+    return files.filter(f => f.endsWith('.json')).map(f => f.replace('.json', ''));
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -529,7 +521,7 @@ export default class KanbanPhoton extends PhotonMCP {
    *
    * @returns Status of installation
    */
-  async installHooks(params?: { folder?: string }): Promise<{
+  async hooks(params?: { folder?: string }): Promise<{
     installed: boolean;
     projectRoot: string;
     isClaudeProject: boolean;
@@ -619,7 +611,6 @@ process.exit(0);
 `;
 
     // Stop hook - checks for pending tasks
-    const boardName = path.basename(projectRoot);
     const stopHook = `#!/usr/bin/env -S node --experimental-strip-types
 /**
  * Claude Code Stop Hook - Kanban Task Enforcement
@@ -627,13 +618,6 @@ process.exit(0);
  */
 
 import { execSync } from 'child_process';
-
-const BOARD = '${boardName}';
-
-function hasUncheckedItems(text) {
-  if (!text) return false;
-  return /^[\\s]*[-*]\\s*\\[\\s*\\]/m.test(text);
-}
 
 function countCheckboxes(text) {
   if (!text) return { checked: 0, unchecked: 0 };
@@ -643,7 +627,7 @@ function countCheckboxes(text) {
 }
 
 try {
-  const result = execSync(\`photon cli kanban myTasks --board \${BOARD} --json\`, {
+  const result = execSync('photon cli kanban mine --json', {
     encoding: 'utf-8',
     stdio: ['pipe', 'pipe', 'pipe'],
   });
@@ -665,7 +649,7 @@ try {
     if (pendingDetails.length > 0) {
       console.log(JSON.stringify({
         decision: 'block',
-        reason: \`Incomplete tasks on board "\${BOARD}":\\n\${pendingDetails.join('\\n')}\\n\\nComplete all checkbox items or move tasks to Done.\`
+        reason: \`Incomplete kanban tasks:\\n\${pendingDetails.join('\\n')}\\n\\nComplete all checkbox items or move tasks to Done.\`
       }));
     }
   }
@@ -704,201 +688,6 @@ process.exit(0);
     await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2));
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // BOARD MANAGEMENT
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /**
-   * List available project folders
-   *
-   * Shows folders in the configured projects root that can be linked to boards.
-   * Use this when creating a new board to see available projects.
-   *
-   * @example projects()
-   */
-  async projects(): Promise<Array<{ name: string; path: string; hasBoard: boolean }>> {
-    const folders: Array<{ name: string; path: string; hasBoard: boolean }> = [];
-
-    try {
-      const entries = await fs.readdir(this.projectsRoot, { withFileTypes: true });
-      const existingBoards = await this.boards();
-      const boardNames = new Set(existingBoards.map(b => b.name));
-
-      for (const entry of entries) {
-        if (entry.isDirectory() && !entry.name.startsWith('.')) {
-          folders.push({
-            name: entry.name,
-            path: path.join(this.projectsRoot, entry.name),
-            hasBoard: boardNames.has(entry.name),
-          });
-        }
-      }
-
-      return folders.sort((a, b) => a.name.localeCompare(b.name));
-    } catch {
-      return [];
-    }
-  }
-
-  /**
-   * List all boards
-   *
-   * See all available boards with task counts. Use this to find existing
-   * project boards or check if a board exists.
-   */
-  async boards(): Promise<BoardMeta[]> {
-    await fs.mkdir(this.boardsDir, { recursive: true });
-
-    try {
-      const files = await fs.readdir(this.boardsDir);
-      const boards: BoardMeta[] = [];
-
-      for (const file of files) {
-        if (!file.endsWith('.json')) continue;
-
-        const boardPath = path.join(this.boardsDir, file);
-        try {
-          const data = await fs.readFile(boardPath, 'utf-8');
-          const board = JSON.parse(data) as Board;
-          boards.push({
-            name: board.name,
-            projectRoot: board.projectRoot,
-            taskCount: board.tasks.length,
-            createdAt: board.createdAt,
-            updatedAt: board.updatedAt,
-          });
-        } catch {
-          // Skip invalid files
-        }
-      }
-
-      return boards.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-    } catch {
-      return [];
-    }
-  }
-
-  /**
-   * Create a new board
-   *
-   * Create a board linked to a project folder. If no folder specified,
-   * use projects() to see available options.
-   *
-   * When a folder is provided:
-   * - Board name = folder name
-   * - Claude Code hooks are auto-installed in the project
-   * - Board is linked to the project for task tracking
-   *
-   * @example boardCreate({ folder: 'my-project' })
-   * @example boardCreate({ folder: 'my-project', columns: ['Todo', 'Doing', 'Done'] })
-   * @example boardCreate({ folder: 'new-project', createFolder: true })
-   */
-  async boardCreate(params: {
-    name?: string;
-    folder?: string;
-    createFolder?: boolean;
-    columns?: string[];
-  }): Promise<Board> {
-    // Determine board name and project root
-    let boardName: string;
-    let projectRoot: string | undefined;
-
-    if (params.folder) {
-      boardName = params.folder;
-      projectRoot = path.join(this.projectsRoot, params.folder);
-
-      // Check if folder exists or should be created
-      if (!existsSync(projectRoot)) {
-        if (params.createFolder) {
-          await fs.mkdir(projectRoot, { recursive: true });
-        } else {
-          throw new Error(`Folder not found: ${params.folder}. Use createFolder: true to create it.`);
-        }
-      }
-    } else if (params.name) {
-      boardName = params.name;
-    } else {
-      throw new Error('Either name or folder must be provided');
-    }
-
-    const boardPath = this.getBoardPath(boardName);
-
-    // Check if board already exists
-    try {
-      await fs.access(boardPath);
-      throw new Error(`Board already exists: ${boardName}`);
-    } catch (e: any) {
-      if (e.code !== 'ENOENT') throw e;
-    }
-
-    const board: Board = {
-      name: boardName,
-      projectRoot: projectRoot,
-      columns: params.columns || [...DEFAULT_COLUMNS],
-      tasks: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    await this.saveBoard(board);
-
-    // Auto-install hooks if linked to a Claude Code project folder
-    if (projectRoot && this.isClaudeCodeProject(projectRoot)) {
-      await this.writeHooksToProject(projectRoot);
-    }
-
-    return board;
-  }
-
-  /**
-   * Link an existing board to a project folder
-   *
-   * Use this to link a board that was created without a folder,
-   * or to regenerate hooks for an existing project.
-   *
-   * @example projectLink({ board: 'photon', folder: 'photon' })
-   */
-  async projectLink(params: {
-    board: string;
-    folder: string;
-  }): Promise<{ success: boolean; projectRoot: string }> {
-    const board = await this.loadBoard(params.board);
-    const projectRoot = path.join(this.projectsRoot, params.folder);
-
-    if (!existsSync(projectRoot)) {
-      throw new Error(`Folder not found: ${params.folder}`);
-    }
-
-    board.projectRoot = projectRoot;
-    await this.saveBoard(board);
-
-    // Auto-install hooks if Claude Code project
-    if (this.isClaudeCodeProject(projectRoot)) {
-      await this.writeHooksToProject(projectRoot);
-    }
-
-    return { success: true, projectRoot };
-  }
-
-  /**
-   * Delete a board
-   *
-   * Permanently remove a board and all its tasks. Use with caution!
-   */
-  async boardDelete(params: { name: string }): Promise<{ success: boolean; message: string }> {
-    if (params.name === 'default') {
-      throw new Error('Cannot delete the default board');
-    }
-
-    const boardPath = this.getBoardPath(params.name);
-
-    try {
-      await fs.unlink(boardPath);
-      return { success: true, message: `Deleted board: ${params.name}` };
-    } catch {
-      throw new Error(`Board not found: ${params.name}`);
-    }
-  }
 
   // ══════════════════════════════════════════════════════════════════════════════
   // MAIN VIEW
@@ -914,7 +703,7 @@ process.exit(0);
    *
    * When working on tasks as an AI assistant:
    *
-   * 1. **Check assigned tasks**: Use `myTasks` to find tasks assigned to you
+   * 1. **Check assigned tasks**: Use `mine` to find tasks assigned to you
    * 2. **Work in "In Progress"**: Tasks you're actively working on should be here
    * 3. **Move to "Review" when done**: Do NOT move directly to "Done"!
    *    - "Review" means: AI finished, waiting for human verification
@@ -925,7 +714,7 @@ process.exit(0);
    *
    * @ui board
    */
-  async *main(params?: { board?: string }) {
+  async *main() {
     // First-time setup: elicit projects root if no config exists
     if (!existsSync(CONFIG_PATH)) {
       const values: Record<string, any> = yield io.ask.form('Configure Kanban', {
@@ -942,7 +731,7 @@ process.exit(0);
       });
     }
 
-    return this.loadBoard(params?.board || this.instanceName || 'default');
+    return this.loadBoard(this.boardName);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -955,29 +744,28 @@ process.exit(0);
    * Use this to understand the current state of the project, find tasks
    * assigned to you, or check what needs attention.
    *
-   * @example tasks({ board: 'my-project', assignee: 'ai' })
-   * @example tasks({ column: 'Todo' })
+   * @example list({ assignee: 'ai' })
+   * @example list({ column: 'Todo' })
    */
-  async tasks(params: {
-    board?: string;
+  async list(params?: {
     column?: string;
     assignee?: string;
     priority?: 'low' | 'medium' | 'high';
     label?: string;
   }): Promise<Task[]> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     let tasks = [...board.tasks];
 
-    if (params.column) {
+    if (params?.column) {
       tasks = tasks.filter((t) => t.column.toLowerCase() === params.column!.toLowerCase());
     }
-    if (params.assignee) {
+    if (params?.assignee) {
       tasks = tasks.filter((t) => t.assignee?.toLowerCase() === params.assignee!.toLowerCase());
     }
-    if (params.priority) {
+    if (params?.priority) {
       tasks = tasks.filter((t) => t.priority === params.priority);
     }
-    if (params.label) {
+    if (params?.label) {
       tasks = tasks.filter((t) => t.labels?.includes(params.label!));
     }
 
@@ -996,8 +784,8 @@ process.exit(0);
    * - Add a comment explaining what you did
    * - Humans will review and move to "Done"
    */
-  async myTasks(params?: { board?: string }): Promise<Task[]> {
-    const board = await this.loadBoard(params?.board);
+  async mine(): Promise<Task[]> {
+    const board = await this.loadBoard(this.boardName);
     return board.tasks.filter(
       (t) => t.assignee?.toLowerCase() === 'ai' && t.column !== 'Done'
     );
@@ -1012,13 +800,11 @@ process.exit(0);
    * Use 'autoPullThreshold' to auto-pull when In Progress < N.
    * Use 'autoReleaseMinutes' to auto-release after N minutes.
    *
-   * @example taskCreate({ board: 'my-project', title: 'Fix bug', priority: 'high' })
-   * @example taskCreate({ title: 'Research auth', context: 'User wants JWT with refresh tokens', links: ['/src/auth/'] })
-   * @example taskCreate({ title: 'Deploy', blockedBy: ['abc123'] }) // Blocked until abc123 is done
-   * @example taskCreate({ title: 'Recurring task', autoPullThreshold: 3, autoReleaseMinutes: 60 })
+   * @example add({ title: 'Fix bug', priority: 'high' })
+   * @example add({ title: 'Research auth', context: 'User wants JWT with refresh tokens', links: ['/src/auth/'] })
+   * @example add({ title: 'Deploy', blockedBy: ['abc123'] }) // Blocked until abc123 is done
    */
-  async taskCreate(params: {
-    board?: string;
+  async add(params: {
     title: string;
     description?: string;
     column?: string;
@@ -1033,7 +819,7 @@ process.exit(0);
     /** Auto-release interval in minutes (only for Backlog cards) */
     autoReleaseMinutes?: number;
   }): Promise<Task> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
 
     // Validate blockedBy references exist
     if (params.blockedBy) {
@@ -1104,11 +890,11 @@ process.exit(0);
    *
    * **Dependencies**: Tasks with unresolved `blockedBy` cannot move to Review or Done.
    *
-   * @example taskMove({ board: 'my-project', id: 'abc123', column: 'In Progress' })
-   * @example taskMove({ id: 'abc123', column: 'Review' }) // AI finished, awaiting human review
+   * @example move({ id: 'abc123', column: 'In Progress' })
+   * @example move({ id: 'abc123', column: 'Review' }) // AI finished, awaiting human review
    */
-  async taskMove(params: { board?: string; id: string; column: string }): Promise<Task> {
-    const board = await this.loadBoard(params.board);
+  async move(params: { id: string; column: string }): Promise<Task> {
+    const board = await this.loadBoard(this.boardName);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -1162,16 +948,15 @@ process.exit(0);
    * Move a task to a specific position. Use `beforeId` to place before another task,
    * or omit to place at the end of the column. Array order = display order.
    *
-   * @example reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
-   * @example reorderTask({ id: 'abc', column: 'Done' }) // Move to end of Done
+   * @example reorder({ id: 'abc', column: 'Todo', beforeId: 'xyz' })
+   * @example reorder({ id: 'abc', column: 'Done' })
    */
-  async taskReorder(params: {
-    board?: string;
+  async reorder(params: {
     id: string;
     column: string;
     beforeId?: string;
   }): Promise<Task> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     const taskIndex = board.tasks.findIndex((t) => t.id === params.id);
 
     if (taskIndex === -1) {
@@ -1227,8 +1012,7 @@ process.exit(0);
    *
    * Modify task title, description, priority, assignee, labels, context, dependencies, or automation settings.
    */
-  async taskUpdate(params: {
-    board?: string;
+  async edit(params: {
     id: string;
     title?: string;
     description?: string;
@@ -1243,7 +1027,7 @@ process.exit(0);
     /** Auto-release interval in minutes (only for Backlog cards) */
     autoReleaseMinutes?: number;
   }): Promise<Task> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -1292,8 +1076,8 @@ process.exit(0);
    *
    * Also removes this task from any other task's blockedBy list.
    */
-  async taskDelete(params: { board?: string; id: string }): Promise<{ success: boolean; message: string }> {
-    const board = await this.loadBoard(params.board);
+  async drop(params: { id: string }): Promise<{ success: boolean; message: string }> {
+    const board = await this.loadBoard(this.boardName);
     const index = board.tasks.findIndex((t) => t.id === params.id);
 
     if (index === -1) {
@@ -1320,47 +1104,20 @@ process.exit(0);
   }
 
   /**
-   * Search tasks across all boards or within a specific board
+   * Search tasks on the current board
    *
    * Find tasks by keyword in title, description, or context.
    */
   async search(params: {
     query: string;
-    board?: string;
-  }): Promise<Array<Task & { board: string }>> {
+  }): Promise<Task[]> {
     const query = params.query.toLowerCase();
-    const results: Array<Task & { board: string }> = [];
-
-    if (params.board) {
-      // Search specific board
-      const board = await this.loadBoard(params.board);
-      for (const task of board.tasks) {
-        if (
-          task.title.toLowerCase().includes(query) ||
-          task.description?.toLowerCase().includes(query) ||
-          task.context?.toLowerCase().includes(query)
-        ) {
-          results.push({ ...task, board: board.name });
-        }
-      }
-    } else {
-      // Search all boards
-      const boards = await this.boards();
-      for (const meta of boards) {
-        const board = await this.loadBoard(meta.name);
-        for (const task of board.tasks) {
-          if (
-            task.title.toLowerCase().includes(query) ||
-            task.description?.toLowerCase().includes(query) ||
-            task.context?.toLowerCase().includes(query)
-          ) {
-            results.push({ ...task, board: board.name });
-          }
-        }
-      }
-    }
-
-    return results;
+    const board = await this.loadBoard(this.boardName);
+    return board.tasks.filter(task =>
+      task.title.toLowerCase().includes(query) ||
+      task.description?.toLowerCase().includes(query) ||
+      task.context?.toLowerCase().includes(query)
+    );
   }
 
   /**
@@ -1369,16 +1126,15 @@ process.exit(0);
    * Use comments for instructions, updates, questions, and conversation.
    * Both humans and AI can add comments to track progress and communicate.
    *
-   * @example commentAdd({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
-   * @example commentAdd({ id: 'abc123', content: 'Implemented JWT with refresh tokens', author: 'ai' })
+   * @example comment({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
+   * @example comment({ id: 'abc123', content: 'Implemented JWT with refresh tokens', author: 'ai' })
    */
-  async commentAdd(params: {
-    board?: string;
+  async comment(params: {
     id: string;
     content: string;
     author?: 'human' | 'ai';
   }): Promise<Comment> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -1413,10 +1169,9 @@ process.exit(0);
    * Retrieve all comments/conversation for a specific task.
    */
   async comments(params: {
-    board?: string;
     id: string;
   }): Promise<Comment[]> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -1431,11 +1186,10 @@ process.exit(0);
    *
    * Returns the full task object with comments for context.
    */
-  async task(params: {
-    board?: string;
+  async show(params: {
     id: string;
   }): Promise<Task> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     const task = board.tasks.find((t) => t.id === params.id);
 
     if (!task) {
@@ -1454,92 +1208,62 @@ process.exit(0);
    *
    * Returns all columns and tasks. Useful for AI to understand the full context.
    */
-  async board(params?: { board?: string }): Promise<Board> {
-    return this.loadBoard(params?.board);
+  async board(): Promise<Board> {
+    return this.loadBoard(this.boardName);
   }
 
   /**
-   * Get the most recently active board
+   * Add or remove a column
    *
-   * Returns the board that was most recently updated (by AI or humans).
-   * Useful for AI to know which project currently needs attention,
-   * and for the UI "Auto" mode to follow activity across boards.
+   * By default adds a new column. Set `remove: true` to remove instead.
+   * Removed columns move their tasks to Backlog. Cannot remove Backlog or Done.
    *
-   * @example const active = await active();
+   * @example column({ name: 'QA' }) // Add before Done
+   * @example column({ name: 'QA', position: 2 }) // Add at position
+   * @example column({ name: 'QA', remove: true }) // Remove
    */
-  async active(): Promise<Board> {
-    const boards = await this.boards();
-    if (boards.length === 0) {
-      return this.loadBoard('default');
-    }
+  async column(params: { name: string; position?: number; remove?: boolean }): Promise<string[]> {
+    const board = await this.loadBoard(this.boardName);
 
-    // Sort by updatedAt descending, get most recent
-    boards.sort((a, b) =>
-      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
-
-    return this.loadBoard(boards[0].name);
-  }
-
-  /**
-   * Add a new column to the board
-   */
-  async columnAdd(params: { board?: string; name: string; position?: number }): Promise<string[]> {
-    const board = await this.loadBoard(params.board);
-
-    if (board.columns.includes(params.name)) {
-      throw new Error(`Column already exists: ${params.name}`);
-    }
-
-    if (params.position !== undefined) {
-      board.columns.splice(params.position, 0, params.name);
+    if (params.remove) {
+      if (['Backlog', 'Done'].includes(params.name)) {
+        throw new Error(`Cannot remove ${params.name} column`);
+      }
+      const index = board.columns.indexOf(params.name);
+      if (index === -1) {
+        throw new Error(`Column not found: ${params.name}`);
+      }
+      board.tasks.forEach((task) => {
+        if (task.column === params.name) {
+          task.column = 'Backlog';
+        }
+      });
+      board.columns.splice(index, 1);
     } else {
-      // Insert before 'Done' by default
-      const doneIndex = board.columns.indexOf('Done');
-      if (doneIndex > -1) {
-        board.columns.splice(doneIndex, 0, params.name);
+      if (board.columns.includes(params.name)) {
+        throw new Error(`Column already exists: ${params.name}`);
+      }
+      if (params.position !== undefined) {
+        board.columns.splice(params.position, 0, params.name);
       } else {
-        board.columns.push(params.name);
+        const doneIndex = board.columns.indexOf('Done');
+        if (doneIndex > -1) {
+          board.columns.splice(doneIndex, 0, params.name);
+        } else {
+          board.columns.push(params.name);
+        }
       }
     }
 
     await this.saveBoard(board);
-    return board.columns;
-  }
-
-  /**
-   * Remove a column (moves tasks to Backlog)
-   */
-  async columnRemove(params: { board?: string; name: string }): Promise<string[]> {
-    const board = await this.loadBoard(params.board);
-
-    if (['Backlog', 'Done'].includes(params.name)) {
-      throw new Error(`Cannot remove ${params.name} column`);
-    }
-
-    const index = board.columns.indexOf(params.name);
-    if (index === -1) {
-      throw new Error(`Column not found: ${params.name}`);
-    }
-
-    // Move tasks from this column to Backlog
-    board.tasks.forEach((task) => {
-      if (task.column === params.name) {
-        task.column = 'Backlog';
-      }
-    });
-
-    board.columns.splice(index, 1);
-    await this.saveBoard(board);
-
     return board.columns;
   }
 
   /**
    * Clear completed tasks (archive them)
    */
-  async completedClear(params?: { board?: string }): Promise<{ removed: number }> {
-    const board = await this.loadBoard(params?.board);
+  async clear(): Promise<{ removed: number }> {
+    const board = await this.loadBoard(this.boardName);
     const before = board.tasks.length;
     board.tasks = board.tasks.filter((t) => t.column !== 'Done');
     const removed = before - board.tasks.length;
@@ -1553,7 +1277,7 @@ process.exit(0);
    *
    * Includes WIP status showing current vs limit for In Progress column.
    */
-  async stats(params?: { board?: string }): Promise<{
+  async stats(): Promise<{
     board: string;
     total: number;
     byColumn: Record<string, number>;
@@ -1562,7 +1286,7 @@ process.exit(0);
     wip: { current: number; limit: number; autoPullEnabled: boolean };
     blockedCount: number;
   }> {
-    const board = await this.loadBoard(params?.board);
+    const board = await this.loadBoard(this.boardName);
     const config = loadConfig();
     const byColumn: Record<string, number> = {};
     const byPriority: Record<string, number> = { low: 0, medium: 0, high: 0 };
@@ -1602,16 +1326,15 @@ process.exit(0);
    *
    * Convenience method to add or remove dependencies between tasks.
    *
-   * @example dependencySet({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
-   * @example dependencySet({ id: 'task2', blockedBy: 'task1', remove: true }) // remove dependency
+   * @example block({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
+   * @example block({ id: 'task2', blockedBy: 'task1', remove: true }) // remove dependency
    */
-  async dependencySet(params: {
-    board?: string;
+  async block(params: {
     id: string;
     blockedBy: string;
     remove?: boolean;
   }): Promise<Task> {
-    const board = await this.loadBoard(params.board);
+    const board = await this.loadBoard(this.boardName);
     const task = board.tasks.find(t => t.id === params.id);
     const blocker = board.tasks.find(t => t.id === params.blockedBy);
 
@@ -1659,7 +1382,6 @@ process.exit(0);
    * @internal
    */
   async reportError(params: {
-    board?: string;
     error: {
       message: string;
       source?: string;
@@ -1671,7 +1393,7 @@ process.exit(0);
   }): Promise<{ logged: boolean }> {
     const errorLogPath = path.join(this.dataDir, 'ui-errors.log');
     const logEntry = {
-      board: params.board || 'unknown',
+      board: this.boardName,
       ...params.error,
       timestamp: params.error.timestamp || new Date().toISOString(),
     };
@@ -1706,11 +1428,11 @@ process.exit(0);
    * @internal
    */
   async scheduledArchiveOldTasks(): Promise<{ archived: number }> {
-    const boards = await this.boards();
+    const boardNames = await this.allBoardNames();
     let totalArchived = 0;
 
-    for (const boardMeta of boards) {
-      const board = await this.loadBoard(boardMeta.name);
+    for (const name of boardNames) {
+      const board = await this.loadBoard(name);
       const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
       const toArchive = board.tasks.filter(
@@ -1744,12 +1466,12 @@ process.exit(0);
   async scheduledMorningPull(): Promise<{ pulled: number; boards: string[] }> {
     const config = loadConfig();
     const pullCount = config.morningPullCount ?? DEFAULT_MORNING_PULL_COUNT;
-    const boards = await this.boards();
+    const boardNames = await this.allBoardNames();
     const affectedBoards: string[] = [];
     let totalPulled = 0;
 
-    for (const boardMeta of boards) {
-      const board = await this.loadBoard(boardMeta.name);
+    for (const name of boardNames) {
+      const board = await this.loadBoard(name);
       let pulledFromBoard = 0;
 
       // Find eligible tasks in Backlog (not blocked, by priority)
@@ -1789,13 +1511,13 @@ process.exit(0);
    * @internal
    */
   async scheduledAutoRelease(): Promise<{ released: number; boards: string[] }> {
-    const boards = await this.boards();
+    const boardNames = await this.allBoardNames();
     const now = Date.now();
     const affectedBoards: string[] = [];
     let totalReleased = 0;
 
-    for (const boardMeta of boards) {
-      const board = await this.loadBoard(boardMeta.name);
+    for (const name of boardNames) {
+      const board = await this.loadBoard(name);
       const config = loadConfig();
       const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
       let inProgressCount = board.tasks.filter(t => t.column === 'In Progress').length;
@@ -1878,12 +1600,12 @@ process.exit(0);
     const staleDays = config.staleTaskDays ?? DEFAULT_STALE_TASK_DAYS;
     const staleThreshold = Date.now() - staleDays * 24 * 60 * 60 * 1000;
 
-    const boards = await this.boards();
+    const boardNames = await this.allBoardNames();
     const affectedBoards: string[] = [];
     let totalMoved = 0;
 
-    for (const boardMeta of boards) {
-      const board = await this.loadBoard(boardMeta.name);
+    for (const name of boardNames) {
+      const board = await this.loadBoard(name);
       const staleTasks: Task[] = [];
 
       // Find stale tasks in Todo or In Progress
@@ -1953,27 +1675,38 @@ process.exit(0);
       full_name: string;
     };
   }): Promise<{ processed: boolean; taskId?: string }> {
-    const boardName = params.repository.full_name.replace('/', '-');
+    // Derive board name from repo (cross-instance access by design)
+    const derivedBoardName = params.repository.full_name.replace('/', '-');
 
     if (params.action === 'opened') {
-      const task = await this.taskCreate({
-        board: boardName,
+      const board = await this.loadBoard(derivedBoardName);
+      const task: Task = {
+        id: this.generateId(),
         title: `#${params.issue.number}: ${params.issue.title}`,
         description: params.issue.body,
-        labels: params.issue.labels?.map((l) => l.name),
         column: 'Backlog',
-      });
+        priority: 'medium',
+        labels: params.issue.labels?.map((l) => l.name),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        createdBy: 'webhook',
+      };
+      board.tasks.unshift(task);
+      await this.saveBoard(board);
+      this.emit({ emit: 'board-update', board: board.name });
       return { processed: true, taskId: task.id };
     }
 
     if (params.action === 'closed') {
-      // Find and move the task to Done
-      const board = await this.loadBoard(boardName);
+      const board = await this.loadBoard(derivedBoardName);
       const task = board.tasks.find((t) =>
         t.title.startsWith(`#${params.issue.number}:`)
       );
       if (task) {
-        await this.taskMove({ board: boardName, id: task.id, column: 'Done' });
+        task.column = 'Done';
+        task.updatedAt = new Date().toISOString();
+        await this.saveBoard(board);
+        this.emit({ emit: 'board-update', board: board.name });
         return { processed: true, taskId: task.id };
       }
     }
@@ -1991,19 +1724,14 @@ process.exit(0);
    * Move multiple tasks atomically. Uses distributed lock to prevent
    * concurrent modifications from corrupting the board.
    *
-   * Option 1: Use @locked tag (entire method locked)
    * @locked board:write
-   *
-   * Option 2: Use this.withLock() for fine-grained control (shown below)
    */
-  async batchMove(params: {
-    board?: string;
+  async sweep(params: {
     taskIds: string[];
     column: string;
   }): Promise<{ moved: number }> {
-    // Using withLock for dynamic lock name based on board
-    return this.withLock(`board:${params.board || 'default'}:write`, async () => {
-      const board = await this.loadBoard(params.board);
+    return this.withLock(`board:${this.boardName}:write`, async () => {
+      const board = await this.loadBoard(this.boardName);
       let moved = 0;
 
       for (const taskId of params.taskIds) {
@@ -2028,4 +1756,3 @@ process.exit(0);
     });
   }
 }
-// test Sat 24 Jan 2026 22:58:03 +08

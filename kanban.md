@@ -1,8 +1,8 @@
-# Kanban Board Photon Multi-tenant task management for humans and AI. Each project/conversation can have its own board. Perfect for:
+# Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for:
 
-Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks ## Quick Reference **Boards:** - `boards()` - List all boards - `board()` - Get board details - `boardCreate()` - Create new board - `boardDelete()` - Delete a board - `projectLink()` - Link board to project folder - `projects()` - List available project folders **Tasks:** - `tasks()` - List tasks (with filters) - `task()` - Get single task with comments - `myTasks()` - Get tasks assigned to AI - `taskCreate()` - Create new task - `taskMove()` - Move task to column - `taskUpdate()` - Update task details - `taskDelete()` - Delete a task - `taskReorder()` - Reorder within column - `search()` - Search tasks by keyword **Comments & Dependencies:** - `commentAdd()` - Add comment to task - `comments()` - Get task comments - `dependencySet()` - Set/remove task dependencies **Columns & Stats:** - `columnAdd()` - Add new column - `columnRemove()` - Remove column - `stats()` - Get board statistics - `completedClear()` - Archive completed tasks **Batch & Utility:** - `main()` - Entry point (shows board UI) - `active()` - Get most recently updated board - `batchMove()` - Move multiple tasks at once
+Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks ## Quick Reference **Tasks:** - `add()` - Create new task - `list()` - List tasks (with filters) - `show()` - Get single task with comments - `mine()` - Get tasks assigned to AI - `edit()` - Update task details - `move()` - Move task to column - `drop()` - Delete a task - `reorder()` - Reorder within column - `search()` - Search tasks by keyword - `sweep()` - Move multiple tasks at once **Comments & Dependencies:** - `comment()` - Add comment to task - `comments()` - Get task comments - `block()` - Set/remove task dependencies **Board Management:** - `board()` - Get full board state - `column()` - Add or remove a column - `stats()` - Get board statistics - `clear()` - Archive completed tasks - `hooks()` - Install Claude Code hooks - `configure()` - Configure settings
 
-> **33 tools** · Streaming Photon · v2.1.0 · MIT
+> **26 tools** · Streaming Photon · v3.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `stateful` `channels`
 
@@ -40,7 +40,7 @@ await configure({ projectsRoot: '/home/user/Projects', wipLimit: 5 })
 ---
 
 
-### `installHooks`
+### `hooks`
 
 Install Claude Code hooks in a project folder. Installs stop hook (blocks stopping with incomplete tasks) and user-prompt-submit hook (logs user messages for reference). Only installs if the folder appears to be a Claude Code project (has .claude folder or CLAUDE.md).
 
@@ -51,70 +51,9 @@ Install Claude Code hooks in a project folder. Installs stop hook (blocks stoppi
 ---
 
 
-### `projects`
-
-List available project folders. Shows folders in the configured projects root that can be linked to boards. Use this when creating a new board to see available projects.
-
-
-
-
-
----
-
-
-### `boards`
-
-List all boards. See all available boards with task counts. Use this to find existing project boards or check if a board exists.
-
-
-
-
-
----
-
-
-### `boardCreate`
-
-Create a new board. Create a board linked to a project folder. If no folder specified, use projects() to see available options. When a folder is provided: - Board name = folder name - Claude Code hooks are auto-installed in the project - Board is linked to the project for task tracking
-
-
-
-
-**Example:**
-
-```typescript
-boardCreate({ folder: 'my-project' })
-```
-
-
----
-
-
-### `projectLink`
-
-Link an existing board to a project folder. Use this to link a board that was created without a folder, or to regenerate hooks for an existing project.
-
-
-
-
-
----
-
-
-### `boardDelete`
-
-Delete a board. Permanently remove a board and all its tasks. Use with caution!
-
-
-
-
-
----
-
-
 ### `main` ⚡
 
-Open the Kanban board. Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods. ## AI Workflow (IMPORTANT). When working on tasks as an AI assistant: 1. **Check assigned tasks**: Use `myTasks` to find tasks assigned to you 2. **Work in "In Progress"**: Tasks you're actively working on should be here 3. **Move to "Review" when done**: Do NOT move directly to "Done"! - "Review" means: AI finished, waiting for human verification - Only humans should move tasks from "Review" to "Done" 4. **Add comments**: Document what you did for the reviewer. This keeps humans in the loop and ensures quality control.
+Open the Kanban board. Visual drag-and-drop board for managing tasks. Both humans and AI can interact with this board - humans through the UI, AI through MCP methods. ## AI Workflow (IMPORTANT). When working on tasks as an AI assistant: 1. **Check assigned tasks**: Use `mine` to find tasks assigned to you 2. **Work in "In Progress"**: Tasks you're actively working on should be here 3. **Move to "Review" when done**: Do NOT move directly to "Done"! - "Review" means: AI finished, waiting for human verification - Only humans should move tasks from "Review" to "Done" 4. **Add comments**: Document what you did for the reviewer. This keeps humans in the loop and ensures quality control.
 
 
 
@@ -123,7 +62,7 @@ Open the Kanban board. Visual drag-and-drop board for managing tasks. Both human
 ---
 
 
-### `tasks`
+### `list`
 
 Get all tasks, optionally filtered. Use this to understand the current state of the project, find tasks assigned to you, or check what needs attention.
 
@@ -133,14 +72,14 @@ Get all tasks, optionally filtered. Use this to understand the current state of 
 **Example:**
 
 ```typescript
-tasks({ board: 'my-project', assignee: 'ai' })
+list({ assignee: 'ai' })
 ```
 
 
 ---
 
 
-### `myTasks`
+### `mine`
 
 Get tasks assigned to AI. Quickly see what tasks are waiting for AI to work on. Call this at the start of a session to check your workload. **Workflow reminder**: - Work on tasks in "In Progress" - When finished, move to "Review" (not "Done") - Add a comment explaining what you did - Humans will review and move to "Done"
 
@@ -151,7 +90,7 @@ Get tasks assigned to AI. Quickly see what tasks are waiting for AI to work on. 
 ---
 
 
-### `taskCreate`
+### `add`
 
 Create a new task. Add a task to the board. By default, tasks go to 'Backlog' column. Use 'context' to store AI reasoning or notes for memory. Use 'blockedBy' to specify dependencies (task IDs that must complete first). Use 'autoPullThreshold' to auto-pull when In Progress < N. Use 'autoReleaseMinutes' to auto-release after N minutes.
 
@@ -161,14 +100,14 @@ Create a new task. Add a task to the board. By default, tasks go to 'Backlog' co
 **Example:**
 
 ```typescript
-taskCreate({ board: 'my-project', title: 'Fix bug', priority: 'high' })
+add({ title: 'Fix bug', priority: 'high' })
 ```
 
 
 ---
 
 
-### `taskMove`
+### `move`
 
 Move a task to a different column. Update the status of a task by moving it between columns. Common flow: Backlog → Todo → In Progress → Review → Done. **AI WORKFLOW**: When you complete a task, move it to "Review" - NOT "Done"! The "Review" column is for human verification. Only humans move tasks to "Done". **Dependencies**: Tasks with unresolved `blockedBy` cannot move to Review or Done.
 
@@ -178,14 +117,14 @@ Move a task to a different column. Update the status of a task by moving it betw
 **Example:**
 
 ```typescript
-taskMove({ board: 'my-project', id: 'abc123', column: 'In Progress' })
+move({ id: 'abc123', column: 'In Progress' })
 ```
 
 
 ---
 
 
-### `taskReorder`
+### `reorder`
 
 Reorder a task within or across columns. Move a task to a specific position. Use `beforeId` to place before another task, or omit to place at the end of the column. Array order = display order.
 
@@ -195,14 +134,14 @@ Reorder a task within or across columns. Move a task to a specific position. Use
 **Example:**
 
 ```typescript
-reorderTask({ id: 'abc', column: 'Todo', beforeId: 'xyz' }) // Place before xyz
+reorder({ id: 'abc', column: 'Todo', beforeId: 'xyz' })
 ```
 
 
 ---
 
 
-### `taskUpdate`
+### `edit`
 
 Update a task's details. Modify task title, description, priority, assignee, labels, context, dependencies, or automation settings.
 
@@ -213,7 +152,7 @@ Update a task's details. Modify task title, description, priority, assignee, lab
 ---
 
 
-### `taskDelete`
+### `drop`
 
 Delete a task. Also removes this task from any other task's blockedBy list.
 
@@ -226,7 +165,7 @@ Delete a task. Also removes this task from any other task's blockedBy list.
 
 ### `search`
 
-Search tasks across all boards or within a specific board. Find tasks by keyword in title, description, or context.
+Search tasks on the current board. Find tasks by keyword in title, description, or context.
 
 
 
@@ -235,7 +174,7 @@ Search tasks across all boards or within a specific board. Find tasks by keyword
 ---
 
 
-### `commentAdd`
+### `comment`
 
 Add a comment to a task. Use comments for instructions, updates, questions, and conversation. Both humans and AI can add comments to track progress and communicate.
 
@@ -245,7 +184,7 @@ Add a comment to a task. Use comments for instructions, updates, questions, and 
 **Example:**
 
 ```typescript
-commentAdd({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
+comment({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
 ```
 
 
@@ -263,7 +202,7 @@ Get comments for a task. Retrieve all comments/conversation for a specific task.
 ---
 
 
-### `task`
+### `show`
 
 Get a task with all its details including comments. Returns the full task object with comments for context.
 
@@ -285,40 +224,24 @@ Get the current board state. Returns all columns and tasks. Useful for AI to und
 ---
 
 
-### `active`
+### `column`
 
-Get the most recently active board. Returns the board that was most recently updated (by AI or humans). Useful for AI to know which project currently needs attention, and for the UI "Auto" mode to follow activity across boards.
-
-
+Add or remove a column. By default adds a new column. Set `remove: true` to remove instead. Removed columns move their tasks to Backlog. Cannot remove Backlog or Done.
 
 
 
----
 
+**Example:**
 
-### `columnAdd`
-
-Add a new column to the board
-
-
-
+```typescript
+column({ name: 'QA' }) // Add before Done
+```
 
 
 ---
 
 
-### `columnRemove`
-
-Remove a column (moves tasks to Backlog)
-
-
-
-
-
----
-
-
-### `completedClear`
+### `clear`
 
 Clear completed tasks (archive them)
 
@@ -340,7 +263,7 @@ Get board statistics. Includes WIP status showing current vs limit for In Progre
 ---
 
 
-### `dependencySet`
+### `block`
 
 Set task dependencies. Convenience method to add or remove dependencies between tasks.
 
@@ -350,7 +273,7 @@ Set task dependencies. Convenience method to add or remove dependencies between 
 **Example:**
 
 ```typescript
-dependencySet({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
+block({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
 ```
 
 
@@ -423,9 +346,9 @@ Handle GitHub webhook for issue events. Creates or updates tasks when GitHub iss
 ---
 
 
-### `batchMove`
+### `sweep`
 
-Batch move tasks with exclusive lock. Move multiple tasks atomically. Uses distributed lock to prevent concurrent modifications from corrupting the board. Option 1: Use @locked tag (entire method locked)
+Batch move tasks with exclusive lock. Move multiple tasks atomically. Uses distributed lock to prevent concurrent modifications from corrupting the board.
 
 
 
@@ -446,70 +369,56 @@ flowchart LR
         PHOTON((🎯))
         T0[🌊 configure (stream)]
         PHOTON --> T0
-        T1[🔧 installHooks]
+        T1[🔧 hooks]
         PHOTON --> T1
-        T2[🔧 projects]
+        T2[🌊 main (stream)]
         PHOTON --> T2
-        T3[🔧 boards]
+        T3[📖 list]
         PHOTON --> T3
-        T4[🔧 boardCreate]
+        T4[🔧 mine]
         PHOTON --> T4
-        T5[🔧 projectLink]
+        T5[✏️ add]
         PHOTON --> T5
-        T6[🔧 boardDelete]
+        T6[🔧 move]
         PHOTON --> T6
-        T7[🌊 main (stream)]
+        T7[🔧 reorder]
         PHOTON --> T7
-        T8[🔧 tasks]
+        T8[🔄 edit]
         PHOTON --> T8
-        T9[🔧 myTasks]
+        T9[🗑️ drop]
         PHOTON --> T9
-        T10[🔧 taskCreate]
+        T10[📖 search]
         PHOTON --> T10
-        T11[🔧 taskMove]
+        T11[🔧 comment]
         PHOTON --> T11
-        T12[🔧 taskReorder]
+        T12[🔧 comments]
         PHOTON --> T12
-        T13[🔧 taskUpdate]
+        T13[🔧 show]
         PHOTON --> T13
-        T14[🔧 taskDelete]
+        T14[🔧 board]
         PHOTON --> T14
-        T15[📖 search]
+        T15[🔧 column]
         PHOTON --> T15
-        T16[🔧 commentAdd]
+        T16[🗑️ clear]
         PHOTON --> T16
-        T17[🔧 comments]
+        T17[🔧 stats]
         PHOTON --> T17
-        T18[🔧 task]
+        T18[🔧 block]
         PHOTON --> T18
-        T19[🔧 board]
+        T19[🔧 reportError]
         PHOTON --> T19
-        T20[🔧 active]
+        T20[🔧 scheduledArchiveOldTasks]
         PHOTON --> T20
-        T21[🔧 columnAdd]
+        T21[🔧 scheduledMorningPull]
         PHOTON --> T21
-        T22[🔧 columnRemove]
+        T22[🔧 scheduledAutoRelease]
         PHOTON --> T22
-        T23[🔧 completedClear]
+        T23[🔧 scheduledStaleTaskCheck]
         PHOTON --> T23
-        T24[🔧 stats]
+        T24[🔧 handleGithubIssue]
         PHOTON --> T24
-        T25[🔧 dependencySet]
+        T25[🔧 sweep]
         PHOTON --> T25
-        T26[🔧 reportError]
-        PHOTON --> T26
-        T27[🔧 scheduledArchiveOldTasks]
-        PHOTON --> T27
-        T28[🔧 scheduledMorningPull]
-        PHOTON --> T28
-        T29[🔧 scheduledAutoRelease]
-        PHOTON --> T29
-        T30[🔧 scheduledStaleTaskCheck]
-        PHOTON --> T30
-        T31[🔧 handleGithubIssue]
-        PHOTON --> T31
-        T32[🔧 batchMove]
-        PHOTON --> T32
     end
 ```
 
@@ -530,4 +439,4 @@ No external dependencies.
 
 ---
 
-MIT · v2.1.0 · Portel
+MIT · v3.0.0 · Portel
