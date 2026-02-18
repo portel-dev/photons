@@ -112,7 +112,7 @@ export({ formId: "abc123", format: "csv" })
 
 ### `stats`
 
-Submission statistics across all forms  Shows total submissions, per-form counts, and submissions per day for the last 7 days.
+Submission statistics across all forms. Shows total submissions, per-form counts, and submissions per day for the last 7 days.
 
 
 
@@ -123,7 +123,7 @@ Submission statistics across all forms  Shows total submissions, per-form counts
 
 ### `handleSubmission`
 
-Receive form submission via webhook  POST /webhook/form-inbox/handleSubmission?form=<formId> Body: JSON matching form field names
+Receive form submission via webhook. POST /webhook/form-inbox/handleSubmission?form=<formId> Body: JSON matching form field names
 
 
 
@@ -134,7 +134,7 @@ Receive form submission via webhook  POST /webhook/form-inbox/handleSubmission?f
 
 ### `handleBulkImport`
 
-Receive bulk CSV import via webhook  POST /webhook/form-inbox/handleBulkImport?form=<formId> Body: { csv: "header1,header2\nval1,val2\n..." }
+Receive bulk CSV import via webhook. POST /webhook/form-inbox/handleBulkImport?form=<formId> Body: { csv: "header1,header2\nval1,val2\n..." }
 
 
 
@@ -145,7 +145,7 @@ Receive bulk CSV import via webhook  POST /webhook/form-inbox/handleBulkImport?f
 
 ### `scheduledDigest`
 
-Daily submission digest  Sends summary of yesterday's submissions across all forms.
+Daily submission digest. Sends summary of yesterday's submissions across all forms.
 
 
 
@@ -156,7 +156,7 @@ Daily submission digest  Sends summary of yesterday's submissions across all for
 
 ### `scheduledCleanup`
 
-Cleanup old submissions  Removes submissions older than 90 days to keep data manageable.
+Cleanup old submissions. Removes submissions older than 90 days to keep data manageable.
 
 
 

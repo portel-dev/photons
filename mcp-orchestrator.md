@@ -17,7 +17,7 @@ No configuration required.
 
 ### `discoverMCPs`
 
-List all available MCPs and their tools  Discovers which MCPs are configured and accessible, showing their available tools.
+List all available MCPs and their tools. Discovers which MCPs are configured and accessible, showing their available tools.
 
 
 | Parameter | Type | Required | Description |
@@ -49,7 +49,7 @@ Check if a specific MCP is available
 
 ### `callTool`
 
-Call a tool on any MCP  Generic method to call any tool on any configured MCP. This demonstrates the polyglot nature - the MCP can be written in any language (Python, Rust, Go, etc.)
+Call a tool on any MCP. Generic method to call any tool on any configured MCP. This demonstrates the polyglot nature - the MCP can be written in any language (Python, Rust, Go, etc.)
 
 
 | Parameter | Type | Required | Description |
@@ -67,7 +67,7 @@ Call a tool on any MCP  Generic method to call any tool on any configured MCP. T
 
 ### `researchWorkflow`
 
-Research Workflow - Combine search and browser MCPs  Demonstrates orchestrating multiple MCPs: 1. Search for information using tavily (Node.js MCP) 2. Optionally fetch page content using browser MCP
+Research Workflow - Combine search and browser MCPs. Demonstrates orchestrating multiple MCPs: 1. Search for information using tavily (Node.js MCP) 2. Optionally fetch page content using browser MCP
 
 
 | Parameter | Type | Required | Description |
@@ -85,7 +85,7 @@ Research Workflow - Combine search and browser MCPs  Demonstrates orchestrating 
 
 ### `reasoningWorkflow`
 
-Multi-Step Reasoning Workflow  Uses sequential-thinking MCP (if available) to break down a complex problem into steps, demonstrating how to use specialized reasoning MCPs.
+Multi-Step Reasoning Workflow. Uses sequential-thinking MCP (if available) to break down a complex problem into steps, demonstrating how to use specialized reasoning MCPs.
 
 
 | Parameter | Type | Required | Description |
@@ -102,7 +102,7 @@ Multi-Step Reasoning Workflow  Uses sequential-thinking MCP (if available) to br
 
 ### `shellWorkflow`
 
-Shell Command Workflow  Demonstrates using the Shell MCP to execute system commands. This MCP might be written in any language that can spawn processes.
+Shell Command Workflow. Demonstrates using the Shell MCP to execute system commands. This MCP might be written in any language that can spawn processes.
 
 
 | Parameter | Type | Required | Description |
@@ -119,7 +119,7 @@ Shell Command Workflow  Demonstrates using the Shell MCP to execute system comma
 
 ### `parallelExecution`
 
-Parallel MCP Execution  Demonstrates calling multiple MCPs in parallel and combining results. Each MCP can be written in a different language.
+Parallel MCP Execution. Demonstrates calling multiple MCPs in parallel and combining results. Each MCP can be written in a different language.
 
 
 | Parameter | Type | Required | Description |
@@ -135,7 +135,7 @@ Parallel MCP Execution  Demonstrates calling multiple MCPs in parallel and combi
 
 ### `chainedWorkflow`
 
-Chained MCP Workflow  Demonstrates chaining MCP calls where output from one becomes input to another. Perfect for pipelines that span multiple services/languages.
+Chained MCP Workflow. Demonstrates chaining MCP calls where output from one becomes input to another. Perfect for pipelines that span multiple services/languages.
 
 
 | Parameter | Type | Required | Description |
@@ -167,7 +167,7 @@ Get detailed info about a specific MCP's tools
 
 ### `findToolsAcrossMCPs`
 
-Find tools across multiple MCPs  Search for tools by keyword across all configured MCPs.
+Find tools across multiple MCPs. Search for tools by keyword across all configured MCPs.
 
 
 | Parameter | Type | Required | Description |

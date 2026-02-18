@@ -2,7 +2,7 @@
 
 Live Task List — stateful, reactive, persistent Same functionality as tasks-basic, but tasks survive restarts and the UI updates in real-time via emit(). Uses `this.memory` for zero-boilerplate persistence — compare with tasks-basic to see the difference (no fs/path/os imports needed).
 
-> **4 tools** · API Photon · v1.8.4 · MIT
+> **4 tools** · API Photon · v1.9.0 · MIT
 
 **Platform Features:** `stateful`
 
@@ -97,4 +97,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.8.4
+MIT · v1.9.0

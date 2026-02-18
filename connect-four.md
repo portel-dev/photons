@@ -17,7 +17,7 @@ No configuration required.
 
 ### `start`
 
-Start a new Connect Four game  You play as 🔴 (Red), opponent plays as 🟡 (Yellow). Player always goes first.  In "builtin" mode, a minimax AI responds automatically after each move. In "mcp" mode, the MCP client (you, the AI assistant) plays as 🟡 by calling drop on your turn.
+Start a new Connect Four game. You play as 🔴 (Red), opponent plays as 🟡 (Yellow). Player always goes first. In "builtin" mode, a minimax AI responds automatically after each move. In "mcp" mode, the MCP client (you, the AI assistant) plays as 🟡 by calling drop on your turn.
 
 
 
@@ -34,7 +34,7 @@ start()
 
 ### `drop`
 
-Drop a piece into a column  Uses a distributed lock to prevent simultaneous moves on the same game.  In builtin mode: places your piece, then the built-in AI auto-responds. In MCP mode: places the current player's piece (player or AI) and switches turns. The MCP client calls this on its turn to play as 🟡.
+Drop a piece into a column. Uses a distributed lock to prevent simultaneous moves on the same game. In builtin mode: places your piece, then the built-in AI auto-responds. In MCP mode: places the current player's piece (player or AI) and switches turns. The MCP client calls this on its turn to play as 🟡.
 
 
 
@@ -68,7 +68,7 @@ board()
 
 ### `games`
 
-List your games  Shows recent games with outcomes.
+List your games. Shows recent games with outcomes.
 
 
 
@@ -118,7 +118,7 @@ Replay a completed game move by move
 
 ### `scheduledCleanup`
 
-Cleanup stale games  Removes active games with no moves for over 7 days and completed games older than 90 days.
+Cleanup stale games. Removes active games with no moves for over 7 days and completed games older than 90 days.
 
 
 

@@ -17,7 +17,7 @@ No configuration required.
 
 ### `configure` ⚡
 
-Configure the Git Box photon  Call this before using repository methods. Three behaviors: 1. **AI with known values**: Pass params directly to skip elicitation 2. **Already configured**: Loads existing config from disk 3. **First-time human**: Prompts user to enter values via elicitation
+Configure the Git Box photon. Call this before using repository methods. Three behaviors: 1. **AI with known values**: Pass params directly to skip elicitation 2. **Already configured**: Loads existing config from disk 3. **First-time human**: Prompts user to enter values via elicitation
 
 
 | Parameter | Type | Required | Description |

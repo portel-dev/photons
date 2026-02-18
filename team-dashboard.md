@@ -17,7 +17,7 @@ No configuration required.
 
 ### `main`
 
-Open the Team Dashboard  TV-optimized display showing project progress, recent activity, and service health. Auto-refreshes for always-on displays.
+Open the Team Dashboard. TV-optimized display showing project progress, recent activity, and service health. Auto-refreshes for always-on displays.
 
 
 
@@ -28,7 +28,7 @@ Open the Team Dashboard  TV-optimized display showing project progress, recent a
 
 ### `getDashboardData`
 
-Get all dashboard data  Aggregates data from Kanban, Git, GitHub, and service monitors into a single dashboard-ready payload.
+Get all dashboard data. Aggregates data from Kanban, Git, GitHub, and service monitors into a single dashboard-ready payload.
 
 
 
@@ -50,7 +50,7 @@ Debug: Show resolved paths
 
 ### `getKanbanStats`
 
-Get Kanban board statistics  Reads from the Kanban photon's data file to get task counts and progress.
+Get Kanban board statistics. Reads from the Kanban photon's data file to get task counts and progress.
 
 
 
@@ -61,7 +61,7 @@ Get Kanban board statistics  Reads from the Kanban photon's data file to get tas
 
 ### `getRecentCommits`
 
-Get recent Git commits  Fetches the last 10 commits from the configured Git repository.
+Get recent Git commits. Fetches the last 10 commits from the configured Git repository.
 
 
 
@@ -72,7 +72,7 @@ Get recent Git commits  Fetches the last 10 commits from the configured Git repo
 
 ### `checkServices`
 
-Check service health  Pings configured services to check if they're up or down.
+Check service health. Pings configured services to check if they're up or down.
 
 
 
@@ -83,7 +83,7 @@ Check service health  Pings configured services to check if they're up or down.
 
 ### `getGitHubStats`
 
-Get GitHub issues and PRs from configured repos  Fetches open issue and PR counts from all configured GitHub repositories. Uses the public GitHub API (no auth required for public repos).
+Get GitHub issues and PRs from configured repos. Fetches open issue and PR counts from all configured GitHub repositories. Uses the public GitHub API (no auth required for public repos).
 
 
 
@@ -94,7 +94,7 @@ Get GitHub issues and PRs from configured repos  Fetches open issue and PR count
 
 ### `getTodaysFocus`
 
-Get today's focus task  Returns the highest priority in-progress task from the Kanban board.
+Get today's focus task. Returns the highest priority in-progress task from the Kanban board.
 
 
 
@@ -105,7 +105,7 @@ Get today's focus task  Returns the highest priority in-progress task from the K
 
 ### `getSummary`
 
-Get a quick summary for AI  Returns a text summary of the dashboard state, perfect for AI to understand project status at a glance.
+Get a quick summary for AI. Returns a text summary of the dashboard state, perfect for AI to understand project status at a glance.
 
 
 
@@ -225,7 +225,7 @@ List all tracked GitHub repositories
 
 ### `listKanbanBoards`
 
-List available Kanban boards  Scans the kanban/boards directory for available board files.
+List available Kanban boards. Scans the kanban/boards directory for available board files.
 
 
 

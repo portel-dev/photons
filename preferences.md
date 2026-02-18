@@ -44,7 +44,7 @@ Get a specific preference value
 
 ### `editSettings` ⚡
 
-Open the settings UI for editing preferences  Shows the settings form UI and handles user input. Demonstrates EmitUI yield type for MCP Apps.
+Open the settings UI for editing preferences. Shows the settings form UI and handles user input. Demonstrates EmitUI yield type for MCP Apps.
 
 
 
@@ -55,7 +55,7 @@ Open the settings UI for editing preferences  Shows the settings form UI and han
 
 ### `previewTheme` ⚡
 
-Preview a theme before applying  Shows an inline preview of the selected theme.
+Preview a theme before applying. Shows an inline preview of the selected theme.
 
 
 
@@ -66,7 +66,7 @@ Preview a theme before applying  Shows an inline preview of the selected theme.
 
 ### `resetToDefaults` ⚡
 
-Reset preferences to defaults  Loads defaults from the resources/defaults.json asset.
+Reset preferences to defaults. Loads defaults from the resources/defaults.json asset.
 
 
 

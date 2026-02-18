@@ -65,7 +65,6 @@ We welcome contributions! Submit pull requests for:
 | [**Preferences Photon Demonstrates MCP Apps with UI assets, prompts, and resources. Assets are auto-discovered from the preferences/ folder by convention. Asset folder structure (auto-served): preferences/ ui/ settings.html    **](preferences.md) | Main settings form theme-preview.html - Theme preview component prompts/ welcome.md        - Welcome message template resources/ defaults.json     - Default configuration | 7 | ⚡🎨💬⚡ |
 | [**Progressive Rendering**](progressive-rendering.md) | Progressive Rendering — Same Data, Better Display Six methods return the same team data, each progressively enhanced. Run them side-by-side in Beam to see how Photon features improve rendering. | 6 | - |
 | [**Redis**](redis.md) | In-memory data store and cache Provides Redis operations using the official Redis client. Supports key-value operations, lists, hashes, sets, and pub/sub patterns. Common use cases: - Caching: "Cache user session for 1 hour", "Get cached API response" - Counters: "Increment page view counter", "Get current visitor count" - Lists/Queues: "Add job to queue", "Get next job from queue" - Pub/Sub: "Publish message to channel", "Subscribe to events" Example: set({ key: "user:123", value: "John", ttl: 3600 }) Configuration: - url: Redis connection URL (default: redis://localhost:6379) - password: Redis password (optional) - database: Database number (default: 0) | 18 | - |
-| [**Truth Serum**](serum.md) | Forces unfiltered honesty, no hedging or diplomacy | 10 | - |
 | [**Slack**](slack.md) | Send messages and manage Slack workspace Provides tools to send messages, list channels, and interact with Slack workspace. Requires a Slack Bot Token with appropriate scopes. Common use cases: - Notifications: "Send a deployment notification to #engineering" - Team updates: "Post the daily standup summary to #team" - Channel management: "List all public channels" Example: postMessage({ channel: "#general", text: "Hello team!" }) Configuration: - token: Slack Bot Token (required, starts with xoxb-) Dependencies are auto-installed on first run. | 7 | - |
 | [**SQLite Photon MCP**](sqlite.md) | SQLite database operations Provides SQLite database utilities: query, execute, insert, update, delete, and schema operations. Supports both in-memory and file-based databases. Example: query({ sql: "SELECT * FROM users WHERE id = ?", params: [1] }) Dependencies are auto-installed on first run. | 9 | - |
 | [**Tasks Basic**](tasks-basic.md) | Basic Task List — stateless, in-memory A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what @stateful adds. | 4 | - |
@@ -78,7 +77,7 @@ We welcome contributions! Submit pull requests for:
 | [**Web**](web.md) | Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes DuckDuckGo for results. 2. Read: Uses Mozilla Readability to extract main article content. | 2 | ⚡ |
 
 
-**Total:** 42 photons ready to use
+**Total:** 41 photons ready to use
 
 ---
 
@@ -122,7 +121,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 42 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 41 focused tools at its fingertips.
 
 ---
 
@@ -188,7 +187,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 42 production-ready photons available
+- 📦 41 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

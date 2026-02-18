@@ -46,7 +46,7 @@ Get current configuration
 
 ### `emits` ⚡
 
-Demonstrates all io.emit types in a single generator  Yields status, progress, stream, log, toast, thinking, and artifact emissions to prove each type works.
+Demonstrates all io.emit types in a single generator. Yields status, progress, stream, log, toast, thinking, and artifact emissions to prove each type works.
 
 
 
@@ -57,7 +57,7 @@ Demonstrates all io.emit types in a single generator  Yields status, progress, s
 
 ### `asks` ⚡
 
-Demonstrates all io.ask types interactively  Each ask type prompts the user for input, then returns a summary.
+Demonstrates all io.ask types interactively. Each ask type prompts the user for input, then returns a summary.
 
 
 
@@ -68,7 +68,7 @@ Demonstrates all io.ask types interactively  Each ask type prompts the user for 
 
 ### `review`
 
-A code review prompt template  Returns a structured prompt for code review assistance.
+A code review prompt template. Returns a structured prompt for code review assistance.
 
 
 | Parameter | Type | Required | Description |
@@ -129,7 +129,7 @@ Returns markdown content
 
 ### `increment`
 
-Increment the counter and return current value  Proves instance state persists across tool calls.
+Increment the counter and return current value. Proves instance state persists across tool calls.
 
 
 

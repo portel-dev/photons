@@ -2,7 +2,7 @@
 
 Progressive Rendering — Same Data, Better Display Six methods return the same team data, each progressively enhanced. Run them side-by-side in Beam to see how Photon features improve rendering.
 
-> **6 tools** · API Photon · v1.8.4 · MIT
+> **6 tools** · API Photon · v1.9.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -27,7 +27,7 @@ Level 1: Raw return — auto-UI guesses the layout
 
 ### `v2_described`
 
-Level 2: Rich description — method card gets context, rendering still auto-detected  Team members with roles and availability status. Returns the full engineering team roster.
+Level 2: Rich description — method card gets context, rendering still auto-detected. Team members with roles and availability status. Returns the full engineering team roster.
 
 
 
@@ -122,4 +122,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.8.4
+MIT · v1.9.0

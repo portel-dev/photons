@@ -1,0 +1,5 @@
+# Runtime data - stored locally, not part of the distribution
+boards/
+data.json
+config.json
+*.log

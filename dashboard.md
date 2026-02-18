@@ -17,7 +17,7 @@ No configuration required.
 
 ### `overview`
 
-Dashboard overview with key metrics  Returns metrics that can be displayed in a card grid UI.
+Dashboard overview with key metrics. Returns metrics that can be displayed in a card grid UI.
 
 
 
@@ -39,7 +39,7 @@ Dashboard main view - Task management
 
 ### `activity`
 
-Recent activity feed  Returns activity stream for the timeline UI.
+Recent activity feed. Returns activity stream for the timeline UI.
 
 
 

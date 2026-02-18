@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.8.4",
+  "version": "1.9.0",
   "owner": {
     "name": "Portel"
   },
@@ -194,7 +194,7 @@
     },
     {
       "name": "deploy",
-      "version": "1.8.4",
+      "version": "1.9.0",
       "description": "Deploy Pipeline — Stateful Workflows + Elicitation + Progress Multi-step deployment pipeline that can crash and resume from the last checkpoint, with human approval gates via elicitation. Steps are simulated — the point is the pattern: checkpoint after side effects, ask before dangerous operations, emit progress throughout.",
       "author": "Unknown",
       "license": "MIT",
@@ -264,7 +264,7 @@
     },
     {
       "name": "expenses",
-      "version": "1.8.4",
+      "version": "1.9.0",
       "description": "Expense Tracker — Memory + Collection + Typed Fields Track personal expenses with category breakdowns and budget alerts. Uses `this.memory` for zero-boilerplate persistence, `Collection` for rich querying (groupBy, sum, where), and `Table` with typed fields for polished rendering (currency, badges, dates). Use named instances (`_use`) to keep personal vs work expenses separate.",
       "author": "Unknown",
       "license": "MIT",
@@ -675,13 +675,7 @@
         "batchMove"
       ],
       "assets": [
-        "kanban/boards/default.json",
-        "kanban/boards/photon.json",
-        "kanban/boards/test-columns.json",
-        "kanban/config.json",
-        "kanban/data.json",
-        "kanban/ui/board.html",
-        "kanban/ui-errors.log"
+        "kanban/ui/board.html"
       ],
       "photonType": "streaming",
       "features": [
@@ -851,11 +845,10 @@
         "exportPreferences"
       ],
       "assets": [
-        "preferences/.DS_Store",
-        "preferences/prompts/welcome.md",
-        "preferences/resources/defaults.json",
         "preferences/ui/settings.html",
-        "preferences/ui/theme-preview.html"
+        "preferences/ui/theme-preview.html",
+        "preferences/prompts/welcome.md",
+        "preferences/resources/defaults.json"
       ],
       "photonType": "workflow",
       "features": [
@@ -867,7 +860,7 @@
     },
     {
       "name": "progressive-rendering",
-      "version": "1.8.4",
+      "version": "1.9.0",
       "description": "Progressive Rendering — Same Data, Better Display Six methods return the same team data, each progressively enhanced. Run them side-by-side in Beam to see how Photon features improve rendering.",
       "author": "Unknown",
       "license": "MIT",
@@ -914,31 +907,6 @@
         "hset",
         "hgetall",
         "flush"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "serum",
-      "version": "1.8.4",
-      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
-      "author": "Unknown",
-      "license": "MIT",
-      "icon": "💉",
-      "source": "../serum.photon.ts",
-      "hash": "sha256:84cab982d704f2b18d1d71285d993661551ee772bb3fb23f973cc9dfa27ecbb3",
-      "tools": [
-        "truth",
-        "clarity",
-        "challenger",
-        "focus",
-        "perspective",
-        "creative",
-        "action",
-        "simplify",
-        "empathy",
-        "custom"
       ],
       "assets": [],
       "photonType": "api",
@@ -992,7 +960,7 @@
     },
     {
       "name": "tasks-basic",
-      "version": "1.8.4",
+      "version": "1.9.0",
       "description": "Basic Task List — stateless, in-memory A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what @stateful adds.",
       "author": "Unknown",
       "license": "MIT",
@@ -1013,7 +981,7 @@
     },
     {
       "name": "tasks-live",
-      "version": "1.8.4",
+      "version": "1.9.0",
       "description": "Live Task List — stateful, reactive, persistent Same functionality as tasks-basic, but tasks survive restarts and the UI updates in real-time via emit(). Uses `this.memory` for zero-boilerplate persistence — compare with tasks-basic to see the difference (no fs/path/os imports needed).",
       "author": "Unknown",
       "license": "MIT",
@@ -1064,7 +1032,6 @@
         "setKanbanBoard"
       ],
       "assets": [
-        "team-dashboard/config.json",
         "team-dashboard/ui/dashboard.html"
       ],
       "photonType": "api",
@@ -1075,7 +1042,7 @@
     },
     {
       "name": "team-pulse",
-      "version": "1.8.4",
+      "version": "1.9.0",
       "description": "Team Pulse — Async Standup with Memory + Channels + Locking Post daily updates, see what the team posted, search past standups. Updates persist via `this.memory`, broadcast to all sessions via channels, and use distributed locking to prevent duplicate rapid-fire posts.",
       "author": "Unknown",
       "license": "MIT",

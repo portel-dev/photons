@@ -17,7 +17,7 @@ No configuration required.
 
 ### `scheduledHeartbeat`
 
-Heartbeat - writes timestamp to state file every minute  When the daemon runs this photon, the heartbeat proves scheduled execution works. Check with `status()` to see last run time.
+Heartbeat - writes timestamp to state file every minute. When the daemon runs this photon, the heartbeat proves scheduled execution works. Check with `status()` to see last run time.
 
 
 
@@ -28,7 +28,7 @@ Heartbeat - writes timestamp to state file every minute  When the daemon runs th
 
 ### `handleWebhook`
 
-Receive a webhook payload and echo it back with metadata  In daemon mode, this is exposed as a POST endpoint. The handler echoes the payload with added timestamp and processing info.
+Receive a webhook payload and echo it back with metadata. In daemon mode, this is exposed as a POST endpoint. The handler echoes the payload with added timestamp and processing info.
 
 
 | Parameter | Type | Required | Description |
@@ -45,7 +45,7 @@ Receive a webhook payload and echo it back with metadata  In daemon mode, this i
 
 ### `critical`
 
-A critical operation protected by a distributed lock  The @locked annotation ensures only one invocation runs at a time. Other callers wait until the lock is released.
+A critical operation protected by a distributed lock. The @locked annotation ensures only one invocation runs at a time. Other callers wait until the lock is released.
 
 
 | Parameter | Type | Required | Description |
@@ -61,7 +61,7 @@ A critical operation protected by a distributed lock  The @locked annotation ens
 
 ### `protect`
 
-Demonstrates manual distributed locking with this.withLock()  Unlike @locked which auto-wraps the entire method, withLock() gives fine-grained control over which section is locked.
+Demonstrates manual distributed locking with this.withLock(). Unlike @locked which auto-wraps the entire method, withLock() gives fine-grained control over which section is locked.
 
 
 | Parameter | Type | Required | Description |
@@ -78,7 +78,7 @@ Demonstrates manual distributed locking with this.withLock()  Unlike @locked whi
 
 ### `publish`
 
-Publish a message to a named channel  Other photons or clients subscribed to this channel will receive the event via the daemon's pub/sub system.
+Publish a message to a named channel. Other photons or clients subscribed to this channel will receive the event via the daemon's pub/sub system.
 
 
 | Parameter | Type | Required | Description |
@@ -96,7 +96,7 @@ Publish a message to a named channel  Other photons or clients subscribed to thi
 
 ### `status`
 
-Show daemon feature status  Reads the heartbeat state file to show when the scheduled job last ran and how many times it has executed.
+Show daemon feature status. Reads the heartbeat state file to show when the scheduled job last ran and how many times it has executed.
 
 
 

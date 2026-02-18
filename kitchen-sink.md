@@ -23,7 +23,7 @@ Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meanin
 
 ### `basicStringReturn`
 
-Returns a simple string  Demonstrates the simplest tool - no parameters, returns a string.
+Returns a simple string. Demonstrates the simplest tool - no parameters, returns a string.
 
 
 
@@ -34,7 +34,7 @@ Returns a simple string  Demonstrates the simplest tool - no parameters, returns
 
 ### `basicNumberReturn`
 
-Returns a number  Tools can return any JSON-serializable type.
+Returns a number. Tools can return any JSON-serializable type.
 
 
 
@@ -56,7 +56,7 @@ Returns a boolean
 
 ### `basicObjectReturn`
 
-Returns an object  Complex objects are automatically serialized to JSON.
+Returns an object. Complex objects are automatically serialized to JSON.
 
 
 
@@ -209,7 +209,7 @@ Demonstrates multiple required parameters
 
 ### `streamingText` ⚡
 
-Streams text word by word  Async generators enable streaming responses. Each yield sends a chunk to the client.
+Streams text word by word. Async generators enable streaming responses. Each yield sends a chunk to the client.
 
 
 
@@ -236,7 +236,7 @@ Streams numbered items
 
 ### `streamingObjects` ⚡
 
-Streams JSON objects  You can stream structured data too - each yield is a complete chunk.
+Streams JSON objects. You can stream structured data too - each yield is a complete chunk.
 
 
 
@@ -247,7 +247,7 @@ Streams JSON objects  You can stream structured data too - each yield is a compl
 
 ### `progressDemo` ⚡
 
-Demonstrates progress reporting using io helper  Uses async generator with `io.emit.*` to send progress updates.
+Demonstrates progress reporting using io helper. Uses async generator with `io.emit.*` to send progress updates.
 
 
 | Parameter | Type | Required | Description |
@@ -263,7 +263,7 @@ Demonstrates progress reporting using io helper  Uses async generator with `io.e
 
 ### `memoryCounter`
 
-Simple counter with in-memory state  State persists during the server session but resets on restart.
+Simple counter with in-memory state. State persists during the server session but resets on restart.
 
 
 | Parameter | Type | Required | Description |
@@ -296,7 +296,7 @@ In-memory todo list
 
 ### `uiGetUsers`
 
-Get all users with visual card display  Returns data for the users UI template.
+Get all users with visual card display. Returns data for the users UI template.
 
 
 
@@ -307,7 +307,7 @@ Get all users with visual card display  Returns data for the users UI template.
 
 ### `uiGetDashboard`
 
-Get dashboard metrics  Returns data for the dashboard UI template.
+Get dashboard metrics. Returns data for the dashboard UI template.
 
 
 
@@ -334,7 +334,7 @@ Search results with rich display
 
 ### `errorHandlingDemo`
 
-Demonstrates proper error handling  Thrown errors are caught and returned as MCP error responses.
+Demonstrates proper error handling. Thrown errors are caught and returned as MCP error responses.
 
 
 | Parameter | Type | Required | Description |
@@ -366,7 +366,7 @@ Demonstrates validation errors
 
 ### `showConfig`
 
-Shows current configuration  Demonstrates accessing constructor parameters (env vars).
+Shows current configuration. Demonstrates accessing constructor parameters (env vars).
 
 
 

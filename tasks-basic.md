@@ -2,7 +2,7 @@
 
 Basic Task List — stateless, in-memory A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what @stateful adds.
 
-> **4 tools** · API Photon · v1.8.4 · MIT
+> **4 tools** · API Photon · v1.9.0 · MIT
 
 **Platform Features:** `stateful`
 
@@ -97,4 +97,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.8.4
+MIT · v1.9.0

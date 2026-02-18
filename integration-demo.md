@@ -17,7 +17,7 @@ No configuration required.
 
 ### `info`
 
-Show photon info, runtime version, and dependency status  Returns structured data about this photon's configuration, runtime compatibility, and available dependencies.
+Show photon info, runtime version, and dependency status. Returns structured data about this photon's configuration, runtime compatibility, and available dependencies.
 
 
 
@@ -28,7 +28,7 @@ Show photon info, runtime version, and dependency status  Returns structured dat
 
 ### `workflow` ⚡
 
-A multi-step stateful workflow with checkpoint yields  Each checkpoint persists state to disk so the workflow can resume after interruption. Steps simulate a data processing pipeline.
+A multi-step stateful workflow with checkpoint yields. Each checkpoint persists state to disk so the workflow can resume after interruption. Steps simulate a data processing pipeline.
 
 
 | Parameter | Type | Required | Description |
@@ -45,7 +45,7 @@ A multi-step stateful workflow with checkpoint yields  Each checkpoint persists 
 
 ### `status`
 
-Integration demo status resource  Exposes a readable MCP resource with the current photon status.
+Integration demo status resource. Exposes a readable MCP resource with the current photon status.
 
 
 
@@ -56,7 +56,7 @@ Integration demo status resource  Exposes a readable MCP resource with the curre
 
 ### `assets`
 
-List discovered assets for this photon  Returns information about the asset folder and its contents. The runtime auto-discovers the `integration-demo/` folder parallel to this `.photon.ts` file.
+List discovered assets for this photon. Returns information about the asset folder and its contents. The runtime auto-discovers the `integration-demo/` folder parallel to this `.photon.ts` file.
 
 
 
