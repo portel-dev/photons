@@ -638,7 +638,7 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:f12427063639033361f6edaf6947464faf6d00e49b61537ddc9e50a0a44b53e8",
+      "hash": "sha256:f2d7dbf03e095c1609a72f8d2dca9207bafd7dcae3d64d06177882e4e0a55d1a",
       "tools": [
         "configure",
         "installHooks",

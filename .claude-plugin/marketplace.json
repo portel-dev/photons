@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official photons MCP servers",
-    "version": "1.8.4"
+    "version": "1.9.0"
   },
   "plugins": [
     {
@@ -562,24 +562,6 @@
           "args": [
             "mcp",
             "redis"
-          ]
-        }
-      }
-    },
-    {
-      "name": "serum",
-      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "serum": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "serum"
           ]
         }
       }

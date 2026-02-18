@@ -240,8 +240,8 @@ export default class KanbanPhoton extends PhotonMCP {
     });
 
     const config: KanbanConfig = {
-      projectsRoot: values.projectsRoot || DEFAULT_PROJECTS_ROOT,
-      wipLimit: values.wipLimit ?? DEFAULT_WIP_LIMIT,
+      projectsRoot: values?.projectsRoot || DEFAULT_PROJECTS_ROOT,
+      wipLimit: values?.wipLimit ?? DEFAULT_WIP_LIMIT,
     };
     saveConfig(config);
     return { configured: true, config };
