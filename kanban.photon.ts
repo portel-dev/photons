@@ -935,7 +935,7 @@ process.exit(0);
     // Ensure configuration exists (will elicit if needed)
     yield* this.configure();
 
-    return this.loadBoard(params?.board || 'default');
+    return this.loadBoard(params?.board || this.instanceName || 'default');
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
