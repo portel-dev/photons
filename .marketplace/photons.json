@@ -638,7 +638,7 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:f2d7dbf03e095c1609a72f8d2dca9207bafd7dcae3d64d06177882e4e0a55d1a",
+      "hash": "sha256:876d18aeb9db97fa3c54e4e29851c243de2feea1dff68208da4f8066cad5102f",
       "tools": [
         "configure",
         "installHooks",
@@ -681,7 +681,6 @@
       "features": [
         "generator",
         "custom-ui",
-        "elicitation",
         "stateful",
         "channels"
       ]

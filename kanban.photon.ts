@@ -213,12 +213,19 @@ export default class KanbanPhoton extends PhotonMCP {
   async *configure(params?: {
     projectsRoot?: string;
     wipLimit?: number;
+    autoPullEnabled?: boolean;
+    morningPullCount?: number;
+    staleTaskDays?: number;
   }): AsyncGenerator<any, { configured: boolean; config?: KanbanConfig }> {
-    // AI provided values directly - use them
-    if (params?.projectsRoot) {
+    // AI/UI provided values directly - merge with existing and save
+    if (params && Object.keys(params).length > 0) {
+      const existing = loadConfig();
       const config: KanbanConfig = {
-        projectsRoot: params.projectsRoot,
-        wipLimit: params.wipLimit ?? DEFAULT_WIP_LIMIT,
+        projectsRoot: params.projectsRoot ?? existing.projectsRoot,
+        wipLimit: params.wipLimit ?? existing.wipLimit ?? DEFAULT_WIP_LIMIT,
+        autoPullEnabled: params.autoPullEnabled ?? existing.autoPullEnabled,
+        morningPullCount: params.morningPullCount ?? existing.morningPullCount,
+        staleTaskDays: params.staleTaskDays ?? existing.staleTaskDays,
       };
       saveConfig(config);
       return { configured: true, config };
@@ -229,22 +236,9 @@ export default class KanbanPhoton extends PhotonMCP {
       return { configured: true, config: loadConfig() };
     }
 
-    // Human user - elicit values
-    const values: Record<string, any> = yield io.ask.form('Configure Kanban', {
-      type: 'object',
-      properties: {
-        projectsRoot: { type: 'string', title: 'Projects Root', default: DEFAULT_PROJECTS_ROOT },
-        wipLimit: { type: 'number', title: 'WIP Limit', default: DEFAULT_WIP_LIMIT, minimum: 1 },
-      },
-      required: ['projectsRoot'],
-    });
-
-    const config: KanbanConfig = {
-      projectsRoot: values?.projectsRoot || DEFAULT_PROJECTS_ROOT,
-      wipLimit: values?.wipLimit ?? DEFAULT_WIP_LIMIT,
-    };
-    saveConfig(config);
-    return { configured: true, config };
+    // No config and no params - return defaults without eliciting
+    // (elicitation happens in main() for first-time interactive setup)
+    return { configured: false, config: loadConfig() };
   }
 
 
@@ -932,8 +926,21 @@ process.exit(0);
    * @ui board
    */
   async *main(params?: { board?: string }) {
-    // Ensure configuration exists (will elicit if needed)
-    yield* this.configure();
+    // First-time setup: elicit projects root if no config exists
+    if (!existsSync(CONFIG_PATH)) {
+      const values: Record<string, any> = yield io.ask.form('Configure Kanban', {
+        type: 'object',
+        properties: {
+          projectsRoot: { type: 'string', title: 'Projects Root', default: DEFAULT_PROJECTS_ROOT },
+          wipLimit: { type: 'number', title: 'WIP Limit', default: DEFAULT_WIP_LIMIT, minimum: 1 },
+        },
+        required: ['projectsRoot'],
+      });
+      saveConfig({
+        projectsRoot: values?.projectsRoot || DEFAULT_PROJECTS_ROOT,
+        wipLimit: values?.wipLimit ?? DEFAULT_WIP_LIMIT,
+      });
+    }
 
     return this.loadBoard(params?.board || this.instanceName || 'default');
   }

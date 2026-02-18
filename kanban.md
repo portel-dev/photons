@@ -4,7 +4,7 @@ Project planning and task tracking - AI working memory across sessions - Human-A
 
 > **33 tools** · Streaming Photon · v2.1.0 · MIT
 
-**Platform Features:** `generator` `custom-ui` `elicitation` `stateful` `channels`
+**Platform Features:** `generator` `custom-ui` `stateful` `channels`
 
 ## ⚙️ Configuration
 
