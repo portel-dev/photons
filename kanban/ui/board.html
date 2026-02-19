@@ -146,6 +146,109 @@
       overflow: visible;
     }
 
+    .board-switcher {
+      position: relative;
+    }
+
+    .board-switcher-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .board-switcher-btn:hover {
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+    }
+
+    .board-menu {
+      position: absolute;
+      top: 100%;
+      margin-top: 4px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      min-width: 220px;
+      max-height: calc(100vh - 80px);
+      z-index: 100;
+      display: none;
+      overflow: hidden;
+    }
+
+    .board-menu.visible {
+      display: block;
+    }
+
+    .board-menu-header {
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .board-menu-list {
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .board-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 12px;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.1s ease;
+    }
+
+    .board-menu-item:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .board-menu-item.active {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent);
+    }
+
+    .board-menu-item .task-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .board-menu-item.active .task-count {
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    .board-menu-divider {
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .board-menu-new {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .board-menu-auto {
+      font-style: italic;
+    }
+
     .search-container {
       position: relative;
       flex: 1;
@@ -1688,6 +1791,10 @@
         font-size: 18px;
       }
 
+      .board-switcher {
+        margin-left: auto;
+      }
+
       .stats {
         display: flex;
         flex-wrap: wrap;
@@ -1725,7 +1832,8 @@
 
       /* Make settings button touch-friendly */
       .settings-btn,
-      .add-task-btn {
+      .add-task-btn,
+      .board-switcher-btn {
         min-width: 44px;
         min-height: 44px;
       }
@@ -1779,6 +1887,24 @@
   <div class="header">
     <div class="board-header-left">
       <h1 class="board-title" id="board-title" contenteditable="true" spellcheck="false" onclick="selectTitle()" onblur="saveTitle()" onkeydown="handleTitleKey(event)">Loading...</h1>
+      <div class="board-switcher">
+        <button class="board-switcher-btn" onclick="toggleBoardMenu()" title="Switch board">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </button>
+        <div class="board-menu" id="board-menu">
+          <div class="board-menu-header">Switch Board</div>
+          <div class="board-menu-list" id="board-menu-list"></div>
+          <div class="board-menu-divider"></div>
+          <button class="board-menu-item board-menu-new" onclick="showNewBoardModal(); closeBoardMenu();">
+            <span>+ New Board</span>
+          </button>
+        </div>
+      </div>
     </div>
     <div class="search-container">
       <input type="text" class="search-input" id="search-input" placeholder="Search tasks..." oninput="filterTasks(this.value)">
@@ -1899,6 +2025,27 @@
           <button type="button" class="btn btn-danger" id="delete-btn" style="display: none; margin-right: auto;" onclick="deleteTask()">Delete</button>
           <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
           <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- New Board Modal -->
+  <div class="modal-overlay" id="new-board-modal">
+    <div class="modal" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Board</h2>
+        <button class="modal-close" onclick="closeNewBoardModal()">&times;</button>
+      </div>
+      <form id="new-board-form" onsubmit="createNewBoard(event)">
+        <div class="form-group">
+          <label class="form-label" for="new-board-name">Board Name *</label>
+          <input type="text" class="form-input" id="new-board-name" required placeholder="e.g., my-project" pattern="[a-zA-Z0-9-_]+" title="Only letters, numbers, hyphens and underscores allowed">
+          <small style="color: var(--text-muted); font-size: 12px; margin-top: 4px; display: block;">Only letters, numbers, hyphens and underscores</small>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeNewBoardModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Board</button>
         </div>
       </form>
     </div>
@@ -2078,6 +2225,7 @@
       // Also try to report via MCP if available
       if (window.photon) {
         window.photon.invoke('reportError', {
+          board: currentInstanceName,
           error: errorInfo
         }).catch(() => {}); // Ignore if method doesn't exist
       }
@@ -2085,7 +2233,12 @@
 
     // Board state
     let board = window.__PHOTON_DATA__ || { columns: [], tasks: [] };
+    let currentInstanceName = board.name || 'default';
     let draggedTask = null;
+    let autoMode = false;
+    let autoModeInterval = null;
+    const AUTO_MODE_POLL_MS = 10000;
+    const BOARD_PREF_KEY = 'kanban:selectedBoard';
 
     // WIP and auto-pull state (fetched from getConfig/getStats)
     let wipLimit = 3;
@@ -2106,7 +2259,7 @@
       if (window.__MCP_APPS_CONTEXT__) return;
       window.parent.postMessage({
         type: 'photon:viewing',
-        itemId: board.name,
+        itemId: currentInstanceName,
         lastEventId: lastEventId
       }, '*');
     }
@@ -2115,6 +2268,7 @@
     document.addEventListener('DOMContentLoaded', async () => {
       renderBoard();
       updateStats();
+      await loadInstancesAndRestore();
       await fetchWipConfig();
     });
 
@@ -2123,8 +2277,10 @@
       const data = e.detail;
       if (data && (data.columns || data.tasks || data.name)) {
         board = data;
+        currentInstanceName = data.name || currentInstanceName;
         const titleEl = document.getElementById('board-title');
-        titleEl.textContent = board.name || 'Kanban';
+        const savedTitle = localStorage.getItem(`kanban:title:${currentInstanceName}`);
+        titleEl.textContent = savedTitle || currentInstanceName;
         renderBoard();
         updateStats();
         notifyViewingBoard();
@@ -2165,7 +2321,7 @@
           }
           // Extract board name from channel (e.g., "kanban:photon" -> "photon")
           const boardName = channel?.split(':')[1];
-          if (boardName === board.name && data) {
+          if (boardName === currentInstanceName && data) {
             applyBoardEvent(eventType, data);
           }
           return;
@@ -2178,8 +2334,9 @@
           if (pendingMoveOperation) {
             return;
           }
-          // Only refresh if it's the current board
-          if (updatedBoard === board.name) {
+          // In auto mode, always refresh (might need to switch boards)
+          // Otherwise, only refresh if it's the current board
+          if (autoMode || updatedBoard === currentInstanceName) {
             await refreshCurrentBoard();
           }
           return;
@@ -2344,8 +2501,10 @@
       try {
         const fullBoard = await window.photon.invoke('board', {});
         board = fullBoard;
+        currentInstanceName = board.name || currentInstanceName;
         renderBoard();
         updateStats();
+        await loadInstanceList();
 
         // Update detail modal if it's open
         if (currentDetailTaskId) {
@@ -2431,11 +2590,11 @@
       const titleEl = document.getElementById('board-title');
       const newTitle = titleEl.textContent.trim();
       if (newTitle) {
-        localStorage.setItem(`kanban:title:${board.name}`, newTitle);
+        localStorage.setItem(`kanban:title:${currentInstanceName}`, newTitle);
       } else {
         // Reset to board name if empty
-        titleEl.textContent = board.name;
-        localStorage.removeItem(`kanban:title:${board.name}`);
+        titleEl.textContent = currentInstanceName;
+        localStorage.removeItem(`kanban:title:${currentInstanceName}`);
       }
     }
 
@@ -2446,9 +2605,184 @@
       } else if (e.key === 'Escape') {
         e.preventDefault();
         // Restore saved title
-        const savedTitle = localStorage.getItem(`kanban:title:${board.name}`);
-        document.getElementById('board-title').textContent = savedTitle || board.name;
+        const savedTitle = localStorage.getItem(`kanban:title:${currentInstanceName}`);
+        document.getElementById('board-title').textContent = savedTitle || currentInstanceName;
         document.getElementById('board-title').blur();
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Board/Instance switching (uses Photon runtime _instances / _use)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Load instances and restore saved preference (or default to Auto)
+    async function loadInstancesAndRestore() {
+      if (!window.photon) return;
+      try {
+        const result = await window.photon.invoke('_instances', {});
+        const instances = result.instances || ['default'];
+        const current = result.current || 'default';
+        currentInstanceName = current;
+
+        const savedBoard = localStorage.getItem(BOARD_PREF_KEY);
+        const useAutoMode = !savedBoard || savedBoard === '__auto__';
+
+        if (useAutoMode) {
+          autoMode = true;
+        } else if (instances.includes(savedBoard)) {
+          // Saved instance exists, switch to it
+          await switchToInstance(savedBoard);
+        } else {
+          // Saved instance no longer exists, fall back to auto
+          localStorage.removeItem(BOARD_PREF_KEY);
+          autoMode = true;
+        }
+
+        updateBoardMenu(instances);
+        updateTitleFromInstance();
+      } catch (err) {
+        console.error('Failed to load instances:', err);
+      }
+    }
+
+    // Load instance list and update menu
+    async function loadInstanceList() {
+      if (!window.photon) return;
+      try {
+        const result = await window.photon.invoke('_instances', {});
+        const instances = result.instances || ['default'];
+        updateBoardMenu(instances);
+      } catch (err) {
+        console.error('Failed to load instances:', err);
+      }
+    }
+
+    // Update board menu with list of instances
+    function updateBoardMenu(instances) {
+      const menuList = document.getElementById('board-menu-list');
+      updateTitleFromInstance();
+
+      let html = `
+        <button class="board-menu-item board-menu-auto ${autoMode ? 'active' : ''}" onclick="selectAutoMode(); closeBoardMenu();">
+          <span>🔄 Auto${autoMode ? ` (${currentInstanceName})` : ''}</span>
+        </button>
+      `;
+
+      instances.forEach(name => {
+        const isActive = !autoMode && name === currentInstanceName;
+        html += `
+          <button class="board-menu-item ${isActive ? 'active' : ''}" onclick="selectInstance('${name}'); closeBoardMenu();">
+            <span>${name}</span>
+          </button>
+        `;
+      });
+
+      menuList.innerHTML = html;
+    }
+
+    function updateTitleFromInstance() {
+      const titleEl = document.getElementById('board-title');
+      const savedTitle = localStorage.getItem(`kanban:title:${currentInstanceName}`);
+      titleEl.textContent = savedTitle || currentInstanceName;
+    }
+
+    // Toggle board menu visibility
+    function toggleBoardMenu() {
+      const menu = document.getElementById('board-menu');
+      const btn = document.querySelector('.board-switcher-btn');
+      const isVisible = menu.classList.toggle('visible');
+      btn.setAttribute('aria-expanded', isVisible);
+
+      if (isVisible) {
+        const btnRect = btn.getBoundingClientRect();
+        const menuWidth = Math.max(220, menu.offsetWidth);
+        if (btnRect.left + menuWidth > window.innerWidth) {
+          menu.style.left = 'auto';
+          menu.style.right = '0';
+        } else {
+          menu.style.left = '0';
+          menu.style.right = 'auto';
+        }
+      }
+    }
+
+    function closeBoardMenu() {
+      const menu = document.getElementById('board-menu');
+      const btn = document.querySelector('.board-switcher-btn');
+      menu.classList.remove('visible');
+      btn?.setAttribute('aria-expanded', 'false');
+    }
+
+    // Switch to a specific instance using _use
+    async function switchToInstance(name) {
+      if (!window.photon) return;
+      try {
+        await window.photon.invoke('_use', { name: name });
+        currentInstanceName = name;
+        // Reload the board for the new instance
+        const fullBoard = await window.photon.invoke('board', {});
+        board = fullBoard;
+        notifyViewingBoard();
+        renderBoard();
+        updateStats();
+        await loadInstanceList();
+        await fetchWipConfig();
+      } catch (err) {
+        console.error('Failed to switch instance:', err);
+      }
+    }
+
+    // Select a specific instance (manual mode)
+    async function selectInstance(name) {
+      autoMode = false;
+      localStorage.setItem(BOARD_PREF_KEY, name);
+      if (name !== currentInstanceName) {
+        await switchToInstance(name);
+      }
+      await loadInstanceList();
+    }
+
+    // Enable auto mode
+    function selectAutoMode() {
+      autoMode = true;
+      localStorage.setItem(BOARD_PREF_KEY, '__auto__');
+      loadInstanceList();
+    }
+
+    // New board modal
+    function showNewBoardModal() {
+      document.getElementById('new-board-modal').classList.add('visible');
+      document.getElementById('new-board-name').focus();
+    }
+
+    function closeNewBoardModal() {
+      document.getElementById('new-board-modal').classList.remove('visible');
+      document.getElementById('new-board-form').reset();
+    }
+
+    async function createNewBoard(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-board-name').value.trim();
+      if (!name || !window.photon) return;
+
+      try {
+        // _use with a new name creates the instance
+        await window.photon.invoke('_use', { name: name });
+        currentInstanceName = name;
+        autoMode = false;
+        localStorage.setItem(BOARD_PREF_KEY, name);
+        closeNewBoardModal();
+
+        // Load the new (empty) board
+        const fullBoard = await window.photon.invoke('board', {});
+        board = fullBoard;
+        notifyViewingBoard();
+        renderBoard();
+        updateStats();
+        await loadInstanceList();
+      } catch (err) {
+        console.error('Failed to create new board:', err);
+        alert('Failed to create board: ' + err.message);
       }
     }
 
@@ -3729,6 +4063,21 @@
     document.getElementById('settings-modal').addEventListener('click', (e) => {
       if (e.target.id === 'settings-modal') {
         closeSettings();
+      }
+    });
+
+    document.getElementById('new-board-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'new-board-modal') {
+        closeNewBoardModal();
+      }
+    });
+
+    // Close board menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('board-menu');
+      const btn = document.querySelector('.board-switcher-btn');
+      if (menu.classList.contains('visible') && !menu.contains(e.target) && !btn.contains(e.target)) {
+        closeBoardMenu();
       }
     });
     // Toast notification system
