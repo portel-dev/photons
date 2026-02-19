@@ -38,7 +38,7 @@ Find documents in a collection
 ---
 
 
-### `findOne`
+### `get`
 
 Find a single document
 
@@ -55,7 +55,7 @@ Find a single document
 ---
 
 
-### `insertOne`
+### `insert`
 
 Insert a document
 
@@ -72,7 +72,7 @@ Insert a document
 ---
 
 
-### `insertMany`
+### `bulk`
 
 Insert multiple documents
 
@@ -89,7 +89,7 @@ Insert multiple documents
 ---
 
 
-### `updateOne`
+### `replace`
 
 Update a document
 
@@ -108,7 +108,7 @@ Update a document
 ---
 
 
-### `updateMany`
+### `update`
 
 Update multiple documents
 
@@ -126,7 +126,7 @@ Update multiple documents
 ---
 
 
-### `removeOne`
+### `remove`
 
 Delete a document
 
@@ -143,7 +143,7 @@ Delete a document
 ---
 
 
-### `removeMany`
+### `delete`
 
 Delete multiple documents
 
@@ -269,19 +269,19 @@ flowchart LR
         PHOTON((🎯))
         T0[📖 find]
         PHOTON --> T0
-        T1[📖 findOne]
+        T1[📖 get]
         PHOTON --> T1
-        T2[✏️ insertOne]
+        T2[✏️ insert]
         PHOTON --> T2
-        T3[✏️ insertMany]
+        T3[🔧 bulk]
         PHOTON --> T3
-        T4[🔄 updateOne]
+        T4[🔧 replace]
         PHOTON --> T4
-        T5[🔄 updateMany]
+        T5[🔄 update]
         PHOTON --> T5
-        T6[🗑️ removeOne]
+        T6[🗑️ remove]
         PHOTON --> T6
-        T7[🗑️ removeMany]
+        T7[🗑️ delete]
         PHOTON --> T7
         T8[🔧 aggregate]
         PHOTON --> T8

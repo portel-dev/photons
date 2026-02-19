@@ -54,7 +54,7 @@ export default class MongoDB {
    * @param filter Query filter (MongoDB query object)
    * @format card
    */
-  async findOne(params: { collection: string; filter: object }) {
+  async get(params: { collection: string; filter: object }) {
     const col = this.db.collection(params.collection);
     const document = await col.findOne(params.filter);
     if (!document) throw new Error('Document not found');
@@ -66,7 +66,7 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param document Document to insert
    */
-  async insertOne(params: { collection: string; document: object }) {
+  async insert(params: { collection: string; document: object }) {
     const col = this.db.collection(params.collection);
     const result = await col.insertOne(params.document);
     return { collection: params.collection, insertedId: result.insertedId.toString() };
@@ -77,7 +77,7 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param documents Array of documents to insert
    */
-  async insertMany(params: { collection: string; documents: object[] }) {
+  async bulk(params: { collection: string; documents: object[] }) {
     const col = this.db.collection(params.collection);
     const result = await col.insertMany(params.documents);
     return {
@@ -94,7 +94,7 @@ export default class MongoDB {
    * @param update Update operations (e.g., {"$set":{"name":"John"}})
    * @param upsert Create document if it doesn't exist
    */
-  async updateOne(params: { collection: string; filter: object; update: object; upsert?: boolean }) {
+  async replace(params: { collection: string; filter: object; update: object; upsert?: boolean }) {
     const col = this.db.collection(params.collection);
     const result = await col.updateOne(params.filter, params.update, { upsert: params.upsert ?? false });
     return {
@@ -111,7 +111,7 @@ export default class MongoDB {
    * @param filter Query filter to match documents
    * @param update Update operations
    */
-  async updateMany(params: { collection: string; filter: object; update: object }) {
+  async update(params: { collection: string; filter: object; update: object }) {
     const col = this.db.collection(params.collection);
     const result = await col.updateMany(params.filter, params.update);
     return {
@@ -126,7 +126,7 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter to match document
    */
-  async removeOne(params: { collection: string; filter: object }) {
+  async remove(params: { collection: string; filter: object }) {
     const col = this.db.collection(params.collection);
     const result = await col.deleteOne(params.filter);
     if (result.deletedCount === 0) throw new Error('No document matched the filter');
@@ -138,7 +138,7 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter to match documents
    */
-  async removeMany(params: { collection: string; filter: object }) {
+  async delete(params: { collection: string; filter: object }) {
     const col = this.db.collection(params.collection);
     const result = await col.deleteMany(params.filter);
     return { collection: params.collection, deletedCount: result.deletedCount };
@@ -240,7 +240,7 @@ export default class MongoDB {
 
   async testInsertFind() {
     if (!this.isConnected()) return { skipped: true, reason: 'MongoDB not connected' };
-    await this.insertOne({ collection: this.testCollection, document: { name: 'Test', value: 42 } });
+    await this.insert({ collection: this.testCollection, document: { name: 'Test', value: 42 } });
     const result = await this.find({ collection: this.testCollection, filter: { name: 'Test' } });
     if (result.count === 0) throw new Error('Document not found');
     if (result.documents[0].value !== 42) throw new Error('Wrong value');
@@ -256,8 +256,8 @@ export default class MongoDB {
 
   async testDelete() {
     if (!this.isConnected()) return { skipped: true, reason: 'MongoDB not connected' };
-    await this.insertOne({ collection: this.testCollection, document: { toDelete: true } });
-    const result = await this.removeOne({ collection: this.testCollection, filter: { toDelete: true } });
+    await this.insert({ collection: this.testCollection, document: { toDelete: true } });
+    const result = await this.remove({ collection: this.testCollection, filter: { toDelete: true } });
     if (result.deletedCount === 0) throw new Error('Document not deleted');
     return { passed: true };
   }

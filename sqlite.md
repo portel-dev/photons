@@ -52,7 +52,7 @@ Execute a SELECT query
 ---
 
 
-### `queryOne`
+### `one`
 
 Execute a SELECT and return first row
 
@@ -170,7 +170,7 @@ flowchart LR
         PHOTON --> T0
         T1[📖 query]
         PHOTON --> T1
-        T2[📖 queryOne]
+        T2[🔧 one]
         PHOTON --> T2
         T3[▶️ execute]
         PHOTON --> T3

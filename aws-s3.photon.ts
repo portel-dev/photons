@@ -93,7 +93,7 @@ export default class AwsS3 {
    * @param bucket Bucket name {@example my-old-bucket}
    * @icon 🗑️
    */
-  async bucketRemove(params: { bucket: string }) {
+  async drop(params: { bucket: string }) {
     await this.s3.send(new DeleteBucketCommand({ Bucket: params.bucket }));
     return { bucket: params.bucket, deleted: true };
   }
@@ -263,7 +263,7 @@ export default class AwsS3 {
    * @param keys Array of object keys to delete {@example ["old/file1.txt","old/file2.txt"]}
    * @icon 🗑️
    */
-  async deleteMany(params: { bucket: string; keys: string[] }) {
+  async purge(params: { bucket: string; keys: string[] }) {
     const response = await this.s3.send(
       new DeleteObjectsCommand({
         Bucket: params.bucket,

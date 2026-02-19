@@ -40,7 +40,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * List all available MCPs and their tools
    */
-  async discoverMCPs({ mcpNames }: { mcpNames?: string } = {}): Promise<MCPStatus[]> {
+  async discover({ mcpNames }: { mcpNames?: string } = {}): Promise<MCPStatus[]> {
     const names = mcpNames
       ? mcpNames.split(',').map((n) => n.trim())
       : ['tavily', 'browser', 'sequential-thinking', 'whatsapp', 'Shell'];
@@ -71,7 +71,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Check if a specific MCP is available
    */
-  async checkMCP({ mcpName }: { mcpName: string }): Promise<MCPStatus> {
+  async check({ mcpName }: { mcpName: string }): Promise<MCPStatus> {
     try {
       const client = this.mcp(mcpName);
       const tools = await client.list();
@@ -92,7 +92,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Call a tool on any MCP
    */
-  async callTool({
+  async call({
     mcpName,
     toolName,
     params,
@@ -126,7 +126,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Research Workflow - Combine search and browser MCPs
    */
-  async researchWorkflow({
+  async research({
     query,
     fetchContent = false,
     maxResults = 5,
@@ -210,7 +210,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Multi-Step Reasoning Workflow using sequential-thinking MCP
    */
-  async reasoningWorkflow({
+  async reason({
     problem,
     steps = 3,
   }: {
@@ -281,7 +281,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Shell Command Workflow - Execute system commands
    */
-  async shellWorkflow({
+  async shell({
     command,
     workingDir,
   }: {
@@ -332,7 +332,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Parallel MCP Execution - Call multiple MCPs concurrently
    */
-  async parallelExecution({ mcpCalls }: { mcpCalls: string }): Promise<WorkflowResult> {
+  async parallel({ mcpCalls }: { mcpCalls: string }): Promise<WorkflowResult> {
     const calls = JSON.parse(mcpCalls) as Array<{
       mcp: string;
       tool: string;
@@ -403,7 +403,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Chained MCP Workflow - Output from one MCP becomes input to another
    */
-  async chainedWorkflow({ steps }: { steps: string }): Promise<WorkflowResult> {
+  async chain({ steps }: { steps: string }): Promise<WorkflowResult> {
     const stepDefs = JSON.parse(steps) as Array<{
       mcp: string;
       tool: string;
@@ -471,7 +471,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Get detailed info about a specific MCP's tools
    */
-  async inspectMCP({ mcpName }: { mcpName: string }): Promise<any> {
+  async inspect({ mcpName }: { mcpName: string }): Promise<any> {
     try {
       const client = this.mcp(mcpName);
       const tools = await client.list();
@@ -498,7 +498,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * Find tools across multiple MCPs by keyword
    */
-  async findToolsAcrossMCPs({
+  async tools({
     query,
     mcpNames,
   }: {

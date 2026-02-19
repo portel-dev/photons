@@ -47,7 +47,7 @@ Create a new bucket
 ---
 
 
-### `bucketRemove`
+### `drop`
 
 Delete a bucket (must be empty)
 
@@ -172,7 +172,7 @@ Delete object from bucket
 ---
 
 
-### `deleteMany`
+### `purge`
 
 Delete multiple objects from bucket
 
@@ -222,7 +222,7 @@ flowchart LR
         PHOTON --> T0
         T1[🔧 bucket]
         PHOTON --> T1
-        T2[🔧 bucketRemove]
+        T2[🗑️ drop]
         PHOTON --> T2
         T3[📖 list]
         PHOTON --> T3
@@ -236,7 +236,7 @@ flowchart LR
         PHOTON --> T7
         T8[🗑️ delete]
         PHOTON --> T8
-        T9[🗑️ deleteMany]
+        T9[🔧 purge]
         PHOTON --> T9
         T10[🔧 presign]
         PHOTON --> T10

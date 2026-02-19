@@ -54,7 +54,7 @@ export default class SQLite {
    * @param params Query parameters
    * @format card
    */
-  async queryOne(params: { sql: string; params?: any[] }) {
+  async one(params: { sql: string; params?: any[] }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');
     const stmt = this.db.prepare(params.sql);
     return stmt.get(...(params.params ?? [])) ?? null;

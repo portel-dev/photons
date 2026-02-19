@@ -124,7 +124,7 @@ List calendars
 ---
 
 
-### `freeBusy`
+### `availability`
 
 Check free/busy
 
@@ -199,7 +199,7 @@ flowchart LR
         PHOTON --> T4
         T5[🔧 calendars]
         PHOTON --> T5
-        T6[🔧 freeBusy]
+        T6[🔧 availability]
         PHOTON --> T6
         T7[📖 search]
         PHOTON --> T7

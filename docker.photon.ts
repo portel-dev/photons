@@ -215,7 +215,7 @@ export default class DockerMCP {
    * @param force Force removal {@default false}
    * @icon 🗑️
    */
-  async imageRemove(params: { id: string; force?: boolean }) {
+  async drop(params: { id: string; force?: boolean }) {
     await this.docker.getImage(params.id).remove({ force: params.force || false });
     return { id: params.id, removed: true };
   }

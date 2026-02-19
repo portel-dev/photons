@@ -163,7 +163,7 @@ Pull an image
 ---
 
 
-### `imageRemove`
+### `drop`
 
 Remove an image
 
@@ -208,7 +208,7 @@ flowchart LR
         PHOTON --> T7
         T8[🔧 pull]
         PHOTON --> T8
-        T9[🔧 imageRemove]
+        T9[🗑️ drop]
         PHOTON --> T9
     end
 

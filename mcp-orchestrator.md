@@ -15,7 +15,7 @@ No configuration required.
 ## 🔧 Tools
 
 
-### `discoverMCPs`
+### `discover`
 
 List all available MCPs and their tools
 
@@ -26,7 +26,7 @@ List all available MCPs and their tools
 ---
 
 
-### `checkMCP`
+### `check`
 
 Check if a specific MCP is available
 
@@ -37,7 +37,7 @@ Check if a specific MCP is available
 ---
 
 
-### `callTool`
+### `call`
 
 Call a tool on any MCP
 
@@ -48,7 +48,7 @@ Call a tool on any MCP
 ---
 
 
-### `researchWorkflow`
+### `research`
 
 Research Workflow - Combine search and browser MCPs
 
@@ -59,7 +59,7 @@ Research Workflow - Combine search and browser MCPs
 ---
 
 
-### `reasoningWorkflow`
+### `reason`
 
 Multi-Step Reasoning Workflow using sequential-thinking MCP
 
@@ -70,7 +70,7 @@ Multi-Step Reasoning Workflow using sequential-thinking MCP
 ---
 
 
-### `shellWorkflow`
+### `shell`
 
 Shell Command Workflow - Execute system commands
 
@@ -81,7 +81,7 @@ Shell Command Workflow - Execute system commands
 ---
 
 
-### `parallelExecution`
+### `parallel`
 
 Parallel MCP Execution - Call multiple MCPs concurrently
 
@@ -92,7 +92,7 @@ Parallel MCP Execution - Call multiple MCPs concurrently
 ---
 
 
-### `chainedWorkflow`
+### `chain`
 
 Chained MCP Workflow - Output from one MCP becomes input to another
 
@@ -103,7 +103,7 @@ Chained MCP Workflow - Output from one MCP becomes input to another
 ---
 
 
-### `inspectMCP`
+### `inspect`
 
 Get detailed info about a specific MCP's tools
 
@@ -114,7 +114,7 @@ Get detailed info about a specific MCP's tools
 ---
 
 
-### `findToolsAcrossMCPs`
+### `tools`
 
 Find tools across multiple MCPs by keyword
 
@@ -135,25 +135,25 @@ flowchart LR
     subgraph mcp_orchestrator["📦 Mcp Orchestrator"]
         direction TB
         PHOTON((🎯))
-        T0[🔧 discoverMCPs]
+        T0[🔧 discover]
         PHOTON --> T0
-        T1[✅ checkMCP]
+        T1[✅ check]
         PHOTON --> T1
-        T2[🔧 callTool]
+        T2[🔧 call]
         PHOTON --> T2
-        T3[🔧 researchWorkflow]
+        T3[🔧 research]
         PHOTON --> T3
-        T4[🔧 reasoningWorkflow]
+        T4[🔧 reason]
         PHOTON --> T4
-        T5[🔧 shellWorkflow]
+        T5[🔧 shell]
         PHOTON --> T5
-        T6[🔧 parallelExecution]
+        T6[🔧 parallel]
         PHOTON --> T6
-        T7[🔧 chainedWorkflow]
+        T7[🔧 chain]
         PHOTON --> T7
-        T8[🔧 inspectMCP]
+        T8[🔧 inspect]
         PHOTON --> T8
-        T9[📖 findToolsAcrossMCPs]
+        T9[🔧 tools]
         PHOTON --> T9
     end
 ```

@@ -108,7 +108,7 @@ ${diagram}
    * @param style Diagram style {@choice linear,branching,structure} {@default linear}
    * @format mermaid
    */
-  async fromFile(params: {
+  async analyze(params: {
     path: string;
     type?: DiagramType;
     style?: DiagramStyle;

@@ -26,7 +26,7 @@ List all forms with submission counts
 ---
 
 
-### `formCreate`
+### `create`
 
 Create a new form with field definitions
 
@@ -37,7 +37,7 @@ Create a new form with field definitions
 ---
 
 
-### `formDelete`
+### `delete`
 
 Delete a form and all its submissions
 
@@ -70,7 +70,7 @@ Get a single submission detail
 ---
 
 
-### `submissionDelete`
+### `remove`
 
 Delete a submission
 
@@ -159,15 +159,15 @@ flowchart LR
         PHOTON((🎯))
         T0[🔧 forms]
         PHOTON --> T0
-        T1[🔧 formCreate]
+        T1[✏️ create]
         PHOTON --> T1
-        T2[🔧 formDelete]
+        T2[🗑️ delete]
         PHOTON --> T2
         T3[🔧 submissions]
         PHOTON --> T3
         T4[🔧 submission]
         PHOTON --> T4
-        T5[🔧 submissionDelete]
+        T5[🗑️ remove]
         PHOTON --> T5
         T6[📥 export]
         PHOTON --> T6

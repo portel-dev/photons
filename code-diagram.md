@@ -34,7 +34,7 @@ Generate diagram from code string
 ---
 
 
-### `fromFile`
+### `analyze`
 
 Generate diagram from file
 
@@ -75,7 +75,7 @@ flowchart LR
         PHOTON((🎯))
         T0[🔧 generate]
         PHOTON --> T0
-        T1[🔧 fromFile]
+        T1[🔧 analyze]
         PHOTON --> T1
         T2[🔧 types]
         PHOTON --> T2

@@ -80,7 +80,7 @@ export default class FormInboxPhoton extends PhotonMCP {
   /**
    * Create a new form with field definitions
    */
-  async formCreate(params: {
+  async create(params: {
     name: string;
     fields: FormField[];
     webhookSecret?: string;
@@ -108,7 +108,7 @@ export default class FormInboxPhoton extends PhotonMCP {
   /**
    * Delete a form and all its submissions
    */
-  async formDelete(params: { formId: string }): Promise<Form> {
+  async delete(params: { formId: string }): Promise<Form> {
     const data = this.loadData();
     const index = data.forms.findIndex(f => f.id === params.formId);
     if (index === -1) throw new Error(`Form not found: ${params.formId}`);
@@ -171,7 +171,7 @@ export default class FormInboxPhoton extends PhotonMCP {
   /**
    * Delete a submission
    */
-  async submissionDelete(params: { submissionId: string }): Promise<Submission> {
+  async remove(params: { submissionId: string }): Promise<Submission> {
     const data = this.loadData();
     const index = data.submissions.findIndex(s => s.id === params.submissionId);
     if (index === -1) throw new Error(`Submission not found: ${params.submissionId}`);

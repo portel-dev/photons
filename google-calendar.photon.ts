@@ -273,7 +273,7 @@ export default class GoogleCalendarPhoton {
    * @format list {@title email, @subtitle busy}
    * @icon ⏰
    */
-  async freeBusy(params: { emails: string[]; from: string; to: string }) {
+  async availability(params: { emails: string[]; from: string; to: string }) {
     const response = await this.calendar.freebusy.query({
       requestBody: {
         timeMin: params.from,

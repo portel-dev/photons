@@ -15,7 +15,7 @@ No configuration required.
 ## 🔧 Tools
 
 
-### `getPreferences`
+### `list`
 
 Get current user preferences
 
@@ -26,7 +26,7 @@ Get current user preferences
 ---
 
 
-### `getPreference`
+### `get`
 
 Get a specific preference value
 
@@ -70,7 +70,7 @@ Reset preferences to defaults
 ---
 
 
-### `importPreferences`
+### `import`
 
 Import preferences from JSON
 
@@ -81,7 +81,7 @@ Import preferences from JSON
 ---
 
 
-### `exportPreferences`
+### `export`
 
 Export current preferences as JSON
 

@@ -152,7 +152,7 @@ export default class Git {
    * @param path Repository path {@default .}
    * @param force Force delete if unmerged {@default false}
    */
-  async removeBranch(params: { name: string; path?: string; force?: boolean }) {
+  async delete(params: { name: string; path?: string; force?: boolean }) {
     const repoPath = this._resolvePath(params.path);
     this._validateRepo(repoPath);
 

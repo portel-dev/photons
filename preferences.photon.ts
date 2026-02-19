@@ -39,14 +39,14 @@ export default class PreferencesPhoton extends PhotonMCP {
    * Get current user preferences
    * @format json
    */
-  async getPreferences(): Promise<UserPreferences> {
+  async list(): Promise<UserPreferences> {
     return this.state.preferences;
   }
 
   /**
    * Get a specific preference value
    */
-  async getPreference(params: {
+  async get(params: {
     key: keyof UserPreferences;
   }): Promise<any> {
     return this.state.preferences[params.key];
@@ -219,7 +219,7 @@ export default class PreferencesPhoton extends PhotonMCP {
   /**
    * Import preferences from JSON
    */
-  async importPreferences(params: {
+  async import(params: {
     preferences: Partial<UserPreferences>;
   }): Promise<UserPreferences> {
     this.state.preferences = { ...this.state.preferences, ...params.preferences };
@@ -231,7 +231,7 @@ export default class PreferencesPhoton extends PhotonMCP {
    * Export current preferences as JSON
    * @format json
    */
-  async exportPreferences(): Promise<PreferencesState> {
+  async export(): Promise<PreferencesState> {
     return this.state;
   }
 }

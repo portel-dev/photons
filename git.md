@@ -121,7 +121,7 @@ Switch to a branch
 ---
 
 
-### `removeBranch`
+### `delete`
 
 Delete a branch
 
@@ -233,7 +233,7 @@ flowchart LR
         PHOTON --> T4
         T5[✅ checkout]
         PHOTON --> T5
-        T6[🗑️ removeBranch]
+        T6[🗑️ delete]
         PHOTON --> T6
         T7[✏️ add]
         PHOTON --> T7
