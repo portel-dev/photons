@@ -1,14 +1,14 @@
 /**
- * Demo Photon - Comprehensive feature demonstration
+ * Demo - Feature showcase
  *
- * Demonstrates all Photon runtime features with Node.js compatible syntax.
- * This version avoids TypeScript parameter properties for compatibility.
+ * Comprehensive demonstration of Photon runtime features: return types, parameters,
+ * progress indicators, user input (elicitation), state management, and UI formats.
  *
  * @version 1.0.0
- * @license MIT
  * @author Portel
+ * @license MIT
  * @icon 🎪
- * @tags demo, testing, features
+ * @tags demo, features, examples
  */
 
 import { io } from '@portel/photon-core';
@@ -19,296 +19,159 @@ interface User {
   email: string;
 }
 
-/**
- * Demo Photon showcasing Photon runtime features
- */
-export default class DemoPhoton {
-  private apiKey: string;
-  private counter: number;
-  private todos: string[];
+export default class Demo {
+  private counter: number = 0;
+  private todos: string[] = [];
 
-  constructor(apiKey: string = 'demo-key') {
-    this.apiKey = apiKey;
-    this.counter = 0;
-    this.todos = [];
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // BASIC RETURN TYPES
-  // ═══════════════════════════════════════════════════════════════
+  constructor(private apiKey: string = 'demo-key') {}
 
   /**
-   * Returns a simple string
+   * Echo a message
+   * @param message {@example Hello, Photon!}
    * @format primitive
    */
-  async getString(): Promise<string> {
-    return 'Hello from Photon!';
-  }
-
-  /**
-   * Returns a number
-   * @format primitive
-   */
-  async getNumber(): Promise<number> {
-    return 42;
-  }
-
-  /**
-   * Returns a boolean
-   * @format primitive
-   */
-  async getBoolean(): Promise<boolean> {
-    return true;
-  }
-
-  /**
-   * Returns an object
-   * @format card
-   */
-  async getObject(): Promise<{ message: string; timestamp: string }> {
-    return {
-      message: 'Success',
-      timestamp: new Date().toISOString(),
-    };
-  }
-
-  /**
-   * Returns an array
-   * @format list
-   */
-  async getArray(): Promise<string[]> {
-    return ['Apple', 'Banana', 'Cherry', 'Date'];
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // PARAMETERS
-  // ═══════════════════════════════════════════════════════════════
-
-  /**
-   * Echo back a message
-   * @param message The message to echo
-   * @format primitive
-   */
-  async echo(params: { message: string }): Promise<string> {
+  async echo(params: { message: string }) {
     return `Echo: ${params.message}`;
   }
 
   /**
    * Add two numbers
-   * @param a First number
-   * @param b Second number
+   * @param a {@example 5}
+   * @param b {@example 3}
    * @format primitive
    */
-  async add(params: { a: number; b: number }): Promise<number> {
+  async add(params: { a: number; b: number }) {
     return params.a + params.b;
   }
 
   /**
-   * Greet with optional name
-   * @param name Optional name (default: "World")
+   * Greet someone
+   * @param name {@example Alice}
    * @format primitive
    */
-  async greet(params: { name?: string }): Promise<string> {
-    const name = params.name || 'World';
-    return `Hello, ${name}!`;
+  async greet(params: { name?: string }) {
+    return `Hello, ${params.name || 'World'}!`;
   }
 
   /**
-   * Set log level
-   * @param level Log level to set
+   * Show progress with steps
+   * @param steps {@example 5}
    * @format primitive
    */
-  async setLogLevel(params: { level: 'debug' | 'info' | 'warn' | 'error' }): Promise<string> {
-    return `Log level set to: ${params.level}`;
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // PROGRESS INDICATORS
-  // ═══════════════════════════════════════════════════════════════
-
-  /**
-   * Demonstrates progress indicators
-   * @param steps Number of steps to execute
-   * @format primitive
-   */
-  async *showProgress(params: { steps?: number }): AsyncGenerator<any> {
+  async *showProgress(params: { steps?: number }) {
     const steps = params.steps || 5;
-
-    yield io.emit.status('Starting process...');
-    await new Promise(resolve => setTimeout(resolve, 500));
+    yield io.emit.status('Starting...');
+    await new Promise(r => setTimeout(r, 500));
 
     for (let i = 1; i <= steps; i++) {
-      yield io.emit.progress(i / steps, `Processing step ${i} of ${steps}`);
-      await new Promise(resolve => setTimeout(resolve, 300));
+      yield io.emit.progress(i / steps, `Step ${i}/${steps}`);
+      await new Promise(r => setTimeout(r, 300));
     }
 
-    yield io.emit.progress(1, 'Complete!');
-    return `Completed ${steps} steps successfully`;
+    return `Completed ${steps} steps!`;
   }
 
   /**
-   * Spinner progress (indeterminate)
+   * Interactive name prompt
    * @format primitive
    */
-  async *showSpinner(): AsyncGenerator<any> {
-    yield io.emit.status('Loading data...');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    yield io.emit.status('Processing...');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    yield io.emit.status('Finalizing...');
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    return 'Done!';
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  // ELICITATION (ASK/YIELD)
-  // ═══════════════════════════════════════════════════════════════
-
-  /**
-   * Ask for user's name interactively
-   * @format primitive
-   */
-  async *askName(): AsyncGenerator<any> {
+  async *askName() {
     const name = yield io.ask.text('What is your name?', { default: 'Anonymous' });
     const age = yield io.ask.text('How old are you?');
-
     return `Hello ${name}, you are ${age} years old!`;
   }
 
   /**
-   * Confirm action with user
+   * Confirmation prompt
    * @format primitive
    */
-  async *confirmAction(): AsyncGenerator<any> {
-    const confirmed = yield io.ask.confirm('Are you sure you want to continue?', { default: false });
-
-    if (confirmed) {
-      return 'Action confirmed and executed!';
-    } else {
-      return 'Action cancelled by user.';
-    }
+  async *confirmAction() {
+    const confirmed = yield io.ask.confirm('Continue?', { default: false });
+    return confirmed ? 'Action executed!' : 'Cancelled.';
   }
 
   /**
-   * Select from options
+   * Selection from options
    * @format primitive
    */
-  async *selectOption(): AsyncGenerator<any> {
-    const choice = yield io.ask.select('Choose your favorite color:', ['Red', 'Green', 'Blue', 'Yellow'], { default: 'Blue' });
-
+  async *selectOption() {
+    const choice = yield io.ask.select('Pick a color:', ['Red', 'Green', 'Blue', 'Yellow']);
     return `You selected: ${choice}`;
   }
 
   /**
-   * Multi-step form with progress
-   * @format primitive
+   * Multi-step registration form
+   * @format card
    */
-  async *multiStepForm(): AsyncGenerator<any> {
+  async *multiStepForm() {
     yield io.emit.status('Starting registration...');
+    const username = yield io.ask.text('Username:');
+    yield io.emit.progress(0.33, 'Step 1/3');
 
-    const username = yield io.ask.text('Enter username:');
+    const email = yield io.ask.text('Email:');
+    yield io.emit.progress(0.66, 'Step 2/3');
 
-    yield io.emit.progress(0.33, 'Step 1/3 complete');
-
-    const email = yield io.ask.text('Enter email:');
-
-    yield io.emit.progress(0.66, 'Step 2/3 complete');
-
-    const confirmed = yield io.ask.confirm(`Create account for ${username} (${email})?`, { default: true });
-
+    const confirmed = yield io.ask.confirm(`Create account for ${username}?`);
     yield io.emit.progress(1, 'Complete!');
 
-    if (confirmed) {
-      return {
-        success: true,
-        message: 'Account created successfully!',
-        username,
-        email,
-      };
-    } else {
-      return { success: false, message: 'Registration cancelled' };
-    }
+    return {
+      success: confirmed,
+      message: confirmed ? 'Account created!' : 'Cancelled',
+      username,
+      email,
+    };
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // STATE MANAGEMENT
-  // ═══════════════════════════════════════════════════════════════
-
   /**
-   * Counter with persistent state
-   * @param action Action to perform
+   * Counter state management
+   * @param action {@choice increment,decrement,reset,get}
    * @format json
    */
-  async counter(params: { action: 'increment' | 'decrement' | 'reset' | 'get' }): Promise<{ count: number; action: string }> {
+  async counter(params: { action: 'increment' | 'decrement' | 'reset' | 'get' }) {
     switch (params.action) {
-      case 'increment':
-        this.counter++;
-        break;
-      case 'decrement':
-        this.counter--;
-        break;
-      case 'reset':
-        this.counter = 0;
-        break;
-      case 'get':
-        break;
+      case 'increment': this.counter++; break;
+      case 'decrement': this.counter--; break;
+      case 'reset': this.counter = 0; break;
     }
     return { count: this.counter, action: params.action };
   }
 
   /**
-   * Todo list manager
-   * @param action Action to perform
-   * @param item Todo item text
+   * Todo management
+   * @param action {@choice add,remove,list,clear}
+   * @param item Optional item text
    * @format json
    */
-  async todos(params: {
-    action: 'add' | 'remove' | 'list' | 'clear';
-    item?: string;
-  }): Promise<{ todos: string[]; message: string }> {
+  async todos(params: { action: 'add' | 'remove' | 'list' | 'clear'; item?: string }) {
     switch (params.action) {
       case 'add':
-        if (params.item) {
-          this.todos.push(params.item);
-          return { todos: this.todos, message: `Added: ${params.item}` };
-        }
-        return { todos: this.todos, message: 'No item provided' };
+        if (!params.item) throw new Error('Item required');
+        this.todos.push(params.item);
+        return { todos: this.todos, message: `Added: ${params.item}` };
 
       case 'remove':
-        if (params.item) {
-          const index = this.todos.indexOf(params.item);
-          if (index > -1) {
-            this.todos.splice(index, 1);
-            return { todos: this.todos, message: `Removed: ${params.item}` };
-          }
-          return { todos: this.todos, message: 'Item not found' };
-        }
-        return { todos: this.todos, message: 'No item provided' };
+        if (!params.item) throw new Error('Item required');
+        const idx = this.todos.indexOf(params.item);
+        if (idx === -1) throw new Error('Item not found');
+        this.todos.splice(idx, 1);
+        return { todos: this.todos, message: `Removed: ${params.item}` };
 
       case 'clear':
+        const count = this.todos.length;
         this.todos = [];
-        return { todos: [], message: 'All todos cleared' };
+        return { todos: [], message: `Cleared ${count} items` };
 
       case 'list':
-        return { todos: this.todos, message: `${this.todos.length} todos` };
-
-      default:
-        return { todos: this.todos, message: 'Invalid action' };
+        return { todos: this.todos, message: `${this.todos.length} items` };
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // UI FORMATS
-  // ═══════════════════════════════════════════════════════════════
-
   /**
-   * Returns users as table
+   * Sample users table
+   * @autorun
    * @format table
    */
-  async getUsers(): Promise<User[]> {
+  async users() {
     return [
       { id: '1', name: 'Alice', email: 'alice@example.com' },
       { id: '2', name: 'Bob', email: 'bob@example.com' },
@@ -317,49 +180,45 @@ export default class DemoPhoton {
   }
 
   /**
-   * Returns markdown documentation
+   * Documentation in markdown
+   * @autorun
    * @format markdown
    */
-  async getDocs(): Promise<string> {
-    return `# Demo Photon Documentation
+  async docs() {
+    return `# Demo Photon
 
 ## Features
 
-This photon demonstrates:
-
-- **Basic Types**: String, number, boolean, object, array
+- **Return types**: Strings, numbers, objects, arrays
 - **Parameters**: Required, optional, enums
 - **Progress**: Spinners and progress bars
-- **Elicitation**: Interactive user input during execution
+- **Elicitation**: Interactive user input
 - **State**: Persistent data across calls
-- **UI Formats**: Tables, markdown, JSON
+- **UI formats**: Tables, markdown, JSON
 
-## Usage
+## Quick Start
 
 \`\`\`bash
-photon cli demo getString
+photon cli demo echo --message "Hello"
 photon cli demo add --a 5 --b 3
 photon cli demo showProgress --steps 10
 \`\`\`
 
-## Interactive Examples
+## Try These
 
-The following methods use elicitation:
-
-- \`askName\` - Asks for user information
-- \`confirmAction\` - Gets user confirmation
-- \`selectOption\` - Choice from list
+- \`askName\` - Interactive input
+- \`confirmAction\` - User confirmation
+- \`selectOption\` - Pick from list
 - \`multiStepForm\` - Multi-step workflow
-
-Try them in the playground for the best experience!
 `;
   }
 
   /**
-   * Returns hierarchical tree data
+   * Sample tree structure
+   * @autorun
    * @format tree
    */
-  async getTree(): Promise<any> {
+  async tree() {
     return {
       name: 'Project',
       children: [
@@ -377,30 +236,23 @@ Try them in the playground for the best experience!
           ],
         },
         { name: 'package.json', size: 256 },
-        { name: 'README.md', size: 1536 },
       ],
     };
   }
 
   /**
-   * Get configuration (demonstrates accessing constructor params)
+   * Get current config
+   * @autorun
    * @format json
    */
-  async getConfig(): Promise<{ apiKeySet: boolean; apiKeyLength: number }> {
+  async config() {
     return {
       apiKeySet: this.apiKey !== 'demo-key',
       apiKeyLength: this.apiKey.length,
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // PRIVATE METHODS (should not be exposed)
-  // ═══════════════════════════════════════════════════════════════
-
-  /**
-   * Private helper method - should not be exposed as a tool
-   */
-  async _privateMethod(): Promise<string> {
-    return 'This should not be visible';
+  async _privateMethod() {
+    return 'Hidden from tools';
   }
 }

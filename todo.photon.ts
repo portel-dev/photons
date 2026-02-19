@@ -1,15 +1,14 @@
 /**
  * Todo List - Reactive collections in action
  *
- * This photon demonstrates Photon's killer feature: reactive arrays.
- * Just use normal array methods (push, splice, filter) and the runtime
- * automatically emits events so connected UIs update in real-time.
+ * Demonstrates Photon's reactive arrays: just use normal array methods (push, splice,
+ * filter) and the runtime automatically emits events so connected UIs update in real-time.
  *
  * @version 1.0.0
- * @license MIT
  * @author Portel
+ * @license MIT
  * @icon ✅
- * @tags demo, reactive, collections, beginner
+ * @tags demo, reactive, collections
  */
 
 import { PhotonMCP } from '@portel/photon-core';
@@ -22,11 +21,13 @@ interface Task {
 }
 
 export default class TodoList extends PhotonMCP {
-  /** Reactive — any mutation auto-emits events to connected clients */
+  /** Reactive — mutations auto-emit events to connected UIs */
   items: Task[] = [];
 
   /**
    * Add a new task
+   * @param text {@example Buy groceries}
+   * @format json
    */
   add(text: string) {
     const task: Task = {
@@ -41,40 +42,45 @@ export default class TodoList extends PhotonMCP {
 
   /**
    * Mark a task as done
+   * @param id Task ID
+   * @format json
    */
   complete(id: string) {
     const task = this.items.find(t => t.id === id);
-    if (!task) return { error: 'Task not found' };
+    if (!task) throw new Error('Task not found');
     task.done = true;
     return task;
   }
 
   /**
    * Remove a task
+   * @param id Task ID
+   * @format json
    */
   remove(id: string) {
     const index = this.items.findIndex(t => t.id === id);
-    if (index === -1) return { error: 'Task not found' };
+    if (index === -1) throw new Error('Task not found');
     const [removed] = this.items.splice(index, 1);
-    return { removed };
+    return removed;
   }
 
   /**
    * List all tasks
+   * @autorun
+   * @format table
    */
   list() {
-    const pending = this.items.filter(t => !t.done);
-    const completed = this.items.filter(t => t.done);
-    return {
-      pending: pending.length,
-      completed: completed.length,
-      total: this.items.length,
-      tasks: this.items,
-    };
+    return this.items.map(t => ({
+      id: t.id,
+      text: t.text,
+      status: t.done ? 'Done' : 'Pending',
+      created: new Date(t.createdAt).toLocaleDateString(),
+    }));
   }
 
   /**
    * Clear all completed tasks
+   * @format json
    */
   clear() {
     const before = this.items.length;

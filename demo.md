@@ -1,8 +1,8 @@
-# Demo Photon
+# Demo
 
-Comprehensive feature demonstration Demonstrates all Photon runtime features with Node.js compatible syntax. This version avoids TypeScript parameter properties for compatibility.
+Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.
 
-> **21 tools** · Streaming Photon · v1.0.0 · MIT
+> **14 tools** · Streaming Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator`
 
@@ -11,7 +11,7 @@ Comprehensive feature demonstration Demonstrates all Photon runtime features wit
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `DEMO_PHOTON_APIKEY` | No | string | No description available (default: `demo-key`) |
+| `DEMO_APIKEY` | No | string | No description available (default: `demo-key`) |
 
 
 
@@ -19,69 +19,14 @@ Comprehensive feature demonstration Demonstrates all Photon runtime features wit
 ## 🔧 Tools
 
 
-### `getString`
-
-Returns a simple string
-
-
-
-
-
----
-
-
-### `getNumber`
-
-Returns a number
-
-
-
-
-
----
-
-
-### `getBoolean`
-
-Returns a boolean
-
-
-
-
-
----
-
-
-### `getObject`
-
-Returns an object
-
-
-
-
-
----
-
-
-### `getArray`
-
-Returns an array
-
-
-
-
-
----
-
-
 ### `echo`
 
-Echo back a message
+Echo a message
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `message` | string | Yes | The message to echo |
+| `message` | string | Yes | - (e.g. `Hello, Photon!`) |
 
 
 
@@ -97,8 +42,8 @@ Add two numbers
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `a` | number | Yes | First number |
-| `b` | number | Yes | Second number |
+| `a` | number | Yes | - (e.g. `5`) |
+| `b` | number | Yes | - (e.g. `3`) |
 
 
 
@@ -109,28 +54,12 @@ Add two numbers
 
 ### `greet`
 
-Greet with optional name
+Greet someone
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | No | Optional name |
-
-
-
-
-
----
-
-
-### `setLogLevel`
-
-Set log level
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `level` | 'debug' | 'info' | 'warn' | 'error' | Yes | Log level to set |
+| `name` | string | No | - (e.g. `Alice`) |
 
 
 
@@ -141,23 +70,12 @@ Set log level
 
 ### `showProgress` ⚡
 
-Demonstrates progress indicators
+Show progress with steps
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `steps` | number | No | Number of steps to execute |
-
-
-
-
-
----
-
-
-### `showSpinner` ⚡
-
-Spinner progress (indeterminate)
+| `steps` | number | No | - (e.g. `5`) |
 
 
 
@@ -168,7 +86,7 @@ Spinner progress (indeterminate)
 
 ### `askName` ⚡
 
-Ask for user's name interactively
+Interactive name prompt
 
 
 
@@ -179,7 +97,7 @@ Ask for user's name interactively
 
 ### `confirmAction` ⚡
 
-Confirm action with user
+Confirmation prompt
 
 
 
@@ -190,7 +108,7 @@ Confirm action with user
 
 ### `selectOption` ⚡
 
-Select from options
+Selection from options
 
 
 
@@ -201,7 +119,7 @@ Select from options
 
 ### `multiStepForm` ⚡
 
-Multi-step form with progress
+Multi-step registration form
 
 
 
@@ -212,12 +130,12 @@ Multi-step form with progress
 
 ### `counter`
 
-Counter with persistent state
+Counter state management
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `action` | 'increment' | 'decrement' | 'reset' | 'get' | Yes | Action to perform |
+| `action` | 'increment' | 'decrement' | 'reset' | 'get' | Yes | - [choice: increment,decrement,reset,get] |
 
 
 
@@ -228,13 +146,13 @@ Counter with persistent state
 
 ### `todos`
 
-Todo list manager
+Todo management
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `action` | 'add' | 'remove' | 'list' | 'clear' | Yes | Action to perform |
-| `item` | string | No | Todo item text |
+| `action` | 'add' | 'remove' | 'list' | 'clear' | Yes | - [choice: add,remove,list,clear] |
+| `item` | string | No | Optional item text |
 
 
 
@@ -243,20 +161,9 @@ Todo list manager
 ---
 
 
-### `getUsers`
+### `users`
 
-Returns users as table
-
-
-
-
-
----
-
-
-### `getDocs`
-
-Returns markdown documentation
+Sample users table
 
 
 
@@ -265,9 +172,9 @@ Returns markdown documentation
 ---
 
 
-### `getTree`
+### `docs`
 
-Returns hierarchical tree data
+Documentation in markdown
 
 
 
@@ -276,9 +183,20 @@ Returns hierarchical tree data
 ---
 
 
-### `getConfig`
+### `tree`
 
-Get configuration (demonstrates accessing constructor params)
+Sample tree structure
+
+
+
+
+
+---
+
+
+### `config`
+
+Get current config
 
 
 
@@ -297,48 +215,34 @@ flowchart LR
     subgraph demo["📦 Demo"]
         direction TB
         PHOTON((🎯))
-        T0[📖 getString]
+        T0[🔧 echo]
         PHOTON --> T0
-        T1[📖 getNumber]
+        T1[✏️ add]
         PHOTON --> T1
-        T2[📖 getBoolean]
+        T2[🔧 greet]
         PHOTON --> T2
-        T3[📖 getObject]
+        T3[🌊 showProgress (stream)]
         PHOTON --> T3
-        T4[📖 getArray]
+        T4[🌊 askName (stream)]
         PHOTON --> T4
-        T5[🔧 echo]
+        T5[🌊 confirmAction (stream)]
         PHOTON --> T5
-        T6[✏️ add]
+        T6[🌊 selectOption (stream)]
         PHOTON --> T6
-        T7[🔧 greet]
+        T7[🌊 multiStepForm (stream)]
         PHOTON --> T7
-        T8[✏️ setLogLevel]
+        T8[🔧 counter]
         PHOTON --> T8
-        T9[🌊 showProgress (stream)]
+        T9[🔧 todos]
         PHOTON --> T9
-        T10[🌊 showSpinner (stream)]
+        T10[🔧 users]
         PHOTON --> T10
-        T11[🌊 askName (stream)]
+        T11[🔧 docs]
         PHOTON --> T11
-        T12[🌊 confirmAction (stream)]
+        T12[🔧 tree]
         PHOTON --> T12
-        T13[🌊 selectOption (stream)]
+        T13[⚙️ config]
         PHOTON --> T13
-        T14[🌊 multiStepForm (stream)]
-        PHOTON --> T14
-        T15[🔧 counter]
-        PHOTON --> T15
-        T16[🔧 todos]
-        PHOTON --> T16
-        T17[📖 getUsers]
-        PHOTON --> T17
-        T18[📖 getDocs]
-        PHOTON --> T18
-        T19[📖 getTree]
-        PHOTON --> T19
-        T20[📖 getConfig]
-        PHOTON --> T20
     end
 ```
 

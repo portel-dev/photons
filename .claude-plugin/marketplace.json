@@ -118,7 +118,7 @@
     },
     {
       "name": "demo",
-      "description": "Demo Photon - Comprehensive feature demonstration Demonstrates all Photon runtime features with Node.js compatible syntax. This version avoids TypeScript parameter properties for compatibility.",
+      "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -352,7 +352,7 @@
     },
     {
       "name": "hello-world",
-      "description": "Hello World - The simplest possible photon Start here. A photon is just a TypeScript class where each method becomes an MCP tool. That's it.",
+      "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -442,7 +442,7 @@
     },
     {
       "name": "math",
-      "description": "Math Photon MCP - Advanced math expression evaluator Exposes a single, robust `calculate` method for AI/agent use. Supports arithmetic, power, sqrt, log, trig, min, max, sum, mean, median, std, abs, floor, ceil, round, random, and constants (PI, E). Example: calculate({ expression: \"mean([1,2,3,4]) + max(5, 10) - abs(-7)\" }) Run with: npx @portel/photon math --dev or install globally with: npm install -g @portel/photon photon math --dev",
+      "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -676,7 +676,7 @@
     },
     {
       "name": "time",
-      "description": "Time - Timezone and time conversion operations Provides timezone-aware time operations using native Node.js Intl API. Zero dependencies, uses JavaScript's built-in timezone support. Common use cases: - Current time queries: \"What time is it in Tokyo?\" - Time conversion: \"Convert 2pm EST to PST\" - Meeting scheduling: \"What's 9am in New York in London time?\" Example: getCurrentTime({ timezone: \"America/New_York\" }) Configuration: - local_timezone: Override system timezone (optional, IANA timezone name)",
+      "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -694,7 +694,7 @@
     },
     {
       "name": "todo",
-      "description": "Todo List - Reactive collections in action This photon demonstrates Photon's killer feature: reactive arrays. Just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
+      "description": "Todo List - Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -712,7 +712,7 @@
     },
     {
       "name": "weather",
-      "description": "Weather - Wrap any API in 20 lines Shows how a photon turns an external API into MCP tools with zero boilerplate. Uses the free Open-Meteo API (no API key needed).",
+      "description": "Weather - Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).",
       "source": "./",
       "strict": false,
       "hooks": [

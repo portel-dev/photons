@@ -1,6 +1,6 @@
 # Hello World
 
-The simplest possible photon Start here. A photon is just a TypeScript class where each method becomes an MCP tool. That's it.
+The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.
 
 > **0 tools** · API Photon · v1.0.0 · MIT
 

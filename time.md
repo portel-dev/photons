@@ -1,6 +1,6 @@
 # Time
 
-Timezone and time conversion operations Provides timezone-aware time operations using native Node.js Intl API. Zero dependencies, uses JavaScript's built-in timezone support. Common use cases: - Current time queries: "What time is it in Tokyo?" - Time conversion: "Convert 2pm EST to PST" - Meeting scheduling: "What's 9am in New York in London time?" Example: getCurrentTime({ timezone: "America/New_York" }) Configuration: - local_timezone: Override system timezone (optional, IANA timezone name)
+Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).
 
 > **3 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,13 +10,9 @@ Timezone and time conversion operations Provides timezone-aware time operations 
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `TIME_LOCAL_TIMEZONE` | No | string | Override system timezone (optional, IANA timezone name) |
+| `TIME_LOCAL_TIMEZONE` | No | string | No description available |
 
 
-
-### Setup Instructions
-
-- local_timezone: Override system timezone (optional, IANA timezone name)
 
 
 ## 🔧 Tools
@@ -24,12 +20,12 @@ Timezone and time conversion operations Provides timezone-aware time operations 
 
 ### `now`
 
-Current time in a specific timezone
+Current time in a timezone
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `timezone` | any | Yes | IANA timezone name (e.g. `America/New_York`) |
+| `timezone` | any | Yes | IANA timezone (e.g. `America/New_York`) |
 
 
 
@@ -40,15 +36,15 @@ Current time in a specific timezone
 
 ### `convert`
 
-Convert time from one timezone to another
+Convert time between timezones
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `source_timezone` | string | Yes | Source IANA timezone [min: 1, max: 100] (e.g. `America/New_York`) |
-| `time` | string | Yes | Time in 24-hour format (HH:MM) [min: 1, max: 10, format: time] (e.g. `14:30`) |
-| `target_timezone` | string | Yes | Target IANA timezone [min: 1, max: 100] (e.g. `Europe/London`) |
-| `date` | string | No | Date in YYYY-MM-DD format (optional, default: today) [max: 20, format: date] (e.g. `2024-03-15`) |
+| `source_timezone` | string | Yes | Source IANA timezone (e.g. `America/New_York`) |
+| `time` | string | Yes | Time in HH:MM format (e.g. `14:30`) |
+| `target_timezone` | string | Yes | Target IANA timezone (e.g. `Europe/London`) |
+| `date` | string | No | Date in YYYY-MM-DD format (e.g. `2024-03-15`) |
 
 
 
@@ -59,12 +55,12 @@ Convert time from one timezone to another
 
 ### `timezones`
 
-List common IANA timezones by region
+List common timezones
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `region` | any | Yes | Filter by region (e.g. `America`) |
+| `region` | any | Yes | Filter by region [choice: America,Europe,Asia,Africa,Pacific,Atlantic,Indian] |
 
 
 

@@ -1,6 +1,6 @@
 # Todo List
 
-Reactive collections in action This photon demonstrates Photon's killer feature: reactive arrays. Just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.
+Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.
 
 > **0 tools** · API Photon · v1.0.0 · MIT
 
