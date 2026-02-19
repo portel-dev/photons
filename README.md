@@ -36,44 +36,44 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|----------|
 | [**AWS S3**](aws-s3.md) | Cloud object storage | 11 | - |
 | [**Code Diagram**](code-diagram.md) | Mermaid visualization from source code | 3 | 🔌📦 |
-| [**Connect Four**](connect-four.md) | Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. | 8 | 🎨📡 |
+| [**Connect Four**](connect-four.md) | Play against AI with distributed locks | 8 | 🎨📡 |
 | [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 6 | 📡 |
-| [**Dashboard**](dashboard.md) | Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json | 6 | 🎨🎨 |
+| [**Dashboard**](dashboard.md) | Dashboard Photon | 6 | 🎨🎨 |
 | [**Data Sync Workflow**](data-sync.md) | Synchronizes data between sources | 3 | ⚡⚡ |
-| [**Demo**](demo.md) | Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats. | 14 | ⚡ |
+| [**Demo**](demo.md) | Feature showcase | 14 | ⚡ |
 | [**Deploy Pipeline**](deploy.md) | Multi-step workflow with checkpoints and approval gates | 3 | ⚡📡 |
 | [**Docker**](docker.md) | Container management | 10 | - |
 | [**Email**](email.md) | SMTP and IMAP email operations | 8 | - |
 | [**Expenses**](expenses.md) | Expenses — Track spending with budgets and summaries | 4 | - |
-| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. | 12 | ⚡📡 |
+| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 12 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
-| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output. | 27 | 📡 |
-| [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox ## Quick Reference ### Repository Management | Method | Description | |--------|-------------| | `repos` | List all tracked repositories | | `repoAdd` | Add a repository to track | | `repoRemove` | Remove a repository from tracking | | `repoInit` | Initialize a new git repository | | `availableRepos` | Scan projects folder for repos | | `projectsRootSet` | Set the projects root folder | ### Working Tree | Method | Description | |--------|-------------| | `status` | Get staged/unstaged/untracked files | | `fileStage` | Stage a file for commit | | `fileUnstage` | Unstage a file | | `changesDiscard` | Discard changes in a file | | `diff` | Get diff for a file | | `fileContent` | Get file content | ### Commits | Method | Description | |--------|-------------| | `commits` | Get commit history | | `commitFiles` | Get files changed in a commit | | `commitDiff` | Get diff for a file in a commit | | `commit` | Create a commit | | `commitRevert` | Revert a commit | | `commitReset` | Reset to a commit | | `commitRecover` | Recover a lost commit | | `commitFixup` | Amend staged changes into older commit | | `commitMessageAmend` | Amend an older commit's message | | `commitsSquash` | Squash multiple commits | | `commitsSearch` | Search commits | ### Branches | Method | Description | |--------|-------------| | `branches` | List all branches | | `branchCreate` | Create a new branch | | `branchCreateSwitch` | Create and switch to branch | | `branchSwitch` | Switch to a branch | | `branchDelete` | Delete a branch | | `branchMerge` | Merge a branch | | `mergeAbort` | Abort an in-progress merge | ### Remote Operations | Method | Description | |--------|-------------| | `pull` | Pull changes from remote | | `push` | Push changes to remote | | `fetch` | Fetch updates from remote | ### Stash | Method | Description | |--------|-------------| | `stashes` | List all stashes | | `stashCreate` | Create a stash | | `stashApply` | Apply a stash (keep it) | | `stashPop` | Apply and remove a stash | | `stashDrop` | Delete a stash | | `stashShow` | Show stash diff | | `stashesClear` | Clear all stashes | ### History & Undo | Method | Description | |--------|-------------| | `reflog` | Get git operation history | | `undoLast` | Undo last git operation | | `blame` | Get blame info for file | | `changeFind` | Find commit that introduced change | ### Rebase & Cherry-pick | Method | Description | |--------|-------------| | `rebasePreview` | Preview commits to rebase | | `rebaseScripted` | Perform scripted rebase | | `rebaseContinue` | Continue rebase | | `rebaseAbort` | Abort rebase | | `cherryPick` | Cherry-pick commits | | `cherryPickContinue` | Continue cherry-pick | | `cherryPickAbort` | Abort cherry-pick | | `revertAbort` | Abort revert | ### Conflicts | Method | Description | |--------|-------------| | `conflicts` | Get current conflicts | | `conflictResolve` | Resolve with ours/theirs | | `conflictMarkResolved` | Mark file as resolved | ### Advanced | Method | Description | |--------|-------------| | `fileRemoveFromHistory` | Remove file from all history | | 58 | ⚡🎨💬 |
+| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos | 27 | 📡 |
+| [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 58 | ⚡🎨💬 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage repository issues | 7 | - |
 | [**Google Calendar**](google-calendar.md) | Schedule and manage events | 9 | - |
-| [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 0 | - |
+| [**Hello World**](hello-world.md) | The simplest possible photon | 0 | - |
 | [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 5 | ⚡🎨 |
 | [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
-| [**Kanban**](kanban.md) | Kanban Board Photon Task management for humans and AI. Use named instances to create per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 26 | ⚡🎨📡 |
-| [**Kitchen Sink**](kitchen-sink.md) | Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons. | 25 | ⚡🎨 |
-| [**Calculator**](math.md) | Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc. | 1 | - |
+| [**Kanban**](kanban.md) | Kanban Board Photon | 26 | ⚡🎨📡 |
+| [**Kitchen Sink**](kitchen-sink.md) | Kitchen Sink Photon | 25 | ⚡🎨 |
+| [**Calculator**](math.md) | Math expression evaluator | 1 | - |
 | [**MCP Orchestrator**](mcp-orchestrator.md) | Combine multiple MCPs into powerful workflows | 10 | 🔌 |
 | [**MongoDB**](mongodb.md) | Flexible document-oriented database | 14 | - |
 | [**PostgreSQL**](postgres.md) | Powerful relational database | 7 | - |
 | [**Preferences Photon**](preferences.md) | MCP App with UI assets and settings | 7 | ⚡🎨💬⚡ |
-| [**Progressive Rendering**](progressive-rendering.md) | Same Data, Better Display Six methods return the same team data, each progressively enhanced. | 6 | - |
+| [**Progressive Rendering**](progressive-rendering.md) | Same Data, Better Display | 6 | - |
 | [**Redis**](redis.md) | High-performance in-memory data store | 18 | - |
 | [**Slack**](slack.md) | Send and manage messages | 7 | - |
 | [**SQLite**](sqlite.md) | File or in-memory SQL database | 9 | - |
-| [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
-| [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |
-| [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs. | 20 | 🎨🎨 |
+| [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list | 4 | - |
+| [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list | 4 | - |
+| [**Team Dashboard**](team-dashboard.md) | Team Dashboard Photon | 20 | 🎨🎨 |
 | [**Team Pulse**](team-pulse.md) | Team Pulse — Async standup with team feed | 4 | - |
-| [**Time**](time.md) | Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies). | 3 | - |
-| [**Todo List**](todo.md) | Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time. | 0 | - |
-| [**Weather**](weather.md) | Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required). | 2 | - |
+| [**Time**](time.md) | Timezone and time conversion | 3 | - |
+| [**Todo List**](todo.md) | Reactive collections in action | 0 | - |
+| [**Weather**](weather.md) | Current weather and forecasts | 2 | - |
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
 

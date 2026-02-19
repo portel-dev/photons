@@ -1,6 +1,6 @@
 # Progressive Rendering
 
-Same Data, Better Display Six methods return the same team data, each progressively enhanced.
+Same Data, Better Display
 
 > **6 tools** · API Photon · v1.0.0 · MIT
 

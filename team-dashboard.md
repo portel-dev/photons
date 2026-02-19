@@ -1,6 +1,6 @@
 # Team Dashboard
 
-Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs.
+Team Dashboard Photon
 
 > **20 tools** · API Photon · v1.0.0 · MIT
 

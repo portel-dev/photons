@@ -1,6 +1,6 @@
 # month, @value revenue}
 
-Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.
+Auto-UI Format Demos
 
 > **27 tools** · API Photon · v1.0.0 · MIT
 

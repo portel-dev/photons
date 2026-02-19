@@ -1,6 +1,6 @@
 # Kitchen Sink
 
-Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons.
+Kitchen Sink Photon
 
 > **25 tools** · Streaming Photon · v1.0.0 · MIT
 

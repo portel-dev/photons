@@ -1,6 +1,6 @@
 # Kanban
 
-Kanban Board Photon Task management for humans and AI. Use named instances to create per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.
+Kanban Board Photon
 
 > **26 tools** · Streaming Photon · v3.0.0 · MIT
 

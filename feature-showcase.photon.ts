@@ -4,6 +4,17 @@
  * Demonstrates every major Photon runtime feature with test methods
  * to prove each one works. Run `photon test feature-showcase` to verify.
  *
+ * Features covered:
+ * - Lifecycle hooks (onInitialize, onShutdown)
+ * - configure() / getConfig() convention
+ * - All io.emit types (status, progress, stream, log, toast, thinking, artifact)
+ * - All io.ask types (text, password, confirm, select, number, file, date, form)
+ * - @Template methods (MCP prompts)
+ * - @format annotations (primitive, json, table, markdown)
+ * - Private _helper methods (hidden from tools)
+ * - Instance state across calls
+ * - this.emit() for pub/sub
+ *
  * @version 1.0.0
  * @author Portel
  * @license MIT

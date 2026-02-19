@@ -55,12 +55,12 @@
     {
       "name": "connect-four",
       "version": "1.0.0",
-      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.",
+      "description": "Connect Four - Play against AI with distributed locks",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:3fc8e6e3d6486c8eed5e576af73054eac04fe488e07166c05d04bda8b754f668",
+      "hash": "sha256:3bf743ebe01f17bc103a483669afa5fb73acb16f50fff97b85f34aa6ff9d7996",
       "tools": [
         "start",
         "drop",
@@ -107,7 +107,7 @@
     {
       "name": "dashboard",
       "version": "1.0.0",
-      "description": "Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json",
+      "description": "Dashboard Photon",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
@@ -156,7 +156,7 @@
     {
       "name": "demo",
       "version": "1.0.0",
-      "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
+      "description": "Demo - Feature showcase",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎪",
@@ -278,12 +278,12 @@
     {
       "name": "feature-showcase",
       "version": "1.0.0",
-      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.",
+      "description": "Feature Showcase - Core Runtime Feature Demos",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎯",
       "source": "../feature-showcase.photon.ts",
-      "hash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
+      "hash": "sha256:d321364598b07e4ca734cc75340654a372b782b012e316b684931390eedefb23",
       "tools": [
         "configure",
         "getConfig",
@@ -365,7 +365,7 @@
     {
       "name": "format-showcase",
       "version": "1.0.0",
-      "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
+      "description": "Format Showcase - Auto-UI Format Demos",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎨",
@@ -409,7 +409,7 @@
     {
       "name": "git-box",
       "version": "2.0.0",
-      "description": "Git Box - Mailbox-style Git interface, manage repos like an inbox ## Quick Reference ### Repository Management | Method | Description | |--------|-------------| | `repos` | List all tracked repositories | | `repoAdd` | Add a repository to track | | `repoRemove` | Remove a repository from tracking | | `repoInit` | Initialize a new git repository | | `availableRepos` | Scan projects folder for repos | | `projectsRootSet` | Set the projects root folder | ### Working Tree | Method | Description | |--------|-------------| | `status` | Get staged/unstaged/untracked files | | `fileStage` | Stage a file for commit | | `fileUnstage` | Unstage a file | | `changesDiscard` | Discard changes in a file | | `diff` | Get diff for a file | | `fileContent` | Get file content | ### Commits | Method | Description | |--------|-------------| | `commits` | Get commit history | | `commitFiles` | Get files changed in a commit | | `commitDiff` | Get diff for a file in a commit | | `commit` | Create a commit | | `commitRevert` | Revert a commit | | `commitReset` | Reset to a commit | | `commitRecover` | Recover a lost commit | | `commitFixup` | Amend staged changes into older commit | | `commitMessageAmend` | Amend an older commit's message | | `commitsSquash` | Squash multiple commits | | `commitsSearch` | Search commits | ### Branches | Method | Description | |--------|-------------| | `branches` | List all branches | | `branchCreate` | Create a new branch | | `branchCreateSwitch` | Create and switch to branch | | `branchSwitch` | Switch to a branch | | `branchDelete` | Delete a branch | | `branchMerge` | Merge a branch | | `mergeAbort` | Abort an in-progress merge | ### Remote Operations | Method | Description | |--------|-------------| | `pull` | Pull changes from remote | | `push` | Push changes to remote | | `fetch` | Fetch updates from remote | ### Stash | Method | Description | |--------|-------------| | `stashes` | List all stashes | | `stashCreate` | Create a stash | | `stashApply` | Apply a stash (keep it) | | `stashPop` | Apply and remove a stash | | `stashDrop` | Delete a stash | | `stashShow` | Show stash diff | | `stashesClear` | Clear all stashes | ### History & Undo | Method | Description | |--------|-------------| | `reflog` | Get git operation history | | `undoLast` | Undo last git operation | | `blame` | Get blame info for file | | `changeFind` | Find commit that introduced change | ### Rebase & Cherry-pick | Method | Description | |--------|-------------| | `rebasePreview` | Preview commits to rebase | | `rebaseScripted` | Perform scripted rebase | | `rebaseContinue` | Continue rebase | | `rebaseAbort` | Abort rebase | | `cherryPick` | Cherry-pick commits | | `cherryPickContinue` | Continue cherry-pick | | `cherryPickAbort` | Abort cherry-pick | | `revertAbort` | Abort revert | ### Conflicts | Method | Description | |--------|-------------| | `conflicts` | Get current conflicts | | `conflictResolve` | Resolve with ours/theirs | | `conflictMarkResolved` | Mark file as resolved | ### Advanced | Method | Description | |--------|-------------| | `fileRemoveFromHistory` | Remove file from all history |",
+      "description": "Git Box - Mailbox-style Git interface, manage repos like an inbox",
       "author": "Portel",
       "license": "MIT",
       "icon": "📬",
@@ -560,7 +560,7 @@
     {
       "name": "hello-world",
       "version": "1.0.0",
-      "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
+      "description": "Hello World - The simplest possible photon",
       "author": "Portel",
       "license": "MIT",
       "icon": "👋",
@@ -626,12 +626,12 @@
     {
       "name": "kanban",
       "version": "3.0.0",
-      "description": "Kanban Board Photon Task management for humans and AI. Use named instances to create per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
+      "description": "Kanban Board Photon",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:5e670128150f2234122ed574ce16310ffb50575d41ad14c32e65ef6486a1e1bf",
+      "hash": "sha256:69e9d9d464dab0570ae71335d54796cb67fab08858fd022f290a5a9a4fe7d310",
       "tools": [
         "configure",
         "hooks",
@@ -674,7 +674,7 @@
     {
       "name": "kitchen-sink",
       "version": "1.0.0",
-      "description": "Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons.",
+      "description": "Kitchen Sink Photon",
       "author": "Portel",
       "license": "MIT",
       "icon": "🍳",
@@ -721,7 +721,7 @@
     {
       "name": "math",
       "version": "1.1.0",
-      "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
+      "description": "Calculator - Math expression evaluator",
       "author": "Portel",
       "license": "MIT",
       "icon": "🧮",
@@ -847,7 +847,7 @@
     {
       "name": "progressive-rendering",
       "version": "1.0.0",
-      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
+      "description": "Progressive Rendering - Same Data, Better Display",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎨",
@@ -947,7 +947,7 @@
     {
       "name": "tasks-basic",
       "version": "1.0.0",
-      "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
+      "description": "Tasks Basic — Stateless task list",
       "author": "Portel",
       "license": "MIT",
       "icon": "📝",
@@ -966,7 +966,7 @@
     {
       "name": "tasks-live",
       "version": "1.0.0",
-      "description": "Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.",
+      "description": "Tasks Live — Persistent reactive task list",
       "author": "Portel",
       "license": "MIT",
       "icon": "✅",
@@ -987,7 +987,7 @@
     {
       "name": "team-dashboard",
       "version": "1.0.0",
-      "description": "Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs.",
+      "description": "Team Dashboard Photon",
       "author": "Portel",
       "license": "MIT",
       "icon": "📺",
@@ -1048,7 +1048,7 @@
     {
       "name": "time",
       "version": "1.0.0",
-      "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
+      "description": "Time - Timezone and time conversion",
       "author": "Portel",
       "license": "MIT",
       "icon": "🕐",
@@ -1066,7 +1066,7 @@
     {
       "name": "todo",
       "version": "1.0.0",
-      "description": "Todo List - Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
+      "description": "Todo List - Reactive collections in action",
       "author": "Portel",
       "license": "MIT",
       "icon": "✅",
@@ -1080,7 +1080,7 @@
     {
       "name": "weather",
       "version": "1.0.0",
-      "description": "Weather - Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).",
+      "description": "Weather - Current weather and forecasts",
       "author": "Portel",
       "license": "MIT",
       "icon": "🌤️",

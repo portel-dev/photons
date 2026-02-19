@@ -1,6 +1,6 @@
 # Feature Showcase
 
-Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.
+Core Runtime Feature Demos
 
 > **12 tools** · Streaming Photon · v1.0.0 · MIT
 

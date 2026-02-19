@@ -1,6 +1,6 @@
 # Demo
 
-Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.
+Feature showcase
 
 > **14 tools** · Streaming Photon · v1.0.0 · MIT
 
