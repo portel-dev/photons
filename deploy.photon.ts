@@ -2,6 +2,9 @@
  * Deploy Pipeline - Multi-step workflow with checkpoints and approval gates
  *
  * @description Resumable deployment pipeline with elicitation
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
  * @tags demo, stateful, elicitation, progress
  * @icon 🚀
  * @stateful

@@ -46,7 +46,7 @@
     },
     {
       "name": "connect-four",
-      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. ## Quick Reference - `start` - Start a new game - `drop` - Drop your disc into a column (1-7) - `board` - View current board state - `games` - List your games - `stats` - Win/loss statistics",
+      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -208,7 +208,7 @@
     },
     {
       "name": "feature-showcase",
-      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. Features covered: - Lifecycle hooks (onInitialize, onShutdown) - configure() / getConfig() convention - All io.emit types (status, progress, stream, log, toast, thinking, artifact) - All io.ask types (text, password, confirm, select, number, file, date, form) - @Template methods (MCP prompts) - @format annotations (primitive, json, table, markdown) - Private _helper methods (hidden from tools) - Instance state across calls - this.emit() for pub/sub",
+      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -406,7 +406,7 @@
     },
     {
       "name": "kanban",
-      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for: - Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks ## Quick Reference **Tasks:** - `add()` - Create new task - `list()` - List tasks (with filters) - `show()` - Get single task with comments - `mine()` - Get tasks assigned to AI - `edit()` - Update task details - `move()` - Move task to column - `drop()` - Delete a task - `reorder()` - Reorder within column - `search()` - Search tasks by keyword - `sweep()` - Move multiple tasks at once **Comments & Dependencies:** - `comment()` - Add comment to task - `comments()` - Get task comments - `block()` - Set/remove task dependencies **Board Management:** - `board()` - Get full board state - `column()` - Add or remove a column - `stats()` - Get board statistics - `clear()` - Archive completed tasks - `hooks()` - Install Claude Code hooks - `configure()` - Configure settings",
+      "description": "Kanban Board Photon Task management for humans and AI. Use named instances to create per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
       "source": "./",
       "strict": false,
       "hooks": [

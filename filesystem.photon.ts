@@ -95,7 +95,7 @@ export default class Filesystem {
 
     const stats = await fs.stat(filePath);
     if (stats.isDirectory()) {
-      throw new Error('Path is a directory, use rmdir instead');
+      throw new Error('Path is a directory, use remove-dir instead');
     }
 
     await fs.unlink(filePath);

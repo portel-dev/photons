@@ -2,7 +2,7 @@
 
 Multi-step workflow with checkpoints and approval gates
 
-> **3 tools** · Streaming Photon · v1.9.0 · MIT
+> **3 tools** · Streaming Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator` `stateful` `channels`
 
@@ -94,4 +94,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.9.0
+MIT · v1.0.0 · Portel

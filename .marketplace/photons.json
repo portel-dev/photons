@@ -55,12 +55,12 @@
     {
       "name": "connect-four",
       "version": "1.0.0",
-      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. ## Quick Reference - `start` - Start a new game - `drop` - Drop your disc into a column (1-7) - `board` - View current board state - `games` - List your games - `stats` - Win/loss statistics",
+      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:3bf743ebe01f17bc103a483669afa5fb73acb16f50fff97b85f34aa6ff9d7996",
+      "hash": "sha256:3fc8e6e3d6486c8eed5e576af73054eac04fe488e07166c05d04bda8b754f668",
       "tools": [
         "start",
         "drop",
@@ -186,13 +186,13 @@
     },
     {
       "name": "deploy",
-      "version": "1.9.0",
+      "version": "1.0.0",
       "description": "Deploy Pipeline - Multi-step workflow with checkpoints and approval gates",
-      "author": "Unknown",
+      "author": "Portel",
       "license": "MIT",
       "icon": "🚀",
       "source": "../deploy.photon.ts",
-      "hash": "sha256:dd90032bc240a090151f72c9cf57239c33d935a7bea69a7175b2949ba4f6a3f9",
+      "hash": "sha256:561d340df44d4a5221f208c5e0a8f8e253f21dea63fd0e03832bf9f9fe48a462",
       "tools": [
         "run",
         "status",
@@ -278,12 +278,12 @@
     {
       "name": "feature-showcase",
       "version": "1.0.0",
-      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. Features covered: - Lifecycle hooks (onInitialize, onShutdown) - configure() / getConfig() convention - All io.emit types (status, progress, stream, log, toast, thinking, artifact) - All io.ask types (text, password, confirm, select, number, file, date, form) - @Template methods (MCP prompts) - @format annotations (primitive, json, table, markdown) - Private _helper methods (hidden from tools) - Instance state across calls - this.emit() for pub/sub",
+      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎯",
       "source": "../feature-showcase.photon.ts",
-      "hash": "sha256:d321364598b07e4ca734cc75340654a372b782b012e316b684931390eedefb23",
+      "hash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
       "tools": [
         "configure",
         "getConfig",
@@ -313,7 +313,7 @@
       "license": "MIT",
       "icon": "📁",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:5cce4d0d0056476c9c5944d85d855e36e8541ef6bc755467502c654313322304",
+      "hash": "sha256:8e242643cadc872068bac5b49064596f1bfea3866509fb8e8cc7f349629e0570",
       "tools": [
         "read",
         "write",
@@ -626,12 +626,12 @@
     {
       "name": "kanban",
       "version": "3.0.0",
-      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for: - Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks ## Quick Reference **Tasks:** - `add()` - Create new task - `list()` - List tasks (with filters) - `show()` - Get single task with comments - `mine()` - Get tasks assigned to AI - `edit()` - Update task details - `move()` - Move task to column - `drop()` - Delete a task - `reorder()` - Reorder within column - `search()` - Search tasks by keyword - `sweep()` - Move multiple tasks at once **Comments & Dependencies:** - `comment()` - Add comment to task - `comments()` - Get task comments - `block()` - Set/remove task dependencies **Board Management:** - `board()` - Get full board state - `column()` - Add or remove a column - `stats()` - Get board statistics - `clear()` - Archive completed tasks - `hooks()` - Install Claude Code hooks - `configure()` - Configure settings",
+      "description": "Kanban Board Photon Task management for humans and AI. Use named instances to create per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:69e9d9d464dab0570ae71335d54796cb67fab08858fd022f290a5a9a4fe7d310",
+      "hash": "sha256:5e670128150f2234122ed574ce16310ffb50575d41ad14c32e65ef6486a1e1bf",
       "tools": [
         "configure",
         "hooks",
