@@ -1,158 +1,139 @@
 /**
- * GitHub Issues - Manage GitHub repository issues
- *
- * Provides tools to list, create, update, and comment on GitHub issues.
- * Requires a GitHub personal access token with repo scope.
- *
- * Common use cases:
- * - Issue tracking: "List all open issues in my repo"
- * - Bug reporting: "Create a new bug issue with details"
- * - Issue management: "Close issue #123 and add a comment"
- *
- * Example: listIssues({ owner: "user", repo: "project", state: "open" })
- *
- * Configuration:
- * - token: GitHub personal access token (required)
- * - baseUrl: GitHub API base URL (default: https://api.github.com)
- *
- * Dependencies are auto-installed on first run.
- *
- * @dependencies @octokit/rest@^20.0.0
- *
+ * GitHub Issues - Manage repository issues
  * @version 1.1.0
  * @author Portel
  * @license MIT
  * @icon 🐙
  * @tags github, issues, tracking
+ * @dependencies @octokit/rest@^20.0.0
  */
 
 import { Octokit } from '@octokit/rest';
 
-export default class GitHubIssues {
+interface Issue {
+  number: number;
+  title: string;
+  state: string;
+  body?: string;
+  labels: string[];
+  user?: string;
+  assignees?: string[];
+  created_at: string;
+  updated_at: string;
+  comments: number;
+  html_url: string;
+}
+
+interface Comment {
+  id: number;
+  body: string;
+  user?: string;
+  created_at: string;
+  updated_at: string;
+  html_url: string;
+}
+
+export default class GitHubIssuesPhoton {
   private octokit: Octokit;
 
   constructor(
     private token: string,
     private baseUrl: string = 'https://api.github.com'
   ) {
-    if (!token || token.trim() === '') {
+    if (!token?.trim()) {
       throw new Error('GitHub token is required');
     }
-
-    this.octokit = new Octokit({
-      auth: token,
-      baseUrl,
-    });
-  }
-
-  async onInitialize() {
-    console.error('[github-issues] ✅ Initialized');
-    console.error(`[github-issues] Base URL: ${this.baseUrl}`);
+    this.octokit = new Octokit({ auth: token, baseUrl });
   }
 
   /**
-   * List issues in a repository
-   * @param owner Repository owner (username or organization)
+   * List issues
+   * @param owner Repository owner
    * @param repo Repository name
-   * @param state Issue state filter (default: all)
-   * @param labels Comma-separated label names to filter by
-   * @param sort Sort by created, updated, or comments (default: created)
-   * @param per_page Number of results per page (default: 30, max: 100)
+   * @param state Filter {@choice open,closed,all} {@default open}
+   * @param labels Filter labels (comma-separated)
+   * @param sort Sort by {@choice created,updated,comments} {@default created}
+   * @param limit Results (default: 30) {@min 1} {@max 100}
+   * @format list {@title title, @subtitle number, @badge state}
+   * @autorun
+   * @icon 📋
    */
-  async listIssues(params: {
+  async list(params: {
     owner: string;
     repo: string;
     state?: 'open' | 'closed' | 'all';
     labels?: string;
     sort?: 'created' | 'updated' | 'comments';
-    per_page?: number;
+    limit?: number;
   }) {
-    try {
-      const response = await this.octokit.issues.listForRepo({
-        owner: params.owner,
-        repo: params.repo,
-        state: params.state || 'all',
-        labels: params.labels,
-        sort: params.sort || 'created',
-        per_page: params.per_page || 30,
-      });
+    const response = await this.octokit.issues.listForRepo({
+      owner: params.owner,
+      repo: params.repo,
+      state: params.state || 'open',
+      labels: params.labels,
+      sort: params.sort || 'created',
+      per_page: params.limit || 30,
+    });
 
-      const issues = response.data.map(issue => ({
-        number: issue.number,
-        title: issue.title,
-        state: issue.state,
-        body: issue.body,
-        labels: issue.labels.map((l: any) => (typeof l === 'string' ? l : l.name)),
-        user: issue.user?.login,
-        created_at: issue.created_at,
-        updated_at: issue.updated_at,
-        comments: issue.comments,
-        html_url: issue.html_url,
-      }));
-
-      return {
-        success: true,
-        count: issues.length,
-        issues,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      count: response.data.length,
+      issues: response.data.map(i => ({
+        number: i.number,
+        title: i.title,
+        state: i.state,
+        body: i.body,
+        labels: i.labels.map((l: any) => (typeof l === 'string' ? l : l.name)),
+        user: i.user?.login,
+        created_at: i.created_at,
+        updated_at: i.updated_at,
+        comments: i.comments,
+        html_url: i.html_url,
+      })) as Issue[],
+    };
   }
 
   /**
-   * Get a single issue by number
+   * Get issue
    * @param owner Repository owner
    * @param repo Repository name
-   * @param issue_number Issue number
+   * @param number Issue number
+   * @format card
+   * @icon 📖
    */
-  async getIssue(params: { owner: string; repo: string; issue_number: number }) {
-    try {
-      const response = await this.octokit.issues.get({
-        owner: params.owner,
-        repo: params.repo,
-        issue_number: params.issue_number,
-      });
+  async get(params: { owner: string; repo: string; number: number }) {
+    const response = await this.octokit.issues.get({
+      owner: params.owner,
+      repo: params.repo,
+      issue_number: params.number,
+    });
 
-      const issue = response.data;
-
-      return {
-        success: true,
-        issue: {
-          number: issue.number,
-          title: issue.title,
-          state: issue.state,
-          body: issue.body,
-          labels: issue.labels.map((l: any) => (typeof l === 'string' ? l : l.name)),
-          user: issue.user?.login,
-          assignees: issue.assignees?.map(a => a.login),
-          created_at: issue.created_at,
-          updated_at: issue.updated_at,
-          comments: issue.comments,
-          html_url: issue.html_url,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    const issue = response.data;
+    return {
+      number: issue.number,
+      title: issue.title,
+      state: issue.state,
+      body: issue.body,
+      labels: issue.labels.map((l: any) => (typeof l === 'string' ? l : l.name)),
+      user: issue.user?.login,
+      assignees: issue.assignees?.map(a => a.login),
+      created_at: issue.created_at,
+      updated_at: issue.updated_at,
+      comments: issue.comments,
+      html_url: issue.html_url,
+    } as Issue;
   }
 
   /**
-   * Create a new issue
+   * Create issue
    * @param owner Repository owner
    * @param repo Repository name
    * @param title Issue title
-   * @param body Issue description/body
-   * @param labels Array of label names
-   * @param assignees Array of usernames to assign
+   * @param body Description {@field textarea}
+   * @param labels Label names (JSON array, optional)
+   * @param assignees Assignees (JSON array, optional)
+   * @icon ✨
    */
-  async createIssue(params: {
+  async create(params: {
     owner: string;
     repo: string;
     title: string;
@@ -160,197 +141,154 @@ export default class GitHubIssues {
     labels?: string[];
     assignees?: string[];
   }) {
-    try {
-      const response = await this.octokit.issues.create({
-        owner: params.owner,
-        repo: params.repo,
-        title: params.title,
-        body: params.body,
-        labels: params.labels,
-        assignees: params.assignees,
-      });
+    const response = await this.octokit.issues.create({
+      owner: params.owner,
+      repo: params.repo,
+      title: params.title,
+      body: params.body,
+      labels: params.labels,
+      assignees: params.assignees,
+    });
 
-      return {
-        success: true,
-        issue: {
-          number: response.data.number,
-          title: response.data.title,
-          html_url: response.data.html_url,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      number: response.data.number,
+      title: response.data.title,
+      html_url: response.data.html_url,
+    };
   }
 
   /**
-   * Update an existing issue
+   * Update issue
    * @param owner Repository owner
    * @param repo Repository name
-   * @param issue_number Issue number to update
+   * @param number Issue number
    * @param title New title (optional)
-   * @param body New body (optional)
-   * @param state New state: open or closed (optional)
-   * @param labels New labels (optional)
+   * @param body New description (optional) {@field textarea}
+   * @param state New state (optional) {@choice open,closed}
+   * @param labels New labels (JSON array, optional)
+   * @icon ✏️
    */
-  async updateIssue(params: {
+  async update(params: {
     owner: string;
     repo: string;
-    issue_number: number;
+    number: number;
     title?: string;
     body?: string;
     state?: 'open' | 'closed';
     labels?: string[];
   }) {
-    try {
-      const response = await this.octokit.issues.update({
-        owner: params.owner,
-        repo: params.repo,
-        issue_number: params.issue_number,
-        title: params.title,
-        body: params.body,
-        state: params.state,
-        labels: params.labels,
-      });
+    const response = await this.octokit.issues.update({
+      owner: params.owner,
+      repo: params.repo,
+      issue_number: params.number,
+      title: params.title,
+      body: params.body,
+      state: params.state,
+      labels: params.labels,
+    });
 
-      return {
-        success: true,
-        issue: {
-          number: response.data.number,
-          title: response.data.title,
-          state: response.data.state,
-          html_url: response.data.html_url,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      number: response.data.number,
+      title: response.data.title,
+      state: response.data.state,
+      html_url: response.data.html_url,
+    };
   }
 
   /**
-   * Add a comment to an issue
+   * Add comment
    * @param owner Repository owner
    * @param repo Repository name
-   * @param issue_number Issue number
-   * @param body Comment text
+   * @param number Issue number
+   * @param body Comment text {@field textarea}
+   * @icon 💬
    */
-  async addComment(params: {
+  async comment(params: {
     owner: string;
     repo: string;
-    issue_number: number;
+    number: number;
     body: string;
   }) {
-    try {
-      const response = await this.octokit.issues.createComment({
-        owner: params.owner,
-        repo: params.repo,
-        issue_number: params.issue_number,
-        body: params.body,
-      });
+    const response = await this.octokit.issues.createComment({
+      owner: params.owner,
+      repo: params.repo,
+      issue_number: params.number,
+      body: params.body,
+    });
 
-      return {
-        success: true,
-        comment: {
-          id: response.data.id,
-          body: response.data.body,
-          user: response.data.user?.login,
-          created_at: response.data.created_at,
-          html_url: response.data.html_url,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      id: response.data.id,
+      body: response.data.body,
+      user: response.data.user?.login,
+      created_at: response.data.created_at,
+      html_url: response.data.html_url,
+    } as Comment;
   }
 
   /**
-   * List comments on an issue
+   * List comments
    * @param owner Repository owner
    * @param repo Repository name
-   * @param issue_number Issue number
+   * @param number Issue number
+   * @format list {@title body, @subtitle user, @badge created_at}
+   * @autorun
+   * @icon 💭
    */
-  async listComments(params: { owner: string; repo: string; issue_number: number }) {
-    try {
-      const response = await this.octokit.issues.listComments({
-        owner: params.owner,
-        repo: params.repo,
-        issue_number: params.issue_number,
-      });
+  async comments(params: { owner: string; repo: string; number: number }) {
+    const response = await this.octokit.issues.listComments({
+      owner: params.owner,
+      repo: params.repo,
+      issue_number: params.number,
+    });
 
-      const comments = response.data.map(comment => ({
-        id: comment.id,
-        body: comment.body,
-        user: comment.user?.login,
-        created_at: comment.created_at,
-        updated_at: comment.updated_at,
-        html_url: comment.html_url,
-      }));
-
-      return {
-        success: true,
-        count: comments.length,
-        comments,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      count: response.data.length,
+      comments: response.data.map(c => ({
+        id: c.id,
+        body: c.body,
+        user: c.user?.login,
+        created_at: c.created_at,
+        updated_at: c.updated_at,
+        html_url: c.html_url,
+      })) as Comment[],
+    };
   }
 
   /**
-   * Search issues across repositories
-   * @param query Search query (e.g., "is:open label:bug")
-   * @param sort Sort by created, updated, or comments (default: created)
-   * @param order Sort order: asc or desc (default: desc)
-   * @param per_page Number of results per page (default: 30)
+   * Search issues
+   * @param query Search query
+   * @param sort Sort by {@choice created,updated,comments}
+   * @param order Order {@choice asc,desc} {@default desc}
+   * @param limit Results (default: 30) {@min 1} {@max 100}
+   * @format list {@title title, @subtitle repository, @badge state}
+   * @icon 🔍
    */
-  async searchIssues(params: {
+  async search(params: {
     query: string;
     sort?: 'created' | 'updated' | 'comments';
     order?: 'asc' | 'desc';
-    per_page?: number;
+    limit?: number;
   }) {
-    try {
-      const response = await this.octokit.search.issuesAndPullRequests({
-        q: params.query,
-        sort: params.sort,
-        order: params.order || 'desc',
-        per_page: params.per_page || 30,
-      });
+    const response = await this.octokit.search.issuesAndPullRequests({
+      q: params.query,
+      sort: params.sort,
+      order: params.order || 'desc',
+      per_page: params.limit || 30,
+    });
 
-      const issues = response.data.items.map(issue => ({
-        number: issue.number,
-        title: issue.title,
-        state: issue.state,
-        repository: issue.repository_url.split('/').slice(-2).join('/'),
-        labels: issue.labels.map((l: any) => (typeof l === 'string' ? l : l.name)),
-        user: issue.user?.login,
-        created_at: issue.created_at,
-        html_url: issue.html_url,
-      }));
-
-      return {
-        success: true,
-        total_count: response.data.total_count,
-        count: issues.length,
-        issues,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      total: response.data.total_count,
+      count: response.data.items.length,
+      issues: response.data.items.map(i => ({
+        number: i.number,
+        title: i.title,
+        state: i.state,
+        repository: i.repository_url.split('/').slice(-2).join('/'),
+        labels: i.labels.map((l: any) => (typeof l === 'string' ? l : l.name)),
+        user: i.user?.login,
+        created_at: i.created_at,
+        html_url: i.html_url,
+      })),
+    };
   }
 }

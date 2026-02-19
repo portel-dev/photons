@@ -17,7 +17,7 @@ No configuration required.
 
 ### `scheduledHeartbeat`
 
-Heartbeat - writes timestamp to state file every minute. When the daemon runs this photon, the heartbeat proves scheduled execution works. Check with `status()` to see last run time.
+Heartbeat - writes timestamp to state file every minute
 
 
 
@@ -28,13 +28,7 @@ Heartbeat - writes timestamp to state file every minute. When the daemon runs th
 
 ### `handleWebhook`
 
-Receive a webhook payload and echo it back with metadata. In daemon mode, this is exposed as a POST endpoint. The handler echoes the payload with added timestamp and processing info.
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `payload` | Record<string | Yes | The webhook body (any JSON) |
-| `source` | string | No | Optional source identifier |
+Receive a webhook payload and echo it back with metadata
 
 
 
@@ -45,12 +39,7 @@ Receive a webhook payload and echo it back with metadata. In daemon mode, this i
 
 ### `critical`
 
-A critical operation protected by a distributed lock. The @locked annotation ensures only one invocation runs at a time. Other callers wait until the lock is released.
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `operation` | string | Yes | Name of the operation |
+Critical operation with distributed lock
 
 
 
@@ -61,13 +50,7 @@ A critical operation protected by a distributed lock. The @locked annotation ens
 
 ### `protect`
 
-Demonstrates manual distributed locking with this.withLock(). Unlike @locked which auto-wraps the entire method, withLock() gives fine-grained control over which section is locked.
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `resource` | string | Yes | Resource identifier to lock on |
-| `value` | number | Yes | Value to process inside the lock |
+Manual distributed locking with this.withLock()
 
 
 
@@ -78,14 +61,7 @@ Demonstrates manual distributed locking with this.withLock(). Unlike @locked whi
 
 ### `publish`
 
-Publish a message to a named channel. Other photons or clients subscribed to this channel will receive the event via the daemon's pub/sub system.
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `channel` | string | Yes | Channel name to publish to |
-| `message` | string | Yes | Message content |
-| `priority` | 'low' | 'normal' | 'high' | No | Priority level |
+Publish a message to a named channel
 
 
 

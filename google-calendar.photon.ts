@@ -1,33 +1,28 @@
 /**
- * Google Calendar - Calendar integration
- *
- * Provides calendar operations using Google Calendar API (OAuth2).
- * Supports event management, calendar listing, and free/busy queries.
- *
- * Common use cases:
- * - Event management: "Schedule a meeting tomorrow at 2pm", "What's on my calendar today?"
- * - Availability: "Check when John is free this week"
- * - Search: "Find all meetings with Sarah"
- *
- * Example: list({ maxResults: 10 })
- *
- * Configuration:
- * - clientId: OAuth2 client ID from Google Cloud Console
- * - clientSecret: OAuth2 client secret
- * - refreshToken: OAuth2 refresh token (obtain via OAuth flow)
- *
- * @dependencies googleapis@^128.0.0
+ * Google Calendar - Schedule and manage events
  * @version 1.0.0
  * @author Portel
  * @license MIT
  * @icon 📅
  * @tags google, calendar, scheduling
+ * @dependencies googleapis@^128.0.0
  */
 
 import { google, calendar_v3 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
-export default class GoogleCalendar {
+interface CalendarEvent {
+  id: string;
+  summary: string;
+  description?: string;
+  start?: string | { dateTime: string; timeZone: string };
+  end?: string | { dateTime: string; timeZone: string };
+  location?: string;
+  attendees?: Array<{ email: string; displayName?: string; responseStatus?: string }>;
+  htmlLink: string;
+}
+
+export default class GoogleCalendarPhoton {
   private oauth2Client: OAuth2Client;
   private calendar: calendar_v3.Calendar;
 
@@ -46,118 +41,96 @@ export default class GoogleCalendar {
     this.calendar = google.calendar({ version: 'v3', auth: this.oauth2Client });
   }
 
-  async onInitialize() {
-    try {
-      // Test authentication by listing calendars
-      await this.calendar.calendarList.list({ maxResults: 1 });
-      console.error('[calendar] ✅ Authenticated with Google Calendar');
-    } catch (error: any) {
-      console.error('[calendar] ❌ Authentication failed:', error.message);
-      throw error;
-    }
-  }
-
   /**
-   * List upcoming events
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
-   * @param maxResults {@min 1} {@max 100} Maximum number of events to return (default: 10)
-   * @param timeMin {@format date-time} Start time (ISO 8601, default: now) {@example 2024-03-15T09:00:00Z}
-   * @param timeMax {@format date-time} End time (ISO 8601, optional) {@example 2024-03-20T18:00:00Z}
+   * List events
+   * @param calendar Calendar ID (default: primary)
+   * @param limit Results (default: 10) {@min 1} {@max 100}
+   * @param from Start time (ISO 8601, optional)
+   * @param to End time (ISO 8601, optional)
+   * @format list {@title summary, @subtitle start, @badge location}
+   * @autorun
+   * @icon 📋
    */
   async list(params?: {
-    calendarId?: string;
-    maxResults?: number;
-    timeMin?: string;
-    timeMax?: string;
+    calendar?: string;
+    limit?: number;
+    from?: string;
+    to?: string;
   }) {
-    try {
-      const response = await this.calendar.events.list({
-        calendarId: params?.calendarId || 'primary',
-        maxResults: params?.maxResults || 10,
-        timeMin: params?.timeMin || new Date().toISOString(),
-        timeMax: params?.timeMax,
-        singleEvents: true,
-        orderBy: 'startTime',
-      });
+    const response = await this.calendar.events.list({
+      calendarId: params?.calendar || 'primary',
+      maxResults: params?.limit || 10,
+      timeMin: params?.from || new Date().toISOString(),
+      timeMax: params?.to,
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
 
-      const events = response.data.items || [];
+    const events = response.data.items || [];
 
-      return {
-        success: true,
-        count: events.length,
-        events: events.map((event) => ({
-          id: event.id,
-          summary: event.summary,
-          description: event.description,
-          start: event.start?.dateTime || event.start?.date,
-          end: event.end?.dateTime || event.end?.date,
-          location: event.location,
-          attendees: event.attendees?.map((a) => ({
-            email: a.email,
-            responseStatus: a.responseStatus,
-          })),
-          htmlLink: event.htmlLink,
+    return {
+      count: events.length,
+      events: events.map(e => ({
+        id: e.id,
+        summary: e.summary,
+        description: e.description,
+        start: e.start?.dateTime || e.start?.date,
+        end: e.end?.dateTime || e.end?.date,
+        location: e.location,
+        attendees: e.attendees?.map(a => ({
+          email: a.email,
+          displayName: a.displayName,
+          responseStatus: a.responseStatus,
         })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+        htmlLink: e.htmlLink,
+      })),
+    };
   }
 
   /**
-   * Get a specific event
-   * @param eventId {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * Get event
+   * @param id Event ID
+   * @param calendar Calendar ID (default: primary)
+   * @format card
+   * @icon 📖
    */
-  async get(params: { eventId: string; calendarId?: string }) {
-    try {
-      const response = await this.calendar.events.get({
-        calendarId: params.calendarId || 'primary',
-        eventId: params.eventId,
-      });
+  async get(params: { id: string; calendar?: string }) {
+    const response = await this.calendar.events.get({
+      calendarId: params.calendar || 'primary',
+      eventId: params.id,
+    });
 
-      const event = response.data;
+    const e = response.data;
 
-      return {
-        success: true,
-        event: {
-          id: event.id,
-          summary: event.summary,
-          description: event.description,
-          start: event.start?.dateTime || event.start?.date,
-          end: event.end?.dateTime || event.end?.date,
-          location: event.location,
-          attendees: event.attendees?.map((a) => ({
-            email: a.email,
-            displayName: a.displayName,
-            responseStatus: a.responseStatus,
-          })),
-          organizer: event.organizer,
-          htmlLink: event.htmlLink,
-          created: event.created,
-          updated: event.updated,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      id: e.id,
+      summary: e.summary,
+      description: e.description,
+      start: e.start?.dateTime || e.start?.date,
+      end: e.end?.dateTime || e.end?.date,
+      location: e.location,
+      attendees: e.attendees?.map(a => ({
+        email: a.email,
+        displayName: a.displayName,
+        responseStatus: a.responseStatus,
+      })),
+      organizer: e.organizer,
+      htmlLink: e.htmlLink,
+      created: e.created,
+      updated: e.updated,
+    } as CalendarEvent & { organizer?: any; created?: string; updated?: string };
   }
 
   /**
-   * Create a new event
-   * @param summary {@min 1} {@max 200} Event title {@example Team Meeting}
-   * @param start {@min 1} {@format date-time} Start time (ISO 8601) {@example 2024-03-15T14:00:00Z}
-   * @param end {@min 1} {@format date-time} End time (ISO 8601) {@example 2024-03-15T15:00:00Z}
-   * @param description {@max 5000} Event description (optional) {@example Quarterly planning session}
-   * @param location {@max 500} Event location (optional) {@example Conference Room A}
-   * @param attendees {@min 1} Array of attendee email addresses (optional) {@example ["user@example.com","colleague@company.com"]}
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * Create event
+   * @param summary Title
+   * @param start Start time (ISO 8601) {@example 2024-03-15T14:00:00Z}
+   * @param end End time (ISO 8601) {@example 2024-03-15T15:00:00Z}
+   * @param description Description (optional) {@field textarea}
+   * @param location Location (optional)
+   * @param attendees Attendee emails (JSON array, optional)
+   * @param calendar Calendar ID (default: primary)
+   * @icon ✨
    */
   async create(params: {
     summary: string;
@@ -166,60 +139,44 @@ export default class GoogleCalendar {
     description?: string;
     location?: string;
     attendees?: string[];
-    calendarId?: string;
+    calendar?: string;
   }) {
-    try {
-      const event: calendar_v3.Schema$Event = {
-        summary: params.summary,
-        description: params.description,
-        location: params.location,
-        start: {
-          dateTime: params.start,
-          timeZone: 'UTC',
-        },
-        end: {
-          dateTime: params.end,
-          timeZone: 'UTC',
-        },
-      };
+    const event: calendar_v3.Schema$Event = {
+      summary: params.summary,
+      description: params.description,
+      location: params.location,
+      start: { dateTime: params.start, timeZone: 'UTC' },
+      end: { dateTime: params.end, timeZone: 'UTC' },
+    };
 
-      if (params.attendees && params.attendees.length > 0) {
-        event.attendees = params.attendees.map((email) => ({ email }));
-      }
-
-      const response = await this.calendar.events.insert({
-        calendarId: params.calendarId || 'primary',
-        requestBody: event,
-        sendUpdates: 'all', // Send invitation emails
-      });
-
-      return {
-        success: true,
-        event: {
-          id: response.data.id,
-          summary: response.data.summary,
-          start: response.data.start?.dateTime,
-          end: response.data.end?.dateTime,
-          htmlLink: response.data.htmlLink,
-        },
-        message: 'Event created successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
+    if (params.attendees?.length) {
+      event.attendees = params.attendees.map(email => ({ email }));
     }
+
+    const response = await this.calendar.events.insert({
+      calendarId: params.calendar || 'primary',
+      requestBody: event,
+      sendUpdates: 'all',
+    });
+
+    return {
+      id: response.data.id,
+      summary: response.data.summary,
+      start: response.data.start?.dateTime,
+      end: response.data.end?.dateTime,
+      htmlLink: response.data.htmlLink,
+    };
   }
 
   /**
-   * Update an existing event
-   * @param eventId {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
-   * @param updates Object containing fields to update
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * Update event
+   * @param id Event ID
+   * @param updates Fields to update (JSON object)
+   * @param calendar Calendar ID (default: primary)
+   * @icon ✏️
    */
   async update(params: {
-    eventId: string;
+    id: string;
     updates: {
       summary?: string;
       description?: string;
@@ -228,235 +185,179 @@ export default class GoogleCalendar {
       end?: string;
       attendees?: string[];
     };
-    calendarId?: string;
+    calendar?: string;
   }) {
-    try {
-      // First get the existing event
-      const existingEvent = await this.calendar.events.get({
-        calendarId: params.calendarId || 'primary',
-        eventId: params.eventId,
-      });
+    const existing = await this.calendar.events.get({
+      calendarId: params.calendar || 'primary',
+      eventId: params.id,
+    });
 
-      // Prepare updated event
-      const updatedEvent: calendar_v3.Schema$Event = {
-        ...existingEvent.data,
-      };
+    const updatedEvent: calendar_v3.Schema$Event = { ...existing.data };
 
-      if (params.updates.summary) updatedEvent.summary = params.updates.summary;
-      if (params.updates.description) updatedEvent.description = params.updates.description;
-      if (params.updates.location) updatedEvent.location = params.updates.location;
+    if (params.updates.summary) updatedEvent.summary = params.updates.summary;
+    if (params.updates.description) updatedEvent.description = params.updates.description;
+    if (params.updates.location) updatedEvent.location = params.updates.location;
 
-      if (params.updates.start) {
-        updatedEvent.start = {
-          dateTime: params.updates.start,
-          timeZone: 'UTC',
-        };
-      }
-
-      if (params.updates.end) {
-        updatedEvent.end = {
-          dateTime: params.updates.end,
-          timeZone: 'UTC',
-        };
-      }
-
-      if (params.updates.attendees) {
-        updatedEvent.attendees = params.updates.attendees.map((email) => ({ email }));
-      }
-
-      const response = await this.calendar.events.update({
-        calendarId: params.calendarId || 'primary',
-        eventId: params.eventId,
-        requestBody: updatedEvent,
-        sendUpdates: 'all',
-      });
-
-      return {
-        success: true,
-        event: {
-          id: response.data.id,
-          summary: response.data.summary,
-          start: response.data.start?.dateTime,
-          end: response.data.end?.dateTime,
-          htmlLink: response.data.htmlLink,
-        },
-        message: 'Event updated successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
+    if (params.updates.start) {
+      updatedEvent.start = { dateTime: params.updates.start, timeZone: 'UTC' };
     }
+
+    if (params.updates.end) {
+      updatedEvent.end = { dateTime: params.updates.end, timeZone: 'UTC' };
+    }
+
+    if (params.updates.attendees) {
+      updatedEvent.attendees = params.updates.attendees.map(email => ({ email }));
+    }
+
+    const response = await this.calendar.events.update({
+      calendarId: params.calendar || 'primary',
+      eventId: params.id,
+      requestBody: updatedEvent,
+      sendUpdates: 'all',
+    });
+
+    return {
+      id: response.data.id,
+      summary: response.data.summary,
+      start: response.data.start?.dateTime,
+      end: response.data.end?.dateTime,
+      htmlLink: response.data.htmlLink,
+    };
   }
 
   /**
-   * Delete an event
-   * @param eventId {@min 1} {@max 200} Event ID {@example abc123def456ghi789}
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * Delete event
+   * @param id Event ID
+   * @param calendar Calendar ID (default: primary)
+   * @icon 🗑
    */
-  async remove(params: { eventId: string; calendarId?: string }) {
-    try {
-      await this.calendar.events.delete({
-        calendarId: params.calendarId || 'primary',
-        eventId: params.eventId,
-        sendUpdates: 'all', // Send cancellation emails
-      });
+  async remove(params: { id: string; calendar?: string }) {
+    await this.calendar.events.delete({
+      calendarId: params.calendar || 'primary',
+      eventId: params.id,
+      sendUpdates: 'all',
+    });
 
-      return {
-        success: true,
-        message: 'Event deleted successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { id: params.id };
   }
 
   /**
-   * List all calendars
+   * List calendars
+   * @format list {@title summary, @subtitle id, @badge primary}
+   * @autorun
+   * @icon 📦
    */
   async calendars() {
-    try {
-      const response = await this.calendar.calendarList.list();
+    const response = await this.calendar.calendarList.list();
+    const items = response.data.items || [];
 
-      const calendars = response.data.items || [];
-
-      return {
-        success: true,
-        count: calendars.length,
-        calendars: calendars.map((cal) => ({
-          id: cal.id,
-          summary: cal.summary,
-          description: cal.description,
-          primary: cal.primary || false,
-          accessRole: cal.accessRole,
-          timeZone: cal.timeZone,
-        })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      count: items.length,
+      calendars: items.map(c => ({
+        id: c.id,
+        summary: c.summary,
+        description: c.description,
+        primary: c.primary || false,
+        accessRole: c.accessRole,
+        timeZone: c.timeZone,
+      })),
+    };
   }
 
   /**
-   * Check free/busy status
-   * @param emails {@min 1} Array of email addresses to check {@example ["user@example.com","colleague@company.com"]}
-   * @param timeMin {@min 1} {@format date-time} Start time (ISO 8601) {@example 2024-03-15T09:00:00Z}
-   * @param timeMax {@min 1} {@format date-time} End time (ISO 8601) {@example 2024-03-15T18:00:00Z}
+   * Check free/busy
+   * @param emails Email addresses (JSON array)
+   * @param from Start time (ISO 8601)
+   * @param to End time (ISO 8601)
+   * @format list {@title email, @subtitle busy}
+   * @icon ⏰
    */
-  async freeBusy(params: { emails: string[]; timeMin: string; timeMax: string }) {
-    try {
-      const response = await this.calendar.freebusy.query({
-        requestBody: {
-          timeMin: params.timeMin,
-          timeMax: params.timeMax,
-          items: params.emails.map((email) => ({ id: email })),
-        },
-      });
+  async freeBusy(params: { emails: string[]; from: string; to: string }) {
+    const response = await this.calendar.freebusy.query({
+      requestBody: {
+        timeMin: params.from,
+        timeMax: params.to,
+        items: params.emails.map(email => ({ id: email })),
+      },
+    });
 
-      const calendars = response.data.calendars || {};
-
-      return {
-        success: true,
-        calendars: Object.entries(calendars).map(([email, data]) => ({
-          email,
-          busy: data.busy || [],
-          errors: data.errors,
-        })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      calendars: Object.entries(response.data.calendars || {}).map(([email, data]) => ({
+        email,
+        busy: (data as any).busy || [],
+        errors: (data as any).errors,
+      })),
+    };
   }
 
   /**
-   * Search for events
-   * @param query {@min 1} {@max 500} Search query {@example team meeting}
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
-   * @param maxResults {@min 1} {@max 100} Maximum number of results (default: 10)
+   * Search events
+   * @param query Search terms
+   * @param calendar Calendar ID (default: primary)
+   * @param limit Results (default: 10) {@min 1} {@max 100}
+   * @format list {@title summary, @subtitle start, @badge location}
+   * @icon 🔍
    */
-  async search(params: { query: string; calendarId?: string; maxResults?: number }) {
-    try {
-      const response = await this.calendar.events.list({
-        calendarId: params.calendarId || 'primary',
-        q: params.query,
-        maxResults: params.maxResults || 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-      });
+  async search(params: { query: string; calendar?: string; limit?: number }) {
+    const response = await this.calendar.events.list({
+      calendarId: params.calendar || 'primary',
+      q: params.query,
+      maxResults: params.limit || 10,
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
 
-      const events = response.data.items || [];
+    const events = response.data.items || [];
 
-      return {
-        success: true,
-        count: events.length,
-        query: params.query,
-        events: events.map((event) => ({
-          id: event.id,
-          summary: event.summary,
-          description: event.description,
-          start: event.start?.dateTime || event.start?.date,
-          end: event.end?.dateTime || event.end?.date,
-          location: event.location,
-          htmlLink: event.htmlLink,
-        })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      count: events.length,
+      events: events.map(e => ({
+        id: e.id,
+        summary: e.summary,
+        description: e.description,
+        start: e.start?.dateTime || e.start?.date,
+        end: e.end?.dateTime || e.end?.date,
+        location: e.location,
+        htmlLink: e.htmlLink,
+      })),
+    };
   }
 
   /**
-   * Get upcoming events within specified hours
-   * @param hours {@min 1} {@max 720} Number of hours from now (default: 24) {@example 48}
-   * @param calendarId {@max 200} Calendar ID (default: 'primary') {@example primary}
+   * Get upcoming (within N hours)
+   * @param hours Hours ahead (default: 24) {@min 1} {@max 720}
+   * @param calendar Calendar ID (default: primary)
+   * @format list {@title summary, @subtitle start}
+   * @autorun
+   * @icon 🚀
    */
-  async upcoming(params?: { hours?: number; calendarId?: string }) {
-    try {
-      const hours = params?.hours || 24;
-      const now = new Date();
-      const timeMax = new Date(now.getTime() + hours * 60 * 60 * 1000);
+  async upcoming(params?: { hours?: number; calendar?: string }) {
+    const hours = params?.hours || 24;
+    const now = new Date();
+    const to = new Date(now.getTime() + hours * 60 * 60 * 1000);
 
-      const response = await this.calendar.events.list({
-        calendarId: params?.calendarId || 'primary',
-        timeMin: now.toISOString(),
-        timeMax: timeMax.toISOString(),
-        singleEvents: true,
-        orderBy: 'startTime',
-      });
+    const response = await this.calendar.events.list({
+      calendarId: params?.calendar || 'primary',
+      timeMin: now.toISOString(),
+      timeMax: to.toISOString(),
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
 
-      const events = response.data.items || [];
+    const events = response.data.items || [];
 
-      return {
-        success: true,
-        hours,
-        count: events.length,
-        events: events.map((event) => ({
-          id: event.id,
-          summary: event.summary,
-          start: event.start?.dateTime || event.start?.date,
-          end: event.end?.dateTime || event.end?.date,
-          location: event.location,
-          htmlLink: event.htmlLink,
-        })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      hours,
+      count: events.length,
+      events: events.map(e => ({
+        id: e.id,
+        summary: e.summary,
+        start: e.start?.dateTime || e.start?.date,
+        end: e.end?.dateTime || e.end?.date,
+        location: e.location,
+        htmlLink: e.htmlLink,
+      })),
+    };
   }
 }

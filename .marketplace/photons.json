@@ -89,7 +89,7 @@
       "license": "MIT",
       "icon": "🔧",
       "source": "../daemon-features.photon.ts",
-      "hash": "sha256:79e7dde1be6f9b2d17f8fea6d9721ef176930964e982c7f0d892748ce740061f",
+      "hash": "sha256:ae4ee4fc409240249ed5b0849696e78249ccf86d8fb71c7521ed23d02622a2ba",
       "tools": [
         "scheduledHeartbeat",
         "handleWebhook",
@@ -494,7 +494,7 @@
       "license": "MIT",
       "icon": "🔀",
       "source": "../git.photon.ts",
-      "hash": "sha256:5076e70fe071e9abe15bc1e0e5cc3af18b4ff74fbd6323d5af325239e8c08bd9",
+      "hash": "sha256:85da8307a44b4539cfc73ff7f19d369ab2a4547c84abe49a13471b0d6c245c85",
       "tools": [
         "status",
         "log",
@@ -537,12 +537,12 @@
     {
       "name": "google-calendar",
       "version": "1.0.0",
-      "description": "Google Calendar - Calendar integration Provides calendar operations using Google Calendar API (OAuth2). Supports event management, calendar listing, and free/busy queries. Common use cases: - Event management: \"Schedule a meeting tomorrow at 2pm\", \"What's on my calendar today?\" - Availability: \"Check when John is free this week\" - Search: \"Find all meetings with Sarah\" Example: list({ maxResults: 10 }) Configuration: - clientId: OAuth2 client ID from Google Cloud Console - clientSecret: OAuth2 client secret - refreshToken: OAuth2 refresh token (obtain via OAuth flow)",
+      "description": "Google Calendar - Schedule and manage events",
       "author": "Portel",
       "license": "MIT",
       "icon": "📅",
       "source": "../google-calendar.photon.ts",
-      "hash": "sha256:e6e172e63afba21eb2d72e14fb69c771ea8380b64117b42d67d6189fff915c8a",
+      "hash": "sha256:838aeeda41d605e98fc5ebfca4057e62c482e62acfff01570d71608a8d42e227",
       "tools": [
         "list",
         "get",

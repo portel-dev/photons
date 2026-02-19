@@ -1,32 +1,33 @@
 /**
- * Jira - Project management and issue tracking
- *
- * Provides Jira operations using the official Jira REST API v3.
- * Supports issue management, projects, transitions, and comments.
- *
- * Common use cases:
- * - Issue tracking: "Create bug report", "Update issue status to In Progress"
- * - Project management: "List all projects", "Get project details"
- * - Collaboration: "Add comment to issue", "Assign issue to developer"
- *
- * Example: createIssue({ project: "PROJ", summary: "Bug in login", issueType: "Bug" })
- *
- * Configuration:
- * - host: Jira instance URL (e.g., "your-domain.atlassian.net")
- * - email: User email for authentication
- * - apiToken: API token from Jira (required)
- *
- * @dependencies axios@^1.6.0
+ * Jira - Issue tracking and project management
  * @version 1.0.0
  * @author Portel
  * @license MIT
  * @icon 🎫
  * @tags jira, project-management, issues
+ * @dependencies axios@^1.6.0
  */
 
 import axios, { AxiosInstance } from 'axios';
 
-export default class Jira {
+interface Issue {
+  key: string;
+  id: string;
+  summary: string;
+  status?: string;
+  assignee?: string;
+  priority?: string;
+  created: string;
+  updated: string;
+}
+
+interface Transition {
+  id: string;
+  name: string;
+  to?: string;
+}
+
+export default class JiraPhoton {
   private api: AxiosInstance;
   private host: string;
 
@@ -39,113 +40,87 @@ export default class Jira {
 
     this.api = axios.create({
       baseURL: `https://${this.host}/rest/api/3`,
-      auth: {
-        username: email,
-        password: apiToken,
-      },
+      auth: { username: email, password: apiToken },
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     });
   }
 
-  async onInitialize() {
-    try {
-      // Test authentication by getting current user
-      const response = await this.api.get('/myself');
-
-      console.error('[jira] ✅ Authenticated with Jira');
-      console.error(`[jira] User: ${response.data.displayName} (${response.data.emailAddress})`);
-      console.error(`[jira] Host: ${this.host}`);
-    } catch (error: any) {
-      console.error('[jira] ❌ Authentication failed:', error.message);
-      throw error;
-    }
-  }
-
   /**
-   * List issues with JQL query
-   * @param jql {@min 1} {@max 1000} JQL query string {@example project = PROJ AND status = Open}
-   * @param maxResults {@min 1} {@max 100} Maximum number of results (default: 50)
-   * @param fields {@max 500} Fields to return (optional, comma-separated) {@example summary,status,assignee}
+   * Search issues (JQL)
+   * @param jql JQL query {@example project = PROJ AND status = Open}
+   * @param limit Results (default: 50) {@min 1} {@max 100}
+   * @param fields Fields to return (comma-separated, optional)
+   * @format list {@title summary, @subtitle key, @badge status}
+   * @autorun
+   * @icon 🔍
    */
-  async search(params: { jql: string; maxResults?: number; fields?: string }) {
-    try {
-      const response = await this.api.post('/search', {
-        jql: params.jql,
-        maxResults: params.maxResults || 50,
-        fields: params.fields?.split(',') || ['summary', 'status', 'assignee', 'priority', 'created'],
-      });
+  async search(params: { jql: string; limit?: number; fields?: string }) {
+    const response = await this.api.post('/search', {
+      jql: params.jql,
+      maxResults: params.limit || 50,
+      fields: params.fields?.split(',') || [
+        'summary',
+        'status',
+        'assignee',
+        'priority',
+        'created',
+      ],
+    });
 
-      const issues = response.data.issues.map((issue: any) => ({
-        key: issue.key,
-        id: issue.id,
-        summary: issue.fields.summary,
-        status: issue.fields.status?.name,
-        assignee: issue.fields.assignee?.displayName,
-        priority: issue.fields.priority?.name,
-        created: issue.fields.created,
-        updated: issue.fields.updated,
-      }));
-
-      return {
-        success: true,
-        total: response.data.total,
-        count: issues.length,
-        issues,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+    return {
+      total: response.data.total,
+      count: response.data.issues.length,
+      issues: response.data.issues.map((i: any) => ({
+        key: i.key,
+        id: i.id,
+        summary: i.fields.summary,
+        status: i.fields.status?.name,
+        assignee: i.fields.assignee?.displayName,
+        priority: i.fields.priority?.name,
+        created: i.fields.created,
+        updated: i.fields.updated,
+      })) as Issue[],
+    };
   }
 
   /**
-   * Get issue details
-   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
+   * Get issue
+   * @param key Issue key {@example PROJ-123}
+   * @format card
+   * @icon 📖
    */
-  async get(params: { issueKey: string }) {
-    try {
-      const response = await this.api.get(`/issue/${params.issueKey}`);
+  async get(params: { key: string }) {
+    const response = await this.api.get(`/issue/${params.key}`);
+    const issue = response.data;
 
-      const issue = response.data;
-
-      return {
-        success: true,
-        issue: {
-          key: issue.key,
-          id: issue.id,
-          summary: issue.fields.summary,
-          description: issue.fields.description,
-          status: issue.fields.status?.name,
-          assignee: issue.fields.assignee?.displayName,
-          reporter: issue.fields.reporter?.displayName,
-          priority: issue.fields.priority?.name,
-          issueType: issue.fields.issuetype?.name,
-          created: issue.fields.created,
-          updated: issue.fields.updated,
-          labels: issue.fields.labels,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+    return {
+      key: issue.key,
+      id: issue.id,
+      summary: issue.fields.summary,
+      description: issue.fields.description,
+      status: issue.fields.status?.name,
+      assignee: issue.fields.assignee?.displayName,
+      reporter: issue.fields.reporter?.displayName,
+      priority: issue.fields.priority?.name,
+      issueType: issue.fields.issuetype?.name,
+      created: issue.fields.created,
+      updated: issue.fields.updated,
+      labels: issue.fields.labels,
+    } as Issue & { description?: string; reporter?: string; issueType?: string; labels?: string[] };
   }
 
   /**
-   * Create a new issue
-   * @param project {@min 1} {@max 50} Project key {@example PROJ}
-   * @param summary {@min 1} {@max 200} Issue title {@example Login authentication fails for users}
-   * @param issueType {@min 1} {@max 50} Issue type {@example Bug}
-   * @param description {@max 5000} Issue description (optional) {@example Steps to reproduce: 1. Navigate to login 2. Enter credentials}
-   * @param priority {@max 50} Priority name (optional) {@example High}
-   * @param assignee {@max 100} Assignee account ID (optional) {@example 5b10a2844c20165700ede21g}
+   * Create issue
+   * @param project Project key {@example PROJ}
+   * @param summary Title
+   * @param issueType Type {@example Bug}
+   * @param description Description (optional) {@field textarea}
+   * @param priority Priority (optional) {@example High}
+   * @param assignee Assignee ID (optional)
+   * @icon ✨
    */
   async create(params: {
     project: string;
@@ -155,298 +130,195 @@ export default class Jira {
     priority?: string;
     assignee?: string;
   }) {
-    try {
-      const fields: any = {
-        project: { key: params.project },
-        summary: params.summary,
-        issuetype: { name: params.issueType },
-      };
+    const fields: any = {
+      project: { key: params.project },
+      summary: params.summary,
+      issuetype: { name: params.issueType },
+    };
 
-      if (params.description) {
-        fields.description = {
-          type: 'doc',
-          version: 1,
-          content: [
-            {
-              type: 'paragraph',
-              content: [{ type: 'text', text: params.description }],
-            },
-          ],
-        };
-      }
-
-      if (params.priority) {
-        fields.priority = { name: params.priority };
-      }
-
-      if (params.assignee) {
-        fields.assignee = { id: params.assignee };
-      }
-
-      const response = await this.api.post('/issue', { fields });
-
-      return {
-        success: true,
-        key: response.data.key,
-        id: response.data.id,
-        url: `https://${this.host}/browse/${response.data.key}`,
-        message: 'Issue created successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
+    if (params.description) {
+      fields.description = {
+        type: 'doc',
+        version: 1,
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: params.description }] }],
       };
     }
+
+    if (params.priority) fields.priority = { name: params.priority };
+    if (params.assignee) fields.assignee = { id: params.assignee };
+
+    const response = await this.api.post('/issue', { fields });
+
+    return {
+      key: response.data.key,
+      id: response.data.id,
+      url: `https://${this.host}/browse/${response.data.key}`,
+    };
   }
 
   /**
-   * Update an issue
-   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
-   * @param summary {@min 1} {@max 200} New summary (optional) {@example Updated: Login authentication fixed}
-   * @param description {@max 5000} New description (optional) {@example Fixed by updating OAuth configuration}
-   * @param priority {@max 50} New priority (optional) {@example Medium}
-   * @param assignee {@max 100} New assignee account ID (optional) {@example 5b10a2844c20165700ede21g}
+   * Update issue
+   * @param key Issue key {@example PROJ-123}
+   * @param summary New summary (optional)
+   * @param description New description (optional) {@field textarea}
+   * @param priority New priority (optional)
+   * @param assignee New assignee ID (optional)
+   * @icon ✏️
    */
   async update(params: {
-    issueKey: string;
+    key: string;
     summary?: string;
     description?: string;
     priority?: string;
     assignee?: string;
   }) {
-    try {
-      const fields: any = {};
+    const fields: any = {};
 
-      if (params.summary) {
-        fields.summary = params.summary;
-      }
+    if (params.summary) fields.summary = params.summary;
 
-      if (params.description) {
-        fields.description = {
-          type: 'doc',
-          version: 1,
-          content: [
-            {
-              type: 'paragraph',
-              content: [{ type: 'text', text: params.description }],
-            },
-          ],
-        };
-      }
-
-      if (params.priority) {
-        fields.priority = { name: params.priority };
-      }
-
-      if (params.assignee) {
-        fields.assignee = { id: params.assignee };
-      }
-
-      await this.api.put(`/issue/${params.issueKey}`, { fields });
-
-      return {
-        success: true,
-        issueKey: params.issueKey,
-        message: 'Issue updated successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
+    if (params.description) {
+      fields.description = {
+        type: 'doc',
+        version: 1,
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: params.description }] }],
       };
     }
+
+    if (params.priority) fields.priority = { name: params.priority };
+    if (params.assignee) fields.assignee = { id: params.assignee };
+
+    await this.api.put(`/issue/${params.key}`, { fields });
+
+    return { key: params.key };
   }
 
   /**
-   * Transition issue to new status
-   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
-   * @param transitionId {@min 1} {@max 50} Transition ID or name {@example 21}
+   * Transition issue
+   * @param key Issue key {@example PROJ-123}
+   * @param transitionId Transition ID or name
+   * @icon ➜
    */
-  async transition(params: { issueKey: string; transitionId: string }) {
-    try {
-      await this.api.post(`/issue/${params.issueKey}/transitions`, {
-        transition: { id: params.transitionId },
-      });
+  async transition(params: { key: string; transitionId: string }) {
+    await this.api.post(`/issue/${params.key}/transitions`, {
+      transition: { id: params.transitionId },
+    });
 
-      return {
-        success: true,
-        issueKey: params.issueKey,
-        message: 'Issue transitioned successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+    return { key: params.key };
   }
 
   /**
-   * Get available transitions for issue
-   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
+   * Get transitions
+   * @param key Issue key {@example PROJ-123}
+   * @format list {@title name, @subtitle to}
+   * @autorun
+   * @icon 🔀
    */
-  async transitions(params: { issueKey: string }) {
-    try {
-      const response = await this.api.get(`/issue/${params.issueKey}/transitions`);
+  async transitions(params: { key: string }) {
+    const response = await this.api.get(`/issue/${params.key}/transitions`);
 
-      const transitions = response.data.transitions.map((t: any) => ({
+    return {
+      count: response.data.transitions.length,
+      transitions: response.data.transitions.map((t: any) => ({
         id: t.id,
         name: t.name,
         to: t.to?.name,
-      }));
-
-      return {
-        success: true,
-        issueKey: params.issueKey,
-        count: transitions.length,
-        transitions,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+      })) as Transition[],
+    };
   }
 
   /**
-   * Add comment to issue
-   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
-   * @param comment {@min 1} {@max 5000} Comment text {@example This issue has been resolved in the latest deployment}
+   * Add comment
+   * @param key Issue key {@example PROJ-123}
+   * @param text Comment text {@field textarea}
+   * @icon 💬
    */
-  async comment(params: { issueKey: string; comment: string }) {
-    try {
-      const response = await this.api.post(`/issue/${params.issueKey}/comment`, {
-        body: {
-          type: 'doc',
-          version: 1,
-          content: [
-            {
-              type: 'paragraph',
-              content: [{ type: 'text', text: params.comment }],
-            },
-          ],
-        },
-      });
+  async comment(params: { key: string; text: string }) {
+    const response = await this.api.post(`/issue/${params.key}/comment`, {
+      body: {
+        type: 'doc',
+        version: 1,
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: params.text }] }],
+      },
+    });
 
-      return {
-        success: true,
-        issueKey: params.issueKey,
-        commentId: response.data.id,
-        message: 'Comment added successfully',
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+    return { key: params.key, commentId: response.data.id };
   }
 
   /**
-   * Get comments for issue
-   * @param issueKey {@min 1} {@max 50} Issue key {@example PROJ-123}
-   * @param maxResults {@min 1} {@max 100} Maximum number of comments (default: 50)
+   * List comments
+   * @param key Issue key {@example PROJ-123}
+   * @param limit Results (default: 50) {@min 1} {@max 100}
+   * @format list {@title body, @subtitle author, @badge created}
+   * @autorun
+   * @icon 💭
    */
-  async comments(params: { issueKey: string; maxResults?: number }) {
-    try {
-      const response = await this.api.get(`/issue/${params.issueKey}/comment`, {
-        params: { maxResults: params.maxResults || 50 },
-      });
+  async comments(params: { key: string; limit?: number }) {
+    const response = await this.api.get(`/issue/${params.key}/comment`, {
+      params: { maxResults: params.limit || 50 },
+    });
 
-      const comments = response.data.comments.map((c: any) => ({
+    return {
+      count: response.data.comments.length,
+      comments: response.data.comments.map((c: any) => ({
         id: c.id,
         author: c.author?.displayName,
         body: this._extractText(c.body),
         created: c.created,
         updated: c.updated,
-      }));
-
-      return {
-        success: true,
-        issueKey: params.issueKey,
-        count: comments.length,
-        comments,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+      })),
+    };
   }
 
   /**
-   * List all projects
+   * List projects
+   * @format list {@title name, @subtitle key, @badge projectTypeKey}
+   * @autorun
+   * @icon 📦
    */
   async projects() {
-    try {
-      const response = await this.api.get('/project');
+    const response = await this.api.get('/project');
 
-      const projects = response.data.map((p: any) => ({
+    return {
+      count: response.data.length,
+      projects: response.data.map((p: any) => ({
         key: p.key,
         id: p.id,
         name: p.name,
         projectTypeKey: p.projectTypeKey,
         lead: p.lead?.displayName,
-      }));
-
-      return {
-        success: true,
-        count: projects.length,
-        projects,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+      })),
+    };
   }
 
   /**
-   * Get project details
-   * @param projectKey {@min 1} {@max 50} Project key {@example PROJ}
+   * Get project
+   * @param key Project key {@example PROJ}
+   * @format card
+   * @icon 📖
    */
-  async project(params: { projectKey: string }) {
-    try {
-      const response = await this.api.get(`/project/${params.projectKey}`);
+  async project(params: { key: string }) {
+    const response = await this.api.get(`/project/${params.key}`);
+    const project = response.data;
 
-      const project = response.data;
-
-      return {
-        success: true,
-        project: {
-          key: project.key,
-          id: project.id,
-          name: project.name,
-          description: project.description,
-          lead: project.lead?.displayName,
-          projectTypeKey: project.projectTypeKey,
-          url: project.url,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data?.errorMessages?.[0] || error.message,
-      };
-    }
+    return {
+      key: project.key,
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      lead: project.lead?.displayName,
+      projectTypeKey: project.projectTypeKey,
+      url: project.url,
+    };
   }
 
-  // Private helper methods
-
   private _extractText(content: any): string {
-    if (!content || !content.content) return '';
+    if (!content?.content) return '';
 
     let text = '';
     for (const node of content.content) {
       if (node.type === 'paragraph' && node.content) {
         for (const item of node.content) {
-          if (item.type === 'text') {
-            text += item.text + ' ';
-          }
+          if (item.type === 'text') text += item.text + ' ';
         }
       }
     }

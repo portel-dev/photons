@@ -1,6 +1,6 @@
 # Google Calendar
 
-Calendar integration Provides calendar operations using Google Calendar API (OAuth2). Supports event management, calendar listing, and free/busy queries. Common use cases: - Event management: "Schedule a meeting tomorrow at 2pm", "What's on my calendar today?" - Availability: "Check when John is free this week" - Search: "Find all meetings with Sarah" Example: list({ maxResults: 10 }) Configuration: - clientId: OAuth2 client ID from Google Cloud Console - clientSecret: OAuth2 client secret - refreshToken: OAuth2 refresh token (obtain via OAuth flow)
+Schedule and manage events
 
 > **9 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,17 +10,11 @@ Calendar integration Provides calendar operations using Google Calendar API (OAu
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `GOOGLE_CALENDAR_CLIENTID` | Yes | string | OAuth2 client ID from Google Cloud Console |
-| `GOOGLE_CALENDAR_CLIENTSECRET` | Yes | string | OAuth2 client secret |
-| `GOOGLE_CALENDAR_REFRESHTOKEN` | Yes | string | OAuth2 refresh token (obtain via OAuth flow) |
+| `GOOGLE_CALENDAR_PHOTON_CLIENTID` | Yes | string | No description available |
+| `GOOGLE_CALENDAR_PHOTON_CLIENTSECRET` | Yes | string | No description available |
+| `GOOGLE_CALENDAR_PHOTON_REFRESHTOKEN` | Yes | string | No description available |
 
 
-
-### Setup Instructions
-
-- clientId: OAuth2 client ID from Google Cloud Console
-- clientSecret: OAuth2 client secret
-- refreshToken: OAuth2 refresh token (obtain via OAuth flow)
 
 
 ## 🔧 Tools
@@ -28,15 +22,15 @@ Calendar integration Provides calendar operations using Google Calendar API (OAu
 
 ### `list`
 
-List upcoming events
+List events
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
-| `maxResults` | number | No | Maximum number of events to return [min: 1, max: 100] |
-| `timeMin` | string | No | Start time (ISO 8601, default: now) [format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
-| `timeMax` | string | No | End time (ISO 8601, optional) [format: date-time] (e.g. `2024-03-20T18:00:00Z`) |
+| `calendar` | any | No | Calendar ID |
+| `limit` | number | No | Results [min: 1, max: 100] |
+| `from` | string | No | Start time (ISO 8601, optional) |
+| `to` | string | No | End time (ISO 8601, optional) |
 
 
 
@@ -47,13 +41,13 @@ List upcoming events
 
 ### `get`
 
-Get a specific event
+Get event
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `eventId` | string | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
-| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `id` | string | Yes | Event ID |
+| `calendar` | string | No | Calendar ID |
 
 
 
@@ -64,18 +58,18 @@ Get a specific event
 
 ### `create`
 
-Create a new event
+Create event
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `summary` | string | Yes | Event title [min: 1, max: 200] (e.g. `Team Meeting`) |
-| `start` | string | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T14:00:00Z`) |
-| `end` | string | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T15:00:00Z`) |
-| `description` | string | No | Event description [max: 5000] (e.g. `Quarterly planning session`) |
-| `location` | string | No | Event location [max: 500] (e.g. `Conference Room A`) |
-| `attendees` | string[] | No | Array of attendee email addresses [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
-| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `summary` | string | Yes | Title |
+| `start` | string | Yes | Start time (ISO 8601) (e.g. `2024-03-15T14:00:00Z`) |
+| `end` | string | Yes | End time (ISO 8601) (e.g. `2024-03-15T15:00:00Z`) |
+| `description` | string | No | Description [field: textarea] |
+| `location` | string | No | Location |
+| `attendees` | string[] | No | Attendee emails (JSON array, optional) |
+| `calendar` | string | No | Calendar ID |
 
 
 
@@ -86,14 +80,14 @@ Create a new event
 
 ### `update`
 
-Update an existing event
+Update event
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `eventId` | string | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
-| `updates` | any | Yes | Object containing fields to update |
-| `calendarId` | any | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `id` | string | Yes | Event ID |
+| `updates` | any | Yes | Fields to update (JSON object) |
+| `calendar` | any | No | Calendar ID |
 
 
 
@@ -104,13 +98,13 @@ Update an existing event
 
 ### `remove`
 
-Delete an event
+Delete event
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `eventId` | string | Yes | Event ID [min: 1, max: 200] (e.g. `abc123def456ghi789`) |
-| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `id` | string | Yes | Event ID |
+| `calendar` | string | No | Calendar ID |
 
 
 
@@ -121,7 +115,7 @@ Delete an event
 
 ### `calendars`
 
-List all calendars
+List calendars
 
 
 
@@ -132,14 +126,14 @@ List all calendars
 
 ### `freeBusy`
 
-Check free/busy status
+Check free/busy
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `emails` | string[] | Yes | Array of email addresses to check [min: 1] (e.g. `["user@example.com","colleague@company.com"]`) |
-| `timeMin` | string | Yes | Start time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T09:00:00Z`) |
-| `timeMax` | string | Yes | End time (ISO 8601) [min: 1, format: date-time] (e.g. `2024-03-15T18:00:00Z`) |
+| `emails` | string[] | Yes | Email addresses (JSON array) |
+| `from` | string | Yes | Start time (ISO 8601) |
+| `to` | string | Yes | End time (ISO 8601) |
 
 
 
@@ -150,14 +144,14 @@ Check free/busy status
 
 ### `search`
 
-Search for events
+Search events
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | string | Yes | Search query [min: 1, max: 500] (e.g. `team meeting`) |
-| `calendarId` | string | No | Calendar ID [max: 200] (e.g. `primary`) |
-| `maxResults` | number | No | Maximum number of results [min: 1, max: 100] |
+| `query` | string | Yes | Search terms |
+| `calendar` | string | No | Calendar ID |
+| `limit` | number | No | Results [min: 1, max: 100] |
 
 
 
@@ -168,13 +162,13 @@ Search for events
 
 ### `upcoming`
 
-Get upcoming events within specified hours
+Get upcoming (within N hours)
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `hours` | any | No | Number of hours from now [min: 1, max: 720] (e.g. `48`) |
-| `calendarId` | string } | No | Calendar ID [max: 200] (e.g. `primary`) |
+| `hours` | any | No | Hours ahead [min: 1, max: 720] |
+| `calendar` | string } | No | Calendar ID |
 
 
 

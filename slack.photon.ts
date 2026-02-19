@@ -1,64 +1,50 @@
 /**
- * Slack - Send messages and manage Slack workspace
- *
- * Provides tools to send messages, list channels, and interact with Slack workspace.
- * Requires a Slack Bot Token with appropriate scopes.
- *
- * Common use cases:
- * - Notifications: "Send a deployment notification to #engineering"
- * - Team updates: "Post the daily standup summary to #team"
- * - Channel management: "List all public channels"
- *
- * Example: postMessage({ channel: "#general", text: "Hello team!" })
- *
- * Configuration:
- * - token: Slack Bot Token (required, starts with xoxb-)
- *
- * Dependencies are auto-installed on first run.
- *
- * @dependencies @slack/web-api@^7.0.0
- *
+ * Slack - Send and manage messages
  * @version 1.0.0
  * @author Portel
  * @license MIT
  * @icon 💬
  * @tags slack, messaging, notifications
+ * @dependencies @slack/web-api@^7.0.0
  */
 
 import { WebClient } from '@slack/web-api';
 
-export default class Slack {
+interface Channel {
+  id: string;
+  name: string;
+  is_private?: boolean;
+  is_archived?: boolean;
+  num_members?: number;
+  topic?: string;
+  purpose?: string;
+}
+
+interface Message {
+  ts: string;
+  user?: string;
+  text: string;
+  type?: string;
+  thread_ts?: string;
+}
+
+export default class SlackPhoton {
   private client: WebClient;
 
   constructor(private token: string) {
-    if (!token || token.trim() === '') {
-      throw new Error('Slack token is required');
+    if (!token?.trim() || (!token.startsWith('xoxb-') && !token.startsWith('xoxp-'))) {
+      throw new Error('Invalid Slack token (must start with xoxb- or xoxp-)');
     }
-
-    if (!token.startsWith('xoxb-') && !token.startsWith('xoxp-')) {
-      throw new Error('Invalid Slack token format (should start with xoxb- or xoxp-)');
-    }
-
     this.client = new WebClient(token);
   }
 
-  async onInitialize() {
-    try {
-      const auth = await this.client.auth.test();
-      console.error('[slack] ✅ Initialized');
-      console.error(`[slack] Workspace: ${auth.team}`);
-      console.error(`[slack] Bot: ${auth.user}`);
-    } catch (error: any) {
-      console.error(`[slack] ⚠️  Auth test failed: ${error.message}`);
-    }
-  }
-
   /**
-   * Post a message to a channel or user
-   * @param channel {@min 1} Channel name or ID {@example #general}
-   * @param text {@min 1} Message text {@example Hello team!}
-   * @param thread_ts Thread timestamp to reply to (optional)
-   * @param blocks Rich message blocks (optional, JSON string)
+   * Post a message
+   * @param channel Channel name or ID
+   * @param text Message text {@field textarea}
+   * @param thread_ts Thread timestamp (optional)
+   * @param blocks Rich blocks (JSON string, optional)
+   * @icon 📤
    */
   async post(params: {
     channel: string;
@@ -66,117 +52,82 @@ export default class Slack {
     thread_ts?: string;
     blocks?: string;
   }) {
-    try {
-      // Parse channel name if it starts with #
-      const channel = params.channel.startsWith('#')
-        ? await this._resolveChannelName(params.channel.slice(1))
-        : params.channel;
+    const channel = params.channel.startsWith('#')
+      ? await this._resolveChannel(params.channel.slice(1))
+      : params.channel;
 
-      const blocks = params.blocks ? JSON.parse(params.blocks) : undefined;
+    const response = await this.client.chat.postMessage({
+      channel,
+      text: params.text,
+      thread_ts: params.thread_ts,
+      blocks: params.blocks ? JSON.parse(params.blocks) : undefined,
+    });
 
-      const response = await this.client.chat.postMessage({
-        channel,
-        text: params.text,
-        thread_ts: params.thread_ts,
-        blocks,
-      });
-
-      return {
-        success: true,
-        message: {
-          ts: response.ts,
-          channel: response.channel,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { ts: response.ts, channel: response.channel };
   }
 
   /**
-   * List all channels in the workspace
-   * @param types Channel types {@example public_channel}
-   * @param limit {@min 1} {@max 1000} Maximum number of channels to return (default: 100)
+   * List channels
+   * @param types Channel types {@choice public_channel,private_channel} {@default public_channel}
+   * @param limit Results limit (default: 100) {@min 1} {@max 1000}
+   * @format list {@title name, @subtitle id, @badge is_private}
+   * @autorun
+   * @icon 📋
    */
-  async channels(params?: {
-    types?: 'public_channel' | 'private_channel' | 'mpim' | 'im';
-    limit?: number;
-  }) {
-    try {
-      const response = await this.client.conversations.list({
-        types: params?.types || 'public_channel',
-        limit: params?.limit || 100,
-      });
+  async channels(params?: { types?: 'public_channel' | 'private_channel'; limit?: number }) {
+    const response = await this.client.conversations.list({
+      types: params?.types || 'public_channel',
+      limit: params?.limit || 100,
+    });
 
-      const channels = response.channels?.map(channel => ({
-        id: channel.id,
-        name: channel.name,
-        is_private: channel.is_private,
-        is_archived: channel.is_archived,
-        num_members: channel.num_members,
-        topic: channel.topic?.value,
-        purpose: channel.purpose?.value,
-      }));
-
-      return {
-        success: true,
-        count: channels?.length || 0,
-        channels,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      count: response.channels?.length || 0,
+      channels: response.channels?.map((ch: any) => ({
+        id: ch.id,
+        name: ch.name,
+        is_private: ch.is_private,
+        is_archived: ch.is_archived,
+        num_members: ch.num_members,
+        topic: ch.topic?.value,
+        purpose: ch.purpose?.value,
+      })) || [],
+    };
   }
 
   /**
-   * Get channel information
-   * @param channel {@min 1} Channel name or ID {@example #general}
+   * Get channel info
+   * @param channel Channel name or ID
+   * @format card
+   * @icon 📖
    */
   async channel(params: { channel: string }) {
-    try {
-      const channel = params.channel.startsWith('#')
-        ? await this._resolveChannelName(params.channel.slice(1))
-        : params.channel;
+    const channel = params.channel.startsWith('#')
+      ? await this._resolveChannel(params.channel.slice(1))
+      : params.channel;
 
-      const response = await this.client.conversations.info({
-        channel,
-      });
+    const response = await this.client.conversations.info({ channel });
+    const ch = response.channel;
 
-      const ch = response.channel;
-
-      return {
-        success: true,
-        channel: {
-          id: ch?.id,
-          name: ch?.name,
-          is_private: ch?.is_private,
-          is_archived: ch?.is_archived,
-          num_members: ch?.num_members,
-          topic: ch?.topic?.value,
-          purpose: ch?.purpose?.value,
-          created: ch?.created,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      id: ch?.id,
+      name: ch?.name,
+      is_private: ch?.is_private,
+      is_archived: ch?.is_archived,
+      num_members: ch?.num_members,
+      topic: ch?.topic?.value,
+      purpose: ch?.purpose?.value,
+      created: ch?.created,
+    };
   }
 
   /**
-   * Get conversation history from a channel
-   * @param channel {@min 1} Channel name or ID {@example #general}
-   * @param limit {@min 1} {@max 100} Number of messages to retrieve (default: 10)
-   * @param oldest Start of time range (Unix timestamp)
-   * @param latest End of time range (Unix timestamp)
+   * Get message history
+   * @param channel Channel name or ID
+   * @param limit Results (default: 10) {@min 1} {@max 100}
+   * @param oldest Start timestamp (optional)
+   * @param latest End timestamp (optional)
+   * @format list {@title text, @subtitle user, @badge ts}
+   * @icon 📜
    */
   async history(params: {
     channel: string;
@@ -184,163 +135,122 @@ export default class Slack {
     oldest?: string;
     latest?: string;
   }) {
-    try {
-      const channel = params.channel.startsWith('#')
-        ? await this._resolveChannelName(params.channel.slice(1))
-        : params.channel;
+    const channel = params.channel.startsWith('#')
+      ? await this._resolveChannel(params.channel.slice(1))
+      : params.channel;
 
-      const response = await this.client.conversations.history({
-        channel,
-        limit: params.limit || 10,
-        oldest: params.oldest,
-        latest: params.latest,
-      });
+    const response = await this.client.conversations.history({
+      channel,
+      limit: params.limit || 10,
+      oldest: params.oldest,
+      latest: params.latest,
+    });
 
-      const messages = response.messages?.map(msg => ({
+    return {
+      count: response.messages?.length || 0,
+      messages: response.messages?.map((msg: any) => ({
         ts: msg.ts,
         user: msg.user,
         text: msg.text,
         type: msg.type,
         thread_ts: msg.thread_ts,
-      }));
-
-      return {
-        success: true,
-        count: messages?.length || 0,
-        messages,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+      })) || [],
+    };
   }
 
   /**
-   * Add a reaction to a message
-   * @param channel {@min 1} Channel name or ID {@example #general}
-   * @param timestamp {@min 1} Message timestamp
-   * @param name {@min 1} Reaction emoji name (without colons) {@example thumbsup}
+   * Add reaction to message
+   * @param channel Channel name or ID
+   * @param timestamp Message timestamp
+   * @param name Emoji name (without colons)
+   * @icon 😀
    */
   async react(params: { channel: string; timestamp: string; name: string }) {
-    try {
-      const channel = params.channel.startsWith('#')
-        ? await this._resolveChannelName(params.channel.slice(1))
-        : params.channel;
+    const channel = params.channel.startsWith('#')
+      ? await this._resolveChannel(params.channel.slice(1))
+      : params.channel;
 
-      await this.client.reactions.add({
-        channel,
-        timestamp: params.timestamp,
-        name: params.name,
-      });
+    await this.client.reactions.add({
+      channel,
+      timestamp: params.timestamp,
+      name: params.name,
+    });
 
-      return {
-        success: true,
-        message: `Added reaction :${params.name}:`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { message: `Added reaction :${params.name}:` };
   }
 
   /**
-   * Upload a file to a channel
-   * @param channel {@min 1} Channel name or ID {@example #general}
-   * @param content {@min 1} File content (text)
-   * @param filename {@min 1} Filename {@example report.txt}
+   * Upload file
+   * @param channel Channel name or ID
+   * @param content File content
+   * @param filename File name
    * @param title File title (optional)
-   * @param initial_comment Comment to add with the file (optional)
+   * @param comment Comment (optional)
+   * @icon 📎
    */
   async upload(params: {
     channel: string;
     content: string;
     filename: string;
     title?: string;
-    initial_comment?: string;
+    comment?: string;
   }) {
-    try {
-      const channel = params.channel.startsWith('#')
-        ? await this._resolveChannelName(params.channel.slice(1))
-        : params.channel;
+    const channel = params.channel.startsWith('#')
+      ? await this._resolveChannel(params.channel.slice(1))
+      : params.channel;
 
-      const response = await this.client.files.uploadV2({
-        channel_id: channel,
-        content: params.content,
-        filename: params.filename,
-        title: params.title || params.filename,
-        initial_comment: params.initial_comment,
-      });
+    const response = await this.client.files.uploadV2({
+      channel_id: channel,
+      content: params.content,
+      filename: params.filename,
+      title: params.title || params.filename,
+      initial_comment: params.comment,
+    });
 
-      return {
-        success: true,
-        file: {
-          id: response.file?.id,
-          name: response.file?.name,
-          url: response.file?.permalink,
-        },
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      id: response.file?.id,
+      name: response.file?.name,
+      url: response.file?.permalink,
+    };
   }
 
   /**
-   * Search for messages in the workspace
-   * @param query {@min 1} Search query {@example deployment}
-   * @param count {@min 1} {@max 100} Number of results to return (default: 20)
-   * @param sort Sort order {@example score}
+   * Search messages
+   * @param query Search query
+   * @param count Results (default: 20) {@min 1} {@max 100}
+   * @param sort Sort order {@choice score,timestamp} {@default score}
+   * @format list {@title text, @subtitle channel, @badge user}
+   * @icon 🔍
    */
   async search(params: { query: string; count?: number; sort?: 'score' | 'timestamp' }) {
-    try {
-      const response = await this.client.search.messages({
-        query: params.query,
-        count: params.count || 20,
-        sort: params.sort || 'score',
-      });
+    const response = await this.client.search.messages({
+      query: params.query,
+      count: params.count || 20,
+      sort: params.sort || 'score',
+    });
 
-      const messages = response.messages?.matches?.map(msg => ({
+    return {
+      total: response.messages?.total,
+      count: response.messages?.matches?.length || 0,
+      messages: response.messages?.matches?.map((msg: any) => ({
         ts: msg.ts,
         user: msg.user,
         username: msg.username,
         text: msg.text,
         channel: msg.channel?.name,
         permalink: msg.permalink,
-      }));
-
-      return {
-        success: true,
-        total: response.messages?.total,
-        count: messages?.length || 0,
-        messages,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+      })) || [],
+    };
   }
 
-  // Private helper: Resolve channel name to channel ID
-  private async _resolveChannelName(name: string): Promise<string> {
+  private async _resolveChannel(name: string): Promise<string> {
     const response = await this.client.conversations.list({
       types: 'public_channel,private_channel',
       limit: 1000,
     });
 
     const channel = response.channels?.find(ch => ch.name === name);
-
-    if (!channel) {
-      throw new Error(`Channel #${name} not found`);
-    }
-
+    if (!channel) throw new Error(`Channel #${name} not found`);
     return channel.id!;
   }
 }

@@ -1,58 +1,31 @@
 /**
- * Email - Send and receive emails via SMTP and IMAP
- *
- * Provides email operations for sending, receiving, and managing emails.
- * Supports SMTP for sending and IMAP for receiving/managing messages.
- *
- * Common use cases:
- * - Send notifications: "Email me the daily report"
- * - Check inbox: "Show me my unread emails"
- * - Send with attachments: "Email this file to the team"
- * - Search emails: "Find emails from john@example.com"
- *
- * Example: sendEmail({ to: "user@example.com", subject: "Report", body: "..." })
- *
- * Configuration:
- * - smtpHost: SMTP server hostname (e.g., smtp.gmail.com)
- * - smtpPort: SMTP server port (default: 587 for TLS, 465 for SSL)
- * - smtpUser: SMTP username/email
- * - smtpPassword: SMTP password or app-specific password
- * - smtpSecure: Use SSL (default: false, uses STARTTLS)
- * - imapHost: IMAP server hostname (optional, for receiving)
- * - imapPort: IMAP server port (optional, default: 993)
- * - imapUser: IMAP username (optional, defaults to smtpUser)
- * - imapPassword: IMAP password (optional, defaults to smtpPassword)
- *
- * Gmail Setup:
- * 1. Enable 2FA in Google Account
- * 2. Generate App Password: https://myaccount.google.com/apppasswords
- * 3. Use: smtpHost=smtp.gmail.com, smtpUser=your@gmail.com, smtpPassword=app_password
- *
- * @dependencies nodemailer@^6.9.0, imap@^0.8.19, mailparser@^3.6.0
- *
+ * Email - SMTP and IMAP email operations
  * @version 1.1.0
  * @author Portel
  * @license MIT
  * @icon 📧
  * @tags email, smtp, imap, messaging
+ * @dependencies nodemailer@^6.9.0, imap@^0.8.19, mailparser@^3.6.0
  */
 
 import nodemailer from 'nodemailer';
 import Imap from 'imap';
 import { simpleParser } from 'mailparser';
 
-interface EmailAddress {
-  address: string;
-  name?: string;
+interface Email {
+  from?: string;
+  to?: string;
+  subject?: string;
+  date?: Date;
+  textBody?: string;
+  htmlBody?: string;
+  attachments?: Array<{ filename?: string; contentType?: string; size?: number }>;
+  uid?: number;
+  flags?: string[];
+  unread?: boolean;
 }
 
-interface EmailAttachment {
-  filename: string;
-  content: string;
-  encoding?: string;
-}
-
-export default class Email {
+export default class EmailPhoton {
   private transporter: nodemailer.Transporter;
   private imapConfig?: Imap.Config;
 
@@ -71,18 +44,13 @@ export default class Email {
       throw new Error('SMTP host, user, and password are required');
     }
 
-    // Create SMTP transporter
     this.transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
-      secure: smtpSecure, // true for 465, false for other ports
-      auth: {
-        user: smtpUser,
-        pass: smtpPassword,
-      },
+      secure: smtpSecure,
+      auth: { user: smtpUser, pass: smtpPassword },
     });
 
-    // Setup IMAP config if provided
     if (imapHost) {
       this.imapConfig = {
         user: imapUser || smtpUser,
@@ -95,33 +63,15 @@ export default class Email {
     }
   }
 
-  async onInitialize() {
-    try {
-      // Verify SMTP connection
-      await this.transporter.verify();
-      console.error('[email] ✅ SMTP connection verified');
-      console.error(`[email] SMTP: ${this.smtpUser}@${this.smtpHost}:${this.smtpPort}`);
-
-      if (this.imapConfig) {
-        console.error(`[email] IMAP: ${this.imapConfig.user}@${this.imapConfig.host}:${this.imapConfig.port}`);
-      } else {
-        console.error('[email] IMAP: Not configured (send-only mode)');
-      }
-    } catch (error: any) {
-      console.error(`[email] ⚠️  SMTP verification failed: ${error.message}`);
-      throw new Error(`Email initialization failed: ${error.message}`);
-    }
-  }
-
   /**
    * Send an email
-   * @param to Recipient email address or comma-separated addresses
-   * @param subject Email subject
-   * @param body Email body (plain text or HTML)
-   * @param html Set to true if body contains HTML (default: false)
-   * @param cc CC recipients (optional, comma-separated)
-   * @param bcc BCC recipients (optional, comma-separated)
-   * @param from Sender email (optional, defaults to smtpUser)
+   * @param to Recipient address {@format email}
+   * @param subject Subject line
+   * @param body Email body {@field textarea}
+   * @param html HTML content (default: false) {@choice true,false}
+   * @param cc CC addresses (optional) {@format email}
+   * @param bcc BCC addresses (optional) {@format email}
+   * @icon 📤
    */
   async send(params: {
     to: string;
@@ -130,224 +80,181 @@ export default class Email {
     html?: boolean;
     cc?: string;
     bcc?: string;
-    from?: string;
   }) {
-    try {
-      const mailOptions: any = {
-        from: params.from || this.smtpUser,
-        to: params.to,
-        subject: params.subject,
-        cc: params.cc,
-        bcc: params.bcc,
-      };
+    const info = await this.transporter.sendMail({
+      from: this.smtpUser,
+      to: params.to,
+      subject: params.subject,
+      [params.html ? 'html' : 'text']: params.body,
+      cc: params.cc,
+      bcc: params.bcc,
+    });
 
-      if (params.html) {
-        mailOptions.html = params.body;
-      } else {
-        mailOptions.text = params.body;
-      }
-
-      const info = await this.transporter.sendMail(mailOptions);
-
-      return {
-        success: true,
-        messageId: info.messageId,
-        accepted: info.accepted,
-        rejected: info.rejected,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { messageId: info.messageId, accepted: info.accepted, rejected: info.rejected };
   }
 
   /**
-   * Send an email with attachments
-   * @param to Recipient email address
-   * @param subject Email subject
-   * @param body Email body
-   * @param attachments Array of attachments with filename and content
-   * @param html Set to true if body contains HTML (default: false)
+   * Send email with attachments
+   * @param to Recipient address {@format email}
+   * @param subject Subject line
+   * @param body Email body {@field textarea}
+   * @param attachments File attachments (JSON array)
+   * @param html HTML content (default: false) {@choice true,false}
+   * @icon 📎
    */
-  async sendAttachment(params: {
+  async attach(params: {
     to: string;
     subject: string;
     body: string;
     attachments: Array<{ filename: string; content: string; encoding?: string }>;
     html?: boolean;
   }) {
-    try {
-      const mailOptions: any = {
-        from: this.smtpUser,
-        to: params.to,
-        subject: params.subject,
-        attachments: params.attachments.map(att => ({
-          filename: att.filename,
-          content: att.content,
-          encoding: att.encoding || 'utf-8',
-        })),
-      };
+    const info = await this.transporter.sendMail({
+      from: this.smtpUser,
+      to: params.to,
+      subject: params.subject,
+      [params.html ? 'html' : 'text']: params.body,
+      attachments: params.attachments.map(a => ({
+        filename: a.filename,
+        content: a.content,
+        encoding: a.encoding || 'utf-8',
+      })),
+    });
 
-      if (params.html) {
-        mailOptions.html = params.body;
-      } else {
-        mailOptions.text = params.body;
-      }
-
-      const info = await this.transporter.sendMail(mailOptions);
-
-      return {
-        success: true,
-        messageId: info.messageId,
-        attachmentCount: params.attachments.length,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { messageId: info.messageId, attachmentCount: params.attachments.length };
   }
 
   /**
-   * List emails from inbox
-   * @param limit Maximum number of emails to return (default: 10)
-   * @param unreadOnly Only return unread emails (default: false)
-   * @param mailbox Mailbox to check (default: INBOX)
+   * List emails from mailbox
+   * @param mailbox Mailbox name (default: INBOX)
+   * @param unread Unread only (default: false)
+   * @param limit Max results (default: 10) {@min 1} {@max 100}
+   * @format list {@title subject, @subtitle from, @badge unread}
+   * @autorun
+   * @icon 📬
    */
-  async inbox(params?: { limit?: number; unreadOnly?: boolean; mailbox?: string }) {
+  async inbox(params?: { mailbox?: string; unread?: boolean; limit?: number }) {
     if (!this.imapConfig) {
-      return {
-        success: false,
-        error: 'IMAP not configured. Provide imapHost to enable email receiving.',
-      };
+      throw new Error('IMAP not configured. Provide imapHost to enable email receiving.');
     }
 
-    return new Promise((resolve) => {
-      const imap = new Imap(this.imapConfig!);
-      const emails: any[] = [];
+    return new Promise<{ count: number; emails: Email[]; total: number; unreadCount?: number }>(
+      resolve => {
+        const imap = new Imap(this.imapConfig!);
+        const emails: Email[] = [];
 
-      imap.once('ready', () => {
-        imap.openBox(params?.mailbox || 'INBOX', true, (err, box) => {
-          if (err) {
-            imap.end();
-            return resolve({ success: false, error: err.message });
-          }
-
-          const criteria = params?.unreadOnly ? ['UNSEEN'] : ['ALL'];
-          const limit = params?.limit || 10;
-
-          imap.search(criteria, (err, results) => {
+        imap.once('ready', () => {
+          imap.openBox(params?.mailbox || 'INBOX', true, (err, box) => {
             if (err) {
               imap.end();
-              return resolve({ success: false, error: err.message });
+              throw err;
             }
 
-            if (results.length === 0) {
-              imap.end();
-              return resolve({
-                success: true,
-                count: 0,
-                emails: [],
-                totalMessages: box.messages.total,
-              });
-            }
+            const criteria = params?.unread ? ['UNSEEN'] : ['ALL'];
+            const limit = params?.limit || 10;
 
-            // Fetch latest emails (limit)
-            const fetch = imap.fetch(results.slice(-limit), {
-              bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
-              struct: true,
-            });
+            imap.search(criteria, (err, results) => {
+              if (err) {
+                imap.end();
+                throw err;
+              }
 
-            fetch.on('message', (msg, seqno) => {
-              const email: any = { uid: seqno };
-
-              msg.on('body', (stream) => {
-                simpleParser(stream, (err, parsed) => {
-                  if (!err && parsed) {
-                    email.from = parsed.from?.text;
-                    email.to = parsed.to?.text;
-                    email.subject = parsed.subject;
-                    email.date = parsed.date;
-                  }
+              if (!results.length) {
+                imap.end();
+                return resolve({
+                  count: 0,
+                  emails: [],
+                  total: box.messages.total,
+                  unreadCount: box.messages.unseen,
                 });
+              }
+
+              const fetch = imap.fetch(results.slice(-limit), {
+                bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
+                struct: true,
               });
 
-              msg.once('attributes', (attrs) => {
-                email.flags = attrs.flags;
-                email.unread = !attrs.flags.includes('\\Seen');
+              fetch.on('message', msg => {
+                const email: Email = {};
+
+                msg.on('body', stream => {
+                  simpleParser(stream, (err, parsed) => {
+                    if (!err && parsed) {
+                      email.from = parsed.from?.text;
+                      email.to = parsed.to?.text;
+                      email.subject = parsed.subject;
+                      email.date = parsed.date;
+                    }
+                  });
+                });
+
+                msg.once('attributes', attrs => {
+                  email.flags = attrs.flags;
+                  email.unread = !attrs.flags.includes('\\Seen');
+                });
+
+                msg.once('end', () => emails.push(email));
               });
 
-              msg.once('end', () => {
-                emails.push(email);
+              fetch.once('error', err => {
+                imap.end();
+                throw err;
               });
-            });
 
-            fetch.once('error', (err) => {
-              imap.end();
-              resolve({ success: false, error: err.message });
-            });
-
-            fetch.once('end', () => {
-              imap.end();
-              resolve({
-                success: true,
-                count: emails.length,
-                emails: emails.reverse(), // Newest first
-                totalMessages: box.messages.total,
-                unreadCount: box.messages.unseen,
+              fetch.once('end', () => {
+                imap.end();
+                resolve({
+                  count: emails.length,
+                  emails: emails.reverse(),
+                  total: box.messages.total,
+                  unreadCount: box.messages.unseen,
+                });
               });
             });
           });
         });
-      });
 
-      imap.once('error', (err) => {
-        resolve({ success: false, error: err.message });
-      });
+        imap.once('error', err => {
+          throw err;
+        });
 
-      imap.connect();
-    });
+        imap.connect();
+      }
+    );
   }
 
   /**
-   * Get a specific email by sequence number
-   * @param uid Email sequence number (from listInbox)
-   * @param mailbox Mailbox to check (default: INBOX)
+   * Get email by UID
+   * @param uid Email UID
+   * @param mailbox Mailbox name (default: INBOX)
+   * @format card
+   * @icon 📖
    */
   async get(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
-      return {
-        success: false,
-        error: 'IMAP not configured. Provide imapHost to enable email receiving.',
-      };
+      throw new Error('IMAP not configured. Provide imapHost to enable email receiving.');
     }
 
-    return new Promise((resolve) => {
+    return new Promise<{ email: Email }>(resolve => {
       const imap = new Imap(this.imapConfig!);
 
       imap.once('ready', () => {
-        imap.openBox(params.mailbox || 'INBOX', true, (err) => {
+        imap.openBox(params.mailbox || 'INBOX', true, err => {
           if (err) {
             imap.end();
-            return resolve({ success: false, error: err.message });
+            throw err;
           }
 
           const fetch = imap.fetch([params.uid], { bodies: '' });
 
-          fetch.on('message', (msg) => {
-            msg.on('body', (stream) => {
+          fetch.on('message', msg => {
+            msg.on('body', stream => {
               simpleParser(stream, (err, parsed) => {
                 imap.end();
 
-                if (err) {
-                  return resolve({ success: false, error: err.message });
-                }
+                if (err) throw err;
 
                 resolve({
-                  success: true,
                   email: {
                     from: parsed.from?.text,
                     to: parsed.to?.text,
@@ -355,10 +262,10 @@ export default class Email {
                     date: parsed.date,
                     textBody: parsed.text,
                     htmlBody: parsed.html,
-                    attachments: parsed.attachments?.map(att => ({
-                      filename: att.filename,
-                      contentType: att.contentType,
-                      size: att.size,
+                    attachments: parsed.attachments?.map(a => ({
+                      filename: a.filename,
+                      contentType: a.contentType,
+                      size: a.size,
                     })),
                   },
                 });
@@ -366,15 +273,15 @@ export default class Email {
             });
           });
 
-          fetch.once('error', (err) => {
+          fetch.once('error', err => {
             imap.end();
-            resolve({ success: false, error: err.message });
+            throw err;
           });
         });
       });
 
-      imap.once('error', (err) => {
-        resolve({ success: false, error: err.message });
+      imap.once('error', err => {
+        throw err;
       });
 
       imap.connect();
@@ -382,11 +289,13 @@ export default class Email {
   }
 
   /**
-   * Search emails by criteria
-   * @param query Search query (from, subject, or body text)
-   * @param searchIn Where to search: from, subject, or body (default: subject)
-   * @param limit Maximum results (default: 10)
-   * @param mailbox Mailbox to search (default: INBOX)
+   * Search emails
+   * @param query Search terms
+   * @param searchIn Search field {@choice from,subject,body} {@default subject}
+   * @param limit Max results (default: 10) {@min 1} {@max 100}
+   * @param mailbox Mailbox name (default: INBOX)
+   * @format list {@title subject, @subtitle from}
+   * @icon 🔍
    */
   async search(params: {
     query: string;
@@ -395,49 +304,36 @@ export default class Email {
     mailbox?: string;
   }) {
     if (!this.imapConfig) {
-      return {
-        success: false,
-        error: 'IMAP not configured. Provide imapHost to enable email receiving.',
-      };
+      throw new Error('IMAP not configured. Provide imapHost to enable email receiving.');
     }
 
-    return new Promise((resolve) => {
+    return new Promise<{ count: number; emails: Email[] }>(resolve => {
       const imap = new Imap(this.imapConfig!);
-      const emails: any[] = [];
+      const emails: Email[] = [];
 
       imap.once('ready', () => {
-        imap.openBox(params.mailbox || 'INBOX', true, (err) => {
+        imap.openBox(params.mailbox || 'INBOX', true, err => {
           if (err) {
             imap.end();
-            return resolve({ success: false, error: err.message });
+            throw err;
           }
 
-          // Build search criteria
-          let criteria: any[];
           const searchIn = params.searchIn || 'subject';
+          const criteria = {
+            from: [['FROM', params.query]],
+            subject: [['SUBJECT', params.query]],
+            body: [['BODY', params.query]],
+          }[searchIn];
 
-          if (searchIn === 'from') {
-            criteria = [['FROM', params.query]];
-          } else if (searchIn === 'subject') {
-            criteria = [['SUBJECT', params.query]];
-          } else {
-            criteria = [['BODY', params.query]];
-          }
-
-          imap.search(criteria, (err, results) => {
+          imap.search(criteria as any, (err, results) => {
             if (err) {
               imap.end();
-              return resolve({ success: false, error: err.message });
+              throw err;
             }
 
-            if (results.length === 0) {
+            if (!results.length) {
               imap.end();
-              return resolve({
-                success: true,
-                count: 0,
-                emails: [],
-                query: params.query,
-              });
+              return resolve({ count: 0, emails: [] });
             }
 
             const limit = params.limit || 10;
@@ -446,10 +342,10 @@ export default class Email {
               struct: true,
             });
 
-            fetch.on('message', (msg, seqno) => {
-              const email: any = { uid: seqno };
+            fetch.on('message', msg => {
+              const email: Email = {};
 
-              msg.on('body', (stream) => {
+              msg.on('body', stream => {
                 simpleParser(stream, (err, parsed) => {
                   if (!err && parsed) {
                     email.from = parsed.from?.text;
@@ -460,31 +356,24 @@ export default class Email {
                 });
               });
 
-              msg.once('end', () => {
-                emails.push(email);
-              });
+              msg.once('end', () => emails.push(email));
             });
 
-            fetch.once('error', (err) => {
+            fetch.once('error', err => {
               imap.end();
-              resolve({ success: false, error: err.message });
+              throw err;
             });
 
             fetch.once('end', () => {
               imap.end();
-              resolve({
-                success: true,
-                count: emails.length,
-                emails: emails.reverse(),
-                query: params.query,
-              });
+              resolve({ count: emails.length, emails: emails.reverse() });
             });
           });
         });
       });
 
-      imap.once('error', (err) => {
-        resolve({ success: false, error: err.message });
+      imap.once('error', err => {
+        throw err;
       });
 
       imap.connect();
@@ -492,46 +381,36 @@ export default class Email {
   }
 
   /**
-   * Mark an email as read
-   * @param uid Email sequence number
+   * Mark email as read
+   * @param uid Email UID
    * @param mailbox Mailbox name (default: INBOX)
+   * @icon ✓
    */
-  async markRead(params: { uid: number; mailbox?: string }) {
+  async read(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
-      return {
-        success: false,
-        error: 'IMAP not configured. Provide imapHost to enable email management.',
-      };
+      throw new Error('IMAP not configured. Provide imapHost to enable email management.');
     }
 
-    return new Promise((resolve) => {
+    return new Promise<{ uid: number }>(resolve => {
       const imap = new Imap(this.imapConfig!);
 
       imap.once('ready', () => {
-        imap.openBox(params.mailbox || 'INBOX', false, (err) => {
+        imap.openBox(params.mailbox || 'INBOX', false, err => {
           if (err) {
             imap.end();
-            return resolve({ success: false, error: err.message });
+            throw err;
           }
 
-          imap.addFlags([params.uid], ['\\Seen'], (err) => {
+          imap.addFlags([params.uid], ['\\Seen'], err => {
             imap.end();
-
-            if (err) {
-              return resolve({ success: false, error: err.message });
-            }
-
-            resolve({
-              success: true,
-              uid: params.uid,
-              message: 'Email marked as read',
-            });
+            if (err) throw err;
+            resolve({ uid: params.uid });
           });
         });
       });
 
-      imap.once('error', (err) => {
-        resolve({ success: false, error: err.message });
+      imap.once('error', err => {
+        throw err;
       });
 
       imap.connect();
@@ -539,53 +418,43 @@ export default class Email {
   }
 
   /**
-   * Delete an email
-   * @param uid Email sequence number
+   * Delete email
+   * @param uid Email UID
    * @param mailbox Mailbox name (default: INBOX)
+   * @icon 🗑
    */
   async remove(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
-      return {
-        success: false,
-        error: 'IMAP not configured. Provide imapHost to enable email management.',
-      };
+      throw new Error('IMAP not configured. Provide imapHost to enable email management.');
     }
 
-    return new Promise((resolve) => {
+    return new Promise<{ uid: number }>(resolve => {
       const imap = new Imap(this.imapConfig!);
 
       imap.once('ready', () => {
-        imap.openBox(params.mailbox || 'INBOX', false, (err) => {
+        imap.openBox(params.mailbox || 'INBOX', false, err => {
           if (err) {
             imap.end();
-            return resolve({ success: false, error: err.message });
+            throw err;
           }
 
-          imap.addFlags([params.uid], ['\\Deleted'], (err) => {
+          imap.addFlags([params.uid], ['\\Deleted'], err => {
             if (err) {
               imap.end();
-              return resolve({ success: false, error: err.message });
+              throw err;
             }
 
-            imap.expunge((err) => {
+            imap.expunge(err => {
               imap.end();
-
-              if (err) {
-                return resolve({ success: false, error: err.message });
-              }
-
-              resolve({
-                success: true,
-                uid: params.uid,
-                message: 'Email deleted',
-              });
+              if (err) throw err;
+              resolve({ uid: params.uid });
             });
           });
         });
       });
 
-      imap.once('error', (err) => {
-        resolve({ success: false, error: err.message });
+      imap.once('error', err => {
+        throw err;
       });
 
       imap.connect();
@@ -593,54 +462,40 @@ export default class Email {
   }
 
   /**
-   * Move email to another mailbox (archive)
-   * @param uid Email sequence number
-   * @param targetMailbox Target mailbox name (e.g., Archive, Trash)
-   * @param sourceMailbox Source mailbox (default: INBOX)
+   * Move email to mailbox
+   * @param uid Email UID
+   * @param target Target mailbox name
+   * @param mailbox Source mailbox (default: INBOX)
+   * @icon 📬
    */
-  async move(params: { uid: number; targetMailbox: string; sourceMailbox?: string }) {
+  async move(params: { uid: number; target: string; mailbox?: string }) {
     if (!this.imapConfig) {
-      return {
-        success: false,
-        error: 'IMAP not configured. Provide imapHost to enable email management.',
-      };
+      throw new Error('IMAP not configured. Provide imapHost to enable email management.');
     }
 
-    return new Promise((resolve) => {
+    return new Promise<{ uid: number; target: string }>(resolve => {
       const imap = new Imap(this.imapConfig!);
 
       imap.once('ready', () => {
-        imap.openBox(params.sourceMailbox || 'INBOX', false, (err) => {
+        imap.openBox(params.mailbox || 'INBOX', false, err => {
           if (err) {
             imap.end();
-            return resolve({ success: false, error: err.message });
+            throw err;
           }
 
-          imap.move([params.uid], params.targetMailbox, (err) => {
+          imap.move([params.uid], params.target, err => {
             imap.end();
-
-            if (err) {
-              return resolve({ success: false, error: err.message });
-            }
-
-            resolve({
-              success: true,
-              uid: params.uid,
-              message: `Email moved to ${params.targetMailbox}`,
-            });
+            if (err) throw err;
+            resolve({ uid: params.uid, target: params.target });
           });
         });
       });
 
-      imap.once('error', (err) => {
-        resolve({ success: false, error: err.message });
+      imap.once('error', err => {
+        throw err;
       });
 
       imap.connect();
     });
-  }
-
-  async onShutdown() {
-    console.error('[email] ✅ Email connection closed');
   }
 }

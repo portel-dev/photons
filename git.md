@@ -128,9 +128,9 @@ Delete a branch
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | Yes | Branch name to delete [min: 1, max: 200] (e.g. `old-feature`) |
-| `path` | string | No | Repository path [max: 500] |
-| `force` | boolean | No | Force delete even if not fully merged |
+| `name` | string | Yes | Branch name (e.g. `old-feature`) |
+| `path` | string | No | Repository path {@default .} |
+| `force` | boolean | No | Force delete if unmerged {@default false} |
 
 
 
@@ -146,8 +146,8 @@ Stage files for commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `files` | string[] | Yes | Array of file paths to stage (use '.' for all files) [min: 1] (e.g. `["src/index.ts","README.md"]`) |
-| `path` | string | No | Repository path [max: 500] |
+| `files` | string[] | Yes | File paths to stage (e.g. `["src/index.ts","README.md"]`) |
+| `path` | string | No | Repository path {@default .} |
 
 
 
@@ -163,9 +163,9 @@ Create a commit
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `message` | string | Yes | Commit message [min: 1, max: 500] (e.g. `fix: resolve authentication bug`) |
-| `path` | string | No | Repository path [max: 500] |
-| `author` | string | No | Optional author override (format: "Name <email>") [max: 200] |
+| `message` | string | Yes | Commit message (e.g. `fix: resolve authentication bug`) |
+| `path` | string | No | Repository path {@default .} |
+| `author` | string | No | Author override (format: "Name <email>") |
 
 
 
@@ -176,15 +176,15 @@ Create a commit
 
 ### `push`
 
-Push commits to remote repository
+Push commits to remote
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | No | Repository path [max: 500] |
-| `remote` | string | No | Remote name [max: 200] (e.g. `origin`) |
-| `branch` | string | No | Branch name [max: 200] (e.g. `main`) |
-| `force` | boolean } | No | Force push |
+| `path` | any | Yes | Repository path {@default .} |
+| `remote` | string | No | Remote name {@default origin} |
+| `branch` | string | No | Branch name (current if omitted) |
+| `force` | boolean } | No | Force push {@default false} |
 
 
 
@@ -195,14 +195,14 @@ Push commits to remote repository
 
 ### `pull`
 
-Pull changes from remote repository
+Pull changes from remote
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | No | Repository path [max: 500] |
-| `remote` | string | No | Remote name [max: 200] (e.g. `origin`) |
-| `branch` | string } | No | Branch name [max: 200] (e.g. `main`) |
+| `path` | any | Yes | Repository path {@default .} |
+| `remote` | string | No | Remote name {@default origin} |
+| `branch` | string } | No | Branch name (current if omitted) |
 
 
 
