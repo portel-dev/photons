@@ -138,7 +138,7 @@ Daily submission digest
 
 ### `scheduledCleanup`
 
-Cleanup old submissions. Removes submissions older than 90 days to keep data manageable.
+Cleanup old submissions (90+ days)
 
 
 

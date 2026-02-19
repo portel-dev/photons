@@ -370,7 +370,7 @@
     },
     {
       "name": "integration-demo",
-      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows Demonstrates dependency management, asset discovery, stateful workflows with checkpoint/resume, and resource methods. Features covered: - Runtime version constraint (>=1.0.0) - CLI dependency check (node) - Stateful class annotation for resumable workflows - Checkpoint yields for workflow resumption - UI asset linking - Asset folder discovery (integration-demo/ui/) - @resource method (MCP resource) - @format annotations",
+      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -460,7 +460,7 @@
     },
     {
       "name": "mcp-orchestrator",
-      "description": "MCP Orchestrator Photon Demonstrates how to consume multiple MCPs (written in any language) as dependencies and orchestrate workflows that combine their capabilities. This photon shows how to: 1. Use this.mcp('name') to access external MCPs 2. Call tools on MCPs written in Python, Rust, Node.js, etc. 3. Combine data from multiple sources into unified workflows 4. Handle errors gracefully when MCPs are unavailable ## MCP Dependencies This photon can work with any MCPs configured in NCP: - `tavily` - Search API (Node.js MCP) - `browser` - Web automation (Node.js MCP) - `whatsapp` - Messaging (Python MCP via uv) - `sequential-thinking` - Reasoning (Node.js MCP) - Any other MCP configured in your NCP profile ## How it Works The `this.mcp('name')` method returns a proxy that: - Calls tools directly: `await this.mcp('tavily').search({ query: '...' })` - Lists tools: `await this.mcp('tavily').list()` - Finds tools: `await this.mcp('tavily').find('search')`",
+      "description": "MCP Orchestrator - Combine multiple MCPs into powerful workflows",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -514,7 +514,7 @@
     },
     {
       "name": "preferences",
-      "description": "Preferences Photon Demonstrates MCP Apps with UI assets, prompts, and resources. Assets are auto-discovered from the preferences/ folder by convention. Asset folder structure (auto-served): preferences/ ui/ settings.html     - Main settings form theme-preview.html - Theme preview component prompts/ welcome.md        - Welcome message template resources/ defaults.json     - Default configuration",
+      "description": "Preferences Photon - MCP App with UI assets and settings",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -532,7 +532,7 @@
     },
     {
       "name": "progressive-rendering",
-      "description": "Progressive Rendering — Same Data, Better Display Six methods return the same team data, each progressively enhanced. Run them side-by-side in Beam to see how Photon features improve rendering.",
+      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
       "source": "./",
       "strict": false,
       "hooks": [

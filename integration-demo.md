@@ -1,6 +1,6 @@
-# Integration Demo — Dependencies, Assets, Stateful Workflows Demonstrates dependency management, asset discovery, stateful workflows with checkpoint/resume, and resource methods. Features covered:
+# Integration Demo
 
-Runtime version constraint (>=1.0.0) - CLI dependency check (node) - Stateful class annotation for resumable workflows - Checkpoint yields for workflow resumption - UI asset linking - Asset folder discovery (integration-demo/ui/) - @resource method (MCP resource) - @format annotations
+Integration Demo — Dependencies, Assets, Stateful Workflows
 
 > **5 tools** · Streaming Photon · v1.0.0 · MIT
 
@@ -17,7 +17,7 @@ No configuration required.
 
 ### `info`
 
-Show photon info, runtime version, and dependency status. Returns structured data about this photon's configuration, runtime compatibility, and available dependencies.
+Show photon info, runtime version, and dependency status
 
 
 
@@ -28,12 +28,11 @@ Show photon info, runtime version, and dependency status. Returns structured dat
 
 ### `workflow` ⚡
 
-A multi-step stateful workflow with checkpoint yields. Each checkpoint persists state to disk so the workflow can resume after interruption. Steps simulate a data processing pipeline.
+Multi-step stateful workflow with checkpoint yields
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `input` | string | Yes | Input data to process |
 | `steps` | number | No | Number of processing steps {@default 3} [min: 2, max: 10] |
 
 
@@ -45,7 +44,7 @@ A multi-step stateful workflow with checkpoint yields. Each checkpoint persists 
 
 ### `status`
 
-Integration demo status resource. Exposes a readable MCP resource with the current photon status.
+Integration demo status resource
 
 
 
@@ -56,7 +55,7 @@ Integration demo status resource. Exposes a readable MCP resource with the curre
 
 ### `assets`
 
-List discovered assets for this photon. Returns information about the asset folder and its contents. The runtime auto-discovers the `integration-demo/` folder parallel to this `.photon.ts` file.
+List discovered assets for this photon
 
 
 

@@ -1,28 +1,5 @@
 /**
- * MCP Orchestrator Photon
- *
- * Demonstrates how to consume multiple MCPs (written in any language)
- * as dependencies and orchestrate workflows that combine their capabilities.
- *
- * This photon shows how to:
- * 1. Use this.mcp('name') to access external MCPs
- * 2. Call tools on MCPs written in Python, Rust, Node.js, etc.
- * 3. Combine data from multiple sources into unified workflows
- * 4. Handle errors gracefully when MCPs are unavailable
- *
- * ## MCP Dependencies
- * This photon can work with any MCPs configured in NCP:
- * - `tavily` - Search API (Node.js MCP)
- * - `browser` - Web automation (Node.js MCP)
- * - `whatsapp` - Messaging (Python MCP via uv)
- * - `sequential-thinking` - Reasoning (Node.js MCP)
- * - Any other MCP configured in your NCP profile
- *
- * ## How it Works
- * The `this.mcp('name')` method returns a proxy that:
- * - Calls tools directly: `await this.mcp('tavily').search({ query: '...' })`
- * - Lists tools: `await this.mcp('tavily').list()`
- * - Finds tools: `await this.mcp('tavily').find('search')`
+ * MCP Orchestrator - Combine multiple MCPs into powerful workflows
  *
  * @version 1.0.0
  * @author Portel
@@ -59,17 +36,9 @@ interface MCPStatus {
   error?: string;
 }
 
-/**
- * MCP Orchestrator - Combine multiple MCPs into powerful workflows
- */
 export default class MCPOrchestratorPhoton extends PhotonMCP {
   /**
    * List all available MCPs and their tools
-   *
-   * Discovers which MCPs are configured and accessible,
-   * showing their available tools.
-   *
-   * @param mcpNames Comma-separated list of MCP names to check (optional)
    */
   async discoverMCPs({ mcpNames }: { mcpNames?: string } = {}): Promise<MCPStatus[]> {
     const names = mcpNames
@@ -101,8 +70,6 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
 
   /**
    * Check if a specific MCP is available
-   *
-   * @param mcpName Name of the MCP to check
    */
   async checkMCP({ mcpName }: { mcpName: string }): Promise<MCPStatus> {
     try {
@@ -124,14 +91,6 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
 
   /**
    * Call a tool on any MCP
-   *
-   * Generic method to call any tool on any configured MCP.
-   * This demonstrates the polyglot nature - the MCP can be
-   * written in any language (Python, Rust, Go, etc.)
-   *
-   * @param mcpName Name of the MCP server
-   * @param toolName Name of the tool to call
-   * @param params JSON parameters for the tool
    */
   async callTool({
     mcpName,
@@ -166,14 +125,6 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
 
   /**
    * Research Workflow - Combine search and browser MCPs
-   *
-   * Demonstrates orchestrating multiple MCPs:
-   * 1. Search for information using tavily (Node.js MCP)
-   * 2. Optionally fetch page content using browser MCP
-   *
-   * @param query Search query
-   * @param fetchContent Whether to fetch full page content for top result
-   * @param maxResults Maximum number of search results
    */
   async researchWorkflow({
     query,
@@ -257,14 +208,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   }
 
   /**
-   * Multi-Step Reasoning Workflow
-   *
-   * Uses sequential-thinking MCP (if available) to break down
-   * a complex problem into steps, demonstrating how to use
-   * specialized reasoning MCPs.
-   *
-   * @param problem The problem to analyze
-   * @param steps Number of reasoning steps
+   * Multi-Step Reasoning Workflow using sequential-thinking MCP
    */
   async reasoningWorkflow({
     problem,
@@ -335,13 +279,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   }
 
   /**
-   * Shell Command Workflow
-   *
-   * Demonstrates using the Shell MCP to execute system commands.
-   * This MCP might be written in any language that can spawn processes.
-   *
-   * @param command Shell command to execute
-   * @param workingDir Working directory (optional)
+   * Shell Command Workflow - Execute system commands
    */
   async shellWorkflow({
     command,
@@ -392,12 +330,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   }
 
   /**
-   * Parallel MCP Execution
-   *
-   * Demonstrates calling multiple MCPs in parallel and combining results.
-   * Each MCP can be written in a different language.
-   *
-   * @param mcpCalls JSON array of MCP calls: [{mcp: "name", tool: "tool", params: {...}}]
+   * Parallel MCP Execution - Call multiple MCPs concurrently
    */
   async parallelExecution({ mcpCalls }: { mcpCalls: string }): Promise<WorkflowResult> {
     const calls = JSON.parse(mcpCalls) as Array<{
@@ -468,13 +401,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   }
 
   /**
-   * Chained MCP Workflow
-   *
-   * Demonstrates chaining MCP calls where output from one
-   * becomes input to another. Perfect for pipelines that
-   * span multiple services/languages.
-   *
-   * @param steps JSON array of steps: [{mcp: "name", tool: "tool", params: {...}, outputKey: "key"}]
+   * Chained MCP Workflow - Output from one MCP becomes input to another
    */
   async chainedWorkflow({ steps }: { steps: string }): Promise<WorkflowResult> {
     const stepDefs = JSON.parse(steps) as Array<{
@@ -543,8 +470,6 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
 
   /**
    * Get detailed info about a specific MCP's tools
-   *
-   * @param mcpName Name of the MCP to inspect
    */
   async inspectMCP({ mcpName }: { mcpName: string }): Promise<any> {
     try {
@@ -571,12 +496,7 @@ export default class MCPOrchestratorPhoton extends PhotonMCP {
   }
 
   /**
-   * Find tools across multiple MCPs
-   *
-   * Search for tools by keyword across all configured MCPs.
-   *
-   * @param query Search keyword
-   * @param mcpNames Comma-separated list of MCPs to search (optional)
+   * Find tools across multiple MCPs by keyword
    */
   async findToolsAcrossMCPs({
     query,

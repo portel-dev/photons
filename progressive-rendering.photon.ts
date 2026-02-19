@@ -1,10 +1,11 @@
 /**
- * Progressive Rendering — Same Data, Better Display
+ * Progressive Rendering - Same Data, Better Display
  *
  * Six methods return the same team data, each progressively enhanced.
- * Run them side-by-side in Beam to see how Photon features improve rendering.
  *
- * @description Demonstrates 6 levels of rendering enhancement on identical data
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
  * @tags tutorial, rendering, ui-types, format
  * @icon 🎨
  */

@@ -1,19 +1,6 @@
 /**
  * Integration Demo — Dependencies, Assets, Stateful Workflows
  *
- * Demonstrates dependency management, asset discovery, stateful
- * workflows with checkpoint/resume, and resource methods.
- *
- * Features covered:
- * - Runtime version constraint (>=1.0.0)
- * - CLI dependency check (node)
- * - Stateful class annotation for resumable workflows
- * - Checkpoint yields for workflow resumption
- * - UI asset linking
- * - Asset folder discovery (integration-demo/ui/)
- * - @resource method (MCP resource)
- * - @format annotations
- *
  * @version 1.0.0
  * @author Portel
  * @license MIT
@@ -28,32 +15,16 @@
 import { PhotonMCP, io } from '@portel/photon-core';
 import * as os from 'os';
 
-// ════════════════════════════════════════════════════════════════════════════════
-// TYPES
-// ════════════════════════════════════════════════════════════════════════════════
-
 interface WorkflowStep {
   name: string;
   status: 'pending' | 'running' | 'complete';
   result?: any;
 }
 
-// ════════════════════════════════════════════════════════════════════════════════
-// PHOTON CLASS
-// ════════════════════════════════════════════════════════════════════════════════
-
 export default class IntegrationDemoPhoton extends PhotonMCP {
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // INFO — Version, runtime, dependency status
-  // ══════════════════════════════════════════════════════════════════════════════
 
   /**
    * Show photon info, runtime version, and dependency status
-   *
-   * Returns structured data about this photon's configuration,
-   * runtime compatibility, and available dependencies.
-   *
    * @ui result-viewer
    * @format json
    */
@@ -86,18 +57,9 @@ export default class IntegrationDemoPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // STATEFUL WORKFLOW — Checkpoint yields for resumability
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
-   * A multi-step stateful workflow with checkpoint yields
-   *
-   * Each checkpoint persists state to disk so the workflow can resume
-   * after interruption. Steps simulate a data processing pipeline.
-   *
+   * Multi-step stateful workflow with checkpoint yields
    * @stateful
-   * @param input Input data to process
    * @param steps Number of processing steps {@min 2} {@max 10} {@default 3}
    * @ui result-viewer
    */
@@ -139,15 +101,8 @@ export default class IntegrationDemoPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // RESOURCE METHOD (MCP Resource)
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Integration demo status resource
-   *
-   * Exposes a readable MCP resource with the current photon status.
-   *
    * @Static photon://integration-demo/status
    */
   async status(): Promise<{
@@ -171,17 +126,8 @@ export default class IntegrationDemoPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // ASSET DISCOVERY HELPER
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * List discovered assets for this photon
-   *
-   * Returns information about the asset folder and its contents.
-   * The runtime auto-discovers the `integration-demo/` folder
-   * parallel to this `.photon.ts` file.
-   *
    * @format json
    */
   async assets(): Promise<{
@@ -195,10 +141,6 @@ export default class IntegrationDemoPhoton extends PhotonMCP {
       annotations: ['ui: result-viewer ./ui/result-viewer.html'],
     };
   }
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // FORMAT EXAMPLES
-  // ══════════════════════════════════════════════════════════════════════════════
 
   /**
    * Render platform details as a markdown report
@@ -224,10 +166,6 @@ export default class IntegrationDemoPhoton extends PhotonMCP {
 All integration features operational.
 `;
   }
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // TEST METHODS — run with: photon test integration-demo
-  // ══════════════════════════════════════════════════════════════════════════════
 
   /**
    * Verify info returns valid structure

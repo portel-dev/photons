@@ -1,23 +1,9 @@
 /**
- * Preferences Photon
- *
- * Demonstrates MCP Apps with UI assets, prompts, and resources.
- * Assets are auto-discovered from the preferences/ folder by convention.
- *
- * Asset folder structure (auto-served):
- *   preferences/
- *     ui/
- *       settings.html     - Main settings form
- *       theme-preview.html - Theme preview component
- *     prompts/
- *       welcome.md        - Welcome message template
- *     resources/
- *       defaults.json     - Default configuration
- *
+ * Preferences Photon - MCP App with UI assets and settings
  *
  * @version 1.0.0
- * @license MIT
  * @author Portel
+ * @license MIT
  * @icon ⚙️
  * @tags preferences, settings, ui-templates
  */
@@ -49,13 +35,8 @@ export default class PreferencesPhoton extends PhotonMCP {
     lastModified: new Date().toISOString(),
   };
 
-  // ═══════════════════════════════════════════════════════════════════
-  // READ OPERATIONS
-  // ═══════════════════════════════════════════════════════════════════
-
   /**
    * Get current user preferences
-   *
    * @format json
    */
   async getPreferences(): Promise<UserPreferences> {
@@ -64,8 +45,6 @@ export default class PreferencesPhoton extends PhotonMCP {
 
   /**
    * Get a specific preference value
-   *
-   * @param key - The preference key to retrieve
    */
   async getPreference(params: {
     key: keyof UserPreferences;
@@ -73,16 +52,8 @@ export default class PreferencesPhoton extends PhotonMCP {
     return this.state.preferences[params.key];
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // WRITE OPERATIONS WITH UI
-  // ═══════════════════════════════════════════════════════════════════
-
   /**
    * Open the settings UI for editing preferences
-   *
-   * Shows the settings form UI and handles user input.
-   * Demonstrates EmitUI yield type for MCP Apps.
-   *
    * @ui settings
    */
   async *editSettings(): AsyncGenerator<any, UserPreferences, any> {
@@ -174,9 +145,6 @@ export default class PreferencesPhoton extends PhotonMCP {
 
   /**
    * Preview a theme before applying
-   *
-   * Shows an inline preview of the selected theme.
-   *
    * @ui theme-preview
    */
   async *previewTheme(params: {
@@ -216,8 +184,6 @@ export default class PreferencesPhoton extends PhotonMCP {
 
   /**
    * Reset preferences to defaults
-   *
-   * Loads defaults from the resources/defaults.json asset.
    */
   async *resetToDefaults(): AsyncGenerator<any, UserPreferences, any> {
     const confirmed: boolean = yield {
@@ -250,29 +216,19 @@ export default class PreferencesPhoton extends PhotonMCP {
     return this.state.preferences;
   }
 
-  // ═══════════════════════════════════════════════════════════════════
-  // BULK OPERATIONS
-  // ═══════════════════════════════════════════════════════════════════
-
   /**
    * Import preferences from JSON
-   *
-   * @param preferences - JSON object with preference values
    */
   async importPreferences(params: {
     preferences: Partial<UserPreferences>;
   }): Promise<UserPreferences> {
-    this.state.preferences = {
-      ...this.state.preferences,
-      ...params.preferences,
-    };
+    this.state.preferences = { ...this.state.preferences, ...params.preferences };
     this.state.lastModified = new Date().toISOString();
     return this.state.preferences;
   }
 
   /**
    * Export current preferences as JSON
-   *
    * @format json
    */
   async exportPreferences(): Promise<PreferencesState> {

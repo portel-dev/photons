@@ -1,6 +1,6 @@
-# Preferences Photon Demonstrates MCP Apps with UI assets, prompts, and resources. Assets are auto-discovered from the preferences/ folder by convention. Asset folder structure (auto-served): preferences/ ui/ settings.html    
+# Preferences Photon
 
-Main settings form theme-preview.html - Theme preview component prompts/ welcome.md        - Welcome message template resources/ defaults.json     - Default configuration
+MCP App with UI assets and settings
 
 > **7 tools** · Workflow Photon · v1.0.0 · MIT
 
@@ -31,11 +31,6 @@ Get current user preferences
 Get a specific preference value
 
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `key` | keyof UserPreferences | Yes | - The preference key to retrieve |
-
-
 
 
 
@@ -44,7 +39,7 @@ Get a specific preference value
 
 ### `editSettings` ⚡
 
-Open the settings UI for editing preferences. Shows the settings form UI and handles user input. Demonstrates EmitUI yield type for MCP Apps.
+Open the settings UI for editing preferences
 
 
 
@@ -55,7 +50,7 @@ Open the settings UI for editing preferences. Shows the settings form UI and han
 
 ### `previewTheme` ⚡
 
-Preview a theme before applying. Shows an inline preview of the selected theme.
+Preview a theme before applying
 
 
 
@@ -66,7 +61,7 @@ Preview a theme before applying. Shows an inline preview of the selected theme.
 
 ### `resetToDefaults` ⚡
 
-Reset preferences to defaults. Loads defaults from the resources/defaults.json asset.
+Reset preferences to defaults
 
 
 
@@ -78,11 +73,6 @@ Reset preferences to defaults. Loads defaults from the resources/defaults.json a
 ### `importPreferences`
 
 Import preferences from JSON
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `preferences` | Partial<UserPreferences> | Yes | - JSON object with preference values |
 
 
 

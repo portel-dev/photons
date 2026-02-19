@@ -429,15 +429,8 @@ export default class FormInboxPhoton extends PhotonMCP {
     return { imported, errors };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // SCHEDULED JOBS
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Daily submission digest
-   *
-   * Sends summary of yesterday's submissions across all forms.
-   *
    * @scheduled 0 9 * * *
    * @internal
    */
@@ -478,10 +471,7 @@ export default class FormInboxPhoton extends PhotonMCP {
   }
 
   /**
-   * Cleanup old submissions
-   *
-   * Removes submissions older than 90 days to keep data manageable.
-   *
+   * Cleanup old submissions (90+ days)
    * @scheduled 0 0 * * 0
    * @internal
    */

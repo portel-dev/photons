@@ -340,7 +340,7 @@
       "license": "MIT",
       "icon": "📬",
       "source": "../form-inbox.photon.ts",
-      "hash": "sha256:f7362c9b13289b75d8809568c70a59defc6cdea68b6611d0ddd50a6c889e6711",
+      "hash": "sha256:62b6720d54d350c6fbb7da28cb3ce1f75d20aabb1a3a5b226afcd703e5632950",
       "tools": [
         "forms",
         "formCreate",
@@ -574,12 +574,12 @@
     {
       "name": "integration-demo",
       "version": "1.0.0",
-      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows Demonstrates dependency management, asset discovery, stateful workflows with checkpoint/resume, and resource methods. Features covered: - Runtime version constraint (>=1.0.0) - CLI dependency check (node) - Stateful class annotation for resumable workflows - Checkpoint yields for workflow resumption - UI asset linking - Asset folder discovery (integration-demo/ui/) - @resource method (MCP resource) - @format annotations",
+      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔗",
       "source": "../integration-demo.photon.ts",
-      "hash": "sha256:5ea6ab366f0e7d18a8ca705334c7e94f57bdabaf852bb7a044796850b2b61f67",
+      "hash": "sha256:e12b85fef935f7bb4be2570ddee2eacd29f559282084d56a21219eaf4ba15b77",
       "tools": [
         "info",
         "workflow",
@@ -737,12 +737,12 @@
     {
       "name": "mcp-orchestrator",
       "version": "1.0.0",
-      "description": "MCP Orchestrator Photon Demonstrates how to consume multiple MCPs (written in any language) as dependencies and orchestrate workflows that combine their capabilities. This photon shows how to: 1. Use this.mcp('name') to access external MCPs 2. Call tools on MCPs written in Python, Rust, Node.js, etc. 3. Combine data from multiple sources into unified workflows 4. Handle errors gracefully when MCPs are unavailable ## MCP Dependencies This photon can work with any MCPs configured in NCP: - `tavily` - Search API (Node.js MCP) - `browser` - Web automation (Node.js MCP) - `whatsapp` - Messaging (Python MCP via uv) - `sequential-thinking` - Reasoning (Node.js MCP) - Any other MCP configured in your NCP profile ## How it Works The `this.mcp('name')` method returns a proxy that: - Calls tools directly: `await this.mcp('tavily').search({ query: '...' })` - Lists tools: `await this.mcp('tavily').list()` - Finds tools: `await this.mcp('tavily').find('search')`",
+      "description": "MCP Orchestrator - Combine multiple MCPs into powerful workflows",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔗",
       "source": "../mcp-orchestrator.photon.ts",
-      "hash": "sha256:5ddd50e04865e329e47273cda0a34fbc8f77d9cb863f69aab499e42323b2d5a5",
+      "hash": "sha256:a23eb7683723847ebef4c263fa2a75d33de863dbbdc20e1dbd0ce65fb9099135",
       "tools": [
         "discoverMCPs",
         "checkMCP",
@@ -815,12 +815,12 @@
     {
       "name": "preferences",
       "version": "1.0.0",
-      "description": "Preferences Photon Demonstrates MCP Apps with UI assets, prompts, and resources. Assets are auto-discovered from the preferences/ folder by convention. Asset folder structure (auto-served): preferences/ ui/ settings.html     - Main settings form theme-preview.html - Theme preview component prompts/ welcome.md        - Welcome message template resources/ defaults.json     - Default configuration",
+      "description": "Preferences Photon - MCP App with UI assets and settings",
       "author": "Portel",
       "license": "MIT",
       "icon": "⚙️",
       "source": "../preferences.photon.ts",
-      "hash": "sha256:860efc4bae09dc6701ac2a5f0ab8039c138262499bfde7b5027519d89200e6f6",
+      "hash": "sha256:46cb55d750f3d597802ba58eb438262c59d0cbc8d1e4f4e082429f86f758df50",
       "tools": [
         "getPreferences",
         "getPreference",
@@ -846,13 +846,13 @@
     },
     {
       "name": "progressive-rendering",
-      "version": "1.9.0",
-      "description": "Progressive Rendering — Same Data, Better Display Six methods return the same team data, each progressively enhanced. Run them side-by-side in Beam to see how Photon features improve rendering.",
-      "author": "Unknown",
+      "version": "1.0.0",
+      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
+      "author": "Portel",
       "license": "MIT",
       "icon": "🎨",
       "source": "../progressive-rendering.photon.ts",
-      "hash": "sha256:3d74e09b18ebe1faac26a7ac1b56727ddc93cf8ee6d1457c8e6031f5457cec28",
+      "hash": "sha256:9e3da4402cace6804332c27abc31e221afd7ee968dd4864dde0c8fa76dfca44d",
       "tools": [
         "v1_raw",
         "v2_described",
