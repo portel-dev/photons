@@ -1,16 +1,15 @@
 /**
- * Live Task List — stateful, reactive, persistent
+ * Tasks Live — Persistent reactive task list
  *
- * Same functionality as tasks-basic, but tasks survive restarts
- * and the UI updates in real-time via emit().
+ * Same as tasks-basic but tasks survive restarts and UI updates in real-time.
+ * Uses `this.memory` for zero-boilerplate persistence.
  *
- * Uses `this.memory` for zero-boilerplate persistence — compare with
- * tasks-basic to see the difference (no fs/path/os imports needed).
- *
- * @description Persistent reactive task list — compare with tasks-basic
- * @tags tutorial, stateful, reactive, tasks
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
  * @icon ✅
- * @stateful
+ * @tags tutorial, stateful, reactive, tasks
+ * @stateful true
  */
 
 import { PhotonMCP } from '@portel/photon-core';
@@ -22,10 +21,11 @@ interface Task {
 }
 
 export default class TasksLive extends PhotonMCP {
-
   /**
-   * List all tasks with visual status
-   * @format list {@title text, @badge status}
+   * List all tasks
+   * @format list
+   * @autorun
+   * @icon 📋
    */
   async list() {
     const tasks = await this.memory.get<Task[]>('tasks') ?? [];
@@ -35,32 +35,45 @@ export default class TasksLive extends PhotonMCP {
     }));
   }
 
-  /** Add a new task — UI refreshes automatically */
+  /**
+   * Add a new task
+   * @param text Task description
+   * @icon ➕
+   */
   async add(params: { text: string }) {
     const tasks = await this.memory.get<Task[]>('tasks') ?? [];
     tasks.push({ id: crypto.randomUUID(), text: params.text, done: false });
     await this.memory.set('tasks', tasks);
-    this.emit({ emit: 'toast', message: `Added: ${params.text}`, type: 'success' });
+    this.emit('added', { text: params.text, total: tasks.length });
     return { added: params.text, total: tasks.length };
   }
 
-  /** Complete a task by index (1-based) — UI refreshes automatically */
+  /**
+   * Complete a task by index (1-based)
+   * @param index Task number (1-based)
+   * @icon ✅
+   */
   async complete(params: { index: number }) {
     const tasks = await this.memory.get<Task[]>('tasks') ?? [];
     const task = tasks[params.index - 1];
-    if (!task) return { error: 'Task not found' };
+    if (!task) {
+      throw new Error(`Task ${params.index} not found`);
+    }
     task.done = true;
     await this.memory.set('tasks', tasks);
-    this.emit({ emit: 'toast', message: `Completed: ${task.text}`, type: 'success' });
+    this.emit('completed', { text: task.text });
     return { completed: task.text };
   }
 
-  /** Remove completed tasks */
+  /**
+   * Remove completed tasks
+   * @icon 🗑️
+   */
   async clean() {
     const tasks = await this.memory.get<Task[]>('tasks') ?? [];
     const remaining = tasks.filter(t => !t.done);
     await this.memory.set('tasks', remaining);
-    this.emit({ emit: 'status', message: `Cleaned ${tasks.length - remaining.length} tasks` });
+    this.emit('cleaned', { removed: tasks.length - remaining.length });
     return { removed: tasks.length - remaining.length, remaining: remaining.length };
   }
 }

@@ -1,6 +1,6 @@
 # Git
 
-Local git repository operations Provides git version control operations for local repositories using simple-git. Supports branch management, commits, staging, and remote operations. Common use cases: - Version control: "Show git status", "Commit these changes" - Branch management: "Create a feature branch", "Switch to main" - History: "Show recent commits", "Show diff of changes" - Remote operations: "Push to origin", "Pull latest changes" Example: status({ path: "/path/to/repo" }) Configuration: - repoPath: Default repository path (default: current directory)
+Local git repository operations
 
 > **11 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,13 +10,9 @@ Local git repository operations Provides git version control operations for loca
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `GIT_REPOPATH` | No | string | Default repository path (default: current directory) (default: `process.cwd()`) |
+| `GIT_REPOPATH` | No | string | No description available (default: `process.cwd()`) |
 
 
-
-### Setup Instructions
-
-- repoPath: Default repository path (default: current directory)
 
 
 ## 🔧 Tools
@@ -24,12 +20,12 @@ Local git repository operations Provides git version control operations for loca
 
 ### `status`
 
-Get git status of repository
+Get repository status
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | No | Repository path |
+| `path` | any | Yes | Repository path {@default .} |
 
 
 
@@ -45,9 +41,9 @@ View commit history
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | No | Repository path [max: 500] |
-| `maxCount` | number | No | Maximum number of commits to retrieve [min: 1, max: 100] |
-| `branch` | string } | No | Branch name to get logs from [max: 200] (e.g. `main`) |
+| `path` | any | Yes | Repository path {@default .} |
+| `maxCount` | number | No | Maximum commits {@default 10} [min: 1, max: 100] |
+| `branch` | string } | No | Branch name (e.g. `main`) |
 
 
 
@@ -58,14 +54,14 @@ View commit history
 
 ### `diff`
 
-Show differences in repository
+Show differences
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | No | Repository path [max: 500] |
-| `staged` | boolean | No | Show staged changes only |
-| `file` | string } | No | Specific file to show diff for [max: 500] |
+| `path` | any | Yes | Repository path {@default .} |
+| `staged` | boolean | No | Show staged changes only {@default false} |
+| `file` | string } | No | Specific file to diff |
 
 
 
@@ -76,12 +72,12 @@ Show differences in repository
 
 ### `branches`
 
-List all branches in repository
+List all branches
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | No | Repository path |
+| `path` | any | Yes | Repository path {@default .} |
 
 
 
@@ -92,14 +88,14 @@ List all branches in repository
 
 ### `branch`
 
-Create a new branch
+Create a branch
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | Yes | Branch name to create [min: 1, max: 200] (e.g. `feature/new-feature`) |
-| `path` | string | No | Repository path [max: 500] |
-| `checkout` | boolean | No | Checkout the new branch after creation |
+| `name` | string | Yes | Branch name (e.g. `feature/new-feature`) |
+| `path` | string | No | Repository path {@default .} |
+| `checkout` | boolean | No | Checkout after creation {@default false} |
 
 
 
@@ -110,13 +106,13 @@ Create a new branch
 
 ### `checkout`
 
-Checkout (switch to) a branch
+Switch to a branch
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | Yes | Branch name to checkout [min: 1, max: 200] (e.g. `main`) |
-| `path` | string | No | Repository path [max: 500] |
+| `name` | string | Yes | Branch name (e.g. `main`) |
+| `path` | string | No | Repository path {@default .} |
 
 
 

@@ -1,16 +1,12 @@
 /**
- * Expense Tracker — Memory + Collection + Typed Fields
+ * Expenses — Track spending with budgets and summaries
  *
- * Track personal expenses with category breakdowns and budget alerts.
- * Uses `this.memory` for zero-boilerplate persistence, `Collection` for
- * rich querying (groupBy, sum, where), and `Table` with typed fields
- * for polished rendering (currency, badges, dates).
- *
- * Use named instances (`_use`) to keep personal vs work expenses separate.
- *
- * @description Track expenses with budgets and category breakdowns
- * @tags demo, memory, collection, table, named-instances
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
  * @icon 💰
+ * @tags expenses, finance, budget
+ * @stateful true
  */
 
 import { PhotonMCP, Table, Collection } from '@portel/photon-core';
@@ -28,25 +24,16 @@ interface BudgetConfig {
 }
 
 export default class Expenses extends PhotonMCP {
-
-  private async loadExpenses(): Promise<Collection<Expense>> {
-    const items = await this.memory.get<Expense[]>('expenses') ?? [];
-    return Collection.from(items);
-  }
-
-  private async saveExpenses(expenses: Collection<Expense>): Promise<void> {
-    await this.memory.set('expenses', Array.from(expenses));
-  }
-
   /**
    * Add an expense
    * @param amount Amount spent {@min 0.01}
-   * @param category Category (food, transport, utilities, entertainment, other)
+   * @param category Category {@choice food,transport,utilities,entertainment,other}
    * @param description What the expense was for
    * @param date Date of expense (YYYY-MM-DD) {@default today}
+   * @icon ➕
    */
   async add(params: { amount: number; category: string; description: string; date?: string }) {
-    const expenses = await this.loadExpenses();
+    const expenses = await this.memory.get<Expense[]>('expenses') ?? [];
     const expense: Expense = {
       id: crypto.randomUUID(),
       amount: Math.round(params.amount * 100) / 100,
@@ -55,40 +42,45 @@ export default class Expenses extends PhotonMCP {
       date: params.date || new Date().toISOString().slice(0, 10),
     };
     expenses.push(expense);
-    await this.saveExpenses(expenses);
-    this.emit({ emit: 'toast', message: `Added $${expense.amount} for ${expense.description}`, type: 'success' });
+    await this.memory.set('expenses', expenses);
+    this.emit('added', { id: expense.id, amount: expense.amount, description: expense.description });
 
     // Check budget
     const budget = await this.memory.get<BudgetConfig>('budget');
     if (budget) {
       const month = expense.date.slice(0, 7);
       const monthTotal = expenses
-        .query(e => e.date.startsWith(month))
-        .sum('amount');
+        .filter(e => e.date.startsWith(month))
+        .reduce((sum, e) => sum + e.amount, 0);
       if (monthTotal > budget.limit) {
-        this.emit({ emit: 'toast', message: `⚠️ Over budget! $${monthTotal.toFixed(2)} / $${budget.limit}`, type: 'warning' });
+        this.emit('budget-warning', { spent: monthTotal, limit: budget.limit });
       }
     }
 
-    return { added: expense, total: expenses.count() };
+    return { added: expense, total: expenses.length };
   }
 
   /**
    * List all expenses
-   * @param category Filter by category
+   * @param category Filter by category {@choice food,transport,utilities,entertainment,other}
    * @param month Filter by month (YYYY-MM)
+   * @format table
+   * @autorun
+   * @icon 📋
    */
   async list(params?: { category?: string; month?: string }) {
-    let expenses = await this.loadExpenses();
+    let expenses = await this.memory.get<Expense[]>('expenses') ?? [];
 
     if (params?.category) {
-      expenses = expenses.where('category', params.category.toLowerCase());
+      expenses = expenses.filter(e => e.category === params.category?.toLowerCase());
     }
     if (params?.month) {
-      expenses = expenses.query(e => e.date.startsWith(params.month!));
+      expenses = expenses.filter(e => e.date.startsWith(params.month!));
     }
 
-    return new Table(Array.from(expenses.sortBy('date', 'desc')))
+    const sorted = expenses.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return new Table(sorted)
       .currency('amount', { currency: 'USD' })
       .badge('category', {
         colors: {
@@ -102,21 +94,32 @@ export default class Expenses extends PhotonMCP {
   /**
    * Category spending summary
    * @param month Filter by month (YYYY-MM) {@default current month}
+   * @format dashboard
+   * @autorun
+   * @icon 📊
    */
   async summary(params?: { month?: string }) {
-    const expenses = await this.loadExpenses();
+    const expenses = await this.memory.get<Expense[]>('expenses') ?? [];
     const month = params?.month || new Date().toISOString().slice(0, 7);
-    const monthExpenses = expenses.query(e => e.date.startsWith(month));
-    const groups = monthExpenses.groupBy('category');
+    const monthExpenses = expenses.filter(e => e.date.startsWith(month));
 
-    const rows = Object.entries(groups).map(([category, items]) => ({
-      category,
-      count: items.count(),
-      total: Math.round(items.sum('amount') * 100) / 100,
-      average: Math.round(items.avg('amount') * 100) / 100,
-    })).sort((a, b) => b.total - a.total);
+    const groups = monthExpenses.reduce((acc, e) => {
+      if (!acc[e.category]) acc[e.category] = [];
+      acc[e.category].push(e);
+      return acc;
+    }, {} as Record<string, Expense[]>);
 
-    const grandTotal = monthExpenses.sum('amount');
+    const rows = Object.entries(groups).map(([category, items]) => {
+      const total = items.reduce((sum, e) => sum + e.amount, 0);
+      return {
+        category,
+        count: items.length,
+        total: Math.round(total * 100) / 100,
+        average: Math.round((total / items.length) * 100) / 100,
+      };
+    }).sort((a, b) => b.total - a.total);
+
+    const grandTotal = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
 
     return {
       month,
@@ -136,20 +139,25 @@ export default class Expenses extends PhotonMCP {
   /**
    * Set or check monthly budget
    * @param limit Monthly spending limit in dollars (omit to check current)
+   * @icon 🎯
    */
   async budget(params?: { limit?: number }) {
     if (params?.limit !== undefined) {
       await this.memory.set('budget', { limit: params.limit });
-      this.emit({ emit: 'toast', message: `Budget set to $${params.limit}/month`, type: 'success' });
+      this.emit('budget-set', { limit: params.limit });
       return { budget: params.limit, status: 'set' };
     }
 
     const budget = await this.memory.get<BudgetConfig>('budget');
-    if (!budget) return { status: 'no budget set — use budget(limit) to set one' };
+    if (!budget) {
+      throw new Error('No budget set — use budget(limit) to set one');
+    }
 
-    const expenses = await this.loadExpenses();
+    const expenses = await this.memory.get<Expense[]>('expenses') ?? [];
     const month = new Date().toISOString().slice(0, 7);
-    const spent = expenses.query(e => e.date.startsWith(month)).sum('amount');
+    const spent = expenses
+      .filter(e => e.date.startsWith(month))
+      .reduce((sum, e) => sum + e.amount, 0);
     const remaining = budget.limit - spent;
 
     return {

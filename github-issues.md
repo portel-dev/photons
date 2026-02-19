@@ -1,6 +1,6 @@
 # GitHub Issues
 
-Manage GitHub repository issues Provides tools to list, create, update, and comment on GitHub issues. Requires a GitHub personal access token with repo scope. Common use cases: - Issue tracking: "List all open issues in my repo" - Bug reporting: "Create a new bug issue with details" - Issue management: "Close issue #123 and add a comment" Example: listIssues({ owner: "user", repo: "project", state: "open" }) Configuration: - token: GitHub personal access token (required) - baseUrl: GitHub API base URL (default: https://api.github.com) Dependencies are auto-installed on first run.
+Manage repository issues
 
 > **7 tools** · API Photon · v1.1.0 · MIT
 
@@ -10,52 +10,28 @@ Manage GitHub repository issues Provides tools to list, create, update, and comm
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `GIT_HUB_ISSUES_TOKEN` | Yes | string | GitHub personal access token (required) |
-| `GIT_HUB_ISSUES_BASEURL` | No | string | GitHub API base URL (default: https://api.github.com) (default: `https://api.github.com`) |
+| `GIT_HUB_ISSUES_PHOTON_TOKEN` | Yes | string | No description available |
+| `GIT_HUB_ISSUES_PHOTON_BASEURL` | No | string | No description available (default: `https://api.github.com`) |
 
 
-
-### Setup Instructions
-
-- token: GitHub personal access token (required)
-- baseUrl: GitHub API base URL (default: https://api.github.com)
-Dependencies are auto-installed on first run.
 
 
 ## 🔧 Tools
 
 
-### `listIssues`
+### `list`
 
-List issues in a repository
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `owner` | string | Yes | Repository owner (username or organization) |
-| `repo` | string | Yes | Repository name |
-| `state` | 'open' | 'closed' | 'all' | No | Issue state filter |
-| `labels` | string | No | Comma-separated label names to filter by |
-| `sort` | 'created' | 'updated' | 'comments' | No | Sort by created, updated, or comments |
-| `per_page` | number | No | Number of results per page |
-
-
-
-
-
----
-
-
-### `getIssue`
-
-Get a single issue by number
+List issues
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `owner` | string | Yes | Repository owner |
 | `repo` | string | Yes | Repository name |
-| `issue_number` | number | Yes | Issue number |
+| `state` | 'open' | 'closed' | 'all' | No | Filter {@default open} [choice: open,closed,all] |
+| `labels` | string | No | Filter labels (comma-separated) |
+| `sort` | 'created' | 'updated' | 'comments' | No | Sort by {@default created} [choice: created,updated,comments] |
+| `limit` | number | No | Results [min: 1, max: 100] |
 
 
 
@@ -64,9 +40,27 @@ Get a single issue by number
 ---
 
 
-### `createIssue`
+### `get`
 
-Create a new issue
+Get issue
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `owner` | string | Yes | Repository owner |
+| `repo` | string | Yes | Repository name |
+| `number` | number | Yes | Issue number |
+
+
+
+
+
+---
+
+
+### `create`
+
+Create issue
 
 
 | Parameter | Type | Required | Description |
@@ -74,9 +68,9 @@ Create a new issue
 | `owner` | string | Yes | Repository owner |
 | `repo` | string | Yes | Repository name |
 | `title` | string | Yes | Issue title |
-| `body` | string | No | Issue description/body |
-| `labels` | string[] | No | Array of label names |
-| `assignees` | string[] | No | Array of usernames to assign |
+| `body` | string | No | Description [field: textarea] |
+| `labels` | string[] | No | Label names (JSON array, optional) |
+| `assignees` | string[] | No | Assignees (JSON array, optional) |
 
 
 
@@ -85,20 +79,20 @@ Create a new issue
 ---
 
 
-### `updateIssue`
+### `update`
 
-Update an existing issue
+Update issue
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `owner` | string | Yes | Repository owner |
 | `repo` | string | Yes | Repository name |
-| `issue_number` | number | Yes | Issue number to update |
+| `number` | number | Yes | Issue number |
 | `title` | string | No | New title |
-| `body` | string | No | New body |
-| `state` | 'open' | 'closed' | No | New state: open or closed |
-| `labels` | string[] | No | New labels |
+| `body` | string | No | New description [field: textarea] |
+| `state` | 'open' | 'closed' | No | New state [choice: open,closed] |
+| `labels` | string[] | No | New labels (JSON array, optional) |
 
 
 
@@ -107,17 +101,17 @@ Update an existing issue
 ---
 
 
-### `addComment`
+### `comment`
 
-Add a comment to an issue
+Add comment
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `owner` | string | Yes | Repository owner |
 | `repo` | string | Yes | Repository name |
-| `issue_number` | number | Yes | Issue number |
-| `body` | string | Yes | Comment text |
+| `number` | number | Yes | Issue number |
+| `body` | string | Yes | Comment text [field: textarea] |
 
 
 
@@ -126,16 +120,16 @@ Add a comment to an issue
 ---
 
 
-### `listComments`
+### `comments`
 
-List comments on an issue
+List comments
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `owner` | string | Yes | Repository owner |
 | `repo` | string | Yes | Repository name |
-| `issue_number` | number | Yes | Issue number |
+| `number` | number | Yes | Issue number |
 
 
 
@@ -144,17 +138,17 @@ List comments on an issue
 ---
 
 
-### `searchIssues`
+### `search`
 
-Search issues across repositories
+Search issues
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | string | Yes | Search query (e.g., "is:open label:bug") |
-| `sort` | 'created' | 'updated' | 'comments' | No | Sort by created, updated, or comments |
-| `order` | 'asc' | 'desc' | No | Sort order: asc or desc |
-| `per_page` | number | No | Number of results per page |
+| `query` | string | Yes | Search query |
+| `sort` | 'created' | 'updated' | 'comments' | No | Sort by [choice: created,updated,comments] |
+| `order` | 'asc' | 'desc' | No | Order {@default desc} [choice: asc,desc] |
+| `limit` | number | No | Results [min: 1, max: 100] |
 
 
 
@@ -173,19 +167,19 @@ flowchart LR
     subgraph github_issues["📦 Github Issues"]
         direction TB
         PHOTON((🎯))
-        T0[📖 listIssues]
+        T0[📖 list]
         PHOTON --> T0
-        T1[📖 getIssue]
+        T1[📖 get]
         PHOTON --> T1
-        T2[✏️ createIssue]
+        T2[✏️ create]
         PHOTON --> T2
-        T3[🔄 updateIssue]
+        T3[🔄 update]
         PHOTON --> T3
-        T4[✏️ addComment]
+        T4[🔧 comment]
         PHOTON --> T4
-        T5[📖 listComments]
+        T5[🔧 comments]
         PHOTON --> T5
-        T6[📖 searchIssues]
+        T6[📖 search]
         PHOTON --> T6
     end
 ```

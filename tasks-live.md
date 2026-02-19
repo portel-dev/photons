@@ -1,8 +1,8 @@
 # Tasks Live
 
-Live Task List — stateful, reactive, persistent Same functionality as tasks-basic, but tasks survive restarts and the UI updates in real-time via emit(). Uses `this.memory` for zero-boilerplate persistence — compare with tasks-basic to see the difference (no fs/path/os imports needed).
+Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.
 
-> **4 tools** · API Photon · v1.9.0 · MIT
+> **4 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `stateful`
 
@@ -17,7 +17,7 @@ No configuration required.
 
 ### `list`
 
-List all tasks with visual status
+List all tasks
 
 
 
@@ -28,7 +28,12 @@ List all tasks with visual status
 
 ### `add`
 
-No description available
+Add a new task
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `text` | string | Yes | Task description |
 
 
 
@@ -39,7 +44,12 @@ No description available
 
 ### `complete`
 
-No description available
+Complete a task by index (1-based)
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `index` | number | Yes | Task number (1-based) |
 
 
 
@@ -50,7 +60,7 @@ No description available
 
 ### `clean`
 
-No description available
+Remove completed tasks
 
 
 
@@ -97,4 +107,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.9.0
+MIT · v1.0.0 · Portel

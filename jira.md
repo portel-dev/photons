@@ -1,6 +1,6 @@
 # Jira
 
-Project management and issue tracking Provides Jira operations using the official Jira REST API v3. Supports issue management, projects, transitions, and comments. Common use cases: - Issue tracking: "Create bug report", "Update issue status to In Progress" - Project management: "List all projects", "Get project details" - Collaboration: "Add comment to issue", "Assign issue to developer" Example: createIssue({ project: "PROJ", summary: "Bug in login", issueType: "Bug" }) Configuration: - host: Jira instance URL (e.g., "your-domain.atlassian.net") - email: User email for authentication - apiToken: API token from Jira (required)
+Issue tracking and project management
 
 > **10 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,17 +10,11 @@ Project management and issue tracking Provides Jira operations using the officia
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `JIRA_HOST` | Yes | string | Jira instance URL (e.g., "your-domain.atlassian.net") |
-| `JIRA_EMAIL` | Yes | string | User email for authentication |
-| `JIRA_APITOKEN` | Yes | string | API token from Jira (required) |
+| `JIRA_PHOTON_HOST` | Yes | string | No description available |
+| `JIRA_PHOTON_EMAIL` | Yes | string | No description available |
+| `JIRA_PHOTON_APITOKEN` | Yes | string | No description available |
 
 
-
-### Setup Instructions
-
-- host: Jira instance URL (e.g., "your-domain.atlassian.net")
-- email: User email for authentication
-- apiToken: API token from Jira (required)
 
 
 ## 🔧 Tools
@@ -28,14 +22,14 @@ Project management and issue tracking Provides Jira operations using the officia
 
 ### `search`
 
-List issues with JQL query
+Search issues (JQL)
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `jql` | string | Yes | JQL query string [min: 1, max: 1000] (e.g. `project = PROJ AND status = Open`) |
-| `maxResults` | number | No | Maximum number of results [min: 1, max: 100] |
-| `fields` | string | No | Fields to return (optional, comma-separated) [max: 500] (e.g. `summary,status,assignee`) |
+| `jql` | string | Yes | JQL query (e.g. `project = PROJ AND status = Open`) |
+| `limit` | number | No | Results [min: 1, max: 100] |
+| `fields` | string | No | Fields to return (comma-separated, optional) |
 
 
 
@@ -46,12 +40,12 @@ List issues with JQL query
 
 ### `get`
 
-Get issue details
+Get issue
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `issueKey` | string | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
+| `key` | string | Yes | Issue key (e.g. `PROJ-123`) |
 
 
 
@@ -62,17 +56,17 @@ Get issue details
 
 ### `create`
 
-Create a new issue
+Create issue
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `project` | string | Yes | Project key [min: 1, max: 50] (e.g. `PROJ`) |
-| `summary` | string | Yes | Issue title [min: 1, max: 200] (e.g. `Login authentication fails for users`) |
-| `issueType` | string | Yes | Issue type [min: 1, max: 50] (e.g. `Bug`) |
-| `description` | string | No | Issue description [max: 5000] (e.g. `Steps to reproduce: 1. Navigate to login 2. Enter credentials`) |
-| `priority` | string | No | Priority name [max: 50] (e.g. `High`) |
-| `assignee` | string | No | Assignee account ID [max: 100] (e.g. `5b10a2844c20165700ede21g`) |
+| `project` | string | Yes | Project key (e.g. `PROJ`) |
+| `summary` | string | Yes | Title |
+| `issueType` | string | Yes | Type (e.g. `Bug`) |
+| `description` | string | No | Description [field: textarea] |
+| `priority` | string | No | Priority (e.g. `High`) |
+| `assignee` | string | No | Assignee ID |
 
 
 
@@ -83,16 +77,16 @@ Create a new issue
 
 ### `update`
 
-Update an issue
+Update issue
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `issueKey` | string | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
-| `summary` | string | No | New summary [min: 1, max: 200] (e.g. `Updated: Login authentication fixed`) |
-| `description` | string | No | New description [max: 5000] (e.g. `Fixed by updating OAuth configuration`) |
-| `priority` | string | No | New priority [max: 50] (e.g. `Medium`) |
-| `assignee` | string | No | New assignee account ID [max: 100] (e.g. `5b10a2844c20165700ede21g`) |
+| `key` | string | Yes | Issue key (e.g. `PROJ-123`) |
+| `summary` | string | No | New summary |
+| `description` | string | No | New description [field: textarea] |
+| `priority` | string | No | New priority |
+| `assignee` | string | No | New assignee ID |
 
 
 
@@ -103,13 +97,13 @@ Update an issue
 
 ### `transition`
 
-Transition issue to new status
+Transition issue
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `issueKey` | string | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
-| `transitionId` | string | Yes | Transition ID or name [min: 1, max: 50] (e.g. `21`) |
+| `key` | string | Yes | Issue key (e.g. `PROJ-123`) |
+| `transitionId` | string | Yes | Transition ID or name |
 
 
 
@@ -120,12 +114,12 @@ Transition issue to new status
 
 ### `transitions`
 
-Get available transitions for issue
+Get transitions
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `issueKey` | string | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
+| `key` | string | Yes | Issue key (e.g. `PROJ-123`) |
 
 
 
@@ -136,13 +130,13 @@ Get available transitions for issue
 
 ### `comment`
 
-Add comment to issue
+Add comment
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `issueKey` | string | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
-| `comment` | string | Yes | Comment text [min: 1, max: 5000] (e.g. `This issue has been resolved in the latest deployment`) |
+| `key` | string | Yes | Issue key (e.g. `PROJ-123`) |
+| `text` | string | Yes | Comment text [field: textarea] |
 
 
 
@@ -153,13 +147,13 @@ Add comment to issue
 
 ### `comments`
 
-Get comments for issue
+List comments
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `issueKey` | string | Yes | Issue key [min: 1, max: 50] (e.g. `PROJ-123`) |
-| `maxResults` | number | No | Maximum number of comments [min: 1, max: 100] |
+| `key` | string | Yes | Issue key (e.g. `PROJ-123`) |
+| `limit` | number | No | Results [min: 1, max: 100] |
 
 
 
@@ -170,7 +164,7 @@ Get comments for issue
 
 ### `projects`
 
-List all projects
+List projects
 
 
 
@@ -181,12 +175,12 @@ List all projects
 
 ### `project`
 
-Get project details
+Get project
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `projectKey` | string | Yes | Project key [min: 1, max: 50] (e.g. `PROJ`) |
+| `key` | string | Yes | Project key (e.g. `PROJ`) |
 
 
 

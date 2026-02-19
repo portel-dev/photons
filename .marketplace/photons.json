@@ -34,12 +34,12 @@
     {
       "name": "code-diagram",
       "version": "1.0.0",
-      "description": "Generate a Mermaid diagram from a file Visualize any code as flowcharts, API surfaces, dependency graphs, or call graphs. Works on raw code strings or files - no AI required, pure static analysis.",
+      "description": "Code Diagram - Mermaid visualization from source code",
       "author": "Portel",
       "license": "MIT",
       "icon": "📊",
       "source": "../code-diagram.photon.ts",
-      "hash": "sha256:36d0945b4e9bc512922fa6b052b044fa9222aad6340b5a1bf5df6aedbd2033e2",
+      "hash": "sha256:c1f18ab26d5b8f12acbca463def4fbdd86c1acf5d0bd31b1371ebd9c4909f14d",
       "tools": [
         "generate",
         "fromFile",
@@ -84,12 +84,12 @@
     {
       "name": "daemon-features",
       "version": "1.0.0",
-      "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub Demonstrates daemon-specific Photon features. These features require the photon daemon to be running for full functionality, but test methods verify the logic works in direct execution mode. Features covered: - @scheduled methods (cron-based execution) - @webhook methods (HTTP endpoint handlers) - @locked methods (auto distributed lock) - this.withLock() manual locking - this.emit() with channels for pub/sub - State file persistence for scheduled proof",
+      "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔧",
       "source": "../daemon-features.photon.ts",
-      "hash": "sha256:f06046845433e25b293b7674094d8befa7b67e208906dcf2cff3d2c5f683aad8",
+      "hash": "sha256:79e7dde1be6f9b2d17f8fea6d9721ef176930964e982c7f0d892748ce740061f",
       "tools": [
         "scheduledHeartbeat",
         "handleWebhook",
@@ -101,7 +101,6 @@
       "assets": [],
       "photonType": "api",
       "features": [
-        "webhooks",
         "channels"
       ]
     },
@@ -235,19 +234,19 @@
     {
       "name": "email",
       "version": "1.1.0",
-      "description": "Email - Send and receive emails via SMTP and IMAP Provides email operations for sending, receiving, and managing emails. Supports SMTP for sending and IMAP for receiving/managing messages. Common use cases: - Send notifications: \"Email me the daily report\" - Check inbox: \"Show me my unread emails\" - Send with attachments: \"Email this file to the team\" - Search emails: \"Find emails from john@example.com\" Example: sendEmail({ to: \"user@example.com\", subject: \"Report\", body: \"...\" }) Configuration: - smtpHost: SMTP server hostname (e.g., smtp.gmail.com) - smtpPort: SMTP server port (default: 587 for TLS, 465 for SSL) - smtpUser: SMTP username/email - smtpPassword: SMTP password or app-specific password - smtpSecure: Use SSL (default: false, uses STARTTLS) - imapHost: IMAP server hostname (optional, for receiving) - imapPort: IMAP server port (optional, default: 993) - imapUser: IMAP username (optional, defaults to smtpUser) - imapPassword: IMAP password (optional, defaults to smtpPassword) Gmail Setup: 1. Enable 2FA in Google Account 2. Generate App Password: https://myaccount.google.com/apppasswords 3. Use: smtpHost=smtp.gmail.com, smtpUser=your@gmail.com, smtpPassword=app_password",
+      "description": "Email - SMTP and IMAP email operations",
       "author": "Portel",
       "license": "MIT",
       "icon": "📧",
       "source": "../email.photon.ts",
-      "hash": "sha256:f1fc79547ca8d85541aa8726389d3f68323ea3e1bd1fd0deabe500f8a1f9d33d",
+      "hash": "sha256:d78e0b5c328f9baaf4557d28f7a0bf0a9906be3033545fd7fb88a7e949f5b6ec",
       "tools": [
         "send",
-        "sendAttachment",
+        "attach",
         "inbox",
         "get",
         "search",
-        "markRead",
+        "read",
         "remove",
         "move"
       ],
@@ -257,13 +256,13 @@
     },
     {
       "name": "expenses",
-      "version": "1.9.0",
-      "description": "Expense Tracker — Memory + Collection + Typed Fields Track personal expenses with category breakdowns and budget alerts. Uses `this.memory` for zero-boilerplate persistence, `Collection` for rich querying (groupBy, sum, where), and `Table` with typed fields for polished rendering (currency, badges, dates). Use named instances (`_use`) to keep personal vs work expenses separate.",
-      "author": "Unknown",
+      "version": "1.0.0",
+      "description": "Expenses — Track spending with budgets and summaries",
+      "author": "Portel",
       "license": "MIT",
       "icon": "💰",
       "source": "../expenses.photon.ts",
-      "hash": "sha256:528b9c2467cf9a0832bda8fa7b4864dc1f87072dd990d00fd7fffd22d0a2fd75",
+      "hash": "sha256:37c32607eb8eb884250ffcc3618dfb911f9037a8bb60f06477bb0a84bbd29df3",
       "tools": [
         "add",
         "list",
@@ -272,7 +271,9 @@
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [
+        "stateful"
+      ]
     },
     {
       "name": "feature-showcase",
@@ -488,12 +489,12 @@
     {
       "name": "git",
       "version": "1.0.0",
-      "description": "Git - Local git repository operations Provides git version control operations for local repositories using simple-git. Supports branch management, commits, staging, and remote operations. Common use cases: - Version control: \"Show git status\", \"Commit these changes\" - Branch management: \"Create a feature branch\", \"Switch to main\" - History: \"Show recent commits\", \"Show diff of changes\" - Remote operations: \"Push to origin\", \"Pull latest changes\" Example: status({ path: \"/path/to/repo\" }) Configuration: - repoPath: Default repository path (default: current directory)",
+      "description": "Git - Local git repository operations",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔀",
       "source": "../git.photon.ts",
-      "hash": "sha256:16b6f5917009dc86c742068ac4b19ea22e58262342518e4f1927cab2203136f3",
+      "hash": "sha256:5076e70fe071e9abe15bc1e0e5cc3af18b4ff74fbd6323d5af325239e8c08bd9",
       "tools": [
         "status",
         "log",
@@ -514,20 +515,20 @@
     {
       "name": "github-issues",
       "version": "1.1.0",
-      "description": "GitHub Issues - Manage GitHub repository issues Provides tools to list, create, update, and comment on GitHub issues. Requires a GitHub personal access token with repo scope. Common use cases: - Issue tracking: \"List all open issues in my repo\" - Bug reporting: \"Create a new bug issue with details\" - Issue management: \"Close issue #123 and add a comment\" Example: listIssues({ owner: \"user\", repo: \"project\", state: \"open\" }) Configuration: - token: GitHub personal access token (required) - baseUrl: GitHub API base URL (default: https://api.github.com) Dependencies are auto-installed on first run.",
+      "description": "GitHub Issues - Manage repository issues",
       "author": "Portel",
       "license": "MIT",
       "icon": "🐙",
       "source": "../github-issues.photon.ts",
-      "hash": "sha256:1c8dd1502b926de892ec61cb432ba8fa1a3ed06d46cda7abbb517a2742bfe6a2",
+      "hash": "sha256:cc415af728fa632230971e33036d99c23d08636c0a00395aa2d9081d9ee66b9a",
       "tools": [
-        "listIssues",
-        "getIssue",
-        "createIssue",
-        "updateIssue",
-        "addComment",
-        "listComments",
-        "searchIssues"
+        "list",
+        "get",
+        "create",
+        "update",
+        "comment",
+        "comments",
+        "search"
       ],
       "assets": [],
       "photonType": "api",
@@ -601,12 +602,12 @@
     {
       "name": "jira",
       "version": "1.0.0",
-      "description": "Jira - Project management and issue tracking Provides Jira operations using the official Jira REST API v3. Supports issue management, projects, transitions, and comments. Common use cases: - Issue tracking: \"Create bug report\", \"Update issue status to In Progress\" - Project management: \"List all projects\", \"Get project details\" - Collaboration: \"Add comment to issue\", \"Assign issue to developer\" Example: createIssue({ project: \"PROJ\", summary: \"Bug in login\", issueType: \"Bug\" }) Configuration: - host: Jira instance URL (e.g., \"your-domain.atlassian.net\") - email: User email for authentication - apiToken: API token from Jira (required)",
+      "description": "Jira - Issue tracking and project management",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎫",
       "source": "../jira.photon.ts",
-      "hash": "sha256:cccbf1fd7ae9dcee4c830cf64ac79aa3dd20565419f912ac90ee088992dd00b0",
+      "hash": "sha256:bf0b458269438ed2a3b9b44b4337a76d6495c47031fac6196e6dce4ed34ed55e",
       "tools": [
         "search",
         "get",
@@ -901,12 +902,12 @@
     {
       "name": "slack",
       "version": "1.0.0",
-      "description": "Slack - Send messages and manage Slack workspace Provides tools to send messages, list channels, and interact with Slack workspace. Requires a Slack Bot Token with appropriate scopes. Common use cases: - Notifications: \"Send a deployment notification to #engineering\" - Team updates: \"Post the daily standup summary to #team\" - Channel management: \"List all public channels\" Example: postMessage({ channel: \"#general\", text: \"Hello team!\" }) Configuration: - token: Slack Bot Token (required, starts with xoxb-) Dependencies are auto-installed on first run.",
+      "description": "Slack - Send and manage messages",
       "author": "Portel",
       "license": "MIT",
       "icon": "💬",
       "source": "../slack.photon.ts",
-      "hash": "sha256:dd71e28742bafc59d43affaea068eaae0ea346e76696914e1bb027b525af8973",
+      "hash": "sha256:18854fea0bc0eda3d3294eed113dba271e41547bfa215227caa7f44b1d2914c0",
       "tools": [
         "post",
         "channels",
@@ -946,13 +947,13 @@
     },
     {
       "name": "tasks-basic",
-      "version": "1.9.0",
-      "description": "Basic Task List — stateless, in-memory A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what @stateful adds.",
-      "author": "Unknown",
+      "version": "1.0.0",
+      "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
+      "author": "Portel",
       "license": "MIT",
       "icon": "📝",
       "source": "../tasks-basic.photon.ts",
-      "hash": "sha256:fe28c365bf95108c2d8674ea5ab3d5bcca827e3a08101771f2595ccedefa9179",
+      "hash": "sha256:b7c9346aafa1f171ada63dcb0ea76433e59bb70deafb94cc2ebcc8c18f62e9a9",
       "tools": [
         "list",
         "add",
@@ -961,19 +962,17 @@
       ],
       "assets": [],
       "photonType": "api",
-      "features": [
-        "stateful"
-      ]
+      "features": []
     },
     {
       "name": "tasks-live",
-      "version": "1.9.0",
-      "description": "Live Task List — stateful, reactive, persistent Same functionality as tasks-basic, but tasks survive restarts and the UI updates in real-time via emit(). Uses `this.memory` for zero-boilerplate persistence — compare with tasks-basic to see the difference (no fs/path/os imports needed).",
-      "author": "Unknown",
+      "version": "1.0.0",
+      "description": "Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.",
+      "author": "Portel",
       "license": "MIT",
       "icon": "✅",
       "source": "../tasks-live.photon.ts",
-      "hash": "sha256:4c005ae7ac03d40a2291cb8364b27cd98bd330f6e46870014a26f87fa3a9c614",
+      "hash": "sha256:9c68429c4ba7fbdcba33379a2a593594fbb35d0ee556dad55ab192995ed28b0e",
       "tools": [
         "list",
         "add",
@@ -1028,13 +1027,13 @@
     },
     {
       "name": "team-pulse",
-      "version": "1.9.0",
-      "description": "Team Pulse — Async Standup with Memory + Channels + Locking Post daily updates, see what the team posted, search past standups. Updates persist via `this.memory`, broadcast to all sessions via channels, and use distributed locking to prevent duplicate rapid-fire posts.",
-      "author": "Unknown",
+      "version": "1.0.0",
+      "description": "Team Pulse — Async standup with team feed",
+      "author": "Portel",
       "license": "MIT",
       "icon": "📡",
       "source": "../team-pulse.photon.ts",
-      "hash": "sha256:d5df36dbcfacabc15b691d9679190ae06ebec234bef148b4ea10e1c8baaf8aae",
+      "hash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
       "tools": [
         "post",
         "today",
@@ -1044,7 +1043,7 @@
       "assets": [],
       "photonType": "api",
       "features": [
-        "channels"
+        "stateful"
       ]
     },
     {

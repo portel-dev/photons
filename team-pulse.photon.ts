@@ -1,16 +1,15 @@
 /**
- * Team Pulse — Async Standup with Memory + Channels + Locking
+ * Team Pulse — Async standup with team feed
  *
- * Post daily updates, see what the team posted, search past standups.
- * Updates persist via `this.memory`, broadcast to all sessions via
- * channels, and use distributed locking to prevent duplicate rapid-fire posts.
- *
- * @description Async standup — post updates, see the team feed
- * @tags demo, memory, channels, collection, locking
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
  * @icon 📡
+ * @tags standup, team, async, communication
+ * @stateful true
  */
 
-import { PhotonMCP, Collection, Table } from '@portel/photon-core';
+import { PhotonMCP, Table } from '@portel/photon-core';
 
 interface Update {
   id: string;
@@ -23,31 +22,18 @@ interface Update {
 }
 
 export default class TeamPulse extends PhotonMCP {
-
-  private async loadUpdates(): Promise<Collection<Update>> {
-    const items = await this.memory.get<Update[]>('updates') ?? [];
-    return Collection.from(items);
-  }
-
-  private async saveUpdates(updates: Collection<Update>): Promise<void> {
-    await this.memory.set('updates', Array.from(updates));
-  }
-
   /**
    * Post a standup update
-   *
-   * Persists to memory, broadcasts to all open sessions, and uses
-   * a distributed lock to prevent duplicate rapid-fire submissions.
-   *
    * @param name Your name
    * @param update What you worked on / plan to work on
    * @param blockers Any blockers (optional)
+   * @icon ➕
    */
   async post(params: { name: string; update: string; blockers?: string }) {
     return this.withLock('pulse:post', async () => {
-      const updates = await this.loadUpdates();
+      const updates = await this.memory.get<Update[]>('updates') ?? [];
       const now = new Date();
-      const maxSeq = updates.count() > 0 ? updates.max('seq')!.seq : 0;
+      const maxSeq = updates.length > 0 ? Math.max(...updates.map(u => u.seq)) : 0;
       const entry: Update = {
         id: crypto.randomUUID(),
         seq: maxSeq + 1,
@@ -58,15 +44,10 @@ export default class TeamPulse extends PhotonMCP {
         date: now.toISOString().slice(0, 10),
       };
       updates.push(entry);
-      await this.saveUpdates(updates);
+      await this.memory.set('updates', updates);
 
       // Broadcast to all sessions
-      this.emit({
-        channel: 'pulse',
-        event: 'new-update',
-        data: { name: entry.name, update: entry.update },
-      });
-      this.emit({ emit: 'toast', message: `Update posted by ${entry.name}`, type: 'success' });
+      this.emit('new-update', { name: entry.name, update: entry.update });
 
       return { posted: entry };
     });
@@ -74,20 +55,22 @@ export default class TeamPulse extends PhotonMCP {
 
   /**
    * See today's standup updates
-   * @format list {@title update, @subtitle name, @badge blockers}
+   * @format list
+   * @autorun
+   * @icon 👀
    */
   async today() {
-    const updates = await this.loadUpdates();
+    const updates = await this.memory.get<Update[]>('updates') ?? [];
     const todayStr = new Date().toISOString().slice(0, 10);
     const todayUpdates = updates
-      .where('date', todayStr)
-      .sortBy('seq', 'desc');
+      .filter(u => u.date === todayStr)
+      .sort((a, b) => b.seq - a.seq);
 
-    if (todayUpdates.isEmpty()) {
+    if (todayUpdates.length === 0) {
       return { message: 'No updates posted today yet.' };
     }
 
-    return Array.from(todayUpdates).map(u => ({
+    return todayUpdates.map(u => ({
       name: u.name,
       update: u.update,
       blockers: u.blockers || 'none',
@@ -98,22 +81,29 @@ export default class TeamPulse extends PhotonMCP {
   /**
    * Past standup history grouped by date
    * @param days Number of days to look back {@default 7} {@min 1} {@max 90}
+   * @format dashboard
+   * @icon 📅
    */
   async history(params?: { days?: number }) {
     const days = params?.days || 7;
-    const updates = await this.loadUpdates();
+    const updates = await this.memory.get<Update[]>('updates') ?? [];
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - days);
     const cutoffStr = cutoff.toISOString().slice(0, 10);
 
     const recent = updates
-      .query(u => u.date >= cutoffStr)
-      .sortBy('seq', 'desc');
+      .filter(u => u.date >= cutoffStr)
+      .sort((a, b) => b.seq - a.seq);
 
-    const groups = recent.groupBy('date');
+    const groups = recent.reduce((acc, u) => {
+      if (!acc[u.date]) acc[u.date] = [];
+      acc[u.date].push(u);
+      return acc;
+    }, {} as Record<string, Update[]>);
+
     const result: Record<string, any[]> = {};
     for (const [date, items] of Object.entries(groups)) {
-      result[date] = Array.from(items).map(u => ({
+      result[date] = items.map(u => ({
         name: u.name,
         update: u.update,
         blockers: u.blockers || 'none',
@@ -122,7 +112,7 @@ export default class TeamPulse extends PhotonMCP {
 
     return {
       days,
-      totalUpdates: recent.count(),
+      totalUpdates: recent.length,
       updates: result,
     };
   }
@@ -130,17 +120,21 @@ export default class TeamPulse extends PhotonMCP {
   /**
    * Search past updates by keyword
    * @param query Search term
+   * @format table
+   * @icon 🔍
    */
   async search(params: { query: string }) {
-    const updates = await this.loadUpdates();
+    const updates = await this.memory.get<Update[]>('updates') ?? [];
     const q = params.query.toLowerCase();
-    const matches = updates.query(u =>
-      u.update.toLowerCase().includes(q) ||
-      u.name.toLowerCase().includes(q) ||
-      (u.blockers?.toLowerCase().includes(q) ?? false)
-    ).sortBy('seq', 'desc');
+    const matches = updates
+      .filter(u =>
+        u.update.toLowerCase().includes(q) ||
+        u.name.toLowerCase().includes(q) ||
+        (u.blockers?.toLowerCase().includes(q) ?? false)
+      )
+      .sort((a, b) => b.seq - a.seq);
 
-    return new Table(Array.from(matches))
+    return new Table(matches)
       .text('name')
       .text('update')
       .badge('blockers')

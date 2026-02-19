@@ -1,6 +1,6 @@
 # Slack
 
-Send messages and manage Slack workspace Provides tools to send messages, list channels, and interact with Slack workspace. Requires a Slack Bot Token with appropriate scopes. Common use cases: - Notifications: "Send a deployment notification to #engineering" - Team updates: "Post the daily standup summary to #team" - Channel management: "List all public channels" Example: postMessage({ channel: "#general", text: "Hello team!" }) Configuration: - token: Slack Bot Token (required, starts with xoxb-) Dependencies are auto-installed on first run.
+Send and manage messages
 
 > **7 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,14 +10,9 @@ Send messages and manage Slack workspace Provides tools to send messages, list c
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `SLACK_TOKEN` | Yes | string | Slack Bot Token (required, starts with xoxb-) |
+| `SLACK_PHOTON_TOKEN` | Yes | string | No description available |
 
 
-
-### Setup Instructions
-
-- token: Slack Bot Token (required, starts with xoxb-)
-Dependencies are auto-installed on first run.
 
 
 ## 🔧 Tools
@@ -25,15 +20,15 @@ Dependencies are auto-installed on first run.
 
 ### `post`
 
-Post a message to a channel or user
+Post a message
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `text` | string | Yes | Message text [min: 1] (e.g. `Hello team!`) |
-| `thread_ts` | string | No | Thread timestamp to reply to |
-| `blocks` | string | No | Rich message blocks (optional, JSON string) |
+| `channel` | string | Yes | Channel name or ID |
+| `text` | string | Yes | Message text [field: textarea] |
+| `thread_ts` | string | No | Thread timestamp |
+| `blocks` | string | No | Rich blocks (JSON string, optional) |
 
 
 
@@ -44,13 +39,13 @@ Post a message to a channel or user
 
 ### `channels`
 
-List all channels in the workspace
+List channels
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `types` | any | Yes | Channel types (e.g. `public_channel`) |
-| `limit` | number | No | Maximum number of channels to return [min: 1, max: 1000] |
+| `types` | any | Yes | Channel types {@default public_channel} [choice: public_channel,private_channel] |
+| `limit` | number } | No | Results limit [min: 1, max: 1000] |
 
 
 
@@ -61,12 +56,12 @@ List all channels in the workspace
 
 ### `channel`
 
-Get channel information
+Get channel info
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
+| `channel` | string | Yes | Channel name or ID |
 
 
 
@@ -77,15 +72,15 @@ Get channel information
 
 ### `history`
 
-Get conversation history from a channel
+Get message history
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `limit` | number | No | Number of messages to retrieve [min: 1, max: 100] |
-| `oldest` | string | No | Start of time range (Unix timestamp) |
-| `latest` | string | No | End of time range (Unix timestamp) |
+| `channel` | string | Yes | Channel name or ID |
+| `limit` | number | No | Results [min: 1, max: 100] |
+| `oldest` | string | No | Start timestamp |
+| `latest` | string | No | End timestamp |
 
 
 
@@ -96,14 +91,14 @@ Get conversation history from a channel
 
 ### `react`
 
-Add a reaction to a message
+Add reaction to message
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `timestamp` | string | Yes | Message timestamp [min: 1] |
-| `name` | string | Yes | Reaction emoji name (without colons) [min: 1] (e.g. `thumbsup`) |
+| `channel` | string | Yes | Channel name or ID |
+| `timestamp` | string | Yes | Message timestamp |
+| `name` | string | Yes | Emoji name (without colons) |
 
 
 
@@ -114,16 +109,16 @@ Add a reaction to a message
 
 ### `upload`
 
-Upload a file to a channel
+Upload file
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `channel` | string | Yes | Channel name or ID [min: 1] (e.g. `#general`) |
-| `content` | string | Yes | File content (text) [min: 1] |
-| `filename` | string | Yes | Filename [min: 1] (e.g. `report.txt`) |
+| `channel` | string | Yes | Channel name or ID |
+| `content` | string | Yes | File content |
+| `filename` | string | Yes | File name |
 | `title` | string | No | File title |
-| `initial_comment` | string | No | Comment to add with the file |
+| `comment` | string | No | Comment |
 
 
 
@@ -134,14 +129,14 @@ Upload a file to a channel
 
 ### `search`
 
-Search for messages in the workspace
+Search messages
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | string | Yes | Search query [min: 1] (e.g. `deployment`) |
-| `count` | number | No | Number of results to return [min: 1, max: 100] |
-| `sort` | 'score' | 'timestamp' | No | Sort order (e.g. `score`) |
+| `query` | string | Yes | Search query |
+| `count` | number | No | Results [min: 1, max: 100] |
+| `sort` | 'score' | 'timestamp' | No | Sort order {@default score} [choice: score,timestamp] |
 
 
 

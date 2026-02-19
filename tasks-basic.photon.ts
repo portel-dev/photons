@@ -1,39 +1,70 @@
 /**
- * Basic Task List — stateless, in-memory
+ * Tasks Basic — Stateless task list
  *
  * A simple todo list that works during a session but loses state on restart.
- * Compare with tasks-live to see what @stateful adds.
+ * Compare with tasks-live to see what persistence adds.
  *
- * @description Stateless task list for comparison with tasks-live
- * @tags tutorial, stateless, tasks
+ * @version 1.0.0
+ * @author Portel
+ * @license MIT
  * @icon 📝
+ * @tags tutorial, stateless, tasks
  */
 
 import { PhotonMCP } from '@portel/photon-core';
 
-export default class TasksBasic extends PhotonMCP {
-  private tasks: { id: string; text: string; done: boolean }[] = [];
+interface Task {
+  id: string;
+  text: string;
+  done: boolean;
+}
 
-  /** List all tasks */
+export default class TasksBasic extends PhotonMCP {
+  private tasks: Task[] = [];
+
+  /**
+   * List all tasks
+   * @format list
+   * @autorun
+   * @icon 📋
+   */
   async list() {
-    return this.tasks;
+    return this.tasks.map(t => ({
+      ...t,
+      status: t.done ? '✓ done' : 'pending',
+    }));
   }
 
-  /** Add a new task */
+  /**
+   * Add a new task
+   * @param text Task description
+   * @icon ➕
+   */
   async add(params: { text: string }) {
     this.tasks.push({ id: crypto.randomUUID(), text: params.text, done: false });
+    this.emit('added', { text: params.text, total: this.tasks.length });
     return { added: params.text, total: this.tasks.length };
   }
 
-  /** Complete a task by index (1-based) */
+  /**
+   * Complete a task by index (1-based)
+   * @param index Task number (1-based)
+   * @icon ✅
+   */
   async complete(params: { index: number }) {
     const task = this.tasks[params.index - 1];
-    if (!task) return { error: 'Task not found' };
+    if (!task) {
+      throw new Error(`Task ${params.index} not found`);
+    }
     task.done = true;
+    this.emit('completed', { text: task.text });
     return { completed: task.text };
   }
 
-  /** Remove completed tasks */
+  /**
+   * Remove completed tasks
+   * @icon 🗑️
+   */
   async clean() {
     const before = this.tasks.length;
     this.tasks = this.tasks.filter(t => !t.done);

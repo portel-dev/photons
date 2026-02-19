@@ -1,6 +1,6 @@
 # Email
 
-Send and receive emails via SMTP and IMAP Provides email operations for sending, receiving, and managing emails. Supports SMTP for sending and IMAP for receiving/managing messages. Common use cases: - Send notifications: "Email me the daily report" - Check inbox: "Show me my unread emails" - Send with attachments: "Email this file to the team" - Search emails: "Find emails from john@example.com" Example: sendEmail({ to: "user@example.com", subject: "Report", body: "..." }) Configuration: - smtpHost: SMTP server hostname (e.g., smtp.gmail.com) - smtpPort: SMTP server port (default: 587 for TLS, 465 for SSL) - smtpUser: SMTP username/email - smtpPassword: SMTP password or app-specific password - smtpSecure: Use SSL (default: false, uses STARTTLS) - imapHost: IMAP server hostname (optional, for receiving) - imapPort: IMAP server port (optional, default: 993) - imapUser: IMAP username (optional, defaults to smtpUser) - imapPassword: IMAP password (optional, defaults to smtpPassword) Gmail Setup: 1. Enable 2FA in Google Account 2. Generate App Password: https://myaccount.google.com/apppasswords 3. Use: smtpHost=smtp.gmail.com, smtpUser=your@gmail.com, smtpPassword=app_password
+SMTP and IMAP email operations
 
 > **8 tools** · API Photon · v1.1.0 · MIT
 
@@ -10,33 +10,17 @@ Send and receive emails via SMTP and IMAP Provides email operations for sending,
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `EMAIL_SMTPHOST` | Yes | string | SMTP server hostname (e.g., smtp.gmail.com) |
-| `EMAIL_SMTPPORT` | No | number | SMTP server port (default: 587 for TLS, 465 for SSL) (default: `587`) |
-| `EMAIL_SMTPUSER` | Yes | string | SMTP username/email |
-| `EMAIL_SMTPPASSWORD` | Yes | string | SMTP password or app-specific password |
-| `EMAIL_SMTPSECURE` | No | boolean | Use SSL (default: false, uses STARTTLS) |
-| `EMAIL_IMAPHOST` | No | string | IMAP server hostname (optional, for receiving) |
-| `EMAIL_IMAPPORT` | No | number | IMAP server port (optional, default: 993) (default: `993`) |
-| `EMAIL_IMAPUSER` | No | string | IMAP username (optional, defaults to smtpUser) |
-| `EMAIL_IMAPPASSWORD` | No | string | IMAP password (optional, defaults to smtpPassword) |
+| `EMAIL_PHOTON_SMTPHOST` | Yes | string | No description available |
+| `EMAIL_PHOTON_SMTPPORT` | No | number | No description available (default: `587`) |
+| `EMAIL_PHOTON_SMTPUSER` | Yes | string | No description available |
+| `EMAIL_PHOTON_SMTPPASSWORD` | Yes | string | No description available |
+| `EMAIL_PHOTON_SMTPSECURE` | No | boolean | No description available |
+| `EMAIL_PHOTON_IMAPHOST` | No | string | No description available |
+| `EMAIL_PHOTON_IMAPPORT` | No | number | No description available (default: `993`) |
+| `EMAIL_PHOTON_IMAPUSER` | No | string | No description available |
+| `EMAIL_PHOTON_IMAPPASSWORD` | No | string | No description available |
 
 
-
-### Setup Instructions
-
-- smtpHost: SMTP server hostname (e.g., smtp.gmail.com)
-- smtpPort: SMTP server port (default: 587 for TLS, 465 for SSL)
-- smtpUser: SMTP username/email
-- smtpPassword: SMTP password or app-specific password
-- smtpSecure: Use SSL (default: false, uses STARTTLS)
-- imapHost: IMAP server hostname (optional, for receiving)
-- imapPort: IMAP server port (optional, default: 993)
-- imapUser: IMAP username (optional, defaults to smtpUser)
-- imapPassword: IMAP password (optional, defaults to smtpPassword)
-Gmail Setup:
-1. Enable 2FA in Google Account
-2. Generate App Password: https://myaccount.google.com/apppasswords
-3. Use: smtpHost=smtp.gmail.com, smtpUser=your@gmail.com, smtpPassword=app_password
 
 
 ## 🔧 Tools
@@ -49,13 +33,12 @@ Send an email
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `to` | string | Yes | Recipient email address or comma-separated addresses |
-| `subject` | string | Yes | Email subject |
-| `body` | string | Yes | Email body (plain text or HTML) |
-| `html` | boolean | No | Set to true if body contains HTML |
-| `cc` | string | No | CC recipients (optional, comma-separated) |
-| `bcc` | string | No | BCC recipients (optional, comma-separated) |
-| `from` | string | No | Sender email (optional, defaults to smtpUser) |
+| `to` | string | Yes | Recipient address [format: email] |
+| `subject` | string | Yes | Subject line |
+| `body` | string | Yes | Email body [field: textarea] |
+| `html` | boolean | No | HTML content [choice: true,false] |
+| `cc` | string | No | CC addresses [format: email] |
+| `bcc` | string | No | BCC addresses [format: email] |
 
 
 
@@ -64,18 +47,18 @@ Send an email
 ---
 
 
-### `sendAttachment`
+### `attach`
 
-Send an email with attachments
+Send email with attachments
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `to` | string | Yes | Recipient email address |
-| `subject` | string | Yes | Email subject |
-| `body` | string | Yes | Email body |
-| `attachments` | Array<{ filename: string | Yes | Array of attachments with filename and content |
-| `html` | any | No | Set to true if body contains HTML |
+| `to` | string | Yes | Recipient address [format: email] |
+| `subject` | string | Yes | Subject line |
+| `body` | string | Yes | Email body [field: textarea] |
+| `attachments` | Array<{ filename: string | Yes | File attachments (JSON array) |
+| `html` | any | No | HTML content [choice: true,false] |
 
 
 
@@ -86,14 +69,14 @@ Send an email with attachments
 
 ### `inbox`
 
-List emails from inbox
+List emails from mailbox
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `limit` | any | No | Maximum number of emails to return |
-| `unreadOnly` | boolean | No | Only return unread emails |
-| `mailbox` | string } | No | Mailbox to check |
+| `mailbox` | any | No | Mailbox name |
+| `unread` | boolean | No | Unread only |
+| `limit` | number } | No | Max results [min: 1, max: 100] |
 
 
 
@@ -104,13 +87,13 @@ List emails from inbox
 
 ### `get`
 
-Get a specific email by sequence number
+Get email by UID
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | number | Yes | Email sequence number (from listInbox) |
-| `mailbox` | string | No | Mailbox to check |
+| `uid` | number | Yes | Email UID |
+| `mailbox` | string | No | Mailbox name |
 
 
 
@@ -121,15 +104,15 @@ Get a specific email by sequence number
 
 ### `search`
 
-Search emails by criteria
+Search emails
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `query` | string | Yes | Search query (from, subject, or body text) |
-| `searchIn` | 'from' | 'subject' | 'body' | No | Where to search: from, subject, or body |
-| `limit` | number | No | Maximum results |
-| `mailbox` | string | No | Mailbox to search |
+| `query` | string | Yes | Search terms |
+| `searchIn` | 'from' | 'subject' | 'body' | No | Search field {@default subject} [choice: from,subject,body] |
+| `limit` | number | No | Max results [min: 1, max: 100] |
+| `mailbox` | string | No | Mailbox name |
 
 
 
@@ -138,14 +121,14 @@ Search emails by criteria
 ---
 
 
-### `markRead`
+### `read`
 
-Mark an email as read
+Mark email as read
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | number | Yes | Email sequence number |
+| `uid` | number | Yes | Email UID |
 | `mailbox` | string | No | Mailbox name |
 
 
@@ -157,12 +140,12 @@ Mark an email as read
 
 ### `remove`
 
-Delete an email
+Delete email
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | number | Yes | Email sequence number |
+| `uid` | number | Yes | Email UID |
 | `mailbox` | string | No | Mailbox name |
 
 
@@ -174,14 +157,14 @@ Delete an email
 
 ### `move`
 
-Move email to another mailbox (archive)
+Move email to mailbox
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `uid` | number | Yes | Email sequence number |
-| `targetMailbox` | string | Yes | Target mailbox name (e.g., Archive, Trash) |
-| `sourceMailbox` | string | No | Source mailbox |
+| `uid` | number | Yes | Email UID |
+| `target` | string | Yes | Target mailbox name |
+| `mailbox` | string | No | Source mailbox |
 
 
 
@@ -202,7 +185,7 @@ flowchart LR
         PHOTON((🎯))
         T0[📤 send]
         PHOTON --> T0
-        T1[📤 sendAttachment]
+        T1[🔧 attach]
         PHOTON --> T1
         T2[🔧 inbox]
         PHOTON --> T2
@@ -210,7 +193,7 @@ flowchart LR
         PHOTON --> T3
         T4[📖 search]
         PHOTON --> T4
-        T5[🔧 markRead]
+        T5[📖 read]
         PHOTON --> T5
         T6[🗑️ remove]
         PHOTON --> T6

@@ -1,10 +1,10 @@
 # Daemon Features
 
-Scheduled Jobs, Webhooks, Locks, Pub/Sub Demonstrates daemon-specific Photon features. These features require the photon daemon to be running for full functionality, but test methods verify the logic works in direct execution mode. Features covered: - @scheduled methods (cron-based execution) - @webhook methods (HTTP endpoint handlers) - @locked methods (auto distributed lock) - this.withLock() manual locking - this.emit() with channels for pub/sub - State file persistence for scheduled proof
+Scheduled Jobs, Webhooks, Locks, Pub/Sub
 
 > **6 tools** · API Photon · v1.0.0 · MIT
 
-**Platform Features:** `webhooks` `channels`
+**Platform Features:** `channels`
 
 ## ⚙️ Configuration
 

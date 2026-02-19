@@ -1,9 +1,10 @@
 # Expenses
 
-Expense Tracker — Memory + Collection + Typed Fields Track personal expenses with category breakdowns and budget alerts. Uses `this.memory` for zero-boilerplate persistence, `Collection` for rich querying (groupBy, sum, where), and `Table` with typed fields for polished rendering (currency, badges, dates). Use named instances (`_use`) to keep personal vs work expenses separate.
+Expenses — Track spending with budgets and summaries
 
-> **4 tools** · API Photon · v1.9.0 · MIT
+> **4 tools** · API Photon · v1.0.0 · MIT
 
+**Platform Features:** `stateful`
 
 ## ⚙️ Configuration
 
@@ -22,7 +23,7 @@ Add an expense
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `amount` | number | Yes | Amount spent {@min 0.01} |
-| `category` | string | Yes | Category (food, transport, utilities, entertainment, other) |
+| `category` | string | Yes | Category [choice: food,transport,utilities,entertainment,other] |
 | `description` | string | Yes | What the expense was for |
 | `date` | string | No | Date of expense (YYYY-MM-DD) {@default today} |
 
@@ -40,7 +41,7 @@ List all expenses
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `category` | any | Yes | Filter by category |
+| `category` | any | Yes | Filter by category [choice: food,transport,utilities,entertainment,other] |
 | `month` | string } | No | Filter by month (YYYY-MM) |
 
 
@@ -120,4 +121,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.9.0
+MIT · v1.0.0 · Portel

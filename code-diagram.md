@@ -1,6 +1,6 @@
-# Generate a Mermaid diagram from a file Visualize any code as flowcharts, API surfaces, dependency graphs, or call graphs. Works on raw code strings or files
+# Code Diagram
 
-no AI required, pure static analysis.
+Mermaid visualization from source code
 
 > **3 tools** · API Photon · v1.0.0 · MIT
 
@@ -17,15 +17,15 @@ No configuration required.
 
 ### `generate`
 
-Generate a Mermaid diagram from code string
+Generate diagram from code string
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `code` | string | Yes | The TypeScript/JavaScript code to analyze |
+| `code` | string | Yes | TypeScript/JavaScript source code |
 | `type` | DiagramType | No | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
 | `style` | DiagramStyle | No | Diagram style {@default linear} [choice: linear,branching,structure] |
-| `name` | string | No | Optional name for the diagram {@default Code} |
+| `name` | string | No | Diagram name {@default Code} |
 
 
 
@@ -36,12 +36,12 @@ Generate a Mermaid diagram from code string
 
 ### `fromFile`
 
-Generate a Mermaid diagram from a file
+Generate diagram from file
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | Path to the TypeScript/JavaScript file |
+| `path` | string | Yes | File path (e.g. `/src/index.ts`) |
 | `type` | DiagramType | No | Diagram type {@default auto} [choice: auto,workflow,api,deps,calls] |
 | `style` | DiagramStyle | No | Diagram style {@default linear} [choice: linear,branching,structure] |
 
