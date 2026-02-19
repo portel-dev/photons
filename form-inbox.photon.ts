@@ -1,19 +1,6 @@
 /**
  * Form Inbox - Webhook-powered form submission collector
  *
- * Create forms, receive submissions via webhooks, and manage responses.
- * Perfect for contact forms, feedback collection, surveys, and event RSVPs.
- *
- * ## Webhook URLs
- * POST /webhook/form-inbox/handleSubmission?form=<formId>
- * POST /webhook/form-inbox/handleBulkImport?form=<formId>
- *
- * ## Quick Reference
- * - `forms` — List all forms
- * - `formCreate` — Create a new form with fields
- * - `submissions` — View submissions for a form
- * - `export` — Export submissions as CSV/JSON
- *
  * @version 1.0.0
  * @author Portel
  * @license MIT
@@ -27,10 +14,6 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
 import { existsSync, readFileSync, mkdirSync } from 'fs';
-
-// ════════════════════════════════════════════════════════════════════════════════
-// TYPES
-// ════════════════════════════════════════════════════════════════════════════════
 
 interface FormField {
   name: string;
@@ -62,16 +45,8 @@ interface InboxData {
   submissions: Submission[];
 }
 
-// ════════════════════════════════════════════════════════════════════════════════
-// CONSTANTS
-// ════════════════════════════════════════════════════════════════════════════════
-
 const DATA_DIR = path.join(process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon'), 'form-inbox');
 const DATA_PATH = path.join(DATA_DIR, 'data.json');
-
-// ════════════════════════════════════════════════════════════════════════════════
-// FORM INBOX PHOTON
-// ════════════════════════════════════════════════════════════════════════════════
 
 export default class FormInboxPhoton extends PhotonMCP {
   private loadData(): InboxData {
@@ -94,14 +69,8 @@ export default class FormInboxPhoton extends PhotonMCP {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // FORM MANAGEMENT
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * List all forms with submission counts
-   *
-   * @example forms()
    */
   async forms(): Promise<Form[]> {
     const data = this.loadData();
@@ -110,16 +79,10 @@ export default class FormInboxPhoton extends PhotonMCP {
 
   /**
    * Create a new form with field definitions
-   *
-   * @example formCreate({ name: "Contact Form", fields: [{ name: "email", type: "email", required: true }, { name: "message", type: "textarea", required: true }] })
-   * @example formCreate({ name: "RSVP", fields: [{ name: "name", type: "text", required: true }, { name: "attending", type: "select", required: true, options: ["Yes", "No", "Maybe"] }] })
    */
   async formCreate(params: {
-    /** Form name */
     name: string;
-    /** Field definitions */
     fields: FormField[];
-    /** Optional webhook secret for signature verification */
     webhookSecret?: string;
   }): Promise<Form> {
     const data = this.loadData();
@@ -144,19 +107,11 @@ export default class FormInboxPhoton extends PhotonMCP {
 
   /**
    * Delete a form and all its submissions
-   *
-   * @example formDelete({ formId: "abc123" })
    */
-  async formDelete(params: {
-    /** Form ID to delete */
-    formId: string;
-  }): Promise<{ success: boolean; message: string }> {
+  async formDelete(params: { formId: string }): Promise<Form> {
     const data = this.loadData();
     const index = data.forms.findIndex(f => f.id === params.formId);
-
-    if (index === -1) {
-      throw new Error(`Form not found: ${params.formId}`);
-    }
+    if (index === -1) throw new Error(`Form not found: ${params.formId}`);
 
     const form = data.forms[index];
     data.forms.splice(index, 1);
@@ -166,25 +121,15 @@ export default class FormInboxPhoton extends PhotonMCP {
     this.emit({ emit: 'toast', message: `Form deleted: ${form.name}` });
     this.emit({ channel: 'form-inbox', event: 'form-deleted', data: { formId: params.formId } });
 
-    return { success: true, message: `Deleted form "${form.name}" and all its submissions` };
+    return form;
   }
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // SUBMISSION MANAGEMENT
-  // ══════════════════════════════════════════════════════════════════════════════
 
   /**
    * List submissions for a form with pagination
-   *
-   * @example submissions({ formId: "abc123" })
-   * @example submissions({ formId: "abc123", limit: 10, offset: 20 })
    */
   async submissions(params: {
-    /** Form ID */
     formId: string;
-    /** Max results (default 50) */
     limit?: number;
-    /** Skip results for pagination */
     offset?: number;
   }): Promise<{ submissions: Submission[]; total: number; hasMore: boolean }> {
     const data = this.loadData();
@@ -211,13 +156,8 @@ export default class FormInboxPhoton extends PhotonMCP {
 
   /**
    * Get a single submission detail
-   *
-   * @example submission({ submissionId: "xyz789" })
    */
-  async submission(params: {
-    /** Submission ID */
-    submissionId: string;
-  }): Promise<Submission> {
+  async submission(params: { submissionId: string }): Promise<Submission> {
     const data = this.loadData();
     const sub = data.submissions.find(s => s.id === params.submissionId);
 
@@ -230,44 +170,26 @@ export default class FormInboxPhoton extends PhotonMCP {
 
   /**
    * Delete a submission
-   *
-   * @example submissionDelete({ submissionId: "xyz789" })
    */
-  async submissionDelete(params: {
-    /** Submission ID to delete */
-    submissionId: string;
-  }): Promise<{ success: boolean; message: string }> {
+  async submissionDelete(params: { submissionId: string }): Promise<Submission> {
     const data = this.loadData();
     const index = data.submissions.findIndex(s => s.id === params.submissionId);
-
-    if (index === -1) {
-      throw new Error(`Submission not found: ${params.submissionId}`);
-    }
+    if (index === -1) throw new Error(`Submission not found: ${params.submissionId}`);
 
     const sub = data.submissions[index];
     data.submissions.splice(index, 1);
-
-    // Decrement form submission count
     const form = data.forms.find(f => f.id === sub.formId);
-    if (form && form.submissionCount > 0) {
-      form.submissionCount--;
-    }
-
+    if (form && form.submissionCount > 0) form.submissionCount--;
     await this.saveData(data);
 
-    return { success: true, message: `Deleted submission ${params.submissionId}` };
+    return sub;
   }
 
   /**
    * Export submissions as JSON or CSV
-   *
-   * @example export({ formId: "abc123", format: "csv" })
-   * @example export({ formId: "abc123", format: "json" })
    */
   async export(params: {
-    /** Form ID */
     formId: string;
-    /** Export format */
     format: 'json' | 'csv';
   }): Promise<{ data: string; filename: string; contentType: string }> {
     const data = this.loadData();
@@ -319,11 +241,6 @@ export default class FormInboxPhoton extends PhotonMCP {
 
   /**
    * Submission statistics across all forms
-   *
-   * Shows total submissions, per-form counts, and submissions per day
-   * for the last 7 days.
-   *
-   * @example stats()
    */
   async stats(): Promise<{
     totalForms: number;
@@ -361,16 +278,8 @@ export default class FormInboxPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // WEBHOOKS
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Receive form submission via webhook
-   *
-   * POST /webhook/form-inbox/handleSubmission?form=<formId>
-   * Body: JSON matching form field names
-   *
    * @internal
    */
   async handleSubmission(params: {
@@ -446,10 +355,6 @@ export default class FormInboxPhoton extends PhotonMCP {
 
   /**
    * Receive bulk CSV import via webhook
-   *
-   * POST /webhook/form-inbox/handleBulkImport?form=<formId>
-   * Body: { csv: "header1,header2\nval1,val2\n..." }
-   *
    * @internal
    */
   async handleBulkImport(params: {

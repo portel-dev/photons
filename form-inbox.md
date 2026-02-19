@@ -1,6 +1,6 @@
 # Form Inbox
 
-Webhook-powered form submission collector Create forms, receive submissions via webhooks, and manage responses. Perfect for contact forms, feedback collection, surveys, and event RSVPs. ## Webhook URLs POST /webhook/form-inbox/handleSubmission?form=<formId> POST /webhook/form-inbox/handleBulkImport?form=<formId> ## Quick Reference - `forms` — List all forms - `formCreate` — Create a new form with fields - `submissions` — View submissions for a form - `export` — Export submissions as CSV/JSON
+Webhook-powered form submission collector
 
 > **12 tools** · API Photon · v1.0.0 · MIT
 
@@ -33,12 +33,6 @@ Create a new form with field definitions
 
 
 
-**Example:**
-
-```typescript
-formCreate({ name: "Contact Form", fields: [{ name: "email", type: "email", required: true }, { name: "message", type: "textarea", required: true }] })
-```
-
 
 ---
 
@@ -60,12 +54,6 @@ List submissions for a form with pagination
 
 
 
-
-**Example:**
-
-```typescript
-submissions({ formId: "abc123" })
-```
 
 
 ---
@@ -100,19 +88,13 @@ Export submissions as JSON or CSV
 
 
 
-**Example:**
-
-```typescript
-export({ formId: "abc123", format: "csv" })
-```
-
 
 ---
 
 
 ### `stats`
 
-Submission statistics across all forms. Shows total submissions, per-form counts, and submissions per day for the last 7 days.
+Submission statistics across all forms
 
 
 
@@ -123,7 +105,7 @@ Submission statistics across all forms. Shows total submissions, per-form counts
 
 ### `handleSubmission`
 
-Receive form submission via webhook. POST /webhook/form-inbox/handleSubmission?form=<formId> Body: JSON matching form field names
+Receive form submission via webhook
 
 
 
@@ -134,7 +116,7 @@ Receive form submission via webhook. POST /webhook/form-inbox/handleSubmission?f
 
 ### `handleBulkImport`
 
-Receive bulk CSV import via webhook. POST /webhook/form-inbox/handleBulkImport?form=<formId> Body: { csv: "header1,header2\nval1,val2\n..." }
+Receive bulk CSV import via webhook
 
 
 
@@ -145,7 +127,7 @@ Receive bulk CSV import via webhook. POST /webhook/form-inbox/handleBulkImport?f
 
 ### `scheduledDigest`
 
-Daily submission digest. Sends summary of yesterday's submissions across all forms.
+Daily submission digest
 
 
 

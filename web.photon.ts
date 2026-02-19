@@ -1,17 +1,10 @@
 /**
- * Web Agent Photon (Search + Read)
+ * Web - Search and read webpages
  *
- * A complete web research toolkit.
- * 1. Search: Scrapes Brave Search for web results (no API key required).
- * 2. Read: Uses Mozilla Readability to extract main article content.
- *
- * Note: Previously used DuckDuckGo, but they now block automated requests
- * with CAPTCHA challenges. Brave Search works without such restrictions.
- *
- * @dependencies axios@^1.6.0, cheerio@^1.0.0, turndown@^7.1.2, @mozilla/readability@^0.5.0, jsdom@^23.0.0, js-yaml@^4.1.0
  * @version 1.1.0
  * @author Portel
  * @license MIT
+ * @dependencies axios@^1.6.0, cheerio@^1.0.0, turndown@^7.1.2, @mozilla/readability@^0.5.0, jsdom@^23.0.0, js-yaml@^4.1.0
  * @icon 🌐
  * @tags web, search, scraping, readability
  */
@@ -34,19 +27,14 @@ export default class Web {
             codeBlockStyle: 'fenced',
             hr: '---'
         });
-
-        // Remove scripts, styles, and other noise from conversion
         this.turndown.remove(['script', 'style', 'iframe', 'nav', 'footer']);
     }
 
-    async onInitialize() {
-        // Silent initialization - ready to use
-    }
-
     /**
-     * Search the web using Brave Search (HTML scraping, no API key needed).
+     * Search the web
      * @param query Search query
-     * @param limit Maximum number of results to return {@default 10} {@min 1} {@max 50}
+     * @param limit Number of results {@default 10} {@min 1} {@max 50}
+     * @format markdown
      */
     async *search(params: { query: string; limit?: number }): AsyncGenerator<any, string[]> {
         const url = `https://search.brave.com/search?q=${encodeURIComponent(params.query)}`;
@@ -101,9 +89,9 @@ export default class Web {
     }
 
     /**
-     * Read a webpage and extract its main content as Markdown.
-     * Uses Mozilla Readability to remove ads/navbars.
-     * @param url URL to read
+     * Read webpage content
+     * @param url URL to read {@example https://example.com}
+     * @format markdown
      */
     async *read(params: { url: string }): AsyncGenerator<any, string> {
         try {
@@ -151,46 +139,4 @@ export default class Web {
         }
     }
 
-    // ========== TESTS ==========
-
-    /** Helper to consume async generator */
-    private async consumeGenerator<T>(gen: AsyncGenerator<any, T>): Promise<T> {
-        let result;
-        while (true) {
-            const { value, done } = await gen.next();
-            if (done) {
-                result = value;
-                break;
-            }
-        }
-        return result;
-    }
-
-    /** Test search functionality */
-    async testSearch() {
-        const gen = this.search({ query: 'typescript' });
-        const results = await this.consumeGenerator(gen);
-        if (!Array.isArray(results)) throw new Error('Expected array');
-        if (results.length === 0) throw new Error('No results');
-        if (results[0] === '*No results found.*') throw new Error('Search failed');
-        return { passed: true };
-    }
-
-    /** Test read functionality */
-    async testRead() {
-        const gen = this.read({ url: 'https://example.com' });
-        const result = await this.consumeGenerator(gen);
-        if (typeof result !== 'string') throw new Error('Expected string');
-        if (result.includes('**Error:**')) throw new Error(result);
-        if (!result.includes('Example Domain')) throw new Error('Missing expected content');
-        return { passed: true };
-    }
-
-    /** Test read with invalid URL */
-    async testReadInvalidUrl() {
-        const gen = this.read({ url: 'https://this-domain-does-not-exist-12345.com' });
-        const result = await this.consumeGenerator(gen);
-        if (!result.includes('**Read Error:**')) throw new Error('Should have failed');
-        return { passed: true };
-    }
 }

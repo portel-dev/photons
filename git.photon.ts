@@ -1,24 +1,10 @@
 /**
  * Git - Local git repository operations
  *
- * Provides git version control operations for local repositories using simple-git.
- * Supports branch management, commits, staging, and remote operations.
- *
- * Common use cases:
- * - Version control: "Show git status", "Commit these changes"
- * - Branch management: "Create a feature branch", "Switch to main"
- * - History: "Show recent commits", "Show diff of changes"
- * - Remote operations: "Push to origin", "Pull latest changes"
- *
- * Example: status({ path: "/path/to/repo" })
- *
- * Configuration:
- * - repoPath: Default repository path (default: current directory)
- *
- * @dependencies simple-git@^3.21.0
  * @version 1.0.0
  * @author Portel
  * @license MIT
+ * @dependencies simple-git@^3.21.0
  * @icon 🔀
  * @tags git, version-control, repository
  */
@@ -34,393 +20,219 @@ export default class Git {
     this.defaultRepoPath = resolve(repoPath);
   }
 
-  async onInitialize() {
-    // Photon ready
-  }
-
   /**
-   * Get git status of repository
-   * @param path Repository path (default: configured repoPath)
+   * Get repository status
+   * @param path Repository path {@default .}
+   * @format table
    */
   async status(params?: { path?: string }) {
-    try {
-      const repoPath = this._resolvePath(params?.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params?.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
-      const status: StatusResult = await git.status();
+    const git = simpleGit(repoPath);
+    const s = await git.status();
 
-      return {
-        success: true,
-        path: repoPath,
-        branch: status.current,
-        ahead: status.ahead,
-        behind: status.behind,
-        staged: status.staged,
-        modified: status.modified,
-        deleted: status.deleted,
-        created: status.created,
-        renamed: status.renamed,
-        conflicted: status.conflicted,
-        not_added: status.not_added,
-        isClean: status.isClean(),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      path: repoPath,
+      branch: s.current,
+      ahead: s.ahead,
+      behind: s.behind,
+      staged: s.staged.length,
+      modified: s.modified.length,
+      deleted: s.deleted.length,
+      created: s.created.length,
+      renamed: s.renamed.length,
+      conflicted: s.conflicted.length,
+      untracked: s.not_added.length,
+      isClean: s.isClean(),
+    };
   }
 
   /**
    * View commit history
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param maxCount {@min 1} {@max 100} Maximum number of commits to retrieve (default: 10)
-   * @param branch {@max 200} Branch name to get logs from (default: current branch) {@example main}
+   * @param path Repository path {@default .}
+   * @param maxCount Maximum commits {@min 1} {@max 100} {@default 10}
+   * @param branch Branch name {@example main}
+   * @format table
    */
   async log(params?: { path?: string; maxCount?: number; branch?: string }) {
-    try {
-      const repoPath = this._resolvePath(params?.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params?.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
-      const options: any = {
-        maxCount: params?.maxCount || 10,
-      };
+    const git = simpleGit(repoPath);
+    const log = await git.log({
+      maxCount: params?.maxCount || 10,
+      from: params?.branch,
+    });
 
-      if (params?.branch) {
-        options.from = params.branch;
-      }
-
-      const log: LogResult = await git.log(options);
-
-      return {
-        success: true,
-        path: repoPath,
-        total: log.total,
-        commits: log.all.map((commit) => ({
-          hash: commit.hash,
-          date: commit.date,
-          message: commit.message,
-          author_name: commit.author_name,
-          author_email: commit.author_email,
-        })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return log.all.map((c) => ({
+      hash: c.hash?.slice(0, 7),
+      date: c.date,
+      author: c.author_name,
+      message: c.message,
+    }));
   }
 
   /**
-   * Show differences in repository
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param staged Show staged changes only (default: false)
-   * @param file {@max 500} Specific file to show diff for (optional)
+   * Show differences
+   * @param path Repository path {@default .}
+   * @param staged Show staged changes only {@default false}
+   * @param file Specific file to diff
+   * @format code:diff
    */
   async diff(params?: { path?: string; staged?: boolean; file?: string }) {
-    try {
-      const repoPath = this._resolvePath(params?.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params?.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
+    const git = simpleGit(repoPath);
+    const options: string[] = [];
+    if (params?.staged) options.push('--cached');
+    if (params?.file) options.push('--', params.file);
 
-      const options: string[] = [];
-      if (params?.staged) {
-        options.push('--cached');
-      }
-      if (params?.file) {
-        options.push('--', params.file);
-      }
-
-      const diff = await git.diff(options);
-
-      return {
-        success: true,
-        path: repoPath,
-        staged: params?.staged || false,
-        file: params?.file,
-        diff,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return await git.diff(options);
   }
 
   /**
-   * List all branches in repository
-   * @param path Repository path (default: configured repoPath)
+   * List all branches
+   * @param path Repository path {@default .}
+   * @format table
    */
   async branches(params?: { path?: string }) {
-    try {
-      const repoPath = this._resolvePath(params?.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params?.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
-      const branches: BranchSummary = await git.branch();
+    const git = simpleGit(repoPath);
+    const b = await git.branch();
 
-      return {
-        success: true,
-        path: repoPath,
-        current: branches.current,
-        all: branches.all,
-        branches: Object.keys(branches.branches).map((name) => ({
-          name,
-          current: branches.branches[name].current,
-          commit: branches.branches[name].commit,
-          label: branches.branches[name].label,
-        })),
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return Object.entries(b.branches).map(([name, info]) => ({
+      name,
+      current: info.current ? '✓' : '',
+      commit: info.commit?.slice(0, 7),
+    }));
   }
 
   /**
-   * Create a new branch
-   * @param name {@min 1} {@max 200} Branch name to create {@example feature/new-feature}
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param checkout Checkout the new branch after creation (default: false)
+   * Create a branch
+   * @param name Branch name {@example feature/new-feature}
+   * @param path Repository path {@default .}
+   * @param checkout Checkout after creation {@default false}
    */
   async branch(params: { name: string; path?: string; checkout?: boolean }) {
-    try {
-      const repoPath = this._resolvePath(params.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
-
-      if (params.checkout) {
-        await git.checkoutLocalBranch(params.name);
-      } else {
-        await git.branch([params.name]);
-      }
-
-      return {
-        success: true,
-        path: repoPath,
-        branch: params.name,
-        checkedOut: params.checkout || false,
-        message: `Branch '${params.name}' created successfully`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
+    const git = simpleGit(repoPath);
+    if (params.checkout) {
+      await git.checkoutLocalBranch(params.name);
+    } else {
+      await git.branch([params.name]);
     }
+
+    return { message: `Branch '${params.name}' created` };
   }
 
   /**
-   * Checkout (switch to) a branch
-   * @param name {@min 1} {@max 200} Branch name to checkout {@example main}
-   * @param path {@max 500} Repository path (default: configured repoPath)
+   * Switch to a branch
+   * @param name Branch name {@example main}
+   * @param path Repository path {@default .}
    */
   async checkout(params: { name: string; path?: string }) {
-    try {
-      const repoPath = this._resolvePath(params.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
-      await git.checkout(params.name);
+    const git = simpleGit(repoPath);
+    await git.checkout(params.name);
 
-      return {
-        success: true,
-        path: repoPath,
-        branch: params.name,
-        message: `Switched to branch '${params.name}'`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { message: `Switched to '${params.name}'` };
   }
 
   /**
    * Delete a branch
-   * @param name {@min 1} {@max 200} Branch name to delete {@example old-feature}
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param force Force delete even if not fully merged (default: false)
+   * @param name Branch name {@example old-feature}
+   * @param path Repository path {@default .}
+   * @param force Force delete if unmerged {@default false}
    */
   async removeBranch(params: { name: string; path?: string; force?: boolean }) {
-    try {
-      const repoPath = this._resolvePath(params.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
+    const git = simpleGit(repoPath);
+    await git.deleteLocalBranch(params.name, params.force || false);
 
-      if (params.force) {
-        await git.deleteLocalBranch(params.name, true);
-      } else {
-        await git.deleteLocalBranch(params.name);
-      }
-
-      return {
-        success: true,
-        path: repoPath,
-        branch: params.name,
-        forced: params.force || false,
-        message: `Branch '${params.name}' deleted successfully`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { message: `Branch '${params.name}' deleted` };
   }
 
   /**
    * Stage files for commit
-   * @param files {@min 1} Array of file paths to stage (use '.' for all files) {@example ["src/index.ts","README.md"]}
-   * @param path {@max 500} Repository path (default: configured repoPath)
+   * @param files File paths to stage {@example ["src/index.ts","README.md"]}
+   * @param path Repository path {@default .}
    */
   async add(params: { files: string[]; path?: string }) {
-    try {
-      const repoPath = this._resolvePath(params.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
-      await git.add(params.files);
+    const git = simpleGit(repoPath);
+    await git.add(params.files);
 
-      return {
-        success: true,
-        path: repoPath,
-        files: params.files,
-        message: `Staged ${params.files.length} file(s)`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return { message: `Staged ${params.files.length} file(s)` };
   }
 
   /**
    * Create a commit
-   * @param message {@min 1} {@max 500} Commit message {@example fix: resolve authentication bug}
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param author {@max 200} Optional author override (format: "Name <email>")
+   * @param message Commit message {@example fix: resolve authentication bug}
+   * @param path Repository path {@default .}
+   * @param author Author override (format: "Name <email>")
    */
   async commit(params: { message: string; path?: string; author?: string }) {
-    try {
-      const repoPath = this._resolvePath(params.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
+    const git = simpleGit(repoPath);
+    const opts: any = {};
+    if (params.author) opts['--author'] = params.author;
 
-      const options: any = {};
-      if (params.author) {
-        options['--author'] = params.author;
-      }
-
-      const result = await git.commit(params.message, undefined, options);
-
-      return {
-        success: true,
-        path: repoPath,
-        commit: result.commit,
-        branch: result.branch,
-        summary: result.summary,
-        message: `Commit created: ${result.commit}`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    const result = await git.commit(params.message, undefined, opts);
+    return { commit: result.commit, message: `Committed: ${result.commit}` };
   }
 
   /**
-   * Push commits to remote repository
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param remote {@max 200} Remote name (default: 'origin') {@example origin}
-   * @param branch {@max 200} Branch name (default: current branch) {@example main}
-   * @param force Force push (default: false)
+   * Push commits to remote
+   * @param path Repository path {@default .}
+   * @param remote Remote name {@default origin}
+   * @param branch Branch name (current if omitted)
+   * @param force Force push {@default false}
    */
   async push(params?: { path?: string; remote?: string; branch?: string; force?: boolean }) {
-    try {
-      const repoPath = this._resolvePath(params?.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params?.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
+    const git = simpleGit(repoPath);
+    const opts: any = {};
+    if (params?.force) opts['--force'] = null;
 
-      const remote = params?.remote || 'origin';
-      const branch = params?.branch || undefined; // undefined uses current branch
-
-      const options: any = {};
-      if (params?.force) {
-        options['--force'] = null;
-      }
-
-      await git.push(remote, branch, options);
-
-      return {
-        success: true,
-        path: repoPath,
-        remote,
-        branch: branch || 'current',
-        forced: params?.force || false,
-        message: `Pushed to ${remote}${branch ? `/${branch}` : ''}`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    await git.push(params?.remote || 'origin', params?.branch || undefined, opts);
+    return { message: `Pushed to ${params?.remote || 'origin'}` };
   }
 
   /**
-   * Pull changes from remote repository
-   * @param path {@max 500} Repository path (default: configured repoPath)
-   * @param remote {@max 200} Remote name (default: 'origin') {@example origin}
-   * @param branch {@max 200} Branch name (default: current branch) {@example main}
+   * Pull changes from remote
+   * @param path Repository path {@default .}
+   * @param remote Remote name {@default origin}
+   * @param branch Branch name (current if omitted)
    */
   async pull(params?: { path?: string; remote?: string; branch?: string }) {
-    try {
-      const repoPath = this._resolvePath(params?.path);
-      this._validateRepo(repoPath);
+    const repoPath = this._resolvePath(params?.path);
+    this._validateRepo(repoPath);
 
-      const git = simpleGit(repoPath);
+    const git = simpleGit(repoPath);
+    const result = await git.pull(params?.remote || 'origin', params?.branch || undefined);
 
-      const remote = params?.remote || 'origin';
-      const branch = params?.branch || undefined; // undefined uses current branch
-
-      const result = await git.pull(remote, branch);
-
-      return {
-        success: true,
-        path: repoPath,
-        remote,
-        branch: branch || 'current',
-        summary: result.summary,
-        files: result.files,
-        insertions: result.insertions,
-        deletions: result.deletions,
-        message: `Pulled from ${remote}${branch ? `/${branch}` : ''}`,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      message: `Pulled ${result.files.length} file(s)`,
+      insertions: result.insertions,
+      deletions: result.deletions,
+    };
   }
-
-  // Private helper methods
 
   private _resolvePath(path?: string): string {
     if (path) {
@@ -431,49 +243,11 @@ export default class Git {
 
   private _validateRepo(repoPath: string): void {
     if (!existsSync(repoPath)) {
-      throw new Error(`Repository path does not exist: ${repoPath}`);
+      throw new Error(`Path does not exist: ${repoPath}`);
     }
-
     const gitDir = resolve(repoPath, '.git');
     if (!existsSync(gitDir)) {
-      throw new Error(`Not a git repository: ${repoPath}`);
+      throw new Error(`Not a git repo: ${repoPath}`);
     }
   }
-
-  // ========== TESTS ==========
-
-  /** Test git status */
-  async testStatus() {
-    const result = await this.status();
-    if (!result.success) throw new Error(result.error);
-    if (!result.branch) throw new Error('Missing branch');
-    return { passed: true };
-  }
-
-  /** Test git log */
-  async testLog() {
-    const result = await this.log({ limit: 5 });
-    if (!result.success) throw new Error(result.error);
-    if (!Array.isArray(result.commits)) throw new Error('Commits should be array');
-    return { passed: true };
-  }
-
-  /** Test git diff */
-  async testDiff() {
-    const result = await this.diff();
-    if (!result.success) throw new Error(result.error);
-    // diff can be empty string, that's ok
-    if (typeof result.diff !== 'string') throw new Error('Diff should be string');
-    return { passed: true };
-  }
-
-  /** Test git branches */
-  async testBranches() {
-    const result = await this.branches();
-    if (!result.success) throw new Error(result.error);
-    if (!Array.isArray(result.branches)) throw new Error('Branches should be array');
-    if (!result.current) throw new Error('Missing current branch');
-    return { passed: true };
-  }
-
 }

@@ -100,7 +100,7 @@
     },
     {
       "name": "data-sync",
-      "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking This workflow demonstrates: - Database MCP integration - Batch processing with progress - Error handling and retry logic",
+      "description": "Data Sync Workflow - Synchronizes data between sources",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -226,7 +226,7 @@
     },
     {
       "name": "filesystem",
-      "description": "Filesystem - File and directory operations Provides safe, cross-platform file system operations using Node.js native APIs. All paths are validated and restricted to the working directory for security. Common use cases: - Reading files: \"Read my project README.md\" - Writing files: \"Save this data to report.json\" - Directory operations: \"List all files in my Downloads folder\" - File management: \"Copy config.json to config.backup.json\" Example: read({ path: \"README.md\" }) Configuration: - workdir: Working directory base path (default: ~/Documents) - maxFileSize: Maximum file size in bytes (default: 10MB) - allowHidden: Allow access to hidden files/directories (default: false)",
+      "description": "Filesystem - File and directory operations",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -244,7 +244,7 @@
     },
     {
       "name": "form-inbox",
-      "description": "Form Inbox - Webhook-powered form submission collector Create forms, receive submissions via webhooks, and manage responses. Perfect for contact forms, feedback collection, surveys, and event RSVPs. ## Webhook URLs POST /webhook/form-inbox/handleSubmission?form=<formId> POST /webhook/form-inbox/handleBulkImport?form=<formId> ## Quick Reference - `forms` — List all forms - `formCreate` — Create a new form with fields - `submissions` — View submissions for a form - `export` — Export submissions as CSV/JSON",
+      "description": "Form Inbox - Webhook-powered form submission collector",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -730,7 +730,7 @@
     },
     {
       "name": "web",
-      "description": "Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions.",
+      "description": "Web - Search and read webpages",
       "source": "./",
       "strict": false,
       "hooks": [

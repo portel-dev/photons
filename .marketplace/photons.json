@@ -89,7 +89,7 @@
       "license": "MIT",
       "icon": "🔧",
       "source": "../daemon-features.photon.ts",
-      "hash": "sha256:ae4ee4fc409240249ed5b0849696e78249ccf86d8fb71c7521ed23d02622a2ba",
+      "hash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
       "tools": [
         "scheduledHeartbeat",
         "handleWebhook",
@@ -135,12 +135,12 @@
     {
       "name": "data-sync",
       "version": "1.0.0",
-      "description": "Data Sync Workflow Synchronizes data between different sources with progress tracking This workflow demonstrates: - Database MCP integration - Batch processing with progress - Error handling and retry logic",
+      "description": "Data Sync Workflow - Synchronizes data between sources",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔄",
       "source": "../data-sync.photon.ts",
-      "hash": "sha256:b23983900826259dfe1a07134a732bbd326e7c11b4ca887d5a9b0b1b45130533",
+      "hash": "sha256:000064a623c95e153e474618e21cc88cbc5229d9f78411564ef86423a7f6ad25",
       "tools": [
         "exportToJson",
         "importFromJson",
@@ -308,12 +308,12 @@
     {
       "name": "filesystem",
       "version": "1.1.0",
-      "description": "Filesystem - File and directory operations Provides safe, cross-platform file system operations using Node.js native APIs. All paths are validated and restricted to the working directory for security. Common use cases: - Reading files: \"Read my project README.md\" - Writing files: \"Save this data to report.json\" - Directory operations: \"List all files in my Downloads folder\" - File management: \"Copy config.json to config.backup.json\" Example: read({ path: \"README.md\" }) Configuration: - workdir: Working directory base path (default: ~/Documents) - maxFileSize: Maximum file size in bytes (default: 10MB) - allowHidden: Allow access to hidden files/directories (default: false)",
+      "description": "Filesystem - File and directory operations",
       "author": "Portel",
       "license": "MIT",
       "icon": "📁",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:daf2b7af6687a54c4736550a5297e968d8178394a46fa3d046eddeead6432018",
+      "hash": "sha256:5cce4d0d0056476c9c5944d85d855e36e8541ef6bc755467502c654313322304",
       "tools": [
         "read",
         "write",
@@ -326,8 +326,7 @@
         "rmdir",
         "info",
         "exists",
-        "search",
-        "workdir"
+        "search"
       ],
       "assets": [],
       "photonType": "api",
@@ -336,12 +335,12 @@
     {
       "name": "form-inbox",
       "version": "1.0.0",
-      "description": "Form Inbox - Webhook-powered form submission collector Create forms, receive submissions via webhooks, and manage responses. Perfect for contact forms, feedback collection, surveys, and event RSVPs. ## Webhook URLs POST /webhook/form-inbox/handleSubmission?form=<formId> POST /webhook/form-inbox/handleBulkImport?form=<formId> ## Quick Reference - `forms` — List all forms - `formCreate` — Create a new form with fields - `submissions` — View submissions for a form - `export` — Export submissions as CSV/JSON",
+      "description": "Form Inbox - Webhook-powered form submission collector",
       "author": "Portel",
       "license": "MIT",
       "icon": "📬",
       "source": "../form-inbox.photon.ts",
-      "hash": "sha256:f3b8ee952f2dc6f922881f35a6f1ae0122fe0460171ba8cef5da86294075a468",
+      "hash": "sha256:f7362c9b13289b75d8809568c70a59defc6cdea68b6611d0ddd50a6c889e6711",
       "tools": [
         "forms",
         "formCreate",
@@ -494,7 +493,7 @@
       "license": "MIT",
       "icon": "🔀",
       "source": "../git.photon.ts",
-      "hash": "sha256:85da8307a44b4539cfc73ff7f19d369ab2a4547c84abe49a13471b0d6c245c85",
+      "hash": "sha256:4e5ca9abfd73da5bdf9d97ca7bbcd5f6446ea97838f771b5cd96620553ea3dc6",
       "tools": [
         "status",
         "log",
@@ -1098,12 +1097,12 @@
     {
       "name": "web",
       "version": "1.1.0",
-      "description": "Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions.",
+      "description": "Web - Search and read webpages",
       "author": "Portel",
       "license": "MIT",
       "icon": "🌐",
       "source": "../web.photon.ts",
-      "hash": "sha256:24e1dc52f7797686fd8a88155b53b194943db751c00733f624e4e7fe79cd9d5f",
+      "hash": "sha256:29c339e2b616d9acd5d029f6914cddeccaed533b70fe865c200d0a29ecff13fc",
       "tools": [
         "search",
         "read"

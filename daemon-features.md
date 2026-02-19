@@ -72,7 +72,7 @@ Publish a message to a named channel
 
 ### `status`
 
-Show daemon feature status. Reads the heartbeat state file to show when the scheduled job last ran and how many times it has executed.
+Show daemon feature status
 
 
 

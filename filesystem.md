@@ -1,8 +1,8 @@
 # Filesystem
 
-File and directory operations Provides safe, cross-platform file system operations using Node.js native APIs. All paths are validated and restricted to the working directory for security. Common use cases: - Reading files: "Read my project README.md" - Writing files: "Save this data to report.json" - Directory operations: "List all files in my Downloads folder" - File management: "Copy config.json to config.backup.json" Example: read({ path: "README.md" }) Configuration: - workdir: Working directory base path (default: ~/Documents) - maxFileSize: Maximum file size in bytes (default: 10MB) - allowHidden: Allow access to hidden files/directories (default: false)
+File and directory operations
 
-> **13 tools** · API Photon · v1.1.0 · MIT
+> **12 tools** · API Photon · v1.1.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -10,17 +10,11 @@ File and directory operations Provides safe, cross-platform file system operatio
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `FILESYSTEM_WORKDIR` | No | string | Working directory base path (default: ~/Documents) (default: `path.join(homedir(), '.photon')`) |
-| `FILESYSTEM_MAXFILESIZE` | No | number | Maximum file size in bytes (default: 10MB) (default: `10485760`) |
-| `FILESYSTEM_ALLOWHIDDEN` | No | boolean | Allow access to hidden files/directories (default: false) (default: `true`) |
+| `FILESYSTEM_WORKDIR` | No | string | No description available (default: `path.join(homedir(), '.photon')`) |
+| `FILESYSTEM_MAXFILESIZE` | No | number | No description available (default: `10485760`) |
+| `FILESYSTEM_ALLOWHIDDEN` | No | boolean | No description available (default: `true`) |
 
 
-
-### Setup Instructions
-
-- workdir: Working directory base path (default: ~/Documents)
-- maxFileSize: Maximum file size in bytes (default: 10MB)
-- allowHidden: Allow access to hidden files/directories (default: false)
 
 
 ## 🔧 Tools
@@ -33,8 +27,8 @@ Read file contents
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | File path (relative to workdir or absolute) |
-| `encoding` | string | No | File encoding |
+| `path` | string | Yes | File path (e.g. `README.md`) |
+| `encoding` | string | No | File encoding {@default utf8} [choice: utf8,base64,hex] |
 
 
 
@@ -50,9 +44,9 @@ Write content to file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | File path (relative to workdir or absolute) |
-| `content` | string | Yes | File content |
-| `encoding` | string | No | File encoding |
+| `path` | string | Yes | File path (e.g. `README.md`) |
+| `content` | string | Yes | File content [field: textarea] |
+| `encoding` | string | No | File encoding {@default utf8} |
 
 
 
@@ -68,9 +62,9 @@ Append content to file
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | File path (relative to workdir or absolute) |
+| `path` | string | Yes | File path |
 | `content` | string | Yes | Content to append |
-| `encoding` | string | No | File encoding |
+| `encoding` | string | No | File encoding {@default utf8} |
 
 
 
@@ -81,12 +75,12 @@ Append content to file
 
 ### `remove`
 
-Remove a file
+Delete a file
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | File path (relative to workdir or absolute) |
+| `path` | string | Yes | File path |
 
 
 
@@ -131,13 +125,13 @@ Move/rename a file
 
 ### `list`
 
-List files in a directory
+List directory contents
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | any | Yes | Directory path (relative to workdir or absolute, default: current workdir) |
-| `recursive` | boolean } | No | List files recursively |
+| `path` | any | Yes | Directory path {@default .} |
+| `recursive` | boolean } | No | List recursively {@default false} |
 
 
 
@@ -153,8 +147,8 @@ Create a directory
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | Directory path (relative to workdir or absolute) |
-| `recursive` | boolean | No | Create parent directories if needed |
+| `path` | string | Yes | Directory path |
+| `recursive` | boolean | No | Create parents {@default true} |
 
 
 
@@ -165,13 +159,13 @@ Create a directory
 
 ### `rmdir`
 
-Remove a directory
+Delete a directory
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | Directory path (relative to workdir or absolute) |
-| `recursive` | boolean | No | Remove directory and all contents |
+| `path` | string | Yes | Directory path |
+| `recursive` | boolean | No | Delete with contents {@default false} |
 
 
 
@@ -182,7 +176,7 @@ Remove a directory
 
 ### `info`
 
-Get file or directory information
+Get file info
 
 
 | Parameter | Type | Required | Description |
@@ -198,7 +192,7 @@ Get file or directory information
 
 ### `exists`
 
-Check if file or directory exists
+Check if path exists
 
 
 | Parameter | Type | Required | Description |
@@ -214,24 +208,13 @@ Check if file or directory exists
 
 ### `search`
 
-Search for files matching a pattern
+Search for files matching pattern
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `pattern` | string | Yes | File name pattern (glob-style: *.txt, **\/*.js) |
-| `path` | string | No | Directory to search |
-
-
-
-
-
----
-
-
-### `workdir`
-
-Get current working directory
+| `pattern` | string | Yes | File glob pattern (e.g. `*.txt`) |
+| `path` | string | No | Directory to search {@default .} |
 
 
 
@@ -274,8 +257,6 @@ flowchart LR
         PHOTON --> T10
         T11[📖 search]
         PHOTON --> T11
-        T12[🔧 workdir]
-        PHOTON --> T12
     end
 ```
 

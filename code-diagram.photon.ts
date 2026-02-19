@@ -1,8 +1,5 @@
 /**
- * Generate a Mermaid diagram from a file
- *
- * Visualize any code as flowcharts, API surfaces, dependency graphs, or call graphs.
- * Works on raw code strings or files - no AI required, pure static analysis.
+ * Code Diagram - Mermaid visualization from source code
  *
  * @name code-diagram
  * @version 1.0.0
@@ -47,13 +44,12 @@ interface CallInfo {
 
 export default class CodeDiagram {
   /**
-   * Generate a Mermaid diagram from code string
-   *
-   * @param code The TypeScript/JavaScript code to analyze
+   * Generate diagram from code string
+   * @param code TypeScript/JavaScript source code
    * @param type Diagram type {@choice auto,workflow,api,deps,calls} {@default auto}
    * @param style Diagram style {@choice linear,branching,structure} {@default linear}
-   * @param name Optional name for the diagram {@default Code}
-   * @format markdown
+   * @param name Diagram name {@default Code}
+   * @format mermaid
    */
   async generate(params: {
     code: string;
@@ -106,12 +102,11 @@ ${diagram}
   }
 
   /**
-   * Generate a Mermaid diagram from a file
-   *
-   * @param path Path to the TypeScript/JavaScript file
+   * Generate diagram from file
+   * @param path File path {@example /src/index.ts}
    * @param type Diagram type {@choice auto,workflow,api,deps,calls} {@default auto}
    * @param style Diagram style {@choice linear,branching,structure} {@default linear}
-   * @format markdown
+   * @format mermaid
    */
   async fromFile(params: {
     path: string;
@@ -128,6 +123,8 @@ ${diagram}
 
   /**
    * List available diagram types and styles
+   * @format table
+   * @autorun
    */
   async types(): Promise<{
     types: Array<{ name: string; description: string; bestFor: string }>;

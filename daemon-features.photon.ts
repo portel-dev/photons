@@ -1,18 +1,6 @@
 /**
  * Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub
  *
- * Demonstrates daemon-specific Photon features. These features require
- * the photon daemon to be running for full functionality, but test methods
- * verify the logic works in direct execution mode.
- *
- * Features covered:
- * - @scheduled methods (cron-based execution)
- * - @webhook methods (HTTP endpoint handlers)
- * - @locked methods (auto distributed lock)
- * - this.withLock() manual locking
- * - this.emit() with channels for pub/sub
- * - State file persistence for scheduled proof
- *
  * @version 1.0.0
  * @author Portel
  * @license MIT
@@ -26,19 +14,11 @@ import * as path from 'path';
 import * as os from 'os';
 import { existsSync, mkdirSync } from 'fs';
 
-// ════════════════════════════════════════════════════════════════════════════════
-// CONSTANTS
-// ════════════════════════════════════════════════════════════════════════════════
-
 const STATE_DIR = path.join(
   process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon'),
   'daemon-features'
 );
 const HEARTBEAT_PATH = path.join(STATE_DIR, 'heartbeat.json');
-
-// ════════════════════════════════════════════════════════════════════════════════
-// TYPES
-// ════════════════════════════════════════════════════════════════════════════════
 
 interface HeartbeatState {
   lastRun: string;
@@ -46,16 +26,7 @@ interface HeartbeatState {
   history: string[];
 }
 
-// ════════════════════════════════════════════════════════════════════════════════
-// PHOTON CLASS
-// ════════════════════════════════════════════════════════════════════════════════
-
 export default class DaemonFeaturesPhoton extends PhotonMCP {
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // STATE HELPERS (private)
-  // ══════════════════════════════════════════════════════════════════════════════
-
   private _ensureDir(): void {
     if (!existsSync(STATE_DIR)) {
       mkdirSync(STATE_DIR, { recursive: true });
@@ -77,16 +48,8 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
     await fs.writeFile(HEARTBEAT_PATH, JSON.stringify(state, null, 2));
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // SCHEDULED METHOD
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Heartbeat - writes timestamp to state file every minute
-   *
-   * When the daemon runs this photon, the heartbeat proves scheduled
-   * execution works. Check with `status()` to see last run time.
-   *
    * @scheduled * * * * *
    * @internal
    */
@@ -114,18 +77,8 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
     return { ran: true, runCount: state.runCount };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // WEBHOOK METHOD
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Receive a webhook payload and echo it back with metadata
-   *
-   * In daemon mode, this is exposed as a POST endpoint. The handler
-   * echoes the payload with added timestamp and processing info.
-   *
-   * @param payload The webhook body (any JSON)
-   * @param source Optional source identifier
    * @internal
    */
   async handleWebhook(params: {
@@ -153,18 +106,9 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // LOCKED METHOD (automatic via annotation)
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
-   * A critical operation protected by a distributed lock
-   *
-   * The @locked annotation ensures only one invocation runs at a time.
-   * Other callers wait until the lock is released.
-   *
+   * Critical operation with distributed lock
    * @locked daemon-features:critical
-   * @param operation Name of the operation
    */
   async critical(params: { operation: string }): Promise<{
     operation: string;
@@ -181,18 +125,8 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // MANUAL LOCK (this.withLock)
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
-   * Demonstrates manual distributed locking with this.withLock()
-   *
-   * Unlike @locked which auto-wraps the entire method, withLock()
-   * gives fine-grained control over which section is locked.
-   *
-   * @param resource Resource identifier to lock on
-   * @param value Value to process inside the lock
+   * Manual distributed locking with this.withLock()
    */
   async protect(params: {
     resource: string;
@@ -222,19 +156,8 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // PUB/SUB BROADCASTING
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Publish a message to a named channel
-   *
-   * Other photons or clients subscribed to this channel will receive
-   * the event via the daemon's pub/sub system.
-   *
-   * @param channel Channel name to publish to
-   * @param message Message content
-   * @param priority Priority level
    */
   async publish(params: {
     channel: string;
@@ -266,16 +189,8 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // STATUS - Check heartbeat state
-  // ══════════════════════════════════════════════════════════════════════════════
-
   /**
    * Show daemon feature status
-   *
-   * Reads the heartbeat state file to show when the scheduled job
-   * last ran and how many times it has executed.
-   *
    * @format json
    */
   async status(): Promise<{
@@ -291,10 +206,6 @@ export default class DaemonFeaturesPhoton extends PhotonMCP {
       stateFileExists: existsSync(HEARTBEAT_PATH),
     };
   }
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // TEST METHODS - run with: photon test daemon-features
-  // ══════════════════════════════════════════════════════════════════════════════
 
   /**
    * Verify webhook echo returns correct structure

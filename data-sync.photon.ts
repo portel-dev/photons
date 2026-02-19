@@ -1,22 +1,29 @@
 /**
- * Data Sync Workflow
- * Synchronizes data between different sources with progress tracking
- *
- * This workflow demonstrates:
- * - Database MCP integration
- * - Batch processing with progress
- * - Error handling and retry logic
- *
- * @mcp postgres anthropics/mcp-server-postgres
- * @mcp filesystem anthropics/mcp-server-filesystem
+ * Data Sync Workflow - Synchronizes data between sources
  *
  * @version 1.0.0
- * @license MIT
  * @author Portel
+ * @license MIT
  * @icon 🔄
  * @tags sync, workflow, database
+ * @mcp postgres anthropics/mcp-server-postgres
+ * @mcp filesystem anthropics/mcp-server-filesystem
  */
-export default class DataSync {
+
+import { PhotonMCP } from '@portel/photon-core';
+
+interface PostgresClient {
+  query(params: { sql: string; params?: any[] }): Promise<{ rows: any[] }>;
+}
+
+interface FilesystemClient {
+  write_file(params: { path: string; content: string }): Promise<void>;
+  read_file(params: { path: string }): Promise<string>;
+}
+
+export default class DataSync extends PhotonMCP {
+  postgres!: PostgresClient;
+  filesystem!: FilesystemClient;
   /**
    * Export database query results to a JSON file
    * @param query SQL query to execute
@@ -31,11 +38,7 @@ export default class DataSync {
     const batchSize = params.batchSize || 1000;
 
     yield { emit: 'status', message: 'Executing query...' };
-
-    // Execute the query
-    const result = await (this as any).postgres.query({
-      sql: params.query,
-    });
+    const result = await this.postgres.query({ sql: params.query });
 
     const rows = result.rows || [];
     yield { emit: 'progress', value: 0.3, message: `Query returned ${rows.length} rows` };
@@ -55,9 +58,8 @@ export default class DataSync {
       yield { emit: 'progress', value: 0.3 + (0.5 * (i + 1) / batches) };
     }
 
-    // Write to file
     yield { emit: 'status', message: 'Writing to file...' };
-    await (this as any).filesystem.write_file({
+    await this.filesystem.write_file({
       path: params.outputPath,
       content: JSON.stringify(processedRows, null, 2),
     });
@@ -86,11 +88,7 @@ export default class DataSync {
     const mode = params.mode || 'append';
 
     yield { emit: 'status', message: 'Reading JSON file...' };
-
-    // Read the JSON file
-    const content = await (this as any).filesystem.read_file({
-      path: params.inputPath,
-    });
+    const content = await this.filesystem.read_file({ path: params.inputPath });
 
     const rows = JSON.parse(content);
     if (!Array.isArray(rows) || rows.length === 0) {
@@ -99,12 +97,9 @@ export default class DataSync {
 
     yield { emit: 'progress', value: 0.2, message: `Loaded ${rows.length} rows` };
 
-    // Clear table if replace mode
     if (mode === 'replace') {
       yield { emit: 'status', message: 'Clearing existing data...' };
-      await (this as any).postgres.query({
-        sql: `DELETE FROM ${params.tableName}`,
-      });
+      await this.postgres.query({ sql: `DELETE FROM ${params.tableName}` });
     }
 
     // Insert rows in batches
@@ -135,7 +130,7 @@ export default class DataSync {
         }
 
         try {
-          await (this as any).postgres.query({ sql, params: values });
+          await this.postgres.query({ sql, params: values });
           inserted++;
         } catch (error: any) {
           yield { emit: 'log', level: 'warn', message: `Row failed: ${error.message}` };
@@ -168,19 +163,13 @@ export default class DataSync {
     keyColumn: string;
   }): AsyncGenerator<any, any, any> {
     yield { emit: 'status', message: 'Fetching source data...' };
-
-    const sourceResult = await (this as any).postgres.query({
-      sql: `SELECT * FROM ${params.sourceTable}`,
-    });
+    const sourceResult = await this.postgres.query({ sql: `SELECT * FROM ${params.sourceTable}` });
     const sourceRows = sourceResult.rows || [];
 
     yield { emit: 'progress', value: 0.3, message: `Source: ${sourceRows.length} rows` };
 
     yield { emit: 'status', message: 'Fetching target data...' };
-
-    const targetResult = await (this as any).postgres.query({
-      sql: `SELECT * FROM ${params.targetTable}`,
-    });
+    const targetResult = await this.postgres.query({ sql: `SELECT * FROM ${params.targetTable}` });
     const targetRows = targetResult.rows || [];
 
     yield { emit: 'progress', value: 0.6, message: `Target: ${targetRows.length} rows` };

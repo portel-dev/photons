@@ -1,6 +1,6 @@
-# Data Sync Workflow Synchronizes data between different sources with progress tracking This workflow demonstrates:
+# Data Sync Workflow
 
-Database MCP integration - Batch processing with progress - Error handling and retry logic
+Synchronizes data between sources
 
 > **3 tools** · Workflow Photon · v1.0.0 · MIT
 

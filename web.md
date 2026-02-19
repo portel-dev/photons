@@ -1,6 +1,6 @@
 # Web
 
-Web Agent Photon (Search + Read) A complete web research toolkit. 1. Search: Scrapes Brave Search for web results (no API key required). 2. Read: Uses Mozilla Readability to extract main article content. Note: Previously used DuckDuckGo, but they now block automated requests with CAPTCHA challenges. Brave Search works without such restrictions.
+Search and read webpages
 
 > **2 tools** · Streaming Photon · v1.1.0 · MIT
 
@@ -17,13 +17,13 @@ No configuration required.
 
 ### `search` ⚡
 
-Search the web using Brave Search (HTML scraping, no API key needed).
+Search the web
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `query` | string | Yes | Search query |
-| `limit` | number | No | Maximum number of results to return {@default 10} [min: 1, max: 50] |
+| `limit` | number | No | Number of results {@default 10} [min: 1, max: 50] |
 
 
 
@@ -34,12 +34,12 @@ Search the web using Brave Search (HTML scraping, no API key needed).
 
 ### `read` ⚡
 
-Read a webpage and extract its main content as Markdown. Uses Mozilla Readability to remove ads/navbars.
+Read webpage content
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | string | Yes | URL to read |
+| `url` | string | Yes | URL to read (e.g. `https://example.com`) |
 
 
 
