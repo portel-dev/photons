@@ -764,12 +764,12 @@
     {
       "name": "mongodb",
       "version": "1.0.0",
-      "description": "MongoDB - NoSQL database operations Provides MongoDB database operations using the official MongoDB driver. Supports document CRUD, aggregation pipelines, and collection management. Common use cases: - Document operations: \"Find users where age > 25\", \"Insert new product\" - Aggregation: \"Group orders by customer and sum totals\" - Collection management: \"List all collections\", \"Create index on email field\" Example: find({ collection: \"users\", filter: { age: { $gt: 25 } } }) Configuration: - uri: MongoDB connection URI (required) - database: Default database name (required)",
+      "description": "MongoDB - Flexible document-oriented database",
       "author": "Portel",
       "license": "MIT",
       "icon": "🍃",
       "source": "../mongodb.photon.ts",
-      "hash": "sha256:abafcb89ae7c2882ba9fe18a86c302420b96d9dca0de1e69eaa7e35e359234a5",
+      "hash": "sha256:f79b205d60006eefcbf1cb95aa897f80268ea1ebff08980c1f2906a94e0e392f",
       "tools": [
         "find",
         "findOne",
@@ -783,7 +783,8 @@
         "count",
         "collections",
         "index",
-        "distinct"
+        "distinct",
+        "drop"
       ],
       "assets": [],
       "photonType": "api",
@@ -792,12 +793,12 @@
     {
       "name": "postgres",
       "version": "1.1.0",
-      "description": "PostgreSQL - Database operations for PostgreSQL Provides tools to query, insert, update, and manage PostgreSQL databases. Supports parameterized queries, transactions, and schema introspection. Common use cases: - Data analysis: \"Query user statistics from the database\" - Data management: \"Insert a new user record\" - Schema exploration: \"List all tables in the database\" Example: query({ sql: \"SELECT * FROM users WHERE active = $1\", params: [true] }) Configuration: - host: Database host (default: localhost) - port: Database port (default: 5432) - database: Database name (required) - user: Database user (required) - password: Database password (required) - ssl: Enable SSL connection (default: false) Dependencies are auto-installed on first run.",
+      "description": "PostgreSQL - Powerful relational database",
       "author": "Portel",
       "license": "MIT",
       "icon": "🐘",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:19eafafa900d232bdd298177c1b3b845f2461195b489b35cdde9584770f7fba0",
+      "hash": "sha256:1a0b8c8a9703783ab82e587dc06e28c449cbd94dbc04a09b165a1a1989ce7394",
       "tools": [
         "query",
         "transaction",
@@ -867,12 +868,12 @@
     {
       "name": "redis",
       "version": "1.0.0",
-      "description": "Redis - In-memory data store and cache Provides Redis operations using the official Redis client. Supports key-value operations, lists, hashes, sets, and pub/sub patterns. Common use cases: - Caching: \"Cache user session for 1 hour\", \"Get cached API response\" - Counters: \"Increment page view counter\", \"Get current visitor count\" - Lists/Queues: \"Add job to queue\", \"Get next job from queue\" - Pub/Sub: \"Publish message to channel\", \"Subscribe to events\" Example: set({ key: \"user:123\", value: \"John\", ttl: 3600 }) Configuration: - url: Redis connection URL (default: redis://localhost:6379) - password: Redis password (optional) - database: Database number (default: 0)",
+      "description": "Redis - High-performance in-memory data store",
       "author": "Portel",
       "license": "MIT",
       "icon": "⚡",
       "source": "../redis.photon.ts",
-      "hash": "sha256:6419f41d6432d7510ad38dc66a0ae73386cb8424a502905d418e351799171097",
+      "hash": "sha256:b7045a23fd722ab0da70e2761e9a80c4d8aa34884428fe2f0b58e57721755b4c",
       "tools": [
         "get",
         "set",
@@ -922,19 +923,19 @@
     {
       "name": "sqlite",
       "version": "1.1.0",
-      "description": "SQLite Photon MCP - SQLite database operations Provides SQLite database utilities: query, execute, insert, update, delete, and schema operations. Supports both in-memory and file-based databases. Example: query({ sql: \"SELECT * FROM users WHERE id = ?\", params: [1] }) Dependencies are auto-installed on first run.",
+      "description": "SQLite - File or in-memory SQL database",
       "author": "Portel",
       "license": "MIT",
       "icon": "🗄️",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:ff5794c41c099e30575fe9897c7b6047ad7fe0fb4f96ebcfa90d2f69c9839550",
+      "hash": "sha256:dbd8dbdf55a320099a0fe117ecf19e5ec3266f632eb4edac4f5fb726c44c62bc",
       "tools": [
         "open",
         "query",
         "queryOne",
         "execute",
         "transaction",
-        "listTables",
+        "tables",
         "schema",
         "close",
         "backup"

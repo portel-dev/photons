@@ -1,6 +1,6 @@
 # Redis
 
-In-memory data store and cache Provides Redis operations using the official Redis client. Supports key-value operations, lists, hashes, sets, and pub/sub patterns. Common use cases: - Caching: "Cache user session for 1 hour", "Get cached API response" - Counters: "Increment page view counter", "Get current visitor count" - Lists/Queues: "Add job to queue", "Get next job from queue" - Pub/Sub: "Publish message to channel", "Subscribe to events" Example: set({ key: "user:123", value: "John", ttl: 3600 }) Configuration: - url: Redis connection URL (default: redis://localhost:6379) - password: Redis password (optional) - database: Database number (default: 0)
+High-performance in-memory data store
 
 > **18 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,17 +10,11 @@ In-memory data store and cache Provides Redis operations using the official Redi
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `REDIS_URL` | No | string | Redis connection URL (default: redis://localhost:6379) (default: `redis://localhost:6379`) |
-| `REDIS_PASSWORD` | No | string | Redis password (optional) |
-| `REDIS_DATABASE` | No | number | Database number (default: 0) |
+| `REDIS_URL` | No | string | No description available (default: `redis://localhost:6379`) |
+| `REDIS_PASSWORD` | No | string | No description available |
+| `REDIS_DATABASE` | No | number | No description available |
 
 
-
-### Setup Instructions
-
-- url: Redis connection URL (default: redis://localhost:6379)
-- password: Redis password (optional)
-- database: Database number (default: 0)
 
 
 ## 🔧 Tools
@@ -50,8 +44,8 @@ Set key-value pair
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `user:123:name`) |
-| `value` | string | Yes | Value to store [min: 1] (e.g. `John`) |
-| `ttl` | number | No | Time to live in seconds (optional, max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
+| `value` | string | Yes | Value to store (e.g. `John`) |
+| `ttl` | number | No | Time to live in seconds (max 30 days) [min: 1, max: 2592000] |
 
 
 
@@ -67,7 +61,7 @@ Delete one or more keys
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `keys` | string[] | Yes | Key name(s) to delete (string or array) [min: 1] (e.g. `["user:123","user:124"]`) |
+| `keys` | string[] | Yes | Key name(s) to delete (e.g. `["user:123","user:124"]`) |
 
 
 
@@ -116,7 +110,7 @@ Increment numeric value
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `counter:page_views`) |
-| `amount` | number | No | Amount to increment by [min: 1] (e.g. `5`) |
+| `amount` | number | No | Amount to increment by [min: 1] |
 
 
 
@@ -133,7 +127,7 @@ Decrement numeric value
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `counter:stock`) |
-| `amount` | number | No | Amount to decrement by [min: 1] (e.g. `3`) |
+| `amount` | number | No | Amount to decrement by [min: 1] |
 
 
 
@@ -150,7 +144,7 @@ Set expiration time on key
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `key` | string | Yes | Key name [min: 1, max: 512] (e.g. `session:123`) |
-| `seconds` | number | Yes | Seconds until expiration (max 30 days) [min: 1, max: 2592000] (e.g. `3600`) |
+| `seconds` | number | Yes | Seconds until expiration (max 30 days) [min: 1, max: 2592000] |
 
 
 
@@ -183,7 +177,7 @@ Push value to list (left side)
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
-| `values` | string[] | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
+| `values` | string[] | Yes | Array of values to push (e.g. `["job1","job2"]`) |
 
 
 
@@ -200,7 +194,7 @@ Push value to list (right side)
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `key` | string | Yes | List key name [min: 1, max: 512] (e.g. `queue:jobs`) |
-| `values` | string[] | Yes | Array of values to push [min: 1] (e.g. `["job1","job2"]`) |
+| `values` | string[] | Yes | Array of values to push (e.g. `["job1","job2"]`) |
 
 
 
@@ -283,7 +277,7 @@ Set hash field value
 |-----------|------|----------|-------------|
 | `key` | string | Yes | Hash key name [min: 1, max: 512] (e.g. `user:123`) |
 | `field` | string | Yes | Field name [min: 1, max: 200] (e.g. `name`) |
-| `value` | string | Yes | Value to set [min: 1] (e.g. `John`) |
+| `value` | string | Yes | Value to set (e.g. `John`) |
 
 
 

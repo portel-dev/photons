@@ -1,6 +1,6 @@
 # PostgreSQL
 
-Database operations for PostgreSQL Provides tools to query, insert, update, and manage PostgreSQL databases. Supports parameterized queries, transactions, and schema introspection. Common use cases: - Data analysis: "Query user statistics from the database" - Data management: "Insert a new user record" - Schema exploration: "List all tables in the database" Example: query({ sql: "SELECT * FROM users WHERE active = $1", params: [true] }) Configuration: - host: Database host (default: localhost) - port: Database port (default: 5432) - database: Database name (required) - user: Database user (required) - password: Database password (required) - ssl: Enable SSL connection (default: false) Dependencies are auto-installed on first run.
+Powerful relational database
 
 > **7 tools** · API Photon · v1.1.0 · MIT
 
@@ -10,24 +10,14 @@ Database operations for PostgreSQL Provides tools to query, insert, update, and 
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `POSTGRE_S_Q_L_DATABASE` | Yes | string | Database name (required) |
-| `POSTGRE_S_Q_L_USER` | Yes | string | Database user (required) |
-| `POSTGRE_S_Q_L_PASSWORD` | Yes | string | Database password (required) |
-| `POSTGRE_S_Q_L_HOST` | No | string | Database host (default: localhost) (default: `localhost`) |
-| `POSTGRE_S_Q_L_PORT` | No | number | Database port (default: 5432) (default: `5432`) |
-| `POSTGRE_S_Q_L_SSL` | No | boolean | Enable SSL connection (default: false) |
+| `POSTGRE_S_Q_L_DATABASE` | Yes | string | No description available |
+| `POSTGRE_S_Q_L_USER` | Yes | string | No description available |
+| `POSTGRE_S_Q_L_PASSWORD` | Yes | string | No description available |
+| `POSTGRE_S_Q_L_HOST` | No | string | No description available (default: `localhost`) |
+| `POSTGRE_S_Q_L_PORT` | No | number | No description available (default: `5432`) |
+| `POSTGRE_S_Q_L_SSL` | No | boolean | No description available |
 
 
-
-### Setup Instructions
-
-- host: Database host (default: localhost)
-- port: Database port (default: 5432)
-- database: Database name (required)
-- user: Database user (required)
-- password: Database password (required)
-- ssl: Enable SSL connection (default: false)
-Dependencies are auto-installed on first run.
 
 
 ## 🔧 Tools
@@ -40,8 +30,8 @@ Execute a SQL query
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | string | Yes | SQL query to execute (supports $1, $2, etc. for parameters) |
-| `params` | any[] | No | Query parameters array |
+| `sql` | string | Yes | SQL query [field: textarea] (e.g. `SELECT * FROM users WHERE active = $1`) |
+| `params` | any[] | No | Query parameters (use $1, $2, etc.) |
 
 
 
@@ -52,7 +42,7 @@ Execute a SQL query
 
 ### `transaction`
 
-Execute multiple SQL statements in a transaction
+Execute multiple statements in a transaction
 
 
 | Parameter | Type | Required | Description |
@@ -68,7 +58,7 @@ Execute multiple SQL statements in a transaction
 
 ### `tables`
 
-List all tables in the database
+List all tables in database
 
 
 | Parameter | Type | Required | Description |
@@ -84,12 +74,12 @@ List all tables in the database
 
 ### `describe`
 
-Get table schema information
+Get schema information for a table
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | string | Yes | Table name |
+| `table` | string | Yes | Table name (e.g. `users`) |
 | `schema` | string | No | Schema name |
 
 
@@ -106,7 +96,7 @@ List all indexes on a table
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | string | Yes | Table name |
+| `table` | string | Yes | Table name (e.g. `users`) |
 | `schema` | string | No | Schema name |
 
 
@@ -118,12 +108,12 @@ List all indexes on a table
 
 ### `insert`
 
-Execute a SQL INSERT statement
+Insert a document
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | string | Yes | Table name |
+| `table` | string | Yes | Table name (e.g. `users`) |
 | `data` | Record<string | Yes | Object with column names as keys |
 | `returning` | string[] | No | Column names to return |
 

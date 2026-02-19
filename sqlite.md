@@ -1,6 +1,6 @@
-# SQLite Photon MCP
+# SQLite
 
-SQLite database operations Provides SQLite database utilities: query, execute, insert, update, delete, and schema operations. Supports both in-memory and file-based databases. Example: query({ sql: "SELECT * FROM users WHERE id = ?", params: [1] }) Dependencies are auto-installed on first run.
+File or in-memory SQL database
 
 > **9 tools** · API Photon · v1.1.0 · MIT
 
@@ -10,7 +10,7 @@ SQLite database operations Provides SQLite database utilities: query, execute, i
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `S_Q_LITE_PATH` | No | string | No description available |
+| `S_Q_LITE_PATH` | No | string | No description available (default: `:memory:`) |
 
 
 
@@ -25,8 +25,8 @@ Open a SQLite database
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `path` | string | Yes | Database file path (use ":memory:" for in-memory database) |
-| `readonly` | boolean | No | Open in readonly mode |
+| `path` | string | Yes | Database file path  or ":memory:" for in-memory (e.g. `data.db`) |
+| `readonly` | boolean | No | Open in read-only mode |
 
 
 
@@ -42,8 +42,8 @@ Execute a SELECT query
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | string | Yes | SQL query string |
-| `params` | any[] | No | Query parameters (for prepared statements) |
+| `sql` | string | Yes | SQL query [field: textarea] (e.g. `SELECT * FROM users WHERE id = ?`) |
+| `params` | any[] | No | Query parameters for prepared statements |
 
 
 
@@ -54,13 +54,13 @@ Execute a SELECT query
 
 ### `queryOne`
 
-Execute a single SELECT query and return first row
+Execute a SELECT and return first row
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | string | Yes | SQL query string |
-| `params` | any[] | No | Query parameters (for prepared statements) |
+| `sql` | string | Yes | SQL query [field: textarea] (e.g. `SELECT * FROM users WHERE id = ?`) |
+| `params` | any[] | No | Query parameters |
 
 
 
@@ -71,13 +71,13 @@ Execute a single SELECT query and return first row
 
 ### `execute`
 
-Execute an INSERT, UPDATE, or DELETE statement
+Execute an INSERT, UPDATE, or DELETE
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `sql` | string | Yes | SQL statement string |
-| `params` | any[] | No | Statement parameters (for prepared statements) |
+| `sql` | string | Yes | SQL statement [field: textarea] (e.g. `INSERT INTO users (name) VALUES (?)`) |
+| `params` | any[] | No | Statement parameters |
 
 
 
@@ -88,7 +88,7 @@ Execute an INSERT, UPDATE, or DELETE statement
 
 ### `transaction`
 
-Execute multiple SQL statements in a transaction
+Execute multiple statements in a transaction
 
 
 | Parameter | Type | Required | Description |
@@ -102,9 +102,9 @@ Execute multiple SQL statements in a transaction
 ---
 
 
-### `listTables`
+### `tables`
 
-List all tables in the database
+List all tables in database
 
 
 
@@ -115,12 +115,12 @@ List all tables in the database
 
 ### `schema`
 
-Get schema information for a table
+Get schema for a table
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `table` | string | Yes | Table name |
+| `table` | string | Yes | Table name (e.g. `users`) |
 
 
 
@@ -131,7 +131,7 @@ Get schema information for a table
 
 ### `close`
 
-Close the database connection
+Close database connection
 
 
 
@@ -147,7 +147,7 @@ Create a backup of the database
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `destination` | string | Yes | Path to backup file |
+| `destination` | string | Yes | Backup file path (e.g. `backup.db`) |
 
 
 
@@ -176,7 +176,7 @@ flowchart LR
         PHOTON --> T3
         T4[🔧 transaction]
         PHOTON --> T4
-        T5[📖 listTables]
+        T5[🔧 tables]
         PHOTON --> T5
         T6[🔧 schema]
         PHOTON --> T6

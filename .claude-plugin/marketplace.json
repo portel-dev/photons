@@ -478,7 +478,7 @@
     },
     {
       "name": "mongodb",
-      "description": "MongoDB - NoSQL database operations Provides MongoDB database operations using the official MongoDB driver. Supports document CRUD, aggregation pipelines, and collection management. Common use cases: - Document operations: \"Find users where age > 25\", \"Insert new product\" - Aggregation: \"Group orders by customer and sum totals\" - Collection management: \"List all collections\", \"Create index on email field\" Example: find({ collection: \"users\", filter: { age: { $gt: 25 } } }) Configuration: - uri: MongoDB connection URI (required) - database: Default database name (required)",
+      "description": "MongoDB - Flexible document-oriented database",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -496,7 +496,7 @@
     },
     {
       "name": "postgres",
-      "description": "PostgreSQL - Database operations for PostgreSQL Provides tools to query, insert, update, and manage PostgreSQL databases. Supports parameterized queries, transactions, and schema introspection. Common use cases: - Data analysis: \"Query user statistics from the database\" - Data management: \"Insert a new user record\" - Schema exploration: \"List all tables in the database\" Example: query({ sql: \"SELECT * FROM users WHERE active = $1\", params: [true] }) Configuration: - host: Database host (default: localhost) - port: Database port (default: 5432) - database: Database name (required) - user: Database user (required) - password: Database password (required) - ssl: Enable SSL connection (default: false) Dependencies are auto-installed on first run.",
+      "description": "PostgreSQL - Powerful relational database",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -550,7 +550,7 @@
     },
     {
       "name": "redis",
-      "description": "Redis - In-memory data store and cache Provides Redis operations using the official Redis client. Supports key-value operations, lists, hashes, sets, and pub/sub patterns. Common use cases: - Caching: \"Cache user session for 1 hour\", \"Get cached API response\" - Counters: \"Increment page view counter\", \"Get current visitor count\" - Lists/Queues: \"Add job to queue\", \"Get next job from queue\" - Pub/Sub: \"Publish message to channel\", \"Subscribe to events\" Example: set({ key: \"user:123\", value: \"John\", ttl: 3600 }) Configuration: - url: Redis connection URL (default: redis://localhost:6379) - password: Redis password (optional) - database: Database number (default: 0)",
+      "description": "Redis - High-performance in-memory data store",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -586,7 +586,7 @@
     },
     {
       "name": "sqlite",
-      "description": "SQLite Photon MCP - SQLite database operations Provides SQLite database utilities: query, execute, insert, update, delete, and schema operations. Supports both in-memory and file-based databases. Example: query({ sql: \"SELECT * FROM users WHERE id = ?\", params: [1] }) Dependencies are auto-installed on first run.",
+      "description": "SQLite - File or in-memory SQL database",
       "source": "./",
       "strict": false,
       "hooks": [
