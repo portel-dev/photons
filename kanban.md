@@ -1,6 +1,6 @@
-# Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for:
+# Kanban
 
-Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks
+Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.
 
 > **26 tools** · Streaming Photon · v3.0.0 · MIT
 

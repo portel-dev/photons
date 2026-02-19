@@ -60,7 +60,7 @@
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:3bf743ebe01f17bc103a483669afa5fb73acb16f50fff97b85f34aa6ff9d7996",
+      "hash": "sha256:3fc8e6e3d6486c8eed5e576af73054eac04fe488e07166c05d04bda8b754f668",
       "tools": [
         "start",
         "drop",
@@ -278,12 +278,12 @@
     {
       "name": "feature-showcase",
       "version": "1.0.0",
-      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. Features covered: - Lifecycle hooks (onInitialize, onShutdown) - configure() / getConfig() convention - All io.emit types (status, progress, stream, log, toast, thinking, artifact) - All io.ask types (text, password, confirm, select, number, file, date, form) - @Template methods (MCP prompts) - @format annotations (primitive, json, table, markdown) - Private _helper methods (hidden from tools) - Instance state across calls - this.emit() for pub/sub",
+      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎯",
       "source": "../feature-showcase.photon.ts",
-      "hash": "sha256:d321364598b07e4ca734cc75340654a372b782b012e316b684931390eedefb23",
+      "hash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
       "tools": [
         "configure",
         "getConfig",
@@ -626,12 +626,12 @@
     {
       "name": "kanban",
       "version": "3.0.0",
-      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for: - Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks",
+      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:69e9d9d464dab0570ae71335d54796cb67fab08858fd022f290a5a9a4fe7d310",
+      "hash": "sha256:cc8f1e8cb7f289523836b2cc43be196a8a1331411519651319cf8f7244b9efde",
       "tools": [
         "configure",
         "hooks",

@@ -6,13 +6,6 @@
  * to play strategically. Distributed locks ensure no two moves happen
  * simultaneously - critical when multiple clients connect to the same game.
  *
- * ## Quick Reference
- * - `start` - Start a new game
- * - `drop` - Drop your disc into a column (1-7)
- * - `board` - View current board state
- * - `games` - List your games
- * - `stats` - Win/loss statistics
- *
  * @version 1.0.0
  * @author Portel
  * @license MIT

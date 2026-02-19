@@ -45,7 +45,7 @@ We welcome contributions! Submit pull requests for:
 | [**Docker**](docker.md) | Container management | 10 | - |
 | [**Email**](email.md) | SMTP and IMAP email operations | 8 | - |
 | [**Expenses**](expenses.md) | Expenses — Track spending with budgets and summaries | 4 | - |
-| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. Features covered: - Lifecycle hooks (onInitialize, onShutdown) - configure() / getConfig() convention - All io.emit types (status, progress, stream, log, toast, thinking, artifact) - All io.ask types (text, password, confirm, select, number, file, date, form) - @Template methods (MCP prompts) - @format annotations (primitive, json, table, markdown) - Private _helper methods (hidden from tools) - Instance state across calls - this.emit() for pub/sub | 12 | ⚡📡 |
+| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. | 12 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 12 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 12 | 📡 |
 | [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output. | 27 | 📡 |
@@ -56,7 +56,7 @@ We welcome contributions! Submit pull requests for:
 | [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 0 | - |
 | [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 5 | ⚡🎨 |
 | [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
-| [**Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for:**](kanban.md) | Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks | 26 | ⚡🎨📡 |
+| [**Kanban**](kanban.md) | Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 26 | ⚡🎨📡 |
 | [**Kitchen Sink**](kitchen-sink.md) | Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons. | 25 | ⚡🎨 |
 | [**Calculator**](math.md) | Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc. | 1 | - |
 | [**MCP Orchestrator**](mcp-orchestrator.md) | Combine multiple MCPs into powerful workflows | 10 | 🔌 |
