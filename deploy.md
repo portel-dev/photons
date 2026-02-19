@@ -1,6 +1,6 @@
-# Deploy
+# Deploy Pipeline
 
-Deploy Pipeline — Stateful Workflows + Elicitation + Progress Multi-step deployment pipeline that can crash and resume from the last checkpoint, with human approval gates via elicitation. Steps are simulated — the point is the pattern: checkpoint after side effects, ask before dangerous operations, emit progress throughout.
+Multi-step workflow with checkpoints and approval gates
 
 > **3 tools** · Streaming Photon · v1.9.0 · MIT
 
@@ -17,7 +17,7 @@ No configuration required.
 
 ### `run` ⚡
 
-Run a deployment pipeline. Interactive multi-step workflow with checkpoints at each stage. If interrupted, re-running resumes from the last completed step.
+Run deployment pipeline Multi-step workflow with checkpoints. Resumable if interrupted.
 
 
 | Parameter | Type | Required | Description |
@@ -49,7 +49,7 @@ Deployment history
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `limit` | any | Yes | Number of recent deploys to show {@default 10} |
+| `limit` | any | Yes | Recent deploys to show {@default 10} |
 
 
 

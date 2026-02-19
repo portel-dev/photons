@@ -1,6 +1,6 @@
 # Docker
 
-Container management operations Provides Docker container and image operations using Dockerode. Supports container lifecycle, logs, stats, and image management. Common use cases: - Container management: "List running containers", "Start the database container" - Monitoring: "Show container logs", "Get container stats" - Image management: "Pull nginx image", "List all images" Example: listContainers({ all: true }) Configuration: - socketPath: Docker socket path (default: /var/run/docker.sock)
+Container management
 
 > **10 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,13 +10,9 @@ Container management operations Provides Docker container and image operations u
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `DOCKER_M_C_P_SOCKETPATH` | No | string | Docker socket path (default: /var/run/docker.sock) (default: `/var/run/docker.sock`) |
+| `DOCKER_M_C_P_SOCKETPATH` | No | string | No description available (default: `/var/run/docker.sock`) |
 
 
-
-### Setup Instructions
-
-- socketPath: Docker socket path (default: /var/run/docker.sock)
 
 
 ## 🔧 Tools
@@ -29,7 +25,7 @@ List containers
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `all` | any | No | Show all containers |
+| `all` | any | Yes | Show all containers {@default false, running only} |
 
 
 
@@ -45,7 +41,7 @@ Start a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `id` | string | Yes | Container ID or name (e.g. `my-container`) |
 
 
 
@@ -61,8 +57,8 @@ Stop a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `timeout` | number | No | Seconds to wait before killing [min: 0, max: 300] |
+| `id` | string | Yes | Container ID or name (e.g. `my-container`) |
+| `timeout` | number | No | Seconds to wait before killing {@default 10} |
 
 
 
@@ -78,8 +74,8 @@ Restart a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `timeout` | number | No | Seconds to wait before killing [min: 0, max: 300] |
+| `id` | string | Yes | Container ID or name (e.g. `my-container`) |
+| `timeout` | number | No | Seconds to wait before killing {@default 10} |
 
 
 
@@ -95,8 +91,8 @@ Remove a container
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `force` | boolean | No | Force remove even if running |
+| `id` | string | Yes | Container ID or name (e.g. `my-container`) |
+| `force` | boolean | No | Force remove even if running {@default false} |
 
 
 
@@ -112,9 +108,25 @@ Get container logs
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
-| `tail` | number | No | Number of lines from the end of logs [min: 1, max: 10000] |
-| `timestamps` | boolean | No | Show timestamps |
+| `id` | string | Yes | Container ID or name (e.g. `my-container`) |
+| `tail` | number | No | Lines from end {@default 100} |
+| `timestamps` | boolean | No | Show timestamps {@default true} |
+
+
+
+
+
+---
+
+
+### `stats`
+
+Get container stats
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | Yes | Container ID or name (e.g. `my-container`) |
 
 
 
@@ -141,8 +153,8 @@ Pull an image
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | Yes | Image name [min: 1, max: 200] (e.g. `nginx`) |
-| `tag` | string | No | Image tag [max: 50] (e.g. `alpine`) |
+| `name` | string | Yes | Image name (e.g. `nginx`) |
+| `tag` | string | No | Image tag {@default latest} |
 
 
 
@@ -151,31 +163,15 @@ Pull an image
 ---
 
 
-### `removeImage`
+### `imageRemove`
 
 Remove an image
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `id` | string | Yes | Image ID or name [min: 1, max: 200] (e.g. `nginx:alpine`) |
-| `force` | boolean | No | Force removal even if used by containers |
-
-
-
-
-
----
-
-
-### `stats`
-
-Get container stats
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `id` | string | Yes | Container ID or name [min: 1, max: 200] (e.g. `my-container`) |
+| `id` | string | Yes | Image ID or name (e.g. `nginx:alpine`) |
+| `force` | boolean | No | Force removal {@default false} |
 
 
 
@@ -206,13 +202,13 @@ flowchart LR
         PHOTON --> T4
         T5[🔧 logs]
         PHOTON --> T5
-        T6[🔧 images]
+        T6[🔧 stats]
         PHOTON --> T6
-        T7[🔧 pull]
+        T7[🔧 images]
         PHOTON --> T7
-        T8[🗑️ removeImage]
+        T8[🔧 pull]
         PHOTON --> T8
-        T9[🔧 stats]
+        T9[🔧 imageRemove]
         PHOTON --> T9
     end
 

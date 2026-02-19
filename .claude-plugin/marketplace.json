@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "aws-s3",
-      "description": "AWS S3 - Cloud object storage operations Provides AWS S3 operations using the AWS SDK v3. Supports object upload/download, bucket management, and presigned URLs. Common use cases: - Object storage: \"Upload file to bucket\", \"Download object from S3\" - File management: \"List all files in bucket\", \"Delete old backups\" - Sharing: \"Generate presigned URL for private object\" Example: uploadObject({ bucket: \"my-bucket\", key: \"file.txt\", content: \"Hello\" }) Configuration: - accessKeyId: AWS access key ID (required) - secretAccessKey: AWS secret access key (required) - region: AWS region (default: us-east-1)",
+      "description": "AWS S3 - Cloud object storage",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -136,7 +136,7 @@
     },
     {
       "name": "deploy",
-      "description": "Deploy Pipeline — Stateful Workflows + Elicitation + Progress Multi-step deployment pipeline that can crash and resume from the last checkpoint, with human approval gates via elicitation. Steps are simulated — the point is the pattern: checkpoint after side effects, ask before dangerous operations, emit progress throughout.",
+      "description": "Deploy Pipeline - Multi-step workflow with checkpoints and approval gates",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -154,7 +154,7 @@
     },
     {
       "name": "docker",
-      "description": "Docker - Container management operations Provides Docker container and image operations using Dockerode. Supports container lifecycle, logs, stats, and image management. Common use cases: - Container management: \"List running containers\", \"Start the database container\" - Monitoring: \"Show container logs\", \"Get container stats\" - Image management: \"Pull nginx image\", \"List all images\" Example: listContainers({ all: true }) Configuration: - socketPath: Docker socket path (default: /var/run/docker.sock)",
+      "description": "Docker - Container management",
       "source": "./",
       "strict": false,
       "hooks": [

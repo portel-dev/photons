@@ -1,6 +1,6 @@
 # AWS S3
 
-Cloud object storage operations Provides AWS S3 operations using the AWS SDK v3. Supports object upload/download, bucket management, and presigned URLs. Common use cases: - Object storage: "Upload file to bucket", "Download object from S3" - File management: "List all files in bucket", "Delete old backups" - Sharing: "Generate presigned URL for private object" Example: uploadObject({ bucket: "my-bucket", key: "file.txt", content: "Hello" }) Configuration: - accessKeyId: AWS access key ID (required) - secretAccessKey: AWS secret access key (required) - region: AWS region (default: us-east-1)
+Cloud object storage
 
 > **11 tools** · API Photon · v1.0.0 · MIT
 
@@ -10,165 +10,14 @@ Cloud object storage operations Provides AWS S3 operations using the AWS SDK v3.
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `AWS_S3_ACCESSKEYID` | Yes | string | AWS access key ID (required) |
-| `AWS_S3_SECRETACCESSKEY` | Yes | string | AWS secret access key (required) |
-| `AWS_S3_REGION` | No | string | AWS region (default: us-east-1) (default: `us-east-1`) |
+| `AWS_S3_ACCESSKEYID` | Yes | string | No description available |
+| `AWS_S3_SECRETACCESSKEY` | Yes | string | No description available |
+| `AWS_S3_REGION` | No | string | No description available (default: `us-east-1`) |
 
 
-
-### Setup Instructions
-
-- accessKeyId: AWS access key ID (required)
-- secretAccessKey: AWS secret access key (required)
-- region: AWS region (default: us-east-1)
 
 
 ## 🔧 Tools
-
-
-### `upload`
-
-Upload object to bucket
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-| `content` | string | Yes | Content to upload (string or base64) [min: 1] (e.g. `Hello World`) |
-| `contentType` | string | No | MIME type [max: 100] (e.g. `text/plain`) |
-| `encoding` | string | No | Content encoding [max: 20] (e.g. `base64`) |
-
-
-
-
-
----
-
-
-### `download`
-
-Download object from bucket
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-| `encoding` | string | No | Return encoding (optional, "base64" for binary files) [max: 20] (e.g. `base64`) |
-
-
-
-
-
----
-
-
-### `list`
-
-List objects in bucket
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `prefix` | string | No | Filter by key prefix [max: 1024] (e.g. `documents/`) |
-| `maxKeys` | number | No | Maximum number of objects to return [min: 1, max: 1000] |
-
-
-
-
-
----
-
-
-### `remove`
-
-Delete object from bucket
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/old-report.pdf`) |
-
-
-
-
-
----
-
-
-### `removeMany`
-
-Delete multiple objects from bucket
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `keys` | string[] | Yes | Array of object keys to delete [min: 1] (e.g. `["old/file1.txt","old/file2.txt"]`) |
-
-
-
-
-
----
-
-
-### `metadata`
-
-Get object metadata
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-
-
-
-
-
----
-
-
-### `copy`
-
-Copy object within S3
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `sourceBucket` | string | Yes | Source bucket name [min: 1, max: 63] (e.g. `my-source-bucket`) |
-| `sourceKey` | string | Yes | Source object key [min: 1, max: 1024] (e.g. `documents/original.pdf`) |
-| `destinationBucket` | string | Yes | Destination bucket name [min: 1, max: 63] (e.g. `my-dest-bucket`) |
-| `destinationKey` | string | Yes | Destination object key [min: 1, max: 1024] (e.g. `backups/copy.pdf`) |
-
-
-
-
-
----
-
-
-### `presign`
-
-Generate presigned URL for object access
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-app-bucket`) |
-| `key` | string | Yes | Object key (file path) [min: 1, max: 1024] (e.g. `documents/report.pdf`) |
-| `expiresIn` | number | No | Expiration time in seconds [min: 1, max: 604800] |
-| `operation` | string | No | Operation type [max: 10] (e.g. `get`) |
-
-
-
-
-
----
 
 
 ### `buckets`
@@ -189,7 +38,7 @@ Create a new bucket
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name (must be globally unique) [min: 1, max: 63] (e.g. `my-new-app-bucket-2024`) |
+| `bucket` | string | Yes | Bucket name (globally unique) (e.g. `my-app-bucket-2024`) |
 
 
 
@@ -198,14 +47,159 @@ Create a new bucket
 ---
 
 
-### `removeBucket`
+### `bucketRemove`
 
 Delete a bucket (must be empty)
 
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `bucket` | string | Yes | Bucket name [min: 1, max: 63] (e.g. `my-old-bucket`) |
+| `bucket` | string | Yes | Bucket name (e.g. `my-old-bucket`) |
+
+
+
+
+
+---
+
+
+### `list`
+
+List objects in bucket
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `prefix` | string | No | Filter by prefix (e.g. `documents/`) |
+| `maxKeys` | number | No | Maximum objects to return {@default 1000} |
+
+
+
+
+
+---
+
+
+### `upload`
+
+Upload object to S3
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key/path (e.g. `documents/report.pdf`) |
+| `content` | string | Yes | File content (string or base64) |
+| `contentType` | string | No | MIME type (e.g. `text/plain`) |
+| `encoding` | string | No | Content encoding [choice: base64] |
+
+
+
+
+
+---
+
+
+### `download`
+
+Download object from S3
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key/path (e.g. `documents/report.pdf`) |
+| `encoding` | string | No | Return encoding [choice: base64] |
+
+
+
+
+
+---
+
+
+### `metadata`
+
+Get object metadata
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key/path (e.g. `documents/report.pdf`) |
+
+
+
+
+
+---
+
+
+### `copy`
+
+Copy object within S3
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sourceBucket` | string | Yes | Source bucket (e.g. `my-source-bucket`) |
+| `sourceKey` | string | Yes | Source object key (e.g. `documents/original.pdf`) |
+| `destinationBucket` | string | Yes | Destination bucket (e.g. `my-dest-bucket`) |
+| `destinationKey` | string | Yes | Destination object key (e.g. `backups/copy.pdf`) |
+
+
+
+
+
+---
+
+
+### `delete`
+
+Delete object from bucket
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key/path (e.g. `documents/old-report.pdf`) |
+
+
+
+
+
+---
+
+
+### `deleteMany`
+
+Delete multiple objects from bucket
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `keys` | string[] | Yes | Array of object keys to delete (e.g. `["old/file1.txt","old/file2.txt"]`) |
+
+
+
+
+
+---
+
+
+### `presign`
+
+Generate presigned URL for object
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `bucket` | string | Yes | Bucket name (e.g. `my-app-bucket`) |
+| `key` | string | Yes | Object key/path (e.g. `documents/report.pdf`) |
+| `expiresIn` | number | No | Expiration time in seconds {@default 3600} |
+| `operation` | string | No | Operation type [choice: get,put] |
 
 
 
@@ -224,27 +218,27 @@ flowchart LR
     subgraph aws_s3["📦 Aws S3"]
         direction TB
         PHOTON((🎯))
-        T0[📤 upload]
+        T0[🔧 buckets]
         PHOTON --> T0
-        T1[📥 download]
+        T1[🔧 bucket]
         PHOTON --> T1
-        T2[📖 list]
+        T2[🔧 bucketRemove]
         PHOTON --> T2
-        T3[🗑️ remove]
+        T3[📖 list]
         PHOTON --> T3
-        T4[🗑️ removeMany]
+        T4[📤 upload]
         PHOTON --> T4
-        T5[🔧 metadata]
+        T5[📥 download]
         PHOTON --> T5
-        T6[🔧 copy]
+        T6[🔧 metadata]
         PHOTON --> T6
-        T7[🔧 presign]
+        T7[🔧 copy]
         PHOTON --> T7
-        T8[🔧 buckets]
+        T8[🗑️ delete]
         PHOTON --> T8
-        T9[🔧 bucket]
+        T9[🗑️ deleteMany]
         PHOTON --> T9
-        T10[🗑️ removeBucket]
+        T10[🔧 presign]
         PHOTON --> T10
     end
 ```
@@ -264,7 +258,7 @@ photon info aws-s3 --mcp
 
 
 ```
-@aws-sdk/client-s3@^3.511.0, @aws-sdk/s3-request-presigner@^3.511.0
+@aws-sdk/client-s3@^3.0.0, @aws-sdk/s3-request-presigner@^3.0.0
 ```
 
 ---
