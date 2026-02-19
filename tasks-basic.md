@@ -1,6 +1,6 @@
 # Tasks Basic
 
-Tasks Basic — Stateless task list
+Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.
 
 > **4 tools** · API Photon · v1.0.0 · MIT
 

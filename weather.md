@@ -1,6 +1,6 @@
 # Weather
 
-Current weather and forecasts
+Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).
 
 > **2 tools** · API Photon · v1.0.0 · MIT
 

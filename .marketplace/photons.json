@@ -55,7 +55,7 @@
     {
       "name": "connect-four",
       "version": "1.0.0",
-      "description": "Connect Four - Play against AI with distributed locks",
+      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🔴",
@@ -107,7 +107,7 @@
     {
       "name": "dashboard",
       "version": "1.0.0",
-      "description": "Dashboard Photon",
+      "description": "Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
@@ -156,7 +156,7 @@
     {
       "name": "demo",
       "version": "1.0.0",
-      "description": "Demo - Feature showcase",
+      "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎪",
@@ -278,7 +278,7 @@
     {
       "name": "feature-showcase",
       "version": "1.0.0",
-      "description": "Feature Showcase - Core Runtime Feature Demos",
+      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. Features covered: - Lifecycle hooks (onInitialize, onShutdown) - configure() / getConfig() convention - All io.emit types (status, progress, stream, log, toast, thinking, artifact) - All io.ask types (text, password, confirm, select, number, file, date, form) - @Template methods (MCP prompts) - @format annotations (primitive, json, table, markdown) - Private _helper methods (hidden from tools) - Instance state across calls - this.emit() for pub/sub",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎯",
@@ -365,7 +365,7 @@
     {
       "name": "format-showcase",
       "version": "1.0.0",
-      "description": "Format Showcase - Auto-UI Format Demos",
+      "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎨",
@@ -560,7 +560,7 @@
     {
       "name": "hello-world",
       "version": "1.0.0",
-      "description": "Hello World - The simplest possible photon",
+      "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
       "author": "Portel",
       "license": "MIT",
       "icon": "👋",
@@ -626,7 +626,7 @@
     {
       "name": "kanban",
       "version": "3.0.0",
-      "description": "Kanban Board Photon",
+      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for: - Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
@@ -674,7 +674,7 @@
     {
       "name": "kitchen-sink",
       "version": "1.0.0",
-      "description": "Kitchen Sink Photon",
+      "description": "Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🍳",
@@ -721,7 +721,7 @@
     {
       "name": "math",
       "version": "1.1.0",
-      "description": "Calculator - Math expression evaluator",
+      "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🧮",
@@ -847,7 +847,7 @@
     {
       "name": "progressive-rendering",
       "version": "1.0.0",
-      "description": "Progressive Rendering - Same Data, Better Display",
+      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
       "author": "Portel",
       "license": "MIT",
       "icon": "🎨",
@@ -947,7 +947,7 @@
     {
       "name": "tasks-basic",
       "version": "1.0.0",
-      "description": "Tasks Basic — Stateless task list",
+      "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📝",
@@ -966,7 +966,7 @@
     {
       "name": "tasks-live",
       "version": "1.0.0",
-      "description": "Tasks Live — Persistent reactive task list",
+      "description": "Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.",
       "author": "Portel",
       "license": "MIT",
       "icon": "✅",
@@ -987,7 +987,7 @@
     {
       "name": "team-dashboard",
       "version": "1.0.0",
-      "description": "Team Dashboard Photon",
+      "description": "Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📺",
@@ -1048,7 +1048,7 @@
     {
       "name": "time",
       "version": "1.0.0",
-      "description": "Time - Timezone and time conversion",
+      "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
       "author": "Portel",
       "license": "MIT",
       "icon": "🕐",
@@ -1066,7 +1066,7 @@
     {
       "name": "todo",
       "version": "1.0.0",
-      "description": "Todo List - Reactive collections in action",
+      "description": "Todo List - Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
       "author": "Portel",
       "license": "MIT",
       "icon": "✅",
@@ -1080,7 +1080,7 @@
     {
       "name": "weather",
       "version": "1.0.0",
-      "description": "Weather - Current weather and forecasts",
+      "description": "Weather - Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).",
       "author": "Portel",
       "license": "MIT",
       "icon": "🌤️",

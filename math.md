@@ -1,6 +1,6 @@
 # Calculator
 
-Math expression evaluator
+Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.
 
 > **1 tools** · API Photon · v1.1.0 · MIT
 

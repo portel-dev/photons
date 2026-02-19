@@ -1,6 +1,6 @@
 # Tasks Live
 
-Tasks Live — Persistent reactive task list
+Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.
 
 > **4 tools** · API Photon · v1.0.0 · MIT
 

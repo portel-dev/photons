@@ -46,7 +46,7 @@
     },
     {
       "name": "connect-four",
-      "description": "Connect Four - Play against AI with distributed locks",
+      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -82,7 +82,7 @@
     },
     {
       "name": "dashboard",
-      "description": "Dashboard Photon",
+      "description": "Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -118,7 +118,7 @@
     },
     {
       "name": "demo",
-      "description": "Demo - Feature showcase",
+      "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -208,7 +208,7 @@
     },
     {
       "name": "feature-showcase",
-      "description": "Feature Showcase - Core Runtime Feature Demos",
+      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. Features covered: - Lifecycle hooks (onInitialize, onShutdown) - configure() / getConfig() convention - All io.emit types (status, progress, stream, log, toast, thinking, artifact) - All io.ask types (text, password, confirm, select, number, file, date, form) - @Template methods (MCP prompts) - @format annotations (primitive, json, table, markdown) - Private _helper methods (hidden from tools) - Instance state across calls - this.emit() for pub/sub",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -262,7 +262,7 @@
     },
     {
       "name": "format-showcase",
-      "description": "Format Showcase - Auto-UI Format Demos",
+      "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -352,7 +352,7 @@
     },
     {
       "name": "hello-world",
-      "description": "Hello World - The simplest possible photon",
+      "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -406,7 +406,7 @@
     },
     {
       "name": "kanban",
-      "description": "Kanban Board Photon",
+      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for: - Project planning and task tracking - AI working memory across sessions - Human-AI collaboration on shared tasks",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -424,7 +424,7 @@
     },
     {
       "name": "kitchen-sink",
-      "description": "Kitchen Sink Photon",
+      "description": "Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -442,7 +442,7 @@
     },
     {
       "name": "math",
-      "description": "Calculator - Math expression evaluator",
+      "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -532,7 +532,7 @@
     },
     {
       "name": "progressive-rendering",
-      "description": "Progressive Rendering - Same Data, Better Display",
+      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -604,7 +604,7 @@
     },
     {
       "name": "tasks-basic",
-      "description": "Tasks Basic — Stateless task list",
+      "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -622,7 +622,7 @@
     },
     {
       "name": "tasks-live",
-      "description": "Tasks Live — Persistent reactive task list",
+      "description": "Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -640,7 +640,7 @@
     },
     {
       "name": "team-dashboard",
-      "description": "Team Dashboard Photon",
+      "description": "Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -676,7 +676,7 @@
     },
     {
       "name": "time",
-      "description": "Time - Timezone and time conversion",
+      "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -694,7 +694,7 @@
     },
     {
       "name": "todo",
-      "description": "Todo List - Reactive collections in action",
+      "description": "Todo List - Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -712,7 +712,7 @@
     },
     {
       "name": "weather",
-      "description": "Weather - Current weather and forecasts",
+      "description": "Weather - Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).",
       "source": "./",
       "strict": false,
       "hooks": [
