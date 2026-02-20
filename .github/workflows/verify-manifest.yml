@@ -33,7 +33,9 @@ jobs:
           for photon in data.get('photons', []):
               name = photon['name']
               source = photon.get('source', '')
-              expected = photon.get('hash', '')
+              # Use contentHash (source-only) when available; fall back to hash
+              # Combined hash includes assets which CI doesn't reproduce
+              expected = photon.get('contentHash', '') or photon.get('hash', '')
 
               if not source or not expected:
                   print(f'SKIP {name}: no source or hash')
