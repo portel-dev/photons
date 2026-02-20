@@ -14,6 +14,7 @@
       "icon": "☁️",
       "source": "../aws-s3.photon.ts",
       "hash": "sha256:adc3fe06218c79b35466e8e85d569459e2f1ffca0c6b52b5bd4e7dc9787d36c5",
+      "contentHash": "sha256:adc3fe06218c79b35466e8e85d569459e2f1ffca0c6b52b5bd4e7dc9787d36c5",
       "tools": [
         "buckets",
         "bucket",
@@ -40,6 +41,7 @@
       "icon": "📊",
       "source": "../code-diagram.photon.ts",
       "hash": "sha256:1e59f636cfb69149acbfb51c5a8eceffc1116889bd41f74df0bfd61fdaf117b5",
+      "contentHash": "sha256:1e59f636cfb69149acbfb51c5a8eceffc1116889bd41f74df0bfd61fdaf117b5",
       "tools": [
         "generate",
         "analyze",
@@ -61,6 +63,7 @@
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
       "hash": "sha256:9cc85e69ed136bea7d7b9af1de7b3eb3fe16e3c7dd045ac82c9105406cad2824",
+      "contentHash": "sha256:9cc85e69ed136bea7d7b9af1de7b3eb3fe16e3c7dd045ac82c9105406cad2824",
       "tools": [
         "start",
         "drop",
@@ -87,6 +90,7 @@
       "icon": "🔧",
       "source": "../daemon-features.photon.ts",
       "hash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
+      "contentHash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
       "tools": [
         "scheduledHeartbeat",
         "handleWebhook",
@@ -109,7 +113,8 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../dashboard.photon.ts",
-      "hash": "sha256:343bd7e47dd3913b16602f7d4c95c41050124670aafe81caf7cab132adf08a65",
+      "hash": "sha256:270aa88c99c7cf9250a4d148d835a31a0c5f74b05beb7fb627844136f49b9cf7",
+      "contentHash": "sha256:343bd7e47dd3913b16602f7d4c95c41050124670aafe81caf7cab132adf08a65",
       "tools": [
         "overview",
         "main",
@@ -138,6 +143,7 @@
       "icon": "🔄",
       "source": "../data-sync.photon.ts",
       "hash": "sha256:3590ef9cac2a681bec01e0939c1c5e7b231d95d4c62570b1daba1fb660bb98fc",
+      "contentHash": "sha256:3590ef9cac2a681bec01e0939c1c5e7b231d95d4c62570b1daba1fb660bb98fc",
       "tools": [
         "exportToJson",
         "importFromJson",
@@ -159,6 +165,7 @@
       "icon": "🎪",
       "source": "../demo.photon.ts",
       "hash": "sha256:43b3c5efd35ca15bd3b21f62022f57cca72da6e71f950c30f59331af4fa5928b",
+      "contentHash": "sha256:43b3c5efd35ca15bd3b21f62022f57cca72da6e71f950c30f59331af4fa5928b",
       "tools": [
         "echo",
         "add",
@@ -190,6 +197,7 @@
       "icon": "🚀",
       "source": "../deploy.photon.ts",
       "hash": "sha256:561d340df44d4a5221f208c5e0a8f8e253f21dea63fd0e03832bf9f9fe48a462",
+      "contentHash": "sha256:561d340df44d4a5221f208c5e0a8f8e253f21dea63fd0e03832bf9f9fe48a462",
       "tools": [
         "run",
         "status",
@@ -212,6 +220,7 @@
       "icon": "🐳",
       "source": "../docker.photon.ts",
       "hash": "sha256:5368fb8ea07dc72fc286e674505e762d3133dd2a8108d048d7d881311f1fd68b",
+      "contentHash": "sha256:5368fb8ea07dc72fc286e674505e762d3133dd2a8108d048d7d881311f1fd68b",
       "tools": [
         "containers",
         "start",
@@ -237,6 +246,7 @@
       "icon": "📧",
       "source": "../email.photon.ts",
       "hash": "sha256:a6c9c68b1eda10adbc40debcf2016344e9df3568e414857c1f08fe9b8dd5f790",
+      "contentHash": "sha256:a6c9c68b1eda10adbc40debcf2016344e9df3568e414857c1f08fe9b8dd5f790",
       "tools": [
         "send",
         "attach",
@@ -260,6 +270,7 @@
       "icon": "💰",
       "source": "../expenses.photon.ts",
       "hash": "sha256:37c32607eb8eb884250ffcc3618dfb911f9037a8bb60f06477bb0a84bbd29df3",
+      "contentHash": "sha256:37c32607eb8eb884250ffcc3618dfb911f9037a8bb60f06477bb0a84bbd29df3",
       "tools": [
         "add",
         "list",
@@ -281,6 +292,7 @@
       "icon": "🎯",
       "source": "../feature-showcase.photon.ts",
       "hash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
+      "contentHash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
       "tools": [
         "configure",
         "getConfig",
@@ -311,6 +323,7 @@
       "icon": "📁",
       "source": "../filesystem.photon.ts",
       "hash": "sha256:09f4a13957075ef59d1ebac5e3db67951d93bbd5e9997091082e3925e53ef3c3",
+      "contentHash": "sha256:09f4a13957075ef59d1ebac5e3db67951d93bbd5e9997091082e3925e53ef3c3",
       "tools": [
         "read",
         "write",
@@ -338,6 +351,7 @@
       "icon": "📬",
       "source": "../form-inbox.photon.ts",
       "hash": "sha256:87dbf7d29ca04d7abc5dd03bd43c580ce3ce53d31a5d6e5fc83ae3d27dd37d8e",
+      "contentHash": "sha256:87dbf7d29ca04d7abc5dd03bd43c580ce3ce53d31a5d6e5fc83ae3d27dd37d8e",
       "tools": [
         "forms",
         "create",
@@ -368,6 +382,7 @@
       "icon": "🎨",
       "source": "../format-showcase.photon.ts",
       "hash": "sha256:dd0c7e98ab53f2a678fa29244f1c53d2b3397c1ad4bbf6e0a5aa8d94c7904ed2",
+      "contentHash": "sha256:dd0c7e98ab53f2a678fa29244f1c53d2b3397c1ad4bbf6e0a5aa8d94c7904ed2",
       "tools": [
         "list",
         "card",
@@ -411,7 +426,8 @@
       "license": "MIT",
       "icon": "📬",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:ae72c5c99225d20555a981941194e9fd7c5bf2b7d58ffc157d4eb2d41a458241",
+      "hash": "sha256:c87d76800998ec7e612de8494ffdabfc3b90828ad5d4bcce47f6f66a69aed6f7",
+      "contentHash": "sha256:0d74b950729300b9d776b6ae055b1c84f29b8d95f22ebade2478e55c5d598f90",
       "tools": [
         "configure",
         "main",
@@ -491,6 +507,7 @@
       "icon": "🔀",
       "source": "../git.photon.ts",
       "hash": "sha256:c6213a706c34cb5468bf597e5abba8877dbb2b96510613d449cfdec897c711b1",
+      "contentHash": "sha256:c6213a706c34cb5468bf597e5abba8877dbb2b96510613d449cfdec897c711b1",
       "tools": [
         "status",
         "log",
@@ -517,6 +534,7 @@
       "icon": "🐙",
       "source": "../github-issues.photon.ts",
       "hash": "sha256:235f1d97dfbe48be52704fa7da3323e699e410008942d79f1ac80038db73117a",
+      "contentHash": "sha256:235f1d97dfbe48be52704fa7da3323e699e410008942d79f1ac80038db73117a",
       "tools": [
         "list",
         "get",
@@ -539,6 +557,7 @@
       "icon": "📅",
       "source": "../google-calendar.photon.ts",
       "hash": "sha256:c9b9f41f68548067370b5bd2316b82f041fef613d470e799d4b02c6dfba18566",
+      "contentHash": "sha256:c9b9f41f68548067370b5bd2316b82f041fef613d470e799d4b02c6dfba18566",
       "tools": [
         "list",
         "get",
@@ -563,6 +582,7 @@
       "icon": "👋",
       "source": "../hello-world.photon.ts",
       "hash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
+      "contentHash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
       "tools": [],
       "assets": [],
       "photonType": "api",
@@ -576,7 +596,8 @@
       "license": "MIT",
       "icon": "🔗",
       "source": "../integration-demo.photon.ts",
-      "hash": "sha256:e12b85fef935f7bb4be2570ddee2eacd29f559282084d56a21219eaf4ba15b77",
+      "hash": "sha256:a13efd8a1fe963d9065547c60ca8cb37f6c50142f8b9b71355f52a41de1a6671",
+      "contentHash": "sha256:e12b85fef935f7bb4be2570ddee2eacd29f559282084d56a21219eaf4ba15b77",
       "tools": [
         "info",
         "workflow",
@@ -604,6 +625,7 @@
       "icon": "🎫",
       "source": "../jira.photon.ts",
       "hash": "sha256:bf0b458269438ed2a3b9b44b4337a76d6495c47031fac6196e6dce4ed34ed55e",
+      "contentHash": "sha256:bf0b458269438ed2a3b9b44b4337a76d6495c47031fac6196e6dce4ed34ed55e",
       "tools": [
         "search",
         "get",
@@ -628,7 +650,8 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:f61e271dbc1d8d245666476091b8b82d5cfda950cd222748af1a94d6f2551757",
+      "hash": "sha256:ebcf5c1efde1b09821de845a8edbe07994abf763816786f7acb41bb60c1e8e82",
+      "contentHash": "sha256:f61e271dbc1d8d245666476091b8b82d5cfda950cd222748af1a94d6f2551757",
       "tools": [
         "configure",
         "hooks",
@@ -676,7 +699,8 @@
       "license": "MIT",
       "icon": "🍳",
       "source": "../kitchen-sink.photon.ts",
-      "hash": "sha256:3e9d69baa4017fbc7d6506dd92b2e6e38c838d613afb7e6f2ee9599e2a2941fa",
+      "hash": "sha256:ffbed9e87b4ebd1eeb5e71ae210ed66fee3f3c4322d74cd00058e9deb2c762cf",
+      "contentHash": "sha256:3e9d69baa4017fbc7d6506dd92b2e6e38c838d613afb7e6f2ee9599e2a2941fa",
       "tools": [
         "basicStringReturn",
         "basicNumberReturn",
@@ -724,6 +748,7 @@
       "icon": "🧮",
       "source": "../math.photon.ts",
       "hash": "sha256:e7907ae33122d74cf22edcd2c236e11f65eda402f3c803120a74b82ab2bf231c",
+      "contentHash": "sha256:e7907ae33122d74cf22edcd2c236e11f65eda402f3c803120a74b82ab2bf231c",
       "tools": [
         "calculate"
       ],
@@ -740,6 +765,7 @@
       "icon": "🔗",
       "source": "../mcp-orchestrator.photon.ts",
       "hash": "sha256:c0b1681646914fa2218fdf72a7ef8129ad205cb3f343d83778a6174d0804a3a1",
+      "contentHash": "sha256:c0b1681646914fa2218fdf72a7ef8129ad205cb3f343d83778a6174d0804a3a1",
       "tools": [
         "discover",
         "check",
@@ -767,6 +793,7 @@
       "icon": "🍃",
       "source": "../mongodb.photon.ts",
       "hash": "sha256:d78e093dc4855c63141c13a709207c17733099bd2e551160c5c548d415646af7",
+      "contentHash": "sha256:d78e093dc4855c63141c13a709207c17733099bd2e551160c5c548d415646af7",
       "tools": [
         "find",
         "get",
@@ -796,6 +823,7 @@
       "icon": "🐘",
       "source": "../postgres.photon.ts",
       "hash": "sha256:5d9a0bc142cfd55b0d2d48b4385883624c1274b057ce47b6c4f831d0b1fa6f90",
+      "contentHash": "sha256:5d9a0bc142cfd55b0d2d48b4385883624c1274b057ce47b6c4f831d0b1fa6f90",
       "tools": [
         "query",
         "transaction",
@@ -817,7 +845,8 @@
       "license": "MIT",
       "icon": "⚙️",
       "source": "../preferences.photon.ts",
-      "hash": "sha256:864bd01a493ba7d11958af9b384f13cc1646f557d13da3fa9680346501a1d6c5",
+      "hash": "sha256:248c41655c4aa7bad4c340c53e57fc053f30b0ad68ebd38b48c06dc1a7066741",
+      "contentHash": "sha256:864bd01a493ba7d11958af9b384f13cc1646f557d13da3fa9680346501a1d6c5",
       "tools": [
         "list",
         "get",
@@ -850,6 +879,7 @@
       "icon": "🎨",
       "source": "../progressive-rendering.photon.ts",
       "hash": "sha256:9e3da4402cace6804332c27abc31e221afd7ee968dd4864dde0c8fa76dfca44d",
+      "contentHash": "sha256:9e3da4402cace6804332c27abc31e221afd7ee968dd4864dde0c8fa76dfca44d",
       "tools": [
         "v1_raw",
         "v2_described",
@@ -871,6 +901,7 @@
       "icon": "⚡",
       "source": "../redis.photon.ts",
       "hash": "sha256:e6ee2f6a22f70e98859b12fc71fdf09d7544032054fb63b99f699836b0333b02",
+      "contentHash": "sha256:e6ee2f6a22f70e98859b12fc71fdf09d7544032054fb63b99f699836b0333b02",
       "tools": [
         "get",
         "set",
@@ -904,6 +935,7 @@
       "icon": "💬",
       "source": "../slack.photon.ts",
       "hash": "sha256:2f70325dafa6bcf611587bad85746e52633394d74e3d80533c38f0c4aba77b4a",
+      "contentHash": "sha256:2f70325dafa6bcf611587bad85746e52633394d74e3d80533c38f0c4aba77b4a",
       "tools": [
         "post",
         "channels",
@@ -926,6 +958,7 @@
       "icon": "🗄️",
       "source": "../sqlite.photon.ts",
       "hash": "sha256:7cc96bfdf6719eb2ab4cc8867728bde35b873ede27a37072f7c5598ef53db41d",
+      "contentHash": "sha256:7cc96bfdf6719eb2ab4cc8867728bde35b873ede27a37072f7c5598ef53db41d",
       "tools": [
         "open",
         "query",
@@ -950,6 +983,7 @@
       "icon": "📝",
       "source": "../tasks-basic.photon.ts",
       "hash": "sha256:b7c9346aafa1f171ada63dcb0ea76433e59bb70deafb94cc2ebcc8c18f62e9a9",
+      "contentHash": "sha256:b7c9346aafa1f171ada63dcb0ea76433e59bb70deafb94cc2ebcc8c18f62e9a9",
       "tools": [
         "list",
         "add",
@@ -969,6 +1003,7 @@
       "icon": "✅",
       "source": "../tasks-live.photon.ts",
       "hash": "sha256:9c68429c4ba7fbdcba33379a2a593594fbb35d0ee556dad55ab192995ed28b0e",
+      "contentHash": "sha256:9c68429c4ba7fbdcba33379a2a593594fbb35d0ee556dad55ab192995ed28b0e",
       "tools": [
         "list",
         "add",
@@ -989,7 +1024,8 @@
       "license": "MIT",
       "icon": "📺",
       "source": "../team-dashboard.photon.ts",
-      "hash": "sha256:4259d9b30f92c83f32547fcc83ae5d075d04bbbee79f6c57a17552688b98b953",
+      "hash": "sha256:914232936b8048e1cd7c0235f0b95accf3e3ee2a0b9faa40d9ce850c5193a362",
+      "contentHash": "sha256:4259d9b30f92c83f32547fcc83ae5d075d04bbbee79f6c57a17552688b98b953",
       "tools": [
         "main",
         "getDashboardData",
@@ -1030,6 +1066,7 @@
       "icon": "📡",
       "source": "../team-pulse.photon.ts",
       "hash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
+      "contentHash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
       "tools": [
         "post",
         "today",
@@ -1051,6 +1088,7 @@
       "icon": "🕐",
       "source": "../time.photon.ts",
       "hash": "sha256:ef23c192b08b87018d42a935d5f8f5792e01e0e1a9fb6828ab44728eda7e4723",
+      "contentHash": "sha256:ef23c192b08b87018d42a935d5f8f5792e01e0e1a9fb6828ab44728eda7e4723",
       "tools": [
         "now",
         "convert",
@@ -1069,6 +1107,7 @@
       "icon": "✅",
       "source": "../todo.photon.ts",
       "hash": "sha256:223cd03ac648a6a1b3cd3b3a9f6eefc97695ebd61273635c37cfd3b163cf4265",
+      "contentHash": "sha256:223cd03ac648a6a1b3cd3b3a9f6eefc97695ebd61273635c37cfd3b163cf4265",
       "tools": [],
       "assets": [],
       "photonType": "api",
@@ -1083,6 +1122,7 @@
       "icon": "🌤️",
       "source": "../weather.photon.ts",
       "hash": "sha256:ed4d6b32473134190b153828bb9239069825d2e9bdb3b4117f6070cb1471dc80",
+      "contentHash": "sha256:ed4d6b32473134190b153828bb9239069825d2e9bdb3b4117f6070cb1471dc80",
       "tools": [
         "current",
         "forecast"
@@ -1100,6 +1140,7 @@
       "icon": "🌐",
       "source": "../web.photon.ts",
       "hash": "sha256:29c339e2b616d9acd5d029f6914cddeccaed533b70fe865c200d0a29ecff13fc",
+      "contentHash": "sha256:29c339e2b616d9acd5d029f6914cddeccaed533b70fe865c200d0a29ecff13fc",
       "tools": [
         "search",
         "read"
