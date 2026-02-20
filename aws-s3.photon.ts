@@ -63,6 +63,9 @@ export default class AwsS3 {
    * @format list {@title name, @subtitle createdAt:date}
    * @autorun
    * @icon 🪣
+   * @timeout 10s
+   * @retryable 2 2s
+   * @cached 5m
    */
   async buckets() {
     const { Buckets = [] } = await this.s3.send(new ListBucketsCommand({}));
@@ -76,6 +79,8 @@ export default class AwsS3 {
    * Create a new bucket
    * @param bucket Bucket name (globally unique) {@example my-app-bucket-2024}
    * @icon ➕
+   * @timeout 15s
+   * @retryable 2 3s
    */
   async bucket(params: { bucket: string }) {
     const cmd = new CreateBucketCommand({
@@ -106,6 +111,8 @@ export default class AwsS3 {
    * @format list {@title key, @subtitle size, lastModified:date}
    * @autorun
    * @icon 📋
+   * @timeout 15s
+   * @retryable 2 2s
    */
   async list(params: { bucket: string; prefix?: string; maxKeys?: number }): Promise<S3Object[]> {
     const { Contents = [] } = await this.s3.send(
@@ -131,6 +138,8 @@ export default class AwsS3 {
    * @param contentType MIME type (optional) {@example text/plain}
    * @param encoding Content encoding (optional) {@choice base64}
    * @icon ⬆️
+   * @timeout 2m
+   * @retryable 2 3s
    */
   async upload(params: {
     bucket: string;
@@ -165,6 +174,8 @@ export default class AwsS3 {
    * @param key Object key/path {@example documents/report.pdf}
    * @param encoding Return encoding (optional) {@choice base64}
    * @icon ⬇️
+   * @timeout 2m
+   * @retryable 2 3s
    */
   async download(params: { bucket: string; key: string; encoding?: string }) {
     const response = await this.s3.send(
@@ -199,6 +210,8 @@ export default class AwsS3 {
    * @param key Object key/path {@example documents/report.pdf}
    * @format card
    * @icon ℹ️
+   * @timeout 10s
+   * @retryable 2 2s
    */
   async metadata(params: { bucket: string; key: string }) {
     const response = await this.s3.send(
@@ -223,6 +236,8 @@ export default class AwsS3 {
    * @param destinationBucket Destination bucket {@example my-dest-bucket}
    * @param destinationKey Destination object key {@example backups/copy.pdf}
    * @icon 📋
+   * @timeout 2m
+   * @retryable 2 3s
    */
   async copy(params: {
     sourceBucket: string;
@@ -249,6 +264,8 @@ export default class AwsS3 {
    * @param bucket Bucket name {@example my-app-bucket}
    * @param key Object key/path {@example documents/old-report.pdf}
    * @icon 🗑️
+   * @timeout 10s
+   * @retryable 2 2s
    */
   async delete(params: { bucket: string; key: string }) {
     await this.s3.send(
@@ -262,6 +279,8 @@ export default class AwsS3 {
    * @param bucket Bucket name {@example my-app-bucket}
    * @param keys Array of object keys to delete {@example ["old/file1.txt","old/file2.txt"]}
    * @icon 🗑️
+   * @timeout 30s
+   * @retryable 2 3s
    */
   async purge(params: { bucket: string; keys: string[] }) {
     const response = await this.s3.send(
@@ -285,6 +304,7 @@ export default class AwsS3 {
    * @param expiresIn Expiration time in seconds {@default 3600}
    * @param operation Operation type {@choice get,put}
    * @icon 🔗
+   * @timeout 5s
    */
   async presign(params: {
     bucket: string;

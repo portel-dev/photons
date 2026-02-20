@@ -59,6 +59,8 @@ export default class PostgreSQL {
    * @param sql SQL query {@field textarea} {@example SELECT * FROM users WHERE active = $1}
    * @param params Query parameters (use $1, $2, etc.)
    * @format table
+   * @timeout 30s
+   * @retryable 2 1s
    */
   async query(params: { sql: string; params?: any[] }): Promise<QueryResult> {
     if (!this.pool) throw new Error('Database not initialized');
@@ -73,6 +75,7 @@ export default class PostgreSQL {
   /**
    * Execute multiple statements in a transaction
    * @param statements Array of SQL statements with optional parameters
+   * @timeout 60s
    */
   async transaction(params: { statements: Array<{ sql: string; params?: any[] }> }) {
     if (!this.pool) throw new Error('Database not initialized');
@@ -100,6 +103,8 @@ export default class PostgreSQL {
    * @param schema Schema name (default: public)
    * @autorun
    * @format table
+   * @timeout 10s
+   * @cached 5m
    */
   async tables(params?: { schema?: string }) {
     if (!this.pool) throw new Error('Database not initialized');
@@ -117,6 +122,8 @@ export default class PostgreSQL {
    * @param table Table name {@example users}
    * @param schema Schema name (default: public)
    * @format table
+   * @timeout 10s
+   * @cached 5m
    */
   async describe(params: { table: string; schema?: string }) {
     if (!this.pool) throw new Error('Database not initialized');
@@ -149,6 +156,8 @@ export default class PostgreSQL {
    * @param table Table name {@example users}
    * @param schema Schema name (default: public)
    * @format table
+   * @timeout 10s
+   * @cached 5m
    */
   async indexes(params: { table: string; schema?: string }) {
     if (!this.pool) throw new Error('Database not initialized');
@@ -202,6 +211,8 @@ export default class PostgreSQL {
    * Get database statistics
    * @autorun
    * @format card
+   * @timeout 10s
+   * @cached 1m
    */
   async stats() {
     if (!this.pool) throw new Error('Database not initialized');

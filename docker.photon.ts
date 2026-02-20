@@ -58,6 +58,8 @@ export default class DockerMCP {
    * @format list {@title name, @subtitle image, status}
    * @autorun
    * @icon 📦
+   * @timeout 10s
+   * @cached 30s
    */
   async containers(params?: { all?: boolean }): Promise<Container[]> {
     const list = await this.docker.listContainers({ all: params?.all || false });
@@ -80,6 +82,8 @@ export default class DockerMCP {
    * Start a container
    * @param id Container ID or name {@example my-container}
    * @icon ▶️
+   * @timeout 30s
+   * @retryable 2 2s
    */
   async start(params: { id: string }) {
     await this.docker.getContainer(params.id).start();
@@ -91,6 +95,7 @@ export default class DockerMCP {
    * @param id Container ID or name {@example my-container}
    * @param timeout Seconds to wait before killing {@default 10}
    * @icon ⏹️
+   * @timeout 30s
    */
   async stop(params: { id: string; timeout?: number }) {
     await this.docker.getContainer(params.id).stop({ t: params.timeout ?? 10 });
@@ -102,6 +107,7 @@ export default class DockerMCP {
    * @param id Container ID or name {@example my-container}
    * @param timeout Seconds to wait before killing {@default 10}
    * @icon 🔄
+   * @timeout 30s
    */
   async restart(params: { id: string; timeout?: number }) {
     await this.docker.getContainer(params.id).restart({ t: params.timeout ?? 10 });
@@ -125,6 +131,7 @@ export default class DockerMCP {
    * @param tail Lines from end {@default 100}
    * @param timestamps Show timestamps {@default true}
    * @icon 📝
+   * @timeout 15s
    */
   async logs(params: { id: string; tail?: number; timestamps?: boolean }): Promise<string> {
     const logs = await this.docker.getContainer(params.id).logs({
@@ -142,6 +149,7 @@ export default class DockerMCP {
    * @param id Container ID or name {@example my-container}
    * @format card
    * @icon 📊
+   * @timeout 10s
    */
   async stats(params: { id: string }) {
     const stats = await this.docker.getContainer(params.id).stats({ stream: false });
@@ -179,6 +187,8 @@ export default class DockerMCP {
    * @format list {@title tags[0], @subtitle size, created:date}
    * @autorun
    * @icon 🖼️
+   * @timeout 10s
+   * @cached 30s
    */
   async images(): Promise<Image[]> {
     const list = await this.docker.listImages();
@@ -195,6 +205,8 @@ export default class DockerMCP {
    * @param name Image name {@example nginx}
    * @param tag Image tag {@default latest}
    * @icon ⬇️
+   * @timeout 5m
+   * @retryable 2 5s
    */
   async pull(params: { name: string; tag?: string }) {
     const image = `${params.name}:${params.tag ?? 'latest'}`;

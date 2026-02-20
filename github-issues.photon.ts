@@ -57,6 +57,9 @@ export default class GitHubIssuesPhoton {
    * @format list {@title title, @subtitle number, @badge state}
    * @autorun
    * @icon 📋
+   * @timeout 15s
+   * @retryable 2 2s
+   * @cached 2m
    */
   async list(params: {
     owner: string;
@@ -99,6 +102,9 @@ export default class GitHubIssuesPhoton {
    * @param number Issue number
    * @format card
    * @icon 📖
+   * @timeout 10s
+   * @retryable 2 2s
+   * @cached 2m
    */
   async get(params: { owner: string; repo: string; number: number }) {
     const response = await this.octokit.issues.get({
@@ -132,6 +138,8 @@ export default class GitHubIssuesPhoton {
    * @param labels Label names (JSON array, optional)
    * @param assignees Assignees (JSON array, optional)
    * @icon ✨
+   * @timeout 15s
+   * @retryable 2 3s
    */
   async create(params: {
     owner: string;
@@ -167,6 +175,8 @@ export default class GitHubIssuesPhoton {
    * @param state New state (optional) {@choice open,closed}
    * @param labels New labels (JSON array, optional)
    * @icon ✏️
+   * @timeout 15s
+   * @retryable 2 3s
    */
   async update(params: {
     owner: string;
@@ -202,6 +212,8 @@ export default class GitHubIssuesPhoton {
    * @param number Issue number
    * @param body Comment text {@field textarea}
    * @icon 💬
+   * @timeout 15s
+   * @retryable 2 3s
    */
   async comment(params: {
     owner: string;
@@ -233,6 +245,9 @@ export default class GitHubIssuesPhoton {
    * @format list {@title body, @subtitle user, @badge created_at}
    * @autorun
    * @icon 💭
+   * @timeout 15s
+   * @retryable 2 2s
+   * @cached 2m
    */
   async comments(params: { owner: string; repo: string; number: number }) {
     const response = await this.octokit.issues.listComments({
@@ -262,6 +277,8 @@ export default class GitHubIssuesPhoton {
    * @param limit Results (default: 30) {@min 1} {@max 100}
    * @format list {@title title, @subtitle repository, @badge state}
    * @icon 🔍
+   * @timeout 15s
+   * @retryable 2 2s
    */
   async search(params: {
     query: string;

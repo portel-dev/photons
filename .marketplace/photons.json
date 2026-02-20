@@ -13,7 +13,7 @@
       "license": "MIT",
       "icon": "☁️",
       "source": "../aws-s3.photon.ts",
-      "hash": "sha256:d3cd21be81b1da58816ed0de23aaf4307d03a8df7b1db9bdc41442cdd1f4ce33",
+      "hash": "sha256:adc3fe06218c79b35466e8e85d569459e2f1ffca0c6b52b5bd4e7dc9787d36c5",
       "tools": [
         "buckets",
         "bucket",
@@ -214,7 +214,7 @@
       "license": "MIT",
       "icon": "🐳",
       "source": "../docker.photon.ts",
-      "hash": "sha256:317a5108602fd97b65dca7bf229d9f6f67ae0888546f0ceb760b45060d0b3881",
+      "hash": "sha256:5368fb8ea07dc72fc286e674505e762d3133dd2a8108d048d7d881311f1fd68b",
       "tools": [
         "containers",
         "start",
@@ -239,7 +239,7 @@
       "license": "MIT",
       "icon": "📧",
       "source": "../email.photon.ts",
-      "hash": "sha256:d78e0b5c328f9baaf4557d28f7a0bf0a9906be3033545fd7fb88a7e949f5b6ec",
+      "hash": "sha256:a6c9c68b1eda10adbc40debcf2016344e9df3568e414857c1f08fe9b8dd5f790",
       "tools": [
         "send",
         "attach",
@@ -519,7 +519,7 @@
       "license": "MIT",
       "icon": "🐙",
       "source": "../github-issues.photon.ts",
-      "hash": "sha256:cc415af728fa632230971e33036d99c23d08636c0a00395aa2d9081d9ee66b9a",
+      "hash": "sha256:235f1d97dfbe48be52704fa7da3323e699e410008942d79f1ac80038db73117a",
       "tools": [
         "list",
         "get",
@@ -541,7 +541,7 @@
       "license": "MIT",
       "icon": "📅",
       "source": "../google-calendar.photon.ts",
-      "hash": "sha256:ff36542c84ac5d88d667b6fa5b9e8abc6db826d4a2866d87f134494ae2f95a7d",
+      "hash": "sha256:c9b9f41f68548067370b5bd2316b82f041fef613d470e799d4b02c6dfba18566",
       "tools": [
         "list",
         "get",
@@ -798,7 +798,7 @@
       "license": "MIT",
       "icon": "🐘",
       "source": "../postgres.photon.ts",
-      "hash": "sha256:1a0b8c8a9703783ab82e587dc06e28c449cbd94dbc04a09b165a1a1989ce7394",
+      "hash": "sha256:5d9a0bc142cfd55b0d2d48b4385883624c1274b057ce47b6c4f831d0b1fa6f90",
       "tools": [
         "query",
         "transaction",
@@ -906,7 +906,7 @@
       "license": "MIT",
       "icon": "💬",
       "source": "../slack.photon.ts",
-      "hash": "sha256:18854fea0bc0eda3d3294eed113dba271e41547bfa215227caa7f44b1d2914c0",
+      "hash": "sha256:2f70325dafa6bcf611587bad85746e52633394d74e3d80533c38f0c4aba77b4a",
       "tools": [
         "post",
         "channels",

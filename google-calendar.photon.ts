@@ -50,6 +50,9 @@ export default class GoogleCalendarPhoton {
    * @format list {@title summary, @subtitle start, @badge location}
    * @autorun
    * @icon 📋
+   * @timeout 10s
+   * @retryable 2 2s
+   * @cached 2m
    */
   async list(params?: {
     calendar?: string;
@@ -93,6 +96,8 @@ export default class GoogleCalendarPhoton {
    * @param calendar Calendar ID (default: primary)
    * @format card
    * @icon 📖
+   * @timeout 10s
+   * @retryable 2 2s
    */
   async get(params: { id: string; calendar?: string }) {
     const response = await this.calendar.events.get({
@@ -131,6 +136,8 @@ export default class GoogleCalendarPhoton {
    * @param attendees Attendee emails (JSON array, optional)
    * @param calendar Calendar ID (default: primary)
    * @icon ✨
+   * @timeout 15s
+   * @retryable 2 3s
    */
   async create(params: {
     summary: string;
@@ -174,6 +181,8 @@ export default class GoogleCalendarPhoton {
    * @param updates Fields to update (JSON object)
    * @param calendar Calendar ID (default: primary)
    * @icon ✏️
+   * @timeout 15s
+   * @retryable 2 3s
    */
   async update(params: {
     id: string;
@@ -231,6 +240,8 @@ export default class GoogleCalendarPhoton {
    * @param id Event ID
    * @param calendar Calendar ID (default: primary)
    * @icon 🗑
+   * @timeout 10s
+   * @retryable 2 2s
    */
   async remove(params: { id: string; calendar?: string }) {
     await this.calendar.events.delete({
@@ -247,6 +258,8 @@ export default class GoogleCalendarPhoton {
    * @format list {@title summary, @subtitle id, @badge primary}
    * @autorun
    * @icon 📦
+   * @timeout 10s
+   * @cached 1h
    */
   async calendars() {
     const response = await this.calendar.calendarList.list();
@@ -272,6 +285,8 @@ export default class GoogleCalendarPhoton {
    * @param to End time (ISO 8601)
    * @format list {@title email, @subtitle busy}
    * @icon ⏰
+   * @timeout 15s
+   * @retryable 2 2s
    */
   async availability(params: { emails: string[]; from: string; to: string }) {
     const response = await this.calendar.freebusy.query({
@@ -298,6 +313,8 @@ export default class GoogleCalendarPhoton {
    * @param limit Results (default: 10) {@min 1} {@max 100}
    * @format list {@title summary, @subtitle start, @badge location}
    * @icon 🔍
+   * @timeout 10s
+   * @retryable 2 2s
    */
   async search(params: { query: string; calendar?: string; limit?: number }) {
     const response = await this.calendar.events.list({
@@ -331,6 +348,9 @@ export default class GoogleCalendarPhoton {
    * @format list {@title summary, @subtitle start}
    * @autorun
    * @icon 🚀
+   * @timeout 10s
+   * @retryable 2 2s
+   * @cached 2m
    */
   async upcoming(params?: { hours?: number; calendar?: string }) {
     const hours = params?.hours || 24;

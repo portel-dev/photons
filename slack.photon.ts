@@ -45,6 +45,8 @@ export default class SlackPhoton {
    * @param thread_ts Thread timestamp (optional)
    * @param blocks Rich blocks (JSON string, optional)
    * @icon 📤
+   * @timeout 15s
+   * @retryable 2 2s
    */
   async post(params: {
     channel: string;
@@ -73,6 +75,8 @@ export default class SlackPhoton {
    * @format list {@title name, @subtitle id, @badge is_private}
    * @autorun
    * @icon 📋
+   * @timeout 15s
+   * @cached 5m
    */
   async channels(params?: { types?: 'public_channel' | 'private_channel'; limit?: number }) {
     const response = await this.client.conversations.list({
@@ -99,6 +103,8 @@ export default class SlackPhoton {
    * @param channel Channel name or ID
    * @format card
    * @icon 📖
+   * @timeout 10s
+   * @cached 5m
    */
   async channel(params: { channel: string }) {
     const channel = params.channel.startsWith('#')
@@ -128,6 +134,7 @@ export default class SlackPhoton {
    * @param latest End timestamp (optional)
    * @format list {@title text, @subtitle user, @badge ts}
    * @icon 📜
+   * @timeout 15s
    */
   async history(params: {
     channel: string;
@@ -164,6 +171,8 @@ export default class SlackPhoton {
    * @param timestamp Message timestamp
    * @param name Emoji name (without colons)
    * @icon 😀
+   * @timeout 10s
+   * @retryable 2 2s
    */
   async react(params: { channel: string; timestamp: string; name: string }) {
     const channel = params.channel.startsWith('#')
@@ -187,6 +196,8 @@ export default class SlackPhoton {
    * @param title File title (optional)
    * @param comment Comment (optional)
    * @icon 📎
+   * @timeout 30s
+   * @retryable 2 3s
    */
   async upload(params: {
     channel: string;
@@ -221,6 +232,7 @@ export default class SlackPhoton {
    * @param sort Sort order {@choice score,timestamp} {@default score}
    * @format list {@title text, @subtitle channel, @badge user}
    * @icon 🔍
+   * @timeout 15s
    */
   async search(params: { query: string; count?: number; sort?: 'score' | 'timestamp' }) {
     const response = await this.client.search.messages({

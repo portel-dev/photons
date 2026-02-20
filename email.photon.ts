@@ -72,6 +72,8 @@ export default class EmailPhoton {
    * @param cc CC addresses (optional) {@format email}
    * @param bcc BCC addresses (optional) {@format email}
    * @icon 📤
+   * @timeout 30s
+   * @retryable 2 3s
    */
   async send(params: {
     to: string;
@@ -101,6 +103,8 @@ export default class EmailPhoton {
    * @param attachments File attachments (JSON array)
    * @param html HTML content (default: false) {@choice true,false}
    * @icon 📎
+   * @timeout 60s
+   * @retryable 2 3s
    */
   async attach(params: {
     to: string;
@@ -132,6 +136,8 @@ export default class EmailPhoton {
    * @format list {@title subject, @subtitle from, @badge unread}
    * @autorun
    * @icon 📬
+   * @timeout 30s
+   * @retryable 2 3s
    */
   async inbox(params?: { mailbox?: string; unread?: boolean; limit?: number }) {
     if (!this.imapConfig) {
@@ -229,6 +235,7 @@ export default class EmailPhoton {
    * @param mailbox Mailbox name (default: INBOX)
    * @format card
    * @icon 📖
+   * @timeout 30s
    */
   async get(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -296,6 +303,7 @@ export default class EmailPhoton {
    * @param mailbox Mailbox name (default: INBOX)
    * @format list {@title subject, @subtitle from}
    * @icon 🔍
+   * @timeout 30s
    */
   async search(params: {
     query: string;
@@ -385,6 +393,7 @@ export default class EmailPhoton {
    * @param uid Email UID
    * @param mailbox Mailbox name (default: INBOX)
    * @icon ✓
+   * @timeout 15s
    */
   async read(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -422,6 +431,7 @@ export default class EmailPhoton {
    * @param uid Email UID
    * @param mailbox Mailbox name (default: INBOX)
    * @icon 🗑
+   * @timeout 15s
    */
   async remove(params: { uid: number; mailbox?: string }) {
     if (!this.imapConfig) {
@@ -467,6 +477,7 @@ export default class EmailPhoton {
    * @param target Target mailbox name
    * @param mailbox Source mailbox (default: INBOX)
    * @icon 📬
+   * @timeout 15s
    */
   async move(params: { uid: number; target: string; mailbox?: string }) {
     if (!this.imapConfig) {
