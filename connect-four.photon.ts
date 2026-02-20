@@ -727,6 +727,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
    *
    * @example games()
    * @example games({ limit: 5 })
+   * @format table
    */
   async games(params?: {
     /** Max games to return (default 10) */
