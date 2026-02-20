@@ -39,6 +39,8 @@ export default class MongoDB {
    * @param limit Max documents to return {@min 1} {@max 1000}
    * @param sort Sort specification
    * @format table
+   * @timeout 15s
+   * @retryable 2 1s
    */
   async find(params: { collection: string; filter?: object; limit?: number; sort?: object }) {
     const col = this.db.collection(params.collection);
@@ -53,6 +55,8 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter (MongoDB query object)
    * @format card
+   * @timeout 10s
+   * @retryable 2 1s
    */
   async get(params: { collection: string; filter: object }) {
     const col = this.db.collection(params.collection);
@@ -65,6 +69,8 @@ export default class MongoDB {
    * Insert a document
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param document Document to insert
+   * @timeout 10s
+   * @retryable 2 1s
    */
   async insert(params: { collection: string; document: object }) {
     const col = this.db.collection(params.collection);
@@ -76,6 +82,8 @@ export default class MongoDB {
    * Insert multiple documents
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param documents Array of documents to insert
+   * @timeout 30s
+   * @retryable 2 2s
    */
   async bulk(params: { collection: string; documents: object[] }) {
     const col = this.db.collection(params.collection);
@@ -93,6 +101,8 @@ export default class MongoDB {
    * @param filter Query filter to match documents
    * @param update Update operations (e.g., {"$set":{"name":"John"}})
    * @param upsert Create document if it doesn't exist
+   * @timeout 10s
+   * @retryable 2 1s
    */
   async replace(params: { collection: string; filter: object; update: object; upsert?: boolean }) {
     const col = this.db.collection(params.collection);
@@ -110,6 +120,8 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter to match documents
    * @param update Update operations
+   * @timeout 30s
+   * @retryable 2 2s
    */
   async update(params: { collection: string; filter: object; update: object }) {
     const col = this.db.collection(params.collection);
@@ -125,6 +137,8 @@ export default class MongoDB {
    * Delete a document
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter to match document
+   * @timeout 10s
+   * @retryable 2 1s
    */
   async remove(params: { collection: string; filter: object }) {
     const col = this.db.collection(params.collection);
@@ -137,6 +151,8 @@ export default class MongoDB {
    * Delete multiple documents
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter to match documents
+   * @timeout 30s
+   * @retryable 2 2s
    */
   async delete(params: { collection: string; filter: object }) {
     const col = this.db.collection(params.collection);
@@ -149,6 +165,7 @@ export default class MongoDB {
    * @param collection Collection name {@example orders} {@min 1} {@max 120}
    * @param pipeline Aggregation pipeline array
    * @format table
+   * @timeout 60s
    */
   async aggregate(params: { collection: string; pipeline: object[] }) {
     const col = this.db.collection(params.collection);
@@ -161,6 +178,8 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param filter Query filter (counts all if omitted)
    * @autorun
+   * @timeout 10s
+   * @retryable 2 1s
    */
   async count(params: { collection: string; filter?: object }) {
     const col = this.db.collection(params.collection);
@@ -172,6 +191,8 @@ export default class MongoDB {
    * List all collections in database
    * @autorun
    * @format table
+   * @timeout 10s
+   * @cached 1m
    */
   async collections() {
     const collections = await this.db.listCollections().toArray();
@@ -186,6 +207,8 @@ export default class MongoDB {
    * @param collection Collection name {@example users} {@min 1} {@max 120}
    * @param keys Index specification (e.g., {"email":1})
    * @param unique Create unique index
+   * @timeout 2m
+   * @queued 1
    */
   async index(params: { collection: string; keys: object; unique?: boolean }) {
     const col = this.db.collection(params.collection);
@@ -199,6 +222,8 @@ export default class MongoDB {
    * @param field Field name {@example country} {@min 1} {@max 200}
    * @param filter Optional query filter
    * @format table
+   * @timeout 15s
+   * @retryable 2 1s
    */
   async distinct(params: { collection: string; field: string; filter?: object }) {
     const col = this.db.collection(params.collection);
@@ -209,6 +234,7 @@ export default class MongoDB {
   /**
    * Drop a collection
    * @param collection Collection name {@example users} {@min 1} {@max 120}
+   * @timeout 30s
    */
   async drop(params: { collection: string }) {
     const col = this.db.collection(params.collection);

@@ -29,6 +29,7 @@ export default class DataSync extends PhotonMCP {
    * @param query SQL query to execute
    * @param outputPath Path to save the JSON file
    * @param batchSize Number of rows to process at a time
+   * @timeout 5m
    */
   async *exportToJson(params: {
     query: string;
@@ -78,6 +79,7 @@ export default class DataSync extends PhotonMCP {
    * @param inputPath Path to the JSON file
    * @param tableName Target table name
    * @param mode Insert mode: 'append', 'replace', or 'upsert'
+   * @timeout 5m
    */
   async *importFromJson(params: {
     inputPath: string;
@@ -156,6 +158,7 @@ export default class DataSync extends PhotonMCP {
    * @param sourceTable Source table name
    * @param targetTable Target table name
    * @param keyColumn Column to use as key for comparison
+   * @timeout 2m
    */
   async *compare(params: {
     sourceTable: string;

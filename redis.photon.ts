@@ -34,6 +34,8 @@ export default class Redis {
   /**
    * Get value by key
    * @param key Key name {@example user:123:session} {@min 1} {@max 512}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async get(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -47,6 +49,8 @@ export default class Redis {
    * @param key Key name {@example user:123:name} {@min 1} {@max 512}
    * @param value Value to store {@example John}
    * @param ttl Time to live in seconds (max 30 days) {@min 1} {@max 2592000}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async set(params: { key: string; value: string; ttl?: number } | string, value?: string, ttl?: number) {
     const key = typeof params === 'string' ? params : params.key;
@@ -64,6 +68,8 @@ export default class Redis {
   /**
    * Delete one or more keys
    * @param keys Key name(s) to delete {@example ["user:123","user:124"]}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async del(params: { keys: string[] } | string | string[], ...additionalKeys: string[]) {
     let keys: string[];
@@ -81,6 +87,8 @@ export default class Redis {
   /**
    * Check if key exists
    * @param key Key name {@example user:123} {@min 1} {@max 512}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async exists(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -92,6 +100,8 @@ export default class Redis {
    * Get all keys matching pattern
    * @param pattern Key pattern {@example user:*} {@min 1} {@max 200}
    * @format table
+   * @timeout 10s
+   * @throttled 1/sec
    */
   async keys(params: { pattern: string } | string) {
     const pattern = typeof params === 'string' ? params : params.pattern;
@@ -103,6 +113,8 @@ export default class Redis {
    * Increment numeric value
    * @param key Key name {@example counter:page_views} {@min 1} {@max 512}
    * @param amount Amount to increment by {@min 1}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async incr(params: { key: string; amount?: number } | string, amount?: number) {
     const key = typeof params === 'string' ? params : params.key;
@@ -115,6 +127,8 @@ export default class Redis {
    * Decrement numeric value
    * @param key Key name {@example counter:stock} {@min 1} {@max 512}
    * @param amount Amount to decrement by {@min 1}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async decr(params: { key: string; amount?: number } | string, amount?: number) {
     const key = typeof params === 'string' ? params : params.key;
@@ -127,6 +141,8 @@ export default class Redis {
    * Set expiration time on key
    * @param key Key name {@example session:123} {@min 1} {@max 512}
    * @param seconds Seconds until expiration (max 30 days) {@min 1} {@max 2592000}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async expire(params: { key: string; seconds: number } | string, seconds?: number) {
     const key = typeof params === 'string' ? params : params.key;
@@ -139,6 +155,8 @@ export default class Redis {
   /**
    * Get time to live for key
    * @param key Key name {@example session:123} {@min 1} {@max 512}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async ttl(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -152,6 +170,8 @@ export default class Redis {
    * Push value to list (left side)
    * @param key List key name {@example queue:jobs} {@min 1} {@max 512}
    * @param values Array of values to push {@example ["job1","job2"]}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async lpush(params: { key: string; values: string[] } | string, values?: string | string[], ...additionalValues: string[]) {
     let key: string;
@@ -173,6 +193,8 @@ export default class Redis {
    * Push value to list (right side)
    * @param key List key name {@example queue:jobs} {@min 1} {@max 512}
    * @param values Array of values to push {@example ["job1","job2"]}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async rpush(params: { key: string; values: string[] } | string, values?: string | string[], ...additionalValues: string[]) {
     let key: string;
@@ -193,6 +215,8 @@ export default class Redis {
   /**
    * Pop value from list (left side)
    * @param key List key name {@example queue:jobs} {@min 1} {@max 512}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async lpop(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -204,6 +228,8 @@ export default class Redis {
   /**
    * Pop value from list (right side)
    * @param key List key name {@example queue:jobs} {@min 1} {@max 512}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async rpop(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -215,6 +241,8 @@ export default class Redis {
   /**
    * Get list length
    * @param key List key name {@example queue:jobs} {@min 1} {@max 512}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async llen(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -226,6 +254,8 @@ export default class Redis {
    * Get hash field value
    * @param key Hash key name {@example user:123} {@min 1} {@max 512}
    * @param field Field name {@example name} {@min 1} {@max 200}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async hget(params: { key: string; field: string } | string, field?: string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -240,6 +270,8 @@ export default class Redis {
    * @param key Hash key name {@example user:123} {@min 1} {@max 512}
    * @param field Field name {@example name} {@min 1} {@max 200}
    * @param value Value to set {@example John}
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async hset(params: { key: string; field: string; value: string } | string, field?: string, value?: string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -253,6 +285,8 @@ export default class Redis {
    * Get all fields and values in hash
    * @param key Hash key name {@example user:123} {@min 1} {@max 512}
    * @format table
+   * @timeout 5s
+   * @retryable 2 500ms
    */
   async hgetall(params: { key: string } | string) {
     const key = typeof params === 'string' ? params : params.key;
@@ -262,6 +296,7 @@ export default class Redis {
 
   /**
    * Flush all data from current database
+   * @timeout 10s
    */
   async flush() {
     await this.client.flushDb();

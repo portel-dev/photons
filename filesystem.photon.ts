@@ -36,6 +36,7 @@ export default class Filesystem {
    * @param path File path {@example README.md}
    * @param encoding File encoding {@choice utf8,base64,hex} {@default utf8}
    * @format markdown
+   * @timeout 10s
    */
   async read(params: { path: string; encoding?: string }) {
     const filePath = this.resolvePath(params.path);
@@ -55,6 +56,7 @@ export default class Filesystem {
    * @param path File path {@example README.md}
    * @param content File content {@field textarea}
    * @param encoding File encoding {@default utf8}
+   * @timeout 15s
    */
   async write(params: { path: string; content: string; encoding?: string }) {
     const filePath = this.resolvePath(params.path);
@@ -75,6 +77,7 @@ export default class Filesystem {
    * @param path File path
    * @param content Content to append
    * @param encoding File encoding {@default utf8}
+   * @timeout 10s
    */
   async append(params: { path: string; content: string; encoding?: string }) {
     const filePath = this.resolvePath(params.path);
@@ -88,6 +91,7 @@ export default class Filesystem {
   /**
    * Delete a file
    * @param path File path
+   * @timeout 5s
    */
   async remove(params: { path: string }) {
     const filePath = this.resolvePath(params.path);
@@ -106,6 +110,7 @@ export default class Filesystem {
    * Copy a file
    * @param source Source file path
    * @param destination Destination file path
+   * @timeout 30s
    */
   async copy(params: { source: string; destination: string }) {
     const sourcePath = this.resolvePath(params.source);
@@ -122,6 +127,7 @@ export default class Filesystem {
    * Move/rename a file
    * @param source Source file path
    * @param destination Destination file path
+   * @timeout 15s
    */
   async move(params: { source: string; destination: string }) {
     const sourcePath = this.resolvePath(params.source);
@@ -138,6 +144,7 @@ export default class Filesystem {
    * @param path Directory path {@default .}
    * @param recursive List recursively {@default false}
    * @format table
+   * @timeout 15s
    */
   async list(params?: { path?: string; recursive?: boolean }) {
     const dirPath = this.resolvePath(params?.path || '.');
@@ -163,6 +170,7 @@ export default class Filesystem {
    * Delete a directory
    * @param path Directory path
    * @param recursive Delete with contents {@default false}
+   * @timeout 10s
    */
   async rmdir(params: { path: string; recursive?: boolean }) {
     const dirPath = this.resolvePath(params.path);
@@ -210,6 +218,7 @@ export default class Filesystem {
    * @param pattern File glob pattern {@example *.txt}
    * @param path Directory to search {@default .}
    * @format table
+   * @timeout 30s
    */
   async search(params: { pattern: string; path?: string }) {
     const searchPath = this.resolvePath(params.path || '.');

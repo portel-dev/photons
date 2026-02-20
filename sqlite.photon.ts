@@ -41,6 +41,7 @@ export default class SQLite {
    * @param sql SQL query {@field textarea} {@example SELECT * FROM users WHERE id = ?}
    * @param params Query parameters for prepared statements
    * @format table
+   * @timeout 30s
    */
   async query(params: { sql: string; params?: any[] }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');
@@ -53,6 +54,7 @@ export default class SQLite {
    * @param sql SQL query {@field textarea} {@example SELECT * FROM users WHERE id = ?}
    * @param params Query parameters
    * @format card
+   * @timeout 30s
    */
   async one(params: { sql: string; params?: any[] }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');
@@ -64,6 +66,7 @@ export default class SQLite {
    * Execute an INSERT, UPDATE, or DELETE
    * @param sql SQL statement {@field textarea} {@example INSERT INTO users (name) VALUES (?)}
    * @param params Statement parameters
+   * @timeout 30s
    */
   async execute(params: { sql: string; params?: any[] }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');
@@ -75,6 +78,7 @@ export default class SQLite {
   /**
    * Execute multiple statements in a transaction
    * @param statements Array of SQL statements with optional parameters
+   * @timeout 60s
    */
   async transaction(params: { statements: Array<{ sql: string; params?: any[] }> }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');
@@ -92,6 +96,8 @@ export default class SQLite {
    * List all tables in database
    * @autorun
    * @format table
+   * @timeout 5s
+   * @cached 5m
    */
   async tables() {
     if (!this.db) throw new Error('Database not open. Call open() first.');
@@ -103,6 +109,8 @@ export default class SQLite {
    * Get schema for a table
    * @param table Table name {@example users}
    * @format table
+   * @timeout 5s
+   * @cached 5m
    */
   async schema(params: { table: string }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');
@@ -121,6 +129,7 @@ export default class SQLite {
   /**
    * Create a backup of the database
    * @param destination Backup file path {@example backup.db}
+   * @timeout 2m
    */
   async backup(params: { destination: string }) {
     if (!this.db) throw new Error('Database not open. Call open() first.');

@@ -825,6 +825,7 @@ process.exit(0);
    * @example add({ title: 'Fix bug', priority: 'high' })
    * @example add({ title: 'Research auth', context: 'User wants JWT with refresh tokens', links: ['/src/auth/'] })
    * @example add({ title: 'Deploy', blockedBy: ['abc123'] }) // Blocked until abc123 is done
+   * @locked board:write
    */
   async add(params: {
     title: string;
@@ -912,6 +913,7 @@ process.exit(0);
    *
    * @example move({ id: 'abc123', column: 'In Progress' })
    * @example move({ id: 'abc123', column: 'Review' }) // AI finished, awaiting human review
+   * @locked board:write
    */
   async move(params: { id: string; column: string }): Promise<Task> {
     const task = this.boardData.tasks.find((t) => t.id === params.id);
@@ -969,6 +971,7 @@ process.exit(0);
    *
    * @example reorder({ id: 'abc', column: 'Todo', beforeId: 'xyz' })
    * @example reorder({ id: 'abc', column: 'Done' })
+   * @locked board:write
    */
   async reorder(params: {
     id: string;
@@ -1029,6 +1032,7 @@ process.exit(0);
    * Update a task's details
    *
    * Modify task title, description, priority, assignee, labels, context, dependencies, or automation settings.
+   * @locked board:write
    */
   async edit(params: {
     id: string;
@@ -1091,6 +1095,7 @@ process.exit(0);
    * Delete a task
    *
    * Also removes this task from any other task's blockedBy list.
+   * @locked board:write
    */
   async drop(params: { id: string }): Promise<{ success: boolean; message: string }> {
     const index = this.boardData.tasks.findIndex((t) => t.id === params.id);
@@ -1142,6 +1147,7 @@ process.exit(0);
    *
    * @example comment({ id: 'abc123', content: 'Please use JWT for auth', author: 'human' })
    * @example comment({ id: 'abc123', content: 'Implemented JWT with refresh tokens', author: 'ai' })
+   * @locked board:write
    */
   async comment(params: {
     id: string;
@@ -1231,6 +1237,7 @@ process.exit(0);
    * @example column({ name: 'QA' }) // Add before Done
    * @example column({ name: 'QA', position: 2 }) // Add at position
    * @example column({ name: 'QA', remove: true }) // Remove
+   * @locked board:write
    */
   async column(params: { name: string; position?: number; remove?: boolean }): Promise<string[]> {
     if (params.remove) {
@@ -1269,6 +1276,7 @@ process.exit(0);
 
   /**
    * Clear completed tasks (archive them)
+   * @locked board:write
    */
   async clear(): Promise<{ removed: number }> {
     const before = this.boardData.tasks.length;
@@ -1333,6 +1341,7 @@ process.exit(0);
    *
    * @example block({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
    * @example block({ id: 'task2', blockedBy: 'task1', remove: true }) // remove dependency
+   * @locked board:write
    */
   async block(params: {
     id: string;
@@ -1431,6 +1440,8 @@ process.exit(0);
    *
    * @scheduled 0 0 * * *
    * @internal
+   * @timeout 30s
+   * @queued 1
    */
   async scheduledArchiveOldTasks(): Promise<{ archived: number }> {
     const boardNames = await this.allBoardNames();
@@ -1467,6 +1478,8 @@ process.exit(0);
    *
    * @scheduled 0 8 * * 1-5
    * @internal
+   * @timeout 30s
+   * @queued 1
    */
   async scheduledMorningPull(): Promise<{ pulled: number; boards: string[] }> {
     const config = loadConfig();
@@ -1514,6 +1527,8 @@ process.exit(0);
    *
    * @scheduled 0/5 * * * *
    * @internal
+   * @timeout 30s
+   * @queued 1
    */
   async scheduledAutoRelease(): Promise<{ released: number; boards: string[] }> {
     const boardNames = await this.allBoardNames();
@@ -1599,6 +1614,8 @@ process.exit(0);
    *
    * @scheduled 0 0 * * 0
    * @internal
+   * @timeout 30s
+   * @queued 1
    */
   async scheduledStaleTaskCheck(): Promise<{ moved: number; boards: string[] }> {
     const config = loadConfig();
@@ -1666,6 +1683,8 @@ process.exit(0);
    * Auto-detected as webhook from 'handle' prefix.
    *
    * @internal
+   * @timeout 10s
+   * @retryable 2 1s
    */
   async handleGithubIssue(params: {
     action: string;

@@ -277,6 +277,7 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * Add a repository to track — prompts interactively if the folder isn't a git repo
    * @param repoPath Path to git repository
+   * @locked git-box:config
    */
   async *repoAdd(params: { repoPath: string }): AsyncGenerator<any> {
     const fullPath = path.resolve(params.repoPath);
@@ -474,6 +475,7 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * Set the projects root folder
    * @param rootPath Path to folder containing git repositories
+   * @locked git-box:config
    */
   async projectsRootSet(params: { rootPath: string }) {
     const fullPath = path.resolve(params.rootPath.replace(/^~/, os.homedir()));
@@ -492,6 +494,7 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * Remove a repository from tracking
    * @param repoPath Path to git repository
+   * @locked git-box:config
    */
   async repoRemove(params: { repoPath: string }) {
     const fullPath = path.resolve(params.repoPath);
@@ -503,6 +506,7 @@ export class GitBoxPhoton extends PhotonMCP {
 
   /**
    * List all tracked repositories with status counts
+   * @timeout 15s
    */
   async repos() {
     const config = this._loadConfig();
@@ -563,6 +567,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param limit Number of commits to fetch
    * @param branch Branch to show commits from
+   * @timeout 15s
    */
   async commits(params: { repoPath: string; limit?: number; branch?: string }) {
     const { repoPath, limit = 50, branch } = params;
@@ -609,6 +614,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * Get files changed in a specific commit
    * @param repoPath Path to repository
    * @param hash Commit hash
+   * @timeout 10s
    */
   async commitFiles(params: { repoPath: string; hash: string }) {
     const { repoPath, hash } = params;
@@ -638,6 +644,7 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * Get current working tree status (staged and unstaged changes)
    * @param repoPath Path to repository
+   * @timeout 10s
    */
   async status(params: { repoPath: string }) {
     const { repoPath } = params;
@@ -752,6 +759,8 @@ export class GitBoxPhoton extends PhotonMCP {
    * Pull changes from remote
    * @param repoPath Path to repository
    * @param remote Remote name (default: origin)
+   * @timeout 60s
+   * @retryable 2 3s
    */
   async pull(params: { repoPath: string; remote?: string }) {
     const { repoPath, remote = 'origin' } = params;
@@ -767,6 +776,8 @@ export class GitBoxPhoton extends PhotonMCP {
    * Push changes to remote
    * @param repoPath Path to repository
    * @param remote Remote name (default: origin)
+   * @timeout 60s
+   * @retryable 2 3s
    */
   async push(params: { repoPath: string; remote?: string }) {
     const { repoPath, remote = 'origin' } = params;
@@ -784,6 +795,8 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param remote Remote name (default: origin)
    * @param prune Remove remote-tracking references that no longer exist
+   * @timeout 60s
+   * @retryable 2 3s
    */
   async fetch(params: { repoPath: string; remote?: string; prune?: boolean }) {
     const { repoPath, remote = 'origin', prune = true } = params;
@@ -799,6 +812,7 @@ export class GitBoxPhoton extends PhotonMCP {
   /**
    * Get list of branches
    * @param repoPath Path to repository
+   * @timeout 10s
    */
   async branches(params: { repoPath: string }) {
     const { repoPath } = params;
@@ -840,6 +854,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param filePath File to diff
    * @param staged Whether to show staged diff
+   * @timeout 10s
    */
   async diff(params: { repoPath: string; filePath: string; staged?: boolean }) {
     const { repoPath, filePath, staged = false } = params;
@@ -890,6 +905,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param hash Commit hash
    * @param filePath File to get diff for
+   * @timeout 10s
    */
   async commitDiff(params: { repoPath: string; hash: string; filePath: string }) {
     const { repoPath, hash, filePath } = params;
@@ -1043,6 +1059,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param branchName Branch to merge
    * @param noFastForward Create merge commit even if fast-forward is possible
+   * @timeout 60s
    */
   async branchMerge(params: { repoPath: string; branchName: string; noFastForward?: boolean }) {
     const { repoPath, branchName, noFastForward = false } = params;
@@ -1313,6 +1330,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param baseCommit The commit BEFORE the range to squash (commits after this get squashed)
    * @param message New commit message for the squashed commit
+   * @timeout 2m
    */
   async commitsSquash(params: { repoPath: string; baseCommit: string; message: string }) {
     const { repoPath, baseCommit, message } = params;
@@ -1349,6 +1367,7 @@ export class GitBoxPhoton extends PhotonMCP {
    * @param repoPath Path to repository
    * @param commitHash The commit whose message to change
    * @param newMessage The new commit message
+   * @timeout 2m
    */
   async commitMessageAmend(params: { repoPath: string; commitHash: string; newMessage: string }) {
     const { repoPath, commitHash, newMessage } = params;
@@ -1413,6 +1432,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param repoPath Path to repository
    * @param filePath File to remove from history
    * @param confirm Must be true to proceed
+   * @timeout 5m
    */
   async fileRemoveFromHistory(params: { repoPath: string; filePath: string; confirm: boolean }) {
     const { repoPath, filePath, confirm } = params;
@@ -1454,6 +1474,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param repoPath Path to repository
    * @param commits Array of commit hashes to cherry-pick (in order)
    * @param noCommit If true, stage changes without committing
+   * @timeout 2m
    */
   async cherryPick(params: { repoPath: string; commits: string[]; noCommit?: boolean }) {
     const { repoPath, commits, noCommit = false } = params;
@@ -1515,6 +1536,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param repoPath Path to repository
    * @param commitHash Commit to revert
    * @param noCommit If true, stage the revert without committing
+   * @timeout 30s
    */
   async commitRevert(params: { repoPath: string; commitHash: string; noCommit?: boolean }) {
     const { repoPath, commitHash, noCommit = false } = params;
@@ -1550,6 +1572,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * Fixup - amend staged changes into an older commit
    * @param repoPath Path to repository
    * @param targetCommit The commit to amend the staged changes into
+   * @timeout 2m
    */
   async commitFixup(params: { repoPath: string; targetCommit: string }) {
     const { repoPath, targetCommit } = params;
@@ -1607,6 +1630,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param repoPath Path to repository
    * @param baseCommit The commit to rebase onto
    * @param actions Array of actions: { hash, action: 'pick'|'reword'|'squash'|'fixup'|'drop', message? }
+   * @timeout 2m
    */
   async rebaseScripted(params: {
     repoPath: string;
@@ -1762,6 +1786,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param filePath File to blame
    * @param startLine Optional start line
    * @param endLine Optional end line
+   * @timeout 30s
    */
   async blame(params: { repoPath: string; filePath: string; startLine?: number; endLine?: number }) {
     const { repoPath, filePath, startLine, endLine } = params;
@@ -1821,6 +1846,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param query Search query
    * @param type Type of search: 'message', 'author', 'content', 'all'
    * @param limit Max results
+   * @timeout 30s
    */
   async commitsSearch(params: { repoPath: string; query: string; type?: 'message' | 'author' | 'content' | 'all'; limit?: number }) {
     const { repoPath, query, type = 'all', limit = 50 } = params;
@@ -1864,6 +1890,7 @@ cat ${this._shellEscape(msgFile)} > "$1"
    * @param repoPath Path to repository
    * @param searchText Text to search for
    * @param filePath Optional file to limit search to
+   * @timeout 30s
    */
   async changeFind(params: { repoPath: string; searchText: string; filePath?: string }) {
     const { repoPath, searchText, filePath } = params;

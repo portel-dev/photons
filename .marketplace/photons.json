@@ -140,7 +140,7 @@
       "license": "MIT",
       "icon": "🔄",
       "source": "../data-sync.photon.ts",
-      "hash": "sha256:000064a623c95e153e474618e21cc88cbc5229d9f78411564ef86423a7f6ad25",
+      "hash": "sha256:3590ef9cac2a681bec01e0939c1c5e7b231d95d4c62570b1daba1fb660bb98fc",
       "tools": [
         "exportToJson",
         "importFromJson",
@@ -313,7 +313,7 @@
       "license": "MIT",
       "icon": "📁",
       "source": "../filesystem.photon.ts",
-      "hash": "sha256:8e242643cadc872068bac5b49064596f1bfea3866509fb8e8cc7f349629e0570",
+      "hash": "sha256:09f4a13957075ef59d1ebac5e3db67951d93bbd5e9997091082e3925e53ef3c3",
       "tools": [
         "read",
         "write",
@@ -414,7 +414,7 @@
       "license": "MIT",
       "icon": "📬",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:f81f5d85c6d1300a1ae32fc89d064919481c4fdf373bb3d9212f3117350cdacd",
+      "hash": "sha256:ae72c5c99225d20555a981941194e9fd7c5bf2b7d58ffc157d4eb2d41a458241",
       "tools": [
         "configure",
         "main",
@@ -631,7 +631,7 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:87417967a7cf9fb3634c6fe70acbd8401687a82d4c7afbf64aec7fe3e1964cd9",
+      "hash": "sha256:f61e271dbc1d8d245666476091b8b82d5cfda950cd222748af1a94d6f2551757",
       "tools": [
         "configure",
         "hooks",
@@ -769,7 +769,7 @@
       "license": "MIT",
       "icon": "🍃",
       "source": "../mongodb.photon.ts",
-      "hash": "sha256:8858785d2a386177b73406e9f27273b310bd93fcd99f49a3846e516157e466ad",
+      "hash": "sha256:d78e093dc4855c63141c13a709207c17733099bd2e551160c5c548d415646af7",
       "tools": [
         "find",
         "get",
@@ -873,7 +873,7 @@
       "license": "MIT",
       "icon": "⚡",
       "source": "../redis.photon.ts",
-      "hash": "sha256:b7045a23fd722ab0da70e2761e9a80c4d8aa34884428fe2f0b58e57721755b4c",
+      "hash": "sha256:e6ee2f6a22f70e98859b12fc71fdf09d7544032054fb63b99f699836b0333b02",
       "tools": [
         "get",
         "set",
@@ -928,7 +928,7 @@
       "license": "MIT",
       "icon": "🗄️",
       "source": "../sqlite.photon.ts",
-      "hash": "sha256:287708598916a4e2b35d584cce75330b2ce856eaa5eec8cc33a6076b1e41ebd3",
+      "hash": "sha256:7cc96bfdf6719eb2ab4cc8867728bde35b873ede27a37072f7c5598ef53db41d",
       "tools": [
         "open",
         "query",
