@@ -12,7 +12,6 @@
  * @tags game, connect-four, ai-opponent, locks, daemon
  * @icon 🔴
  * @stateful
- * @ui board ./ui/board.html
  */
 
 import { PhotonMCP } from '@portel/photon-core';
@@ -406,7 +405,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
    * @example start()
    * @example start({ difficulty: "hard", playerName: "Alice" })
    * @example start({ opponent: "mcp" })
-   * @ui board
    */
   async start(params?: {
     /** AI difficulty, only used in builtin mode (default: medium) */

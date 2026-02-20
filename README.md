@@ -36,7 +36,7 @@ We welcome contributions! Submit pull requests for:
 |--------|-------|-------|----------|
 | [**AWS S3**](aws-s3.md) | Cloud object storage | 11 | - |
 | [**Code Diagram**](code-diagram.md) | Mermaid visualization from source code | 3 | 🔌📦 |
-| [**Connect Four**](connect-four.md) | Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. | 8 | 🎨📡 |
+| [**Connect Four**](connect-four.md) | Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. | 8 | 📡 |
 | [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 6 | 📡 |
 | [**Dashboard**](dashboard.md) | Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json | 6 | 🎨🎨 |
 | [**Data Sync Workflow**](data-sync.md) | Synchronizes data between sources | 3 | ⚡⚡ |

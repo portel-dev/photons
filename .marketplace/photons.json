@@ -60,7 +60,7 @@
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:3fc8e6e3d6486c8eed5e576af73054eac04fe488e07166c05d04bda8b754f668",
+      "hash": "sha256:9cc85e69ed136bea7d7b9af1de7b3eb3fe16e3c7dd045ac82c9105406cad2824",
       "tools": [
         "start",
         "drop",
@@ -71,12 +71,9 @@
         "replay",
         "scheduledCleanup"
       ],
-      "assets": [
-        "ui/board.html"
-      ],
+      "assets": [],
       "photonType": "api",
       "features": [
-        "custom-ui",
         "stateful",
         "channels"
       ]

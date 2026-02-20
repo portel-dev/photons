@@ -4,7 +4,7 @@ Play against AI with distributed locks Classic Connect Four game where you drop 
 
 > **8 tools** · API Photon · v1.0.0 · MIT
 
-**Platform Features:** `custom-ui` `stateful` `channels`
+**Platform Features:** `stateful` `channels`
 
 ## ⚙️ Configuration
 
