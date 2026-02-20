@@ -416,7 +416,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
   }): Promise<{
     gameId: string;
     board: string;
-    boardData: Board;
     message: string;
     difficulty: Difficulty;
     opponentMode: OpponentMode;
@@ -451,7 +450,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
     return {
       gameId: game.id,
       board: renderBoard(game.board),
-      boardData: game.board,
       message: `Game on! Player is 🔴, opponent is 🟡. ${modeMsg}`,
       difficulty,
       opponentMode,
@@ -477,7 +475,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
     gameId?: string;
   }): Promise<{
     board: string;
-    boardData: Board;
     yourMove: number;
     aiMove?: number;
     status: string;
@@ -529,7 +526,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
           return {
             board: renderBoard(freshGame.board),
-            boardData: cloneBoard(freshGame.board),
+      
             yourMove: params.column,
             status: winLabel,
             aiComment: getAICommentary(freshGame, col, who === 'player' ? 'player_wins' : 'ai_wins'),
@@ -546,7 +543,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
           return {
             board: renderBoard(freshGame.board),
-            boardData: cloneBoard(freshGame.board),
+      
             yourMove: params.column,
             status: 'Draw!',
             aiComment: getAICommentary(freshGame, col, 'draw'),
@@ -559,7 +556,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
         const nextTurn = freshGame.currentTurn === 'player' ? 'Your turn' : 'Opponent\'s turn';
         return {
           board: renderBoard(freshGame.board),
-          boardData: cloneBoard(freshGame.board),
+    
           yourMove: params.column,
           status: nextTurn,
           aiComment: '',
@@ -590,7 +587,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
         return {
           board: renderBoard(freshGame.board),
-          boardData: cloneBoard(freshGame.board),
+    
           yourMove: params.column,
           status: 'You win! 🎉',
           aiComment: comment,
@@ -610,7 +607,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
         return {
           board: renderBoard(freshGame.board),
-          boardData: cloneBoard(freshGame.board),
+    
           yourMove: params.column,
           status: 'Draw!',
           aiComment: comment,
@@ -637,7 +634,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
         return {
           board: renderBoard(freshGame.board),
-          boardData: cloneBoard(freshGame.board),
+    
           yourMove: params.column,
           aiMove: aiCol + 1,
           status: 'AI wins! 🟡',
@@ -656,7 +653,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
         const comment = getAICommentary(freshGame, aiCol, 'draw');
         return {
           board: renderBoard(freshGame.board),
-          boardData: cloneBoard(freshGame.board),
+    
           yourMove: params.column,
           aiMove: aiCol + 1,
           status: 'Draw!',
@@ -672,7 +669,7 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
       return {
         board: renderBoard(freshGame.board),
-        boardData: cloneBoard(freshGame.board),
+  
         yourMove: params.column,
         aiMove: aiCol + 1,
         status: 'Your turn',
@@ -692,7 +689,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
     gameId?: string;
   }): Promise<{
     board: string;
-    boardData: Board;
     gameId: string;
     status: string;
     currentTurn: string;
@@ -711,7 +707,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
 
     return {
       board: renderBoard(game.board),
-      boardData: cloneBoard(game.board),
       gameId: game.id,
       status: statusLabels[game.status],
       currentTurn: game.currentTurn,
@@ -982,12 +977,6 @@ export default class ConnectFourPhoton extends PhotonMCP {
     }
     if (result.board.includes('🔴') || result.board.includes('🟡')) {
       return { passed: false, message: 'New game board should have no pieces placed' };
-    }
-    if (!result.boardData || !Array.isArray(result.boardData) || result.boardData.length !== 6) {
-      return { passed: false, message: 'start should return boardData as 6-row array for UI rendering' };
-    }
-    if (result.boardData.some((row: Cell[]) => row.some((c: Cell) => c !== 0))) {
-      return { passed: false, message: 'New game boardData should be all zeros (empty)' };
     }
     if (result.difficulty !== 'easy') {
       return { passed: false, message: `Expected difficulty easy, got ${result.difficulty}` };

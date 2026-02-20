@@ -62,8 +62,8 @@
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:3e417abc967d798761a0cd363375b9020ebc7d3a4c28ec2f04ad969405f685d6",
-      "contentHash": "sha256:3e417abc967d798761a0cd363375b9020ebc7d3a4c28ec2f04ad969405f685d6",
+      "hash": "sha256:e63715135cc88c8d53c55e224a6567b3e8904da9fb8ef6a47e9a2328e421a2b6",
+      "contentHash": "sha256:e63715135cc88c8d53c55e224a6567b3e8904da9fb8ef6a47e9a2328e421a2b6",
       "tools": [
         "start",
         "drop",
