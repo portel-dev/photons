@@ -5,7 +5,7 @@
  * for per-project boards. Perfect for project planning, AI working memory across
  * sessions, and human-AI collaboration on shared tasks.
  *
- * @version 3.0.0
+ * @version 4.0.0
  * @author Portel
  * @license MIT
  * @tags kanban, tasks, collaboration, project-management, memory
@@ -13,19 +13,11 @@
  * @stateful
  */
 
-import { PhotonMCP, io } from '@portel/photon-core';
+import { io } from '@portel/photon-core';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { fileURLToPath } from 'url';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// BEAM compiles photons to a cache directory, so we need the source location
-// Default to ~/.photon for user photons (can be overridden via PHOTONS_DIR)
-const PHOTONS_DIR = process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -89,6 +81,9 @@ function createEmptyBoard(name: string): Board {
 // KANBAN PHOTON
 // ════════════════════════════════════════════════════════════════════════════════
 
+// Default to ~/.photon for user photons (can be overridden via PHOTONS_DIR)
+const PHOTONS_DIR = process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
+
 // Config stored persistently so all instances (MCP, Beam, etc.) use same settings
 interface KanbanConfig {
   projectsRoot: string;
@@ -125,29 +120,51 @@ function saveConfig(config: KanbanConfig): void {
   writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
 }
 
-export default class KanbanPhoton extends PhotonMCP {
-  private boardsDir: string;
-  private dataDir: string;
+// State directory for cross-instance access (scheduled jobs, webhooks)
+const STATE_DIR = path.join(os.homedir(), '.photon', 'state', 'kanban');
+// Archive/data directory (append-only logs, not instance state)
+const DATA_DIR = path.join(PHOTONS_DIR, 'kanban');
+
+export default class KanbanPhoton {
+  boardData: Board;
+
+  // Runtime-injected capabilities (auto-detected from usage patterns)
+  declare emit: (data: any) => void;
+  declare withLock: (lockName: string, fn: () => Promise<any>) => Promise<any>;
+  declare instanceName: string;
 
   // projectsRoot is loaded from config file, not constructor
   private get projectsRoot(): string {
     return loadConfig().projectsRoot;
   }
 
-  constructor() {
-    super();
-    this.boardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
-    this.dataDir = path.join(PHOTONS_DIR, 'kanban');
+  constructor(boardData: Board = createEmptyBoard('default')) {
+    this.boardData = boardData;
   }
 
-  private get boardName(): string {
-    return this.instanceName || 'default';
-  }
+  // ══════════════════════════════════════════════════════════════════════════════
+  // CROSS-INSTANCE HELPERS (for scheduled jobs & webhooks)
+  // ══════════════════════════════════════════════════════════════════════════════
 
   private async allBoardNames(): Promise<string[]> {
-    await fs.mkdir(this.boardsDir, { recursive: true });
-    const files = await fs.readdir(this.boardsDir);
-    return files.filter(f => f.endsWith('.json')).map(f => f.replace('.json', ''));
+    try {
+      const files = await fs.readdir(STATE_DIR);
+      return files.filter(f => f.endsWith('.json')).map(f => f.replace('.json', ''));
+    } catch { return []; }
+  }
+
+  private async loadInstanceBoard(name: string): Promise<Board> {
+    const statePath = path.join(STATE_DIR, `${name}.json`);
+    try {
+      const snapshot = JSON.parse(await fs.readFile(statePath, 'utf-8'));
+      return snapshot.boardData || createEmptyBoard(name);
+    } catch { return createEmptyBoard(name); }
+  }
+
+  private async saveInstanceBoard(name: string, board: Board): Promise<void> {
+    const statePath = path.join(STATE_DIR, `${name}.json`);
+    await fs.mkdir(path.dirname(statePath), { recursive: true });
+    await fs.writeFile(statePath, JSON.stringify({ boardData: board }, null, 2));
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -204,104 +221,13 @@ export default class KanbanPhoton extends PhotonMCP {
     return { configured: false, config: loadConfig() };
   }
 
-
-  private getBoardPath(name: string): string {
-    // Sanitize board name for filesystem
-    const safeName = name.replace(/[^a-zA-Z0-9_-]/g, '_');
-    return path.join(this.boardsDir, `${safeName}.json`);
-  }
-
-  private async loadBoard(name: string = 'default'): Promise<Board> {
-    const boardPath = this.getBoardPath(name);
-
-    try {
-      const data = await fs.readFile(boardPath, 'utf-8');
-      const board = JSON.parse(data) as Board;
-      board.name = name;
-      return board;
-    } catch {
-      // Board doesn't exist - create it
-      const board = createEmptyBoard(name);
-      await this.saveBoard(board);
-      return board;
-    }
-  }
-
-  private async saveBoard(board: Board): Promise<void> {
-    board.updatedAt = new Date().toISOString();
-    await fs.mkdir(this.boardsDir, { recursive: true });
-
-    // Auto-archive: keep only last 50 in Done
-    const doneTasks = board.tasks.filter(t => t.column === 'Done');
-    if (doneTasks.length > 50) {
-      // Sort by updatedAt desc, archive oldest
-      doneTasks.sort((a, b) =>
-        new Date(b.updatedAt || b.createdAt).getTime() -
-        new Date(a.updatedAt || a.createdAt).getTime()
-      );
-      const toArchive = doneTasks.slice(50);
-      await this._archiveTasks(board.name, toArchive);
-
-      // Remove archived tasks from board
-      const archiveIds = new Set(toArchive.map(t => t.id));
-      board.tasks = board.tasks.filter(t => !archiveIds.has(t.id));
-    }
-
-    const boardPath = this.getBoardPath(board.name);
-    await fs.writeFile(boardPath, JSON.stringify(board, null, 2));
-  }
-
-  private getArchivePath(boardName: string): string {
-    const safeName = boardName.replace(/[^a-zA-Z0-9_-]/g, '_');
-    return path.join(this.boardsDir, `${safeName}.archive.jsonl`);
-  }
-
-  private async _archiveTasks(boardName: string, tasks: Task[]): Promise<void> {
-    if (tasks.length === 0) return;
-
-    const archivePath = this.getArchivePath(boardName);
-    const timestamp = new Date().toISOString();
-
-    // Append each task as a JSON line with archive metadata
-    const lines = tasks.map(task =>
-      JSON.stringify({ ...task, archivedAt: timestamp })
-    ).join('\n') + '\n';
-
-    await fs.appendFile(archivePath, lines);
-
-    // Rotate: remove entries older than 30 days
-    await this._rotateArchive(boardName);
-  }
-
-  private async _rotateArchive(boardName: string): Promise<void> {
-    const archivePath = this.getArchivePath(boardName);
-    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-
-    try {
-      const content = await fs.readFile(archivePath, 'utf-8');
-      const lines = content.trim().split('\n').filter(Boolean);
-
-      // Keep only entries from last 30 days
-      const kept = lines.filter(line => {
-        try {
-          const entry = JSON.parse(line);
-          const archivedAt = new Date(entry.archivedAt).getTime();
-          return archivedAt > thirtyDaysAgo;
-        } catch {
-          return false;
-        }
-      });
-
-      if (kept.length < lines.length) {
-        await fs.writeFile(archivePath, kept.join('\n') + (kept.length ? '\n' : ''));
-      }
-    } catch {
-      // Archive doesn't exist yet, nothing to rotate
-    }
-  }
-
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  }
+
+  // Helper: channel name for emits
+  private get channel(): string {
+    return `kanban:${this.instanceName || 'default'}`;
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -355,23 +281,23 @@ export default class KanbanPhoton extends PhotonMCP {
   /**
    * Called after a task is moved - handles unblocking and auto-pull
    */
-  private async afterTaskMoved(board: Board, task: Task, fromColumn: string, toColumn: string): Promise<void> {
+  private async afterTaskMoved(task: Task, fromColumn: string, toColumn: string): Promise<void> {
     // 1. If moved to Done, check if this unblocks other tasks
     if (toColumn === 'Done') {
-      await this.checkUnblockedTasks(board, task.id);
+      this.checkUnblockedTasks(task.id);
     }
 
     // 2. If In Progress changed, check WIP and auto-pull
     if (fromColumn === 'In Progress' || toColumn === 'In Progress') {
-      await this.checkWipAndAutoPull(board);
+      this.checkWipAndAutoPull();
     }
   }
 
   /**
    * Check if completing a task unblocks others
    */
-  private async checkUnblockedTasks(board: Board, completedTaskId: string): Promise<void> {
-    for (const task of board.tasks) {
+  private checkUnblockedTasks(completedTaskId: string): void {
+    for (const task of this.boardData.tasks) {
       if (!task.blockedBy?.includes(completedTaskId)) continue;
 
       // Remove the completed task from blockedBy
@@ -379,20 +305,18 @@ export default class KanbanPhoton extends PhotonMCP {
       task.updatedAt = new Date().toISOString();
 
       // Check if task is now fully unblocked
-      if (!this.isTaskBlocked(task, board)) {
+      if (!this.isTaskBlocked(task, this.boardData)) {
         this.emit({
           emit: 'toast',
           message: `🔓 "${task.title}" is now unblocked!`,
         });
         this.emit({
-          channel: `kanban:${board.name}`,
+          channel: this.channel,
           event: 'task-unblocked',
           data: { task, unblockedBy: completedTaskId },
         });
       }
     }
-
-    await this.saveBoard(board);
   }
 
   /**
@@ -401,22 +325,22 @@ export default class KanbanPhoton extends PhotonMCP {
    * Card-specific auto-pull: Each Backlog card can set its own threshold.
    * When In Progress count < card's threshold, that card gets pulled.
    */
-  private async checkWipAndAutoPull(board: Board): Promise<void> {
+  private checkWipAndAutoPull(): void {
     const config = loadConfig();
     const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
-    const inProgressCount = board.tasks.filter(t => t.column === 'In Progress').length;
+    const inProgressCount = this.boardData.tasks.filter(t => t.column === 'In Progress').length;
 
     // Hard WIP limit - never exceed
     if (inProgressCount >= wipLimit) return;
 
     // Find eligible cards: in Backlog, has threshold, threshold > inProgressCount, not blocked
     const priorityOrder = { high: 0, medium: 1, low: 2 };
-    const candidates = board.tasks
+    const candidates = this.boardData.tasks
       .filter(t =>
         t.column === 'Backlog' &&
         t.autoPullThreshold !== undefined &&
         inProgressCount < t.autoPullThreshold &&
-        !this.isTaskBlocked(t, board)
+        !this.isTaskBlocked(t, this.boardData)
       )
       .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
@@ -427,23 +351,21 @@ export default class KanbanPhoton extends PhotonMCP {
       nextTask.updatedAt = new Date().toISOString();
 
       // Move to top of In Progress
-      const taskIndex = board.tasks.findIndex(t => t.id === nextTask.id);
-      board.tasks.splice(taskIndex, 1);
-      const firstInProgress = board.tasks.findIndex(t => t.column === 'In Progress');
+      const taskIndex = this.boardData.tasks.findIndex(t => t.id === nextTask.id);
+      this.boardData.tasks.splice(taskIndex, 1);
+      const firstInProgress = this.boardData.tasks.findIndex(t => t.column === 'In Progress');
       if (firstInProgress === -1) {
-        board.tasks.push(nextTask);
+        this.boardData.tasks.push(nextTask);
       } else {
-        board.tasks.splice(firstInProgress, 0, nextTask);
+        this.boardData.tasks.splice(firstInProgress, 0, nextTask);
       }
-
-      await this.saveBoard(board);
 
       this.emit({
         emit: 'toast',
         message: `⚡ Auto-pulled "${nextTask.title}" to In Progress (WIP: ${inProgressCount + 1}/${wipLimit})`,
       });
       this.emit({
-        channel: `kanban:${board.name}`,
+        channel: this.channel,
         event: 'task-auto-pulled',
         data: { task: nextTask, from: oldColumn },
       });
@@ -661,6 +583,125 @@ process.exit(0);
 
 
   // ══════════════════════════════════════════════════════════════════════════════
+  // AUTO-ARCHIVE HELPER
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  private getArchivePath(boardName: string): string {
+    const safeName = boardName.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return path.join(DATA_DIR, 'boards', `${safeName}.archive.jsonl`);
+  }
+
+  private async _archiveTasks(boardName: string, tasks: Task[]): Promise<void> {
+    if (tasks.length === 0) return;
+
+    const archivePath = this.getArchivePath(boardName);
+    const timestamp = new Date().toISOString();
+
+    // Append each task as a JSON line with archive metadata
+    const lines = tasks.map(task =>
+      JSON.stringify({ ...task, archivedAt: timestamp })
+    ).join('\n') + '\n';
+
+    await fs.mkdir(path.dirname(archivePath), { recursive: true });
+    await fs.appendFile(archivePath, lines);
+
+    // Rotate: remove entries older than 30 days
+    await this._rotateArchive(boardName);
+  }
+
+  private async _rotateArchive(boardName: string): Promise<void> {
+    const archivePath = this.getArchivePath(boardName);
+    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+
+    try {
+      const content = await fs.readFile(archivePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(Boolean);
+
+      // Keep only entries from last 30 days
+      const kept = lines.filter(line => {
+        try {
+          const entry = JSON.parse(line);
+          const archivedAt = new Date(entry.archivedAt).getTime();
+          return archivedAt > thirtyDaysAgo;
+        } catch {
+          return false;
+        }
+      });
+
+      if (kept.length < lines.length) {
+        await fs.writeFile(archivePath, kept.join('\n') + (kept.length ? '\n' : ''));
+      }
+    } catch {
+      // Archive doesn't exist yet, nothing to rotate
+    }
+  }
+
+  /**
+   * Auto-archive excess Done tasks from a board
+   */
+  private async autoArchiveBoard(board: Board): Promise<void> {
+    const doneTasks = board.tasks.filter(t => t.column === 'Done');
+    if (doneTasks.length > 50) {
+      doneTasks.sort((a, b) =>
+        new Date(b.updatedAt || b.createdAt).getTime() -
+        new Date(a.updatedAt || a.createdAt).getTime()
+      );
+      const toArchive = doneTasks.slice(50);
+      await this._archiveTasks(board.name, toArchive);
+
+      const archiveIds = new Set(toArchive.map(t => t.id));
+      board.tasks = board.tasks.filter(t => !archiveIds.has(t.id));
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
+  // DATA MIGRATION
+  // ══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * One-time migration from old boards/*.json to state dir
+   */
+  private async migrateOldBoards(): Promise<boolean> {
+    const oldBoardsDir = path.join(PHOTONS_DIR, 'kanban', 'boards');
+    let didMigrate = false;
+
+    try {
+      const files = await fs.readdir(oldBoardsDir);
+      const boardFiles = files.filter(f => f.endsWith('.json') && !f.includes('.archive'));
+
+      for (const file of boardFiles) {
+        const name = file.replace('.json', '');
+        const statePath = path.join(STATE_DIR, `${name}.json`);
+
+        // Only migrate if state file is empty or missing
+        let needsMigration = false;
+        try {
+          const existing = await fs.readFile(statePath, 'utf-8');
+          const parsed = JSON.parse(existing);
+          // Empty marker file (from _use fix) — needs migration
+          needsMigration = !parsed.boardData;
+        } catch {
+          needsMigration = true;
+        }
+
+        if (needsMigration) {
+          const oldData = await fs.readFile(path.join(oldBoardsDir, file), 'utf-8');
+          const boardObj = JSON.parse(oldData) as Board;
+          boardObj.name = name;
+
+          await fs.mkdir(STATE_DIR, { recursive: true });
+          await fs.writeFile(statePath, JSON.stringify({ boardData: boardObj }, null, 2));
+          didMigrate = true;
+        }
+      }
+    } catch {
+      // No old boards dir — nothing to migrate
+    }
+
+    return didMigrate;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════════
   // MAIN VIEW
   // ══════════════════════════════════════════════════════════════════════════════
 
@@ -702,7 +743,19 @@ process.exit(0);
       });
     }
 
-    return this.loadBoard(this.boardName);
+    // Migrate old board files on first access
+    const migrated = await this.migrateOldBoards();
+    if (migrated) {
+      // Reload in-memory state from freshly migrated data
+      const instanceName = this.instanceName || 'default';
+      const loaded = await this.loadInstanceBoard(instanceName);
+      this.boardData = loaded;
+    }
+
+    // Sync board name with instance
+    this.boardData.name = this.instanceName || 'default';
+
+    return this.boardData;
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -724,8 +777,7 @@ process.exit(0);
     priority?: 'low' | 'medium' | 'high';
     label?: string;
   }): Promise<Task[]> {
-    const board = await this.loadBoard(this.boardName);
-    let tasks = [...board.tasks];
+    let tasks = [...this.boardData.tasks];
 
     if (params?.column) {
       tasks = tasks.filter((t) => t.column.toLowerCase() === params.column!.toLowerCase());
@@ -756,8 +808,7 @@ process.exit(0);
    * - Humans will review and move to "Done"
    */
   async mine(): Promise<Task[]> {
-    const board = await this.loadBoard(this.boardName);
-    return board.tasks.filter(
+    return this.boardData.tasks.filter(
       (t) => t.assignee?.toLowerCase() === 'ai' && t.column !== 'Done'
     );
   }
@@ -790,12 +841,10 @@ process.exit(0);
     /** Auto-release interval in minutes (only for Backlog cards) */
     autoReleaseMinutes?: number;
   }): Promise<Task> {
-    const board = await this.loadBoard(this.boardName);
-
     // Validate blockedBy references exist
     if (params.blockedBy) {
       for (const blockerId of params.blockedBy) {
-        if (!board.tasks.find(t => t.id === blockerId)) {
+        if (!this.boardData.tasks.find(t => t.id === blockerId)) {
           throw new Error(`Invalid blockedBy reference: task "${blockerId}" not found`);
         }
       }
@@ -820,31 +869,31 @@ process.exit(0);
     };
 
     // Check for circular dependencies
-    if (task.blockedBy && this.hasCircularDependency(task.id, task.blockedBy, board)) {
+    if (task.blockedBy && this.hasCircularDependency(task.id, task.blockedBy, this.boardData)) {
       throw new Error('Circular dependency detected');
     }
 
     // Validate column exists
-    if (!board.columns.includes(task.column)) {
+    if (!this.boardData.columns.includes(task.column)) {
       task.column = 'Backlog';
     }
 
     // Insert at TOP of target column (newest first)
-    const firstInColumn = board.tasks.findIndex(t => t.column === task.column);
+    const firstInColumn = this.boardData.tasks.findIndex(t => t.column === task.column);
     if (firstInColumn === -1) {
-      board.tasks.push(task);
+      this.boardData.tasks.push(task);
     } else {
-      board.tasks.splice(firstInColumn, 0, task);
+      this.boardData.tasks.splice(firstInColumn, 0, task);
     }
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
     // Notify connected UIs of the change (both in-process and cross-process)
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'task-created', data: { task } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'task-created', data: { task } });
 
     // Notify Claude Code if task is assigned to AI
     if (task.assignee === 'ai') {
-      this.emit({ emit: 'status', type: 'info', message: `New task assigned: ${task.title} [${board.name}]` });
+      this.emit({ emit: 'status', type: 'info', message: `New task assigned: ${task.title} [${this.boardData.name}]` });
     }
 
     return task;
@@ -865,50 +914,49 @@ process.exit(0);
    * @example move({ id: 'abc123', column: 'Review' }) // AI finished, awaiting human review
    */
   async move(params: { id: string; column: string }): Promise<Task> {
-    const board = await this.loadBoard(this.boardName);
-    const task = board.tasks.find((t) => t.id === params.id);
+    const task = this.boardData.tasks.find((t) => t.id === params.id);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
     }
 
     // Validate column exists
-    if (!board.columns.includes(params.column)) {
-      throw new Error(`Invalid column: ${params.column}. Available: ${board.columns.join(', ')}`);
+    if (!this.boardData.columns.includes(params.column)) {
+      throw new Error(`Invalid column: ${params.column}. Available: ${this.boardData.columns.join(', ')}`);
     }
 
     // Check dependencies before moving to Review or Done
-    if (['Review', 'Done'].includes(params.column) && this.isTaskBlocked(task, board)) {
-      const blockers = this.getBlockingTaskNames(task, board);
+    if (['Review', 'Done'].includes(params.column) && this.isTaskBlocked(task, this.boardData)) {
+      const blockers = this.getBlockingTaskNames(task, this.boardData);
       throw new Error(`Cannot move to ${params.column}: blocked by "${blockers.join('", "')}". Complete blocking tasks first.`);
     }
 
     const fromColumn = task.column;
 
     // Remove task from current position
-    const oldIndex = board.tasks.findIndex((t) => t.id === params.id);
-    board.tasks.splice(oldIndex, 1);
+    const oldIndex = this.boardData.tasks.findIndex((t) => t.id === params.id);
+    this.boardData.tasks.splice(oldIndex, 1);
 
     // Update column and timestamp
     task.column = params.column;
     task.updatedAt = new Date().toISOString();
 
     // Insert at TOP of target column (most visible position)
-    const firstInColumn = board.tasks.findIndex((t) => t.column === params.column);
+    const firstInColumn = this.boardData.tasks.findIndex((t) => t.column === params.column);
     if (firstInColumn === -1) {
-      board.tasks.push(task);
+      this.boardData.tasks.push(task);
     } else {
-      board.tasks.splice(firstInColumn, 0, task);
+      this.boardData.tasks.splice(firstInColumn, 0, task);
     }
 
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
     // Notify connected UIs of the change (both in-process and cross-process)
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'task-moved', data: { task } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'task-moved', data: { task } });
 
     // After-move automation (unblock checks, WIP auto-pull)
-    await this.afterTaskMoved(board, task, fromColumn, params.column);
+    await this.afterTaskMoved(task, fromColumn, params.column);
 
     return task;
   }
@@ -927,53 +975,52 @@ process.exit(0);
     column: string;
     beforeId?: string;
   }): Promise<Task> {
-    const board = await this.loadBoard(this.boardName);
-    const taskIndex = board.tasks.findIndex((t) => t.id === params.id);
+    const taskIndex = this.boardData.tasks.findIndex((t) => t.id === params.id);
 
     if (taskIndex === -1) {
       throw new Error(`Task not found: ${params.id}`);
     }
 
     // Validate column exists
-    if (!board.columns.includes(params.column)) {
-      throw new Error(`Invalid column: ${params.column}. Available: ${board.columns.join(', ')}`);
+    if (!this.boardData.columns.includes(params.column)) {
+      throw new Error(`Invalid column: ${params.column}. Available: ${this.boardData.columns.join(', ')}`);
     }
 
     // Remove task from current position
-    const [task] = board.tasks.splice(taskIndex, 1);
+    const [task] = this.boardData.tasks.splice(taskIndex, 1);
     task.column = params.column;
     task.updatedAt = new Date().toISOString();
 
     // Find insert position
     if (params.beforeId) {
-      const beforeIndex = board.tasks.findIndex((t) => t.id === params.beforeId);
+      const beforeIndex = this.boardData.tasks.findIndex((t) => t.id === params.beforeId);
       if (beforeIndex === -1) {
         // beforeId not found, insert at top of column
-        const firstInColumn = board.tasks.findIndex((t) => t.column === params.column);
+        const firstInColumn = this.boardData.tasks.findIndex((t) => t.column === params.column);
         if (firstInColumn === -1) {
-          board.tasks.push(task);
+          this.boardData.tasks.push(task);
         } else {
-          board.tasks.splice(firstInColumn, 0, task);
+          this.boardData.tasks.splice(firstInColumn, 0, task);
         }
       } else {
-        board.tasks.splice(beforeIndex, 0, task);
+        this.boardData.tasks.splice(beforeIndex, 0, task);
       }
     } else {
       // No beforeId - insert at TOP of the column (most visible position)
-      const firstInColumn = board.tasks.findIndex((t) => t.column === params.column);
+      const firstInColumn = this.boardData.tasks.findIndex((t) => t.column === params.column);
       if (firstInColumn === -1) {
         // No tasks in column yet, just append
-        board.tasks.push(task);
+        this.boardData.tasks.push(task);
       } else {
-        board.tasks.splice(firstInColumn, 0, task);
+        this.boardData.tasks.splice(firstInColumn, 0, task);
       }
     }
 
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
     // Notify connected UIs
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'task-reordered', data: { task } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'task-reordered', data: { task } });
 
     return task;
   }
@@ -998,8 +1045,7 @@ process.exit(0);
     /** Auto-release interval in minutes (only for Backlog cards) */
     autoReleaseMinutes?: number;
   }): Promise<Task> {
-    const board = await this.loadBoard(this.boardName);
-    const task = board.tasks.find((t) => t.id === params.id);
+    const task = this.boardData.tasks.find((t) => t.id === params.id);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
@@ -1011,12 +1057,12 @@ process.exit(0);
         if (blockerId === params.id) {
           throw new Error('Task cannot block itself');
         }
-        if (!board.tasks.find(t => t.id === blockerId)) {
+        if (!this.boardData.tasks.find(t => t.id === blockerId)) {
           throw new Error(`Invalid blockedBy reference: task "${blockerId}" not found`);
         }
       }
       // Check for circular dependencies
-      if (this.hasCircularDependency(params.id, params.blockedBy, board)) {
+      if (this.hasCircularDependency(params.id, params.blockedBy, this.boardData)) {
         throw new Error('Circular dependency detected');
       }
     }
@@ -1032,12 +1078,11 @@ process.exit(0);
     if (params.autoPullThreshold !== undefined) task.autoPullThreshold = params.autoPullThreshold || undefined;
     if (params.autoReleaseMinutes !== undefined) task.autoReleaseMinutes = params.autoReleaseMinutes || undefined;
     task.updatedAt = new Date().toISOString();
-
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
     // Notify connected UIs of the change (both in-process and cross-process)
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'task-updated', data: { task } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'task-updated', data: { task } });
 
     return task;
   }
@@ -1048,28 +1093,27 @@ process.exit(0);
    * Also removes this task from any other task's blockedBy list.
    */
   async drop(params: { id: string }): Promise<{ success: boolean; message: string }> {
-    const board = await this.loadBoard(this.boardName);
-    const index = board.tasks.findIndex((t) => t.id === params.id);
+    const index = this.boardData.tasks.findIndex((t) => t.id === params.id);
 
     if (index === -1) {
       throw new Error(`Task not found: ${params.id}`);
     }
 
-    const [removed] = board.tasks.splice(index, 1);
+    const [removed] = this.boardData.tasks.splice(index, 1);
 
     // Remove this task from any blockedBy references
-    for (const task of board.tasks) {
+    for (const task of this.boardData.tasks) {
       if (task.blockedBy?.includes(removed.id)) {
         task.blockedBy = task.blockedBy.filter(id => id !== removed.id);
         task.updatedAt = new Date().toISOString();
       }
     }
 
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
     // Notify connected UIs of the change (both in-process and cross-process)
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'task-deleted', data: { taskId: removed.id } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'task-deleted', data: { taskId: removed.id } });
 
     return { success: true, message: `Deleted task: ${removed.title}` };
   }
@@ -1083,8 +1127,7 @@ process.exit(0);
     query: string;
   }): Promise<Task[]> {
     const query = params.query.toLowerCase();
-    const board = await this.loadBoard(this.boardName);
-    return board.tasks.filter(task =>
+    return this.boardData.tasks.filter(task =>
       task.title.toLowerCase().includes(query) ||
       task.description?.toLowerCase().includes(query) ||
       task.context?.toLowerCase().includes(query)
@@ -1105,8 +1148,7 @@ process.exit(0);
     content: string;
     author?: 'human' | 'ai';
   }): Promise<Comment> {
-    const board = await this.loadBoard(this.boardName);
-    const task = board.tasks.find((t) => t.id === params.id);
+    const task = this.boardData.tasks.find((t) => t.id === params.id);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
@@ -1124,12 +1166,11 @@ process.exit(0);
     }
     task.comments.push(comment);
     task.updatedAt = new Date().toISOString();
-
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
     // Notify connected UIs of the change (both in-process and cross-process)
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'comment-added', data: { taskId: task.id, comment } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'comment-added', data: { taskId: task.id, comment } });
 
     return comment;
   }
@@ -1142,8 +1183,7 @@ process.exit(0);
   async comments(params: {
     id: string;
   }): Promise<Comment[]> {
-    const board = await this.loadBoard(this.boardName);
-    const task = board.tasks.find((t) => t.id === params.id);
+    const task = this.boardData.tasks.find((t) => t.id === params.id);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
@@ -1160,8 +1200,7 @@ process.exit(0);
   async show(params: {
     id: string;
   }): Promise<Task> {
-    const board = await this.loadBoard(this.boardName);
-    const task = board.tasks.find((t) => t.id === params.id);
+    const task = this.boardData.tasks.find((t) => t.id === params.id);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
@@ -1180,7 +1219,7 @@ process.exit(0);
    * Returns all columns and tasks. Useful for AI to understand the full context.
    */
   async board(): Promise<Board> {
-    return this.loadBoard(this.boardName);
+    return this.boardData;
   }
 
   /**
@@ -1194,52 +1233,48 @@ process.exit(0);
    * @example column({ name: 'QA', remove: true }) // Remove
    */
   async column(params: { name: string; position?: number; remove?: boolean }): Promise<string[]> {
-    const board = await this.loadBoard(this.boardName);
-
     if (params.remove) {
       if (['Backlog', 'Done'].includes(params.name)) {
         throw new Error(`Cannot remove ${params.name} column`);
       }
-      const index = board.columns.indexOf(params.name);
+      const index = this.boardData.columns.indexOf(params.name);
       if (index === -1) {
         throw new Error(`Column not found: ${params.name}`);
       }
-      board.tasks.forEach((task) => {
+      this.boardData.tasks.forEach((task) => {
         if (task.column === params.name) {
           task.column = 'Backlog';
         }
       });
-      board.columns.splice(index, 1);
+      this.boardData.columns.splice(index, 1);
     } else {
-      if (board.columns.includes(params.name)) {
+      if (this.boardData.columns.includes(params.name)) {
         throw new Error(`Column already exists: ${params.name}`);
       }
       if (params.position !== undefined) {
-        board.columns.splice(params.position, 0, params.name);
+        this.boardData.columns.splice(params.position, 0, params.name);
       } else {
-        const doneIndex = board.columns.indexOf('Done');
+        const doneIndex = this.boardData.columns.indexOf('Done');
         if (doneIndex > -1) {
-          board.columns.splice(doneIndex, 0, params.name);
+          this.boardData.columns.splice(doneIndex, 0, params.name);
         } else {
-          board.columns.push(params.name);
+          this.boardData.columns.push(params.name);
         }
       }
     }
 
-    await this.saveBoard(board);
-    return board.columns;
+    this.boardData.updatedAt = new Date().toISOString();
+    return this.boardData.columns;
   }
 
   /**
    * Clear completed tasks (archive them)
    */
   async clear(): Promise<{ removed: number }> {
-    const board = await this.loadBoard(this.boardName);
-    const before = board.tasks.length;
-    board.tasks = board.tasks.filter((t) => t.column !== 'Done');
-    const removed = before - board.tasks.length;
-
-    await this.saveBoard(board);
+    const before = this.boardData.tasks.length;
+    this.boardData.tasks = this.boardData.tasks.filter((t) => t.column !== 'Done');
+    const removed = before - this.boardData.tasks.length;
+    this.boardData.updatedAt = new Date().toISOString();
     return { removed };
   }
 
@@ -1257,29 +1292,28 @@ process.exit(0);
     wip: { current: number; limit: number; autoPullEnabled: boolean };
     blockedCount: number;
   }> {
-    const board = await this.loadBoard(this.boardName);
     const config = loadConfig();
     const byColumn: Record<string, number> = {};
     const byPriority: Record<string, number> = { low: 0, medium: 0, high: 0 };
     const byAssignee: Record<string, number> = {};
     let blockedCount = 0;
 
-    board.columns.forEach((col) => (byColumn[col] = 0));
+    this.boardData.columns.forEach((col) => (byColumn[col] = 0));
 
-    board.tasks.forEach((task) => {
+    this.boardData.tasks.forEach((task) => {
       byColumn[task.column] = (byColumn[task.column] || 0) + 1;
       byPriority[task.priority]++;
       if (task.assignee) {
         byAssignee[task.assignee] = (byAssignee[task.assignee] || 0) + 1;
       }
-      if (this.isTaskBlocked(task, board)) {
+      if (this.isTaskBlocked(task, this.boardData)) {
         blockedCount++;
       }
     });
 
     return {
-      board: board.name,
-      total: board.tasks.length,
+      board: this.boardData.name,
+      total: this.boardData.tasks.length,
       byColumn,
       byPriority,
       byAssignee,
@@ -1305,9 +1339,8 @@ process.exit(0);
     blockedBy: string;
     remove?: boolean;
   }): Promise<Task> {
-    const board = await this.loadBoard(this.boardName);
-    const task = board.tasks.find(t => t.id === params.id);
-    const blocker = board.tasks.find(t => t.id === params.blockedBy);
+    const task = this.boardData.tasks.find(t => t.id === params.id);
+    const blocker = this.boardData.tasks.find(t => t.id === params.blockedBy);
 
     if (!task) {
       throw new Error(`Task not found: ${params.id}`);
@@ -1328,7 +1361,7 @@ process.exit(0);
     } else {
       if (!task.blockedBy.includes(params.blockedBy)) {
         // Check for circular dependency
-        if (this.hasCircularDependency(params.id, [...task.blockedBy, params.blockedBy], board)) {
+        if (this.hasCircularDependency(params.id, [...task.blockedBy, params.blockedBy], this.boardData)) {
           throw new Error('Circular dependency detected');
         }
         task.blockedBy.push(params.blockedBy);
@@ -1336,10 +1369,10 @@ process.exit(0);
     }
 
     task.updatedAt = new Date().toISOString();
-    await this.saveBoard(board);
+    this.boardData.updatedAt = new Date().toISOString();
 
-    this.emit({ emit: 'board-update', board: board.name });
-    this.emit({ channel: `kanban:${board.name}`, event: 'dependency-changed', data: { task, blocker, removed: params.remove } });
+    this.emit({ emit: 'board-update', board: this.boardData.name });
+    this.emit({ channel: this.channel, event: 'dependency-changed', data: { task, blocker, removed: params.remove } });
 
     return task;
   }
@@ -1362,15 +1395,16 @@ process.exit(0);
       timestamp?: string;
     };
   }): Promise<{ logged: boolean }> {
-    const errorLogPath = path.join(this.dataDir, 'ui-errors.log');
+    const errorLogPath = path.join(DATA_DIR, 'ui-errors.log');
     const logEntry = {
-      board: this.boardName,
+      board: this.instanceName || 'default',
       ...params.error,
       timestamp: params.error.timestamp || new Date().toISOString(),
     };
 
     // Append to error log
     const logLine = JSON.stringify(logEntry) + '\n';
+    await fs.mkdir(DATA_DIR, { recursive: true });
     await fs.appendFile(errorLogPath, logLine);
 
     // Also emit for real-time notification
@@ -1403,7 +1437,7 @@ process.exit(0);
     let totalArchived = 0;
 
     for (const name of boardNames) {
-      const board = await this.loadBoard(name);
+      const board = await this.loadInstanceBoard(name);
       const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
       const toArchive = board.tasks.filter(
@@ -1417,7 +1451,7 @@ process.exit(0);
         board.tasks = board.tasks.filter(
           (task) => !toArchive.some((a) => a.id === task.id)
         );
-        await this.saveBoard(board);
+        await this.saveInstanceBoard(name, board);
         totalArchived += toArchive.length;
       }
     }
@@ -1442,7 +1476,7 @@ process.exit(0);
     let totalPulled = 0;
 
     for (const name of boardNames) {
-      const board = await this.loadBoard(name);
+      const board = await this.loadInstanceBoard(name);
       let pulledFromBoard = 0;
 
       // Find eligible tasks in Backlog (not blocked, by priority)
@@ -1456,7 +1490,7 @@ process.exit(0);
       }
 
       if (pulledFromBoard > 0) {
-        await this.saveBoard(board);
+        await this.saveInstanceBoard(name, board);
         affectedBoards.push(board.name);
         totalPulled += pulledFromBoard;
 
@@ -1488,7 +1522,7 @@ process.exit(0);
     let totalReleased = 0;
 
     for (const name of boardNames) {
-      const board = await this.loadBoard(name);
+      const board = await this.loadInstanceBoard(name);
       const config = loadConfig();
       const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
       let inProgressCount = board.tasks.filter(t => t.column === 'In Progress').length;
@@ -1548,7 +1582,7 @@ process.exit(0);
       }
 
       if (boardChanged) {
-        await this.saveBoard(board);
+        await this.saveInstanceBoard(name, board);
         affectedBoards.push(board.name);
         this.emit({ emit: 'board-update', board: board.name });
       }
@@ -1576,7 +1610,7 @@ process.exit(0);
     let totalMoved = 0;
 
     for (const name of boardNames) {
-      const board = await this.loadBoard(name);
+      const board = await this.loadInstanceBoard(name);
       const staleTasks: Task[] = [];
 
       // Find stale tasks in Todo or In Progress
@@ -1604,7 +1638,7 @@ process.exit(0);
           });
         }
 
-        await this.saveBoard(board);
+        await this.saveInstanceBoard(name, board);
         affectedBoards.push(board.name);
         totalMoved += staleTasks.length;
 
@@ -1650,7 +1684,7 @@ process.exit(0);
     const derivedBoardName = params.repository.full_name.replace('/', '-');
 
     if (params.action === 'opened') {
-      const board = await this.loadBoard(derivedBoardName);
+      const board = await this.loadInstanceBoard(derivedBoardName);
       const task: Task = {
         id: this.generateId(),
         title: `#${params.issue.number}: ${params.issue.title}`,
@@ -1663,20 +1697,20 @@ process.exit(0);
         createdBy: 'webhook',
       };
       board.tasks.unshift(task);
-      await this.saveBoard(board);
+      await this.saveInstanceBoard(derivedBoardName, board);
       this.emit({ emit: 'board-update', board: board.name });
       return { processed: true, taskId: task.id };
     }
 
     if (params.action === 'closed') {
-      const board = await this.loadBoard(derivedBoardName);
+      const board = await this.loadInstanceBoard(derivedBoardName);
       const task = board.tasks.find((t) =>
         t.title.startsWith(`#${params.issue.number}:`)
       );
       if (task) {
         task.column = 'Done';
         task.updatedAt = new Date().toISOString();
-        await this.saveBoard(board);
+        await this.saveInstanceBoard(derivedBoardName, board);
         this.emit({ emit: 'board-update', board: board.name });
         return { processed: true, taskId: task.id };
       }
@@ -1701,24 +1735,23 @@ process.exit(0);
     taskIds: string[];
     column: string;
   }): Promise<{ moved: number }> {
-    return this.withLock(`board:${this.boardName}:write`, async () => {
-      const board = await this.loadBoard(this.boardName);
+    return this.withLock(`board:${this.instanceName || 'default'}:write`, async () => {
       let moved = 0;
 
       for (const taskId of params.taskIds) {
-        const task = board.tasks.find((t) => t.id === taskId);
-        if (task && board.columns.includes(params.column)) {
+        const task = this.boardData.tasks.find((t) => t.id === taskId);
+        if (task && this.boardData.columns.includes(params.column)) {
           task.column = params.column;
           task.updatedAt = new Date().toISOString();
           moved++;
         }
       }
 
-      await this.saveBoard(board);
+      this.boardData.updatedAt = new Date().toISOString();
 
-      this.emit({ emit: 'board-update', board: board.name });
+      this.emit({ emit: 'board-update', board: this.boardData.name });
       this.emit({
-        channel: `kanban:${board.name}`,
+        channel: this.channel,
         event: 'batch-move',
         data: { taskIds: params.taskIds, column: params.column },
       });

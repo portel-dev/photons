@@ -2,13 +2,17 @@
 
 Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.
 
-> **26 tools** · Streaming Photon · v3.0.0 · MIT
+> **26 tools** · Streaming Photon · v4.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `stateful` `channels`
 
 ## ⚙️ Configuration
 
-No configuration required.
+
+| Variable | Required | Type | Description |
+|----------|----------|------|-------------|
+| `KANBAN_PHOTON_BOARDDATA` | No | Board | No description available (default: `createEmptyBoard('default')`) |
+
 
 
 
@@ -439,4 +443,4 @@ No external dependencies.
 
 ---
 
-MIT · v3.0.0 · Portel
+MIT · v4.0.0 · Portel
