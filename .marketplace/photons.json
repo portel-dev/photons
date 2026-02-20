@@ -109,7 +109,7 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../dashboard.photon.ts",
-      "hash": "sha256:343bd7e47dd3913b16602f7d4c95c41050124670aafe81caf7cab132adf08a65",
+      "hash": "sha256:270aa88c99c7cf9250a4d148d835a31a0c5f74b05beb7fb627844136f49b9cf7",
       "tools": [
         "overview",
         "main",
@@ -411,7 +411,7 @@
       "license": "MIT",
       "icon": "📬",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:ae72c5c99225d20555a981941194e9fd7c5bf2b7d58ffc157d4eb2d41a458241",
+      "hash": "sha256:3e3cf90166aaceb04970cb17f7e2eff066d00f6e87866e439707038902a73cf9",
       "tools": [
         "configure",
         "main",
@@ -576,7 +576,7 @@
       "license": "MIT",
       "icon": "🔗",
       "source": "../integration-demo.photon.ts",
-      "hash": "sha256:e12b85fef935f7bb4be2570ddee2eacd29f559282084d56a21219eaf4ba15b77",
+      "hash": "sha256:a13efd8a1fe963d9065547c60ca8cb37f6c50142f8b9b71355f52a41de1a6671",
       "tools": [
         "info",
         "workflow",
@@ -628,7 +628,7 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:f61e271dbc1d8d245666476091b8b82d5cfda950cd222748af1a94d6f2551757",
+      "hash": "sha256:1ee560194b9bf4cf69b271b44904519b1eccba1c42a40380a781cc3867a86652",
       "tools": [
         "configure",
         "hooks",
@@ -676,7 +676,7 @@
       "license": "MIT",
       "icon": "🍳",
       "source": "../kitchen-sink.photon.ts",
-      "hash": "sha256:3e9d69baa4017fbc7d6506dd92b2e6e38c838d613afb7e6f2ee9599e2a2941fa",
+      "hash": "sha256:ffbed9e87b4ebd1eeb5e71ae210ed66fee3f3c4322d74cd00058e9deb2c762cf",
       "tools": [
         "basicStringReturn",
         "basicNumberReturn",
@@ -817,7 +817,7 @@
       "license": "MIT",
       "icon": "⚙️",
       "source": "../preferences.photon.ts",
-      "hash": "sha256:864bd01a493ba7d11958af9b384f13cc1646f557d13da3fa9680346501a1d6c5",
+      "hash": "sha256:248c41655c4aa7bad4c340c53e57fc053f30b0ad68ebd38b48c06dc1a7066741",
       "tools": [
         "list",
         "get",
@@ -989,7 +989,7 @@
       "license": "MIT",
       "icon": "📺",
       "source": "../team-dashboard.photon.ts",
-      "hash": "sha256:4259d9b30f92c83f32547fcc83ae5d075d04bbbee79f6c57a17552688b98b953",
+      "hash": "sha256:914232936b8048e1cd7c0235f0b95accf3e3ee2a0b9faa40d9ce850c5193a362",
       "tools": [
         "main",
         "getDashboardData",
