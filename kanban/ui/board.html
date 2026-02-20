@@ -2334,8 +2334,12 @@
           if (pendingMoveOperation) {
             return;
           }
-          // In auto mode, always refresh (might need to switch boards)
-          // Otherwise, only refresh if it's the current board
+          // In auto mode, follow the board that just had activity
+          if (autoMode && updatedBoard && updatedBoard !== currentInstanceName) {
+            await switchToInstance(updatedBoard);
+            return;
+          }
+          // Refresh current board if it matches or we're in auto mode
           if (autoMode || updatedBoard === currentInstanceName) {
             await refreshCurrentBoard();
           }
@@ -2622,6 +2626,7 @@
         const result = await window.photon.invoke('_instances', {});
         const instances = result.instances || ['default'];
         const current = result.current || 'default';
+        const autoInstance = result.autoInstance || 'default';
         currentInstanceName = current;
 
         const savedBoard = localStorage.getItem(BOARD_PREF_KEY);
@@ -2629,6 +2634,10 @@
 
         if (useAutoMode) {
           autoMode = true;
+          // Switch to the most recently modified board
+          if (autoInstance !== currentInstanceName) {
+            await switchToInstance(autoInstance);
+          }
         } else if (instances.includes(savedBoard)) {
           // Saved instance exists, switch to it
           await switchToInstance(savedBoard);
@@ -2743,10 +2752,22 @@
     }
 
     // Enable auto mode
-    function selectAutoMode() {
+    async function selectAutoMode() {
       autoMode = true;
       localStorage.setItem(BOARD_PREF_KEY, '__auto__');
-      loadInstanceList();
+      // Fetch instances to determine the most recently updated board
+      if (window.photon) {
+        try {
+          const result = await window.photon.invoke('_instances', {});
+          const autoInstance = result.autoInstance || 'default';
+          if (autoInstance !== currentInstanceName) {
+            await switchToInstance(autoInstance);
+          }
+        } catch (err) {
+          console.error('Failed to resolve auto instance:', err);
+        }
+      }
+      await loadInstanceList();
     }
 
     // New board modal
