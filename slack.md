@@ -15,6 +15,19 @@ Send and manage messages
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `post` | Post a message |
+| `channels` | List channels |
+| `channel` | Get channel info |
+| `history` | Get message history |
+| `react` | Add reaction to message |
+| `upload` | Upload file |
+| `search` | Search messages |
+
+
 ## 🔧 Tools
 
 

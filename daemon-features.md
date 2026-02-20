@@ -12,6 +12,18 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `scheduledHeartbeat` | Heartbeat - writes timestamp to state file every minute |
+| `handleWebhook` | Receive a webhook payload and echo it back with metadata |
+| `critical` | Critical operation with distributed lock |
+| `protect` | Manual distributed locking with this.withLock() |
+| `publish` | Publish a message to a named channel |
+| `status` | Show daemon feature status |
+
+
 ## 🔧 Tools
 
 

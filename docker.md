@@ -15,6 +15,22 @@ Container management
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `containers` | List containers |
+| `start` | Start a container |
+| `stop` | Stop a container |
+| `restart` | Restart a container |
+| `remove` | Remove a container |
+| `logs` | Get container logs |
+| `stats` | Get container stats |
+| `images` | List images |
+| `pull` | Pull an image |
+| `drop` | Remove an image |
+
+
 ## 🔧 Tools
 
 

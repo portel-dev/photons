@@ -15,6 +15,21 @@ File or in-memory SQL database
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `open` | Open a SQLite database |
+| `query` | Execute a SELECT query |
+| `one` | Execute a SELECT and return first row |
+| `execute` | Execute an INSERT, UPDATE, or DELETE |
+| `transaction` | Execute multiple statements in a transaction |
+| `tables` | List all tables in database |
+| `schema` | Get schema for a table |
+| `close` | Close database connection |
+| `backup` | Create a backup of the database |
+
+
 ## 🔧 Tools
 
 

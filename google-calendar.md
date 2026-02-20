@@ -17,6 +17,21 @@ Schedule and manage events
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `list` | List events |
+| `get` | Get event |
+| `create` | Create event |
+| `update` | Update event |
+| `remove` | Delete event |
+| `calendars` | List calendars |
+| `availability` | Check free/busy |
+| `search` | Search events |
+| `upcoming` | Get upcoming (within N hours) |
+
+
 ## 🔧 Tools
 
 

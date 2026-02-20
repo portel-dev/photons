@@ -12,6 +12,24 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `forms` | List all forms with submission counts |
+| `create` | Create a new form with field definitions |
+| `delete` | Delete a form and all its submissions |
+| `submissions` | List submissions for a form with pagination |
+| `submission` | Get a single submission detail |
+| `remove` | Delete a submission |
+| `export` | Export submissions as JSON or CSV |
+| `stats` | Submission statistics across all forms |
+| `handleSubmission` | Receive form submission via webhook |
+| `handleBulkImport` | Receive bulk CSV import via webhook |
+| `scheduledDigest` | Daily submission digest |
+| `scheduledCleanup` | Cleanup old submissions (90+ days) |
+
+
 ## 🔧 Tools
 
 

@@ -16,6 +16,38 @@ Kanban Board Photon Task management for humans and AI. Use named instances (`_us
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `configure` ⚡ | Configure the Kanban photon. |
+| `hooks` | Install Claude Code hooks in a project folder. |
+| `main` ⚡ | Open the Kanban board. |
+| `list` | Get all tasks, optionally filtered. |
+| `mine` | Get tasks assigned to AI. |
+| `add` | Create a new task. |
+| `move` | Move a task to a different column. |
+| `reorder` | Reorder a task within or across columns. |
+| `edit` | Update a task's details. |
+| `drop` | Delete a task. |
+| `search` | Search tasks on the current board. |
+| `comment` | Add a comment to a task. |
+| `comments` | Get comments for a task. |
+| `show` | Get a task with all its details including comments. |
+| `board` | Get the current board state. |
+| `column` | Add or remove a column. |
+| `clear` | Clear completed tasks (archive them) |
+| `stats` | Get board statistics. |
+| `block` | Set task dependencies. |
+| `reportError` | Report a JavaScript error from the UI. |
+| `scheduledArchiveOldTasks` | Archive old completed tasks. |
+| `scheduledMorningPull` | Morning standup prep. |
+| `scheduledAutoRelease` | Time-based auto-release for cards with autoReleaseMinutes set. |
+| `scheduledStaleTaskCheck` | Stale task cleanup. |
+| `handleGithubIssue` | Handle GitHub webhook for issue events. |
+| `sweep` | Batch move tasks with exclusive lock. |
+
+
 ## 🔧 Tools
 
 

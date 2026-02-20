@@ -18,6 +18,37 @@ Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meanin
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `basicStringReturn` | Returns a simple string. |
+| `basicNumberReturn` | Returns a number. |
+| `basicBooleanReturn` | Returns a boolean |
+| `basicObjectReturn` | Returns an object. |
+| `basicArrayReturn` | Returns an array |
+| `paramString` | Demonstrates string parameter |
+| `paramNumber` | Demonstrates number parameter |
+| `paramBoolean` | Demonstrates boolean parameter |
+| `paramEnum` | Demonstrates enum parameter (string literals) |
+| `paramOptional` | Demonstrates optional parameter with default |
+| `paramArray` | Demonstrates array parameter |
+| `paramObject` | Demonstrates object parameter |
+| `paramMultipleRequired` | Demonstrates multiple required parameters |
+| `streamingText` ⚡ | Streams text word by word. |
+| `streamingNumbers` ⚡ | Streams numbered items |
+| `streamingObjects` ⚡ | Streams JSON objects. |
+| `progressDemo` ⚡ | Demonstrates progress reporting using io helper. |
+| `memoryCounter` | Simple counter with in-memory state. |
+| `memoryTodoList` | In-memory todo list |
+| `uiGetUsers` | Get all users with visual card display. |
+| `uiGetDashboard` | Get dashboard metrics. |
+| `uiSearch` | Search results with rich display |
+| `errorHandlingDemo` | Demonstrates proper error handling. |
+| `errorValidation` | Demonstrates validation errors |
+| `showConfig` | Shows current configuration. |
+
+
 ## 🔧 Tools
 
 

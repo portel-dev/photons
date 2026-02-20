@@ -23,6 +23,20 @@ SMTP and IMAP email operations
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `send` | Send an email |
+| `attach` | Send email with attachments |
+| `inbox` | List emails from mailbox |
+| `get` | Get email by UID |
+| `search` | Search emails |
+| `read` | Mark email as read |
+| `remove` | Delete email |
+| `move` | Move email to mailbox |
+
+
 ## 🔧 Tools
 
 

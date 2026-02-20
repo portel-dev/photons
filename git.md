@@ -15,6 +15,23 @@ Local git repository operations
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `status` | Get repository status |
+| `log` | View commit history |
+| `diff` | Show differences |
+| `branches` | List all branches |
+| `branch` | Create a branch |
+| `checkout` | Switch to a branch |
+| `delete` | Delete a branch |
+| `add` | Stage files for commit |
+| `commit` | Create a commit |
+| `push` | Push commits to remote |
+| `pull` | Pull changes from remote |
+
+
 ## 🔧 Tools
 
 

@@ -17,6 +17,23 @@ Cloud object storage
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `buckets` | List all buckets |
+| `bucket` | Create a new bucket |
+| `drop` | Delete a bucket (must be empty) |
+| `list` | List objects in bucket |
+| `upload` | Upload object to S3 |
+| `download` | Download object from S3 |
+| `metadata` | Get object metadata |
+| `copy` | Copy object within S3 |
+| `delete` | Delete object from bucket |
+| `purge` | Delete multiple objects from bucket |
+| `presign` | Generate presigned URL for object |
+
+
 ## 🔧 Tools
 
 

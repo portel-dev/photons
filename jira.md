@@ -17,6 +17,22 @@ Issue tracking and project management
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `search` | Search issues (JQL) |
+| `get` | Get issue |
+| `create` | Create issue |
+| `update` | Update issue |
+| `transition` | Transition issue |
+| `transitions` | Get transitions |
+| `comment` | Add comment |
+| `comments` | List comments |
+| `projects` | List projects |
+| `project` | Get project |
+
+
 ## 🔧 Tools
 
 

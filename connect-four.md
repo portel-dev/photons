@@ -12,6 +12,20 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `start` | Start a new Connect Four game. |
+| `drop` | Drop a piece into a column. |
+| `board` | View the current board |
+| `games` | List your games. |
+| `resign` | Resign the current game |
+| `stats` | Get your win/loss statistics |
+| `replay` | Replay a completed game move by move |
+| `scheduledCleanup` | Cleanup stale games. |
+
+
 ## 🔧 Tools
 
 

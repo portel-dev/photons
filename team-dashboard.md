@@ -12,6 +12,32 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `main` | Open the Team Dashboard. |
+| `getDashboardData` | Get all dashboard data. |
+| `getDebugPaths` | Debug: Show resolved paths |
+| `getKanbanStats` | Get Kanban board statistics. |
+| `getRecentCommits` | Get recent Git commits. |
+| `checkServices` | Check service health. |
+| `getGitHubStats` | Get GitHub issues and PRs from configured repos. |
+| `getTodaysFocus` | Get today's focus task. |
+| `getSummary` | Get a quick summary for AI. |
+| `getConfig` | Get dashboard configuration |
+| `updateConfig` | Update dashboard configuration |
+| `addService` | Add a service to monitor |
+| `removeService` | Remove a service from monitoring |
+| `setGitRepo` | Set the Git repository path |
+| `setTeamName` | Set team name displayed on dashboard |
+| `addGitHubRepo` | Add a GitHub repository to track |
+| `removeGitHubRepo` | Remove a GitHub repository from tracking |
+| `listGitHubRepos` | List all tracked GitHub repositories |
+| `listKanbanBoards` | List available Kanban boards. |
+| `setKanbanBoard` | Set the Kanban board to display |
+
+
 ## 🔧 Tools
 
 

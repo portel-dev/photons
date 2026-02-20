@@ -12,6 +12,70 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `configure` ⚡ | Configure the Git Box photon. |
+| `main` ⚡ | Opens the mailbox interface for managing git repositories. |
+| `repoAdd` ⚡ | Add a repository to track — prompts interactively if the folder isn't a git repo |
+| `repoInit` | Initialize a new git repository |
+| `availableRepos` | Scan projects root folder for available git repositories and folders |
+| `projectsRootSet` | Set the projects root folder |
+| `repoRemove` | Remove a repository from tracking |
+| `repos` | List all tracked repositories with status counts |
+| `commits` | Get commit history for a repository (like inbox messages) |
+| `commitFiles` | Get files changed in a specific commit |
+| `status` | Get current working tree status (staged and unstaged changes) |
+| `fileStage` | Stage a file for commit |
+| `fileUnstage` | Unstage a file |
+| `commit` | Create a commit with staged changes |
+| `pull` | Pull changes from remote |
+| `push` | Push changes to remote |
+| `fetch` | Fetch updates from remote without merging |
+| `branches` | Get list of branches |
+| `branchSwitch` | Switch to a different branch |
+| `diff` | Get diff for a file with syntax-highlighted output |
+| `changesDiscard` | Discard changes in a file |
+| `commitDiff` | Get diff for a specific file in a commit |
+| `fileContent` | Get file content (current version or from a specific commit) |
+| `branchCreate` | Create a new branch |
+| `branchCreateSwitch` | Create and switch to a new branch |
+| `branchDelete` | Delete a branch |
+| `branchMerge` | Merge a branch into the current branch |
+| `mergeAbort` | Abort an in-progress merge |
+| `reflog` | Get reflog - history of all git operations (undo stack) |
+| `undoLast` | Undo the last git operation (soft reset to previous HEAD) |
+| `commitReset` | Reset to a specific commit (from reflog or commit history) |
+| `commitRecover` | Recover a "lost" commit using reflog |
+| `stashes` | List all stashes |
+| `stashCreate` | Create a new stash |
+| `stashApply` | Apply a stash (keep the stash) |
+| `stashPop` | Pop a stash (apply and remove) |
+| `stashDrop` | Drop (delete) a stash |
+| `stashShow` | Show diff of a stash |
+| `stashesClear` | Clear all stashes (dangerous!) |
+| `commitsSquash` | Squash multiple commits into one |
+| `commitMessageAmend` | Amend an older commit's message using automated rebase |
+| `fileRemoveFromHistory` | Remove a file from the entire git history (dangerous!) |
+| `cherryPick` | Cherry-pick one or more commits from another branch |
+| `cherryPickAbort` | Abort an in-progress cherry-pick |
+| `cherryPickContinue` | Continue cherry-pick after resolving conflicts |
+| `commitRevert` | Revert a specific commit (creates a new commit that undoes it) |
+| `revertAbort` | Abort an in-progress revert |
+| `commitFixup` | Fixup - amend staged changes into an older commit |
+| `rebasePreview` | Interactive rebase preview - shows what commits would be affected |
+| `rebaseScripted` | Perform a scripted rebase with custom actions for each commit |
+| `rebaseContinue` | Continue an in-progress rebase |
+| `rebaseAbort` | Abort an in-progress rebase |
+| `conflicts` | Get conflicts in current merge/rebase/cherry-pick |
+| `conflictMarkResolved` | Mark a conflicted file as resolved |
+| `conflictResolve` | Use ours or theirs version for a conflicted file |
+| `blame` | Get blame information for a file |
+| `commitsSearch` | Search for commits by message, author, or content |
+| `changeFind` | Find which commit introduced a specific line or change (pickaxe) |
+
+
 ## 🔧 Tools
 
 

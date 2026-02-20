@@ -12,6 +12,19 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `list` | Get current user preferences |
+| `get` | Get a specific preference value |
+| `editSettings` ⚡ | Open the settings UI for editing preferences |
+| `previewTheme` ⚡ | Preview a theme before applying |
+| `resetToDefaults` ⚡ | Reset preferences to defaults |
+| `import` | Import preferences from JSON |
+| `export` | Export current preferences as JSON |
+
+
 ## 🔧 Tools
 
 

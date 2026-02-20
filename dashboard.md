@@ -12,6 +12,18 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `overview` | Dashboard overview with key metrics. |
+| `main` | Dashboard main view - Task management |
+| `activity` | Recent activity feed. |
+| `add` | Add a new task |
+| `update` | Update task status |
+| `delete` | Delete a task |
+
+
 ## 🔧 Tools
 
 

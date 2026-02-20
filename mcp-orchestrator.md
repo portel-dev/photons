@@ -12,6 +12,22 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `discover` | List all available MCPs and their tools |
+| `check` | Check if a specific MCP is available |
+| `call` | Call a tool on any MCP |
+| `research` | Research Workflow - Combine search and browser MCPs |
+| `reason` | Multi-Step Reasoning Workflow using sequential-thinking MCP |
+| `shell` | Shell Command Workflow - Execute system commands |
+| `parallel` | Parallel MCP Execution - Call multiple MCPs concurrently |
+| `chain` | Chained MCP Workflow - Output from one MCP becomes input to another |
+| `inspect` | Get detailed info about a specific MCP's tools |
+| `tools` | Find tools across multiple MCPs by keyword |
+
+
 ## 🔧 Tools
 
 

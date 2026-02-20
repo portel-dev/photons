@@ -16,6 +16,26 @@ Feature showcase Comprehensive demonstration of Photon runtime features: return 
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `echo` | Echo a message |
+| `add` | Add two numbers |
+| `greet` | Greet someone |
+| `showProgress` ⚡ | Show progress with steps |
+| `askName` ⚡ | Interactive name prompt |
+| `confirmAction` ⚡ | Confirmation prompt |
+| `selectOption` ⚡ | Selection from options |
+| `multiStepForm` ⚡ | Multi-step registration form |
+| `counter` | Counter state management |
+| `todos` | Todo management |
+| `users` | Sample users table |
+| `docs` | Documentation in markdown |
+| `tree` | Sample tree structure |
+| `config` | Get current config |
+
+
 ## 🔧 Tools
 
 

@@ -16,6 +16,26 @@ Flexible document-oriented database
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `find` | Find documents in a collection |
+| `get` | Find a single document |
+| `insert` | Insert a document |
+| `bulk` | Insert multiple documents |
+| `replace` | Update a document |
+| `update` | Update multiple documents |
+| `remove` | Delete a document |
+| `delete` | Delete multiple documents |
+| `aggregate` | Run aggregation pipeline |
+| `count` | Count documents matching filter |
+| `collections` | List all collections in database |
+| `index` | Create an index on a collection |
+| `distinct` | Get distinct values for a field |
+| `drop` | Drop a collection |
+
+
 ## 🔧 Tools
 
 

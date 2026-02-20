@@ -16,6 +16,19 @@ Manage repository issues
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `list` | List issues |
+| `get` | Get issue |
+| `create` | Create issue |
+| `update` | Update issue |
+| `comment` | Add comment |
+| `comments` | List comments |
+| `search` | Search issues |
+
+
 ## 🔧 Tools
 
 

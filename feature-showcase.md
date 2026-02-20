@@ -12,6 +12,24 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `configure` | Set configuration values |
+| `getConfig` | Get current configuration |
+| `emits` ⚡ | Demonstrates all io.emit types in a single generator. |
+| `asks` ⚡ | Demonstrates all io.ask types interactively. |
+| `review` | A code review prompt template. |
+| `formatPrimitive` | Returns a plain string |
+| `formatJson` | Returns structured JSON data |
+| `formatTable` | Returns tabular data |
+| `formatMarkdown` | Returns markdown content |
+| `increment` | Increment the counter and return current value. |
+| `count` | Get the current counter value |
+| `broadcast` | Broadcast an event on a named channel |
+
+
 ## 🔧 Tools
 
 

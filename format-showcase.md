@@ -12,6 +12,39 @@ No configuration required.
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `list` | Uses **`@format list`** — the declarative approach. |
+| `card` | Uses **`@format card`** — renders a single object as a detail card. |
+| `table` | Uses **`@format table`** — the declarative approach. |
+| `bars` | Uses **`@format chart:bar`** — the declarative approach. |
+| `pie` | Uses **`@format chart:pie`** — declarative pie chart. |
+| `metric` | Uses **`@format metric`** — a single KPI with trend indicator. |
+| `gauge` | Uses **`@format gauge`** — a circular gauge with min/max bounds. |
+| `timeline` | Uses **`@format timeline`** — a vertical event sequence. |
+| `dashboard` | Uses **`@format dashboard`** — a composite layout for mixed data. |
+| `cart` | Uses **`@format cart`** — a shopping cart with line items and totals. |
+| `panels` | Uses **`@format panels`** — a CSS grid of titled panels. |
+| `tabs` | Uses **`@format tabs`** — a tab bar switching between groups. |
+| `accordion` | Uses **`@format accordion`** — collapsible sections. |
+| `stack` | Uses **`@format stack`** — vertical stack of metrics. |
+| `columns` | Uses **`@format columns`** — side-by-side layout. |
+| `rich_table` | Uses the **`Table`** class — the programmatic approach. |
+| `rich_chart` | Uses the **`Chart`** class — the programmatic approach. |
+| `rich_stats` | Uses the **`Stats`** class — the programmatic approach. |
+| `rich_cards` | Uses the **`Cards`** class — the programmatic approach. |
+| `rich_progress` | Uses the **`Progress`** class — multi-bar progress display. |
+| `rich_steps` | Uses the **`Progress`** class in `steps` mode — a step indicator. |
+| `mermaid` | Returns a **mermaid flowchart** as a plain string. |
+| `mermaid_card` | Returns an object with a **mermaid diagram embedded** in a field. |
+| `markdown_frontmatter` | Returns **markdown with YAML frontmatter** — the metadata block between `---` fences is extracted and rendered as a table above the body. |
+| `live` | *Live streaming** — gauge updates every second via `this.emit()`. |
+| `live_diagram` | *Animated diagram** — a flowchart that builds itself step by step. |
+| `stop` | Stops the live gauge stream started by `live()` or the diagram animation started by `live_diagram()`. |
+
+
 ## 🔧 Tools
 
 

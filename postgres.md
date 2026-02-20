@@ -20,6 +20,19 @@ Powerful relational database
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `query` | Execute a SQL query |
+| `transaction` | Execute multiple statements in a transaction |
+| `tables` | List all tables in database |
+| `describe` | Get schema information for a table |
+| `indexes` | List all indexes on a table |
+| `insert` | Insert a document |
+| `stats` | Get database statistics |
+
+
 ## 🔧 Tools
 
 

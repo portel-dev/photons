@@ -17,6 +17,30 @@ High-performance in-memory data store
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `get` | Get value by key |
+| `set` | Set key-value pair |
+| `del` | Delete one or more keys |
+| `exists` | Check if key exists |
+| `keys` | Get all keys matching pattern |
+| `incr` | Increment numeric value |
+| `decr` | Decrement numeric value |
+| `expire` | Set expiration time on key |
+| `ttl` | Get time to live for key |
+| `lpush` | Push value to list (left side) |
+| `rpush` | Push value to list (right side) |
+| `lpop` | Pop value from list (left side) |
+| `rpop` | Pop value from list (right side) |
+| `llen` | Get list length |
+| `hget` | Get hash field value |
+| `hset` | Set hash field value |
+| `hgetall` | Get all fields and values in hash |
+| `flush` | Flush all data from current database |
+
+
 ## 🔧 Tools
 
 

@@ -17,6 +17,24 @@ File and directory operations
 
 
 
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `read` | Read file contents |
+| `write` | Write content to file |
+| `append` | Append content to file |
+| `remove` | Delete a file |
+| `copy` | Copy a file |
+| `move` | Move/rename a file |
+| `list` | List directory contents |
+| `mkdir` | Create a directory |
+| `rmdir` | Delete a directory |
+| `info` | Get file info |
+| `exists` | Check if path exists |
+| `search` | Search for files matching pattern |
+
+
 ## 🔧 Tools
 
 
