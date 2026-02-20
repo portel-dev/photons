@@ -2,7 +2,7 @@
 
 Scheduled Jobs, Webhooks, Locks, Pub/Sub
 
-> **6 tools** · API Photon · v1.0.0 · MIT
+> **4 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `channels`
 
@@ -12,41 +12,8 @@ No configuration required.
 
 
 
-## 📋 Quick Reference
-
-| Method | Description |
-|--------|-------------|
-| `scheduledHeartbeat` | Heartbeat - writes timestamp to state file every minute |
-| `handleWebhook` | Receive a webhook payload and echo it back with metadata |
-| `critical` | Critical operation with distributed lock |
-| `protect` | Manual distributed locking with this.withLock() |
-| `publish` | Publish a message to a named channel |
-| `status` | Show daemon feature status |
-
 
 ## 🔧 Tools
-
-
-### `scheduledHeartbeat`
-
-Heartbeat - writes timestamp to state file every minute
-
-
-
-
-
----
-
-
-### `handleWebhook`
-
-Receive a webhook payload and echo it back with metadata
-
-
-
-
-
----
 
 
 ### `critical`
@@ -103,18 +70,14 @@ flowchart LR
     subgraph daemon_features["📦 Daemon Features"]
         direction TB
         PHOTON((🎯))
-        T0[🔧 scheduledHeartbeat]
+        T0[🔧 critical]
         PHOTON --> T0
-        T1[🔧 handleWebhook]
+        T1[🔧 protect]
         PHOTON --> T1
-        T2[🔧 critical]
+        T2[📤 publish]
         PHOTON --> T2
-        T3[🔧 protect]
+        T3[🔧 status]
         PHOTON --> T3
-        T4[📤 publish]
-        PHOTON --> T4
-        T5[🔧 status]
-        PHOTON --> T5
     end
 ```
 

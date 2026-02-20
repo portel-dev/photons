@@ -71,8 +71,7 @@
         "games",
         "resign",
         "stats",
-        "replay",
-        "scheduledCleanup"
+        "replay"
       ],
       "assets": [],
       "photonType": "api",
@@ -92,8 +91,6 @@
       "hash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
       "contentHash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
       "tools": [
-        "scheduledHeartbeat",
-        "handleWebhook",
         "critical",
         "protect",
         "publish",
@@ -360,11 +357,7 @@
         "submission",
         "remove",
         "export",
-        "stats",
-        "handleSubmission",
-        "handleBulkImport",
-        "scheduledDigest",
-        "scheduledCleanup"
+        "stats"
       ],
       "assets": [],
       "photonType": "api",
@@ -672,12 +665,6 @@
         "clear",
         "stats",
         "block",
-        "reportError",
-        "scheduledArchiveOldTasks",
-        "scheduledMorningPull",
-        "scheduledAutoRelease",
-        "scheduledStaleTaskCheck",
-        "handleGithubIssue",
         "sweep"
       ],
       "assets": [

@@ -2,7 +2,7 @@
 
 Webhook-powered form submission collector
 
-> **12 tools** · API Photon · v1.0.0 · MIT
+> **8 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `stateful` `channels`
 
@@ -24,10 +24,6 @@ No configuration required.
 | `remove` | Delete a submission |
 | `export` | Export submissions as JSON or CSV |
 | `stats` | Submission statistics across all forms |
-| `handleSubmission` | Receive form submission via webhook |
-| `handleBulkImport` | Receive bulk CSV import via webhook |
-| `scheduledDigest` | Daily submission digest |
-| `scheduledCleanup` | Cleanup old submissions (90+ days) |
 
 
 ## 🔧 Tools
@@ -121,50 +117,6 @@ Submission statistics across all forms
 ---
 
 
-### `handleSubmission`
-
-Receive form submission via webhook
-
-
-
-
-
----
-
-
-### `handleBulkImport`
-
-Receive bulk CSV import via webhook
-
-
-
-
-
----
-
-
-### `scheduledDigest`
-
-Daily submission digest
-
-
-
-
-
----
-
-
-### `scheduledCleanup`
-
-Cleanup old submissions (90+ days)
-
-
-
-
-
----
-
-
 
 
 
@@ -191,14 +143,6 @@ flowchart LR
         PHOTON --> T6
         T7[🔧 stats]
         PHOTON --> T7
-        T8[🔧 handleSubmission]
-        PHOTON --> T8
-        T9[🔧 handleBulkImport]
-        PHOTON --> T9
-        T10[🔧 scheduledDigest]
-        PHOTON --> T10
-        T11[🔧 scheduledCleanup]
-        PHOTON --> T11
     end
 ```
 

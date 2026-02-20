@@ -2,7 +2,7 @@
 
 Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.
 
-> **26 tools** · Streaming Photon · v4.0.0 · MIT
+> **20 tools** · Streaming Photon · v4.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `stateful` `channels`
 
@@ -39,12 +39,6 @@ Kanban Board Photon Task management for humans and AI. Use named instances (`_us
 | `clear` | Clear completed tasks (archive them) |
 | `stats` | Get board statistics. |
 | `block` | Set task dependencies. |
-| `reportError` | Report a JavaScript error from the UI. |
-| `scheduledArchiveOldTasks` | Archive old completed tasks. |
-| `scheduledMorningPull` | Morning standup prep. |
-| `scheduledAutoRelease` | Time-based auto-release for cards with autoReleaseMinutes set. |
-| `scheduledStaleTaskCheck` | Stale task cleanup. |
-| `handleGithubIssue` | Handle GitHub webhook for issue events. |
 | `sweep` | Batch move tasks with exclusive lock. |
 
 
@@ -316,72 +310,6 @@ block({ id: 'task2', blockedBy: 'task1' }) // task2 waits for task1
 ---
 
 
-### `reportError`
-
-Report a JavaScript error from the UI. Used by the kanban UI to report runtime errors back to developers/AI. Errors are logged to a file for debugging and can trigger notifications.
-
-
-
-
-
----
-
-
-### `scheduledArchiveOldTasks`
-
-Archive old completed tasks. Runs daily at midnight to move completed tasks older than 7 days to an archive file, keeping the board clean.
-
-
-
-
-
----
-
-
-### `scheduledMorningPull`
-
-Morning standup prep. Runs every weekday at 8am to pull tasks from Backlog → Todo. Helps teams prepare for the day with fresh tasks ready to work on.
-
-
-
-
-
----
-
-
-### `scheduledAutoRelease`
-
-Time-based auto-release for cards with autoReleaseMinutes set. Checks every 5 minutes for Backlog cards that have an auto-release interval configured. If the interval has passed since lastReleaseAttempt, the card is moved to In Progress (respecting WIP limit).
-
-
-
-
-
----
-
-
-### `scheduledStaleTaskCheck`
-
-Stale task cleanup. Runs weekly on Sunday to move stale tasks (no updates in N days) back to Backlog for re-prioritization.
-
-
-
-
-
----
-
-
-### `handleGithubIssue`
-
-Handle GitHub webhook for issue events. Creates or updates tasks when GitHub issues are opened/closed. Configure GitHub webhook URL: POST /webhook/handleGithubIssue. Auto-detected as webhook from 'handle' prefix.
-
-
-
-
-
----
-
-
 ### `sweep`
 
 Batch move tasks with exclusive lock. Move multiple tasks atomically. Uses distributed lock to prevent concurrent modifications from corrupting the board.
@@ -441,20 +369,8 @@ flowchart LR
         PHOTON --> T17
         T18[🔧 block]
         PHOTON --> T18
-        T19[🔧 reportError]
+        T19[🔧 sweep]
         PHOTON --> T19
-        T20[🔧 scheduledArchiveOldTasks]
-        PHOTON --> T20
-        T21[🔧 scheduledMorningPull]
-        PHOTON --> T21
-        T22[🔧 scheduledAutoRelease]
-        PHOTON --> T22
-        T23[🔧 scheduledStaleTaskCheck]
-        PHOTON --> T23
-        T24[🔧 handleGithubIssue]
-        PHOTON --> T24
-        T25[🔧 sweep]
-        PHOTON --> T25
     end
 ```
 

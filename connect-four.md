@@ -2,7 +2,7 @@
 
 Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.
 
-> **8 tools** · API Photon · v1.0.0 · MIT
+> **7 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `stateful` `channels`
 
@@ -23,7 +23,6 @@ No configuration required.
 | `resign` | Resign the current game |
 | `stats` | Get your win/loss statistics |
 | `replay` | Replay a completed game move by move |
-| `scheduledCleanup` | Cleanup stale games. |
 
 
 ## 🔧 Tools
@@ -130,17 +129,6 @@ Replay a completed game move by move
 ---
 
 
-### `scheduledCleanup`
-
-Cleanup stale games. Removes active games with no moves for over 7 days and completed games older than 90 days.
-
-
-
-
-
----
-
-
 
 
 
@@ -165,8 +153,6 @@ flowchart LR
         PHOTON --> T5
         T6[🔧 replay]
         PHOTON --> T6
-        T7[🔧 scheduledCleanup]
-        PHOTON --> T7
     end
 ```
 
