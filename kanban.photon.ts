@@ -5,7 +5,7 @@
  * for per-project boards. Perfect for project planning, AI working memory across
  * sessions, and human-AI collaboration on shared tasks.
  *
- * @version 4.0.0
+ * @version 4.0.1
  * @author Portel
  * @license MIT
  * @tags kanban, tasks, collaboration, project-management, memory
@@ -81,8 +81,8 @@ function createEmptyBoard(name: string): Board {
 // KANBAN PHOTON
 // ════════════════════════════════════════════════════════════════════════════════
 
-// Default to ~/.photon for user photons (can be overridden via PHOTONS_DIR)
-const PHOTONS_DIR = process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
+// Default to ~/.photon for user photons (can be overridden via PHOTON_DIR or PHOTONS_DIR)
+const PHOTONS_DIR = process.env.PHOTON_DIR || process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
 
 // Config stored persistently so all instances (MCP, Beam, etc.) use same settings
 interface KanbanConfig {
@@ -121,7 +121,7 @@ function saveConfig(config: KanbanConfig): void {
 }
 
 // State directory for cross-instance access (scheduled jobs, webhooks)
-const STATE_DIR = path.join(os.homedir(), '.photon', 'state', 'kanban');
+const STATE_DIR = path.join(PHOTONS_DIR, 'state', 'kanban');
 // Archive/data directory (append-only logs, not instance state)
 const DATA_DIR = path.join(PHOTONS_DIR, 'kanban');
 

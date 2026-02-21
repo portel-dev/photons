@@ -637,14 +637,14 @@
     },
     {
       "name": "kanban",
-      "version": "4.0.0",
+      "version": "4.0.1",
       "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:ebcf5c1efde1b09821de845a8edbe07994abf763816786f7acb41bb60c1e8e82",
-      "contentHash": "sha256:f61e271dbc1d8d245666476091b8b82d5cfda950cd222748af1a94d6f2551757",
+      "hash": "sha256:26a49db985608fe73e7d2ba37ce1df008ce8f6ce390f5d54c20c1063093dff51",
+      "contentHash": "sha256:d995e7b368ec2d5ab2ebcc15a676d575597a2564b5ba4951b70fb72fa6c11891",
       "tools": [
         "configure",
         "hooks",
