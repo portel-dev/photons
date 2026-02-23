@@ -2364,7 +2364,7 @@
     async function applyBoardEvent(eventType, data) {
       switch (eventType) {
         case 'task-created':
-          if (data.task && !board.tasks.find(t => t.id === data.task.id)) {
+          if (data.task && !board.tasks.find(t => t.id === data.task.id) && pendingOptimisticIds.size === 0) {
             board.tasks.push(data.task);
             renderBoard();
             updateStats();
@@ -3116,6 +3116,7 @@
     let dropTargetId = null; // Track which card to insert before
     const recentlyMovedTasks = new Map(); // taskId -> timestamp (to skip redundant refreshes)
     let pendingMoveOperation = false; // True while a move is being persisted
+    const pendingOptimisticIds = new Set(); // Temp IDs of optimistically-added tasks awaiting invoke
 
     function handleDragStart(e, task) {
       draggedTask = task;
@@ -3937,22 +3938,29 @@
             createdBy: 'human'
           };
           board.tasks.push(newTask);
+          pendingOptimisticIds.add(newTask.id);
 
           if (window.photon) {
-            const result = await window.photon.invoke('add', {
-                title,
-              description: description || undefined,
-              column,
-              priority,
-              assignee: assignee || undefined,
-              autoPullThreshold,
-              autoReleaseMinutes
-            });
-            // Replace temp task with server-assigned ID so task-created dedup works
-            if (result) {
-              const idx = board.tasks.findIndex(t => t.id === newTask.id);
-              if (idx !== -1) board.tasks.splice(idx, 1, result);
+            try {
+              const result = await window.photon.invoke('add', {
+                  title,
+                description: description || undefined,
+                column,
+                priority,
+                assignee: assignee || undefined,
+                autoPullThreshold,
+                autoReleaseMinutes
+              });
+              // Replace temp task with server-assigned ID so task-created dedup works
+              if (result) {
+                const idx = board.tasks.findIndex(t => t.id === newTask.id);
+                if (idx !== -1) board.tasks.splice(idx, 1, result);
+              }
+            } finally {
+              pendingOptimisticIds.delete(newTask.id);
             }
+          } else {
+            pendingOptimisticIds.delete(newTask.id);
           }
         }
 
