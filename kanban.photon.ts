@@ -5,7 +5,7 @@
  * for per-project boards. Perfect for project planning, AI working memory across
  * sessions, and human-AI collaboration on shared tasks.
  *
- * @version 4.0.2
+ * @version 4.0.3
  * @author Portel
  * @license MIT
  * @tags kanban, tasks, collaboration, project-management, memory

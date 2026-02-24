@@ -522,11 +522,18 @@
     .task-description {
       font-size: 12px;
       color: var(--text-secondary);
-      line-height: 1.6;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .task-description:not(:empty) {
-      margin-bottom: 8px;
+      margin-top: 6px;
+      margin-bottom: 4px;
     }
 
     /* Progress rows for checkbox groups */
@@ -3060,6 +3067,11 @@
       const checkboxGroups = parseCheckboxGroups(task.description);
       let progressHtml = '';
 
+      // Plain-text description preview (only when no checkboxes — those render as progress bars)
+      const descriptionHtml = task.description && checkboxGroups.length === 0
+        ? `<div class="task-description">${escapeHtml(task.description.trim())}</div>`
+        : '';
+
       if (checkboxGroups.length > 0) {
         const progressRows = checkboxGroups.map(group => {
           const percent = group.total > 0 ? Math.round((group.checked / group.total) * 100) : 0;
@@ -3091,6 +3103,7 @@
           ${commentBadge}
         </div>
         <div class="task-title">${escapeHtml(task.title)}</div>
+        ${descriptionHtml}
         ${progressHtml}
         <div class="task-footer">
           <div class="task-actions">
