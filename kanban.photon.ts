@@ -727,19 +727,11 @@ process.exit(0);
    * @ui board
    */
   async *main() {
-    // First-time setup: elicit projects root if no config exists
+    // First-time setup: create config with defaults (user can run `configure` to customize)
     if (!existsSync(CONFIG_PATH)) {
-      const values: Record<string, any> = yield io.ask.form('Configure Kanban', {
-        type: 'object',
-        properties: {
-          projectsRoot: { type: 'string', title: 'Projects Root', default: DEFAULT_PROJECTS_ROOT },
-          wipLimit: { type: 'number', title: 'WIP Limit', default: DEFAULT_WIP_LIMIT, minimum: 1 },
-        },
-        required: ['projectsRoot'],
-      });
       saveConfig({
-        projectsRoot: values?.projectsRoot || DEFAULT_PROJECTS_ROOT,
-        wipLimit: values?.wipLimit ?? DEFAULT_WIP_LIMIT,
+        projectsRoot: DEFAULT_PROJECTS_ROOT,
+        wipLimit: DEFAULT_WIP_LIMIT,
       });
     }
 

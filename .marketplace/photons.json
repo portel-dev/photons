@@ -643,8 +643,8 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:5e85bfa93c595894bd2afc75767788b74bcc52ed2caa2ed87626eb84aaf283b0",
-      "contentHash": "sha256:f5e41655deac0428630a46b380d9fc40e0b521b5b8b70a0dc4bc223d969e1d51",
+      "hash": "sha256:4748b99645c7f527f50ea7bac0d32c91cfdb3cd10ddfc6b7296ffb678b44d194",
+      "contentHash": "sha256:f49bb5dd08bf20c07b5dea413d249ede223b460a5b58f927121dcbc5ef749175",
       "tools": [
         "configure",
         "hooks",
