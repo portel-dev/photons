@@ -3773,11 +3773,9 @@
       const newStaleDays = parseInt(document.getElementById('settings-stale-days').value) || 7;
 
       try {
-        await window.photon.invoke('configure', {
-          wipLimit: newWipLimit,
-          morningPullCount: newMorningPull,
-          staleTaskDays: newStaleDays
-        });
+        // Try 'settings' first, fall back to 'configure'
+        const settingsParams = { wipLimit: newWipLimit, morningPullCount: newMorningPull, staleTaskDays: newStaleDays };
+        try { await window.photon.invoke('settings', settingsParams); } catch { await window.photon.invoke('configure', settingsParams); }
 
         // Update local state
         wipEnabled = newWipEnabled;
@@ -4054,8 +4052,9 @@
           wipEnabled = stats.wip.enabled !== false;
         }
 
-        // Get full config for other settings
-        const config = await window.photon.invoke('configure', {});
+        // Get full config for other settings (try 'settings' first, fall back to 'configure')
+        let config;
+        try { config = await window.photon.invoke('settings', {}); } catch { config = await window.photon.invoke('configure', {}); }
         if (config) {
           autoPullEnabled = config.autoPullEnabled || false;
           morningPullCount = config.morningPullCount || 3;
@@ -4063,12 +4062,12 @@
           if (config.wipLimit) wipLimit = config.wipLimit;
         }
 
-        // Re-render to show WIP indicators
-        renderBoard();
       } catch (err) {
         // Config may not be available, use defaults
         console.log('Config not available:', err.message);
       }
+      // Always re-render to show WIP indicators (even if config fetch failed)
+      renderBoard();
     }
 
     // Utility
