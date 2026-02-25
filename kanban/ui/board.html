@@ -3775,7 +3775,9 @@
       try {
         // Try 'settings' first, fall back to 'configure'
         const settingsParams = { wipLimit: newWipLimit, morningPullCount: newMorningPull, staleTaskDays: newStaleDays };
-        try { await window.photon.invoke('settings', settingsParams); } catch { await window.photon.invoke('configure', settingsParams); }
+        try { await window.photon.invoke('settings', settingsParams); } catch {
+          try { await window.photon.invoke('configure', settingsParams); } catch { /* neither method available */ }
+        }
 
         // Update local state
         wipEnabled = newWipEnabled;
@@ -4052,9 +4054,11 @@
           wipEnabled = stats.wip.enabled !== false;
         }
 
-        // Get full config for other settings (try 'settings' first, fall back to 'configure')
+        // Get full config (try 'settings' first, fall back to 'configure', silently skip if neither exists)
         let config;
-        try { config = await window.photon.invoke('settings', {}); } catch { config = await window.photon.invoke('configure', {}); }
+        try { config = await window.photon.invoke('settings', {}); } catch {
+          try { config = await window.photon.invoke('configure', {}); } catch { /* neither method available */ }
+        }
         if (config) {
           autoPullEnabled = config.autoPullEnabled || false;
           morningPullCount = config.morningPullCount || 3;
@@ -4062,9 +4066,8 @@
           if (config.wipLimit) wipLimit = config.wipLimit;
         }
 
-      } catch (err) {
-        // Config may not be available, use defaults
-        console.log('Config not available:', err.message);
+      } catch {
+        // stats not available, use defaults
       }
       // Always re-render to show WIP indicators (even if config fetch failed)
       renderBoard();
