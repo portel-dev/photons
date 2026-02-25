@@ -33,6 +33,28 @@
       "features": []
     },
     {
+      "name": "boards",
+      "version": "2.0.0",
+      "description": "Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
+      "author": "Portel",
+      "license": "MIT",
+      "icon": "📋",
+      "source": "../boards.photon.ts",
+      "hash": "sha256:76089e26eaabcb9a47eed87aea1ed3436000fabcbcd06d6334239437af40b184",
+      "contentHash": "sha256:76089e26eaabcb9a47eed87aea1ed3436000fabcbcd06d6334239437af40b184",
+      "tools": [
+        "main"
+      ],
+      "assets": [],
+      "photonType": "streaming",
+      "features": [
+        "generator",
+        "custom-ui",
+        "stateful",
+        "channels"
+      ]
+    },
+    {
       "name": "code-diagram",
       "version": "1.0.0",
       "description": "Code Diagram - Mermaid visualization from source code",
@@ -576,6 +598,21 @@
       "source": "../hello-world.photon.ts",
       "hash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
       "contentHash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
+      "tools": [],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
+      "name": "input-showcase",
+      "version": "1.9.0",
+      "description": "Input Showcase",
+      "author": "Unknown",
+      "license": "MIT",
+      "icon": null,
+      "source": "../input-showcase.photon.ts",
+      "hash": "sha256:d79a6566045771d17749fd4fa44164311b8f9b93804041d230e477f10986d163",
+      "contentHash": "sha256:d79a6566045771d17749fd4fa44164311b8f9b93804041d230e477f10986d163",
       "tools": [],
       "assets": [],
       "photonType": "api",

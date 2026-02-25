@@ -27,6 +27,24 @@
       }
     },
     {
+      "name": "boards",
+      "description": "Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "boards": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "boards"
+          ]
+        }
+      }
+    },
+    {
       "name": "code-diagram",
       "description": "Code Diagram - Mermaid visualization from source code",
       "source": "./",
@@ -364,6 +382,24 @@
           "args": [
             "mcp",
             "hello-world"
+          ]
+        }
+      }
+    },
+    {
+      "name": "input-showcase",
+      "description": "Input Showcase",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "input-showcase": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "input-showcase"
           ]
         }
       }

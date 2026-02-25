@@ -35,6 +35,7 @@ We welcome contributions! Submit pull requests for:
 | Photon | Focus | Tools | Features |
 |--------|-------|-------|----------|
 | [**AWS S3**](aws-s3.md) | Cloud object storage | 11 | - |
+| [**Boards**](boards.md) | Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 1 | ⚡🎨📡 |
 | [**Code Diagram**](code-diagram.md) | Mermaid visualization from source code | 3 | 🔌📦 |
 | [**Connect Four**](connect-four.md) | Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. | 7 | 📡 |
 | [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 4 | 📡 |
@@ -54,6 +55,7 @@ We welcome contributions! Submit pull requests for:
 | [**GitHub Issues**](github-issues.md) | Manage repository issues | 7 | - |
 | [**Google Calendar**](google-calendar.md) | Schedule and manage events | 9 | - |
 | [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 0 | - |
+| [**Input Showcase**](input-showcase.md) | Input Showcase | 0 | - |
 | [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 5 | ⚡🎨 |
 | [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
 | [**Kanban**](kanban.md) | Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 20 | ⚡🎨📡 |
@@ -77,7 +79,7 @@ We welcome contributions! Submit pull requests for:
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
 
-**Total:** 41 photons ready to use
+**Total:** 43 photons ready to use
 
 ---
 
@@ -121,7 +123,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 41 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 43 focused tools at its fingertips.
 
 ---
 
@@ -187,7 +189,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 41 production-ready photons available
+- 📦 43 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)
