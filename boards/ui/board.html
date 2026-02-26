@@ -1,0 +1,4704 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="mcp:ui-size"
+      content="minWidth=1100;minHeight=500;maxHeight=800"
+    />
+    <title>Kanban Board</title>
+    <style>
+      :root {
+        --bg-primary: #0d0d0d;
+        --bg-secondary: #1a1a1a;
+        --bg-tertiary: #262626;
+        --bg-card: #1e1e1e;
+        --text-primary: #e6e6e6;
+        --text-secondary: #a0a0a0;
+        --text-muted: #666;
+        --border-color: #333;
+        --accent: #79aef0;
+        --accent-hover: #5a9ae8;
+        --priority-high: #ff6b6b;
+        --priority-medium: #ffd93d;
+        --priority-low: #6bcb77;
+        --column-backlog: #6b7280;
+        --column-todo: #3b82f6;
+        --column-progress: #f59e0b;
+        --column-review: #8b5cf6;
+        --column-done: #10b981;
+        /* Heat display colors - subtle red tints for recently updated cards */
+        --heat-high: rgba(239, 68, 68, 0.25);
+        --heat-medium: rgba(239, 68, 68, 0.15);
+        --heat-low: rgba(239, 68, 68, 0.08);
+      }
+
+      /* Light theme - Zinc scale, Linear/Notion inspired */
+      :root.light {
+        --bg-primary: #f4f4f5;
+        --bg-secondary: #fafafa;
+        --bg-tertiary: #e4e4e7;
+        --bg-card: #ffffff;
+        --text-primary: #18181b;
+        --text-secondary: #52525b;
+        --text-muted: #a1a1aa;
+        --border-color: #d4d4d8;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        /* Heat display colors for light theme - slightly more visible */
+        --heat-high: rgba(220, 38, 38, 0.18);
+        --heat-medium: rgba(220, 38, 38, 0.1);
+        --heat-low: rgba(220, 38, 38, 0.05);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+          Roboto, sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        padding: 16px;
+        height: calc(100vh - 32px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
+        flex-shrink: 0;
+      }
+
+      .header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header h1::before {
+        content: "📋";
+      }
+
+      .stats {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .stat-value {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .board-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .board-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        padding: 2px 6px;
+        margin-left: -6px;
+        border-radius: 4px;
+        border: 1px solid transparent;
+        outline: none;
+        cursor: text;
+        transition: all 0.15s ease;
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .board-title:hover {
+        background: var(--bg-tertiary);
+      }
+
+      .board-title:focus {
+        background: var(--bg-secondary);
+        border-color: var(--accent);
+        max-width: none;
+        overflow: visible;
+      }
+
+      .board-switcher {
+        position: relative;
+      }
+
+      .board-switcher-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 4px;
+        color: var(--text-muted);
+        transition: all 0.15s ease;
+      }
+
+      .board-switcher-btn:hover {
+        color: var(--text-secondary);
+        background: var(--bg-tertiary);
+      }
+
+      .board-menu {
+        position: absolute;
+        top: 100%;
+        margin-top: 4px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        min-width: 220px;
+        max-height: calc(100vh - 80px);
+        z-index: 100;
+        display: none;
+        overflow: hidden;
+      }
+
+      .board-menu.visible {
+        display: block;
+      }
+
+      .board-menu-header {
+        padding: 8px 12px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .board-menu-list {
+        max-height: 240px;
+        overflow-y: auto;
+      }
+
+      .board-menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 12px;
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 14px;
+        cursor: pointer;
+        text-align: left;
+        transition: background 0.1s ease;
+      }
+
+      .board-menu-item:hover {
+        background: var(--bg-tertiary);
+      }
+
+      .board-menu-item.active {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--accent);
+      }
+
+      .board-menu-item .task-count {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .board-menu-item.active .task-count {
+        color: var(--accent);
+        opacity: 0.7;
+      }
+
+      .board-menu-divider {
+        height: 1px;
+        background: var(--border-color);
+      }
+
+      .board-menu-new {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .board-menu-auto {
+        font-style: italic;
+      }
+
+      .search-container {
+        position: relative;
+        flex: 1;
+        max-width: 250px;
+      }
+
+      .search-input {
+        width: 100%;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 6px 28px 6px 12px;
+        font-size: 13px;
+        outline: none;
+        transition: all 0.15s ease;
+      }
+
+      .search-input:focus {
+        border-color: var(--accent);
+      }
+
+      .search-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .search-clear {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .search-clear:hover {
+        color: var(--text-primary);
+      }
+
+      .task-card.hidden {
+        display: none !important;
+      }
+
+      .board {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .column {
+        flex: 1 1 200px;
+        min-width: 200px;
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .column-header {
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .column-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .column-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .column[data-column="Backlog"] .column-dot {
+        background: var(--column-backlog);
+      }
+      .column[data-column="Todo"] .column-dot {
+        background: var(--column-todo);
+      }
+      .column[data-column="In Progress"] .column-dot {
+        background: var(--column-progress);
+      }
+      .column[data-column="Review"] .column-dot {
+        background: var(--column-review);
+      }
+      .column[data-column="Done"] .column-dot {
+        background: var(--column-done);
+      }
+
+      .column-count {
+        background: var(--bg-tertiary);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .add-task-btn {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      .add-task-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+      }
+
+      .column-tasks {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .column-tasks.drag-over {
+        background: rgba(121, 174, 240, 0.1);
+      }
+
+      .task-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        cursor: grab;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          border-color 0.15s ease,
+          opacity 0.15s ease;
+        position: relative;
+      }
+
+      .task-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-1px);
+      }
+
+      .task-card.dragging {
+        opacity: 0.4;
+        transform: scale(0.98);
+        cursor: grabbing;
+        box-shadow: none;
+      }
+
+      .task-card.drop-above::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent);
+        border-radius: 2px;
+        animation: dropIndicator 0.2s ease;
+      }
+
+      @keyframes dropIndicator {
+        from {
+          transform: scaleX(0);
+          opacity: 0;
+        }
+        to {
+          transform: scaleX(1);
+          opacity: 1;
+        }
+      }
+
+      .task-card.drag-preview {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        transform: rotate(3deg);
+      }
+
+      /* FLIP animation for card movement */
+      .task-card.flip-animate {
+        transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+      }
+
+      /* Card settling animation after drop */
+      .task-card.just-dropped {
+        animation: cardSettle 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes cardSettle {
+        0% {
+          transform: scale(1.02);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: none;
+        }
+      }
+
+      /* Heat display for recently updated cards */
+      /* Brief flash to attract attention, then persistent subtle highlight */
+      .task-card.just-updated {
+        animation: cardFlash 0.4s ease-out;
+      }
+
+      .task-card.heat-high,
+      .task-card.heat-medium,
+      .task-card.heat-low {
+        transition: border-left-color 2s ease-out;
+      }
+
+      .task-card.heat-high {
+        border-left: 3px solid rgba(239, 68, 68, 0.9);
+      }
+
+      .task-card.heat-medium {
+        border-left: 3px solid rgba(239, 68, 68, 0.5);
+      }
+
+      .task-card.heat-low {
+        border-left: 3px solid rgba(239, 68, 68, 0.25);
+      }
+
+      @keyframes cardFlash {
+        0% {
+          transform: scale(1.02);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Flash animation for newly created cards */
+      .task-card.just-created {
+        animation: cardFlashIn 0.5s ease-out;
+      }
+
+      @keyframes cardFlashIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-8px) scale(1.02);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(0) scale(1.02);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Cards shifting to make room */
+      .task-card.shifting {
+        transition: transform 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+      }
+
+      /* Warmth indicators for recently changed cards */
+      .task-card.changed-hot {
+        border-left: 3px solid #ff6b6b; /* < 5 min - hot red */
+      }
+      .task-card.changed-warm {
+        border-left: 3px solid #ffa94d; /* < 30 min - warm orange */
+      }
+      .task-card.changed-cool {
+        border-left: 3px solid #ffe066; /* < 2 hr - cooling yellow */
+      }
+
+      /* Light theme adjustments for warmth */
+      :root.light .task-card.changed-hot {
+        border-left-color: #e03131;
+      }
+      :root.light .task-card.changed-warm {
+        border-left-color: #f76707;
+      }
+      :root.light .task-card.changed-cool {
+        border-left-color: #f59f00;
+      }
+
+      .task-badges {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+        justify-content: flex-end;
+      }
+
+      .task-title {
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+        margin-bottom: 8px;
+      }
+
+      .task-description {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .task-description:not(:empty) {
+        margin-top: 6px;
+        margin-bottom: 4px;
+      }
+
+      /* Progress rows for checkbox groups */
+      .task-progress {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 8px;
+      }
+
+      .progress-row {
+        position: relative;
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--text-secondary);
+        background: var(--bg-tertiary);
+        padding: 8px 8px 6px 8px;
+        border-radius: 6px;
+        line-height: 1.4;
+        overflow: hidden;
+      }
+
+      .progress-row .progress-count {
+        font-weight: 600;
+        font-size: 10px;
+        white-space: nowrap;
+        /* Color changes based on progress via inline style */
+      }
+
+      /* Progress count color classes - from red (0%) to green (100%) */
+      .progress-row .progress-count.progress-0 {
+        color: var(--text-muted);
+      }
+      .progress-row .progress-count.progress-25 {
+        color: #f87171;
+      }
+      .progress-row .progress-count.progress-50 {
+        color: #fbbf24;
+      }
+      .progress-row .progress-count.progress-75 {
+        color: #a3e635;
+      }
+      .progress-row .progress-count.progress-100 {
+        color: var(--column-done);
+      }
+
+      .progress-row .progress-label {
+        flex: 1;
+        color: var(--text-primary);
+      }
+
+      .progress-row .progress-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: transparent;
+      }
+
+      .progress-row .progress-bar-fill {
+        height: 100%;
+        background: rgba(160, 160, 160, 0.4);
+        transition: width 0.2s ease;
+      }
+
+      .progress-row .progress-bar-fill.complete {
+        background: rgba(160, 160, 160, 0.5);
+      }
+
+      /* Markdown rendered content */
+      .task-description h1,
+      .task-description h2,
+      .task-description h3 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 8px 0 4px 0;
+      }
+
+      .task-description h1:first-child,
+      .task-description h2:first-child,
+      .task-description h3:first-child {
+        margin-top: 0;
+      }
+
+      .task-description ul,
+      .task-description ol {
+        margin: 4px 0;
+        padding-left: 16px;
+      }
+
+      .task-description li {
+        margin: 2px 0;
+      }
+
+      .task-description code {
+        background: var(--bg-tertiary);
+        padding: 1px 4px;
+        border-radius: 3px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+      }
+
+      .task-description pre {
+        background: var(--bg-tertiary);
+        padding: 8px;
+        border-radius: 4px;
+        overflow-x: auto;
+        margin: 6px 0;
+      }
+
+      .task-description pre code {
+        padding: 0;
+        background: none;
+      }
+
+      .task-description strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      .task-description a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .task-description a:hover {
+        text-decoration: underline;
+      }
+
+      /* Interactive checkboxes - checklist style with good spacing */
+      .task-description .md-checkbox-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 6px 6px;
+        margin: 2px -6px;
+        border-radius: 4px;
+        transition: background 0.1s ease;
+      }
+
+      .task-description .md-checkbox-item:hover {
+        background: var(--bg-tertiary);
+      }
+
+      .task-description .md-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+        border: 2px solid var(--text-muted);
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1px;
+        transition: all 0.15s ease;
+        position: relative;
+      }
+
+      .task-description .md-checkbox:hover {
+        border-color: var(--accent);
+      }
+
+      .task-description .md-checkbox:checked {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .task-description .md-checkbox:checked::after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 1px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+
+      .task-description .md-checkbox-label {
+        cursor: pointer;
+        flex: 1;
+        line-height: 1.5;
+      }
+
+      .task-description .md-checkbox-label.checked {
+        text-decoration: line-through;
+        color: var(--text-muted);
+      }
+
+      /* Checkbox update animation */
+      .task-description .md-checkbox.checkbox-updated {
+        animation: checkboxPulse 0.5s ease;
+      }
+
+      @keyframes checkboxPulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(121, 174, 240, 0.6);
+        }
+        50% {
+          transform: scale(1.2);
+          box-shadow: 0 0 0 8px rgba(121, 174, 240, 0);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(121, 174, 240, 0);
+        }
+      }
+
+      /* Progress bar animation */
+      .progress-row .progress-bar-fill {
+        transition: width 0.3s ease-out;
+      }
+
+      .progress-row .progress-count {
+        transition: color 0.3s ease;
+      }
+
+      /* Regular list items */
+      .task-description .md-list-item {
+        padding: 2px 0;
+        padding-left: 4px;
+      }
+
+      .task-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .badge-priority-high {
+        background: rgba(255, 107, 107, 0.2);
+        color: var(--priority-high);
+      }
+      .badge-priority-medium {
+        background: rgba(255, 217, 61, 0.2);
+        color: var(--priority-medium);
+      }
+      .badge-priority-low {
+        background: rgba(107, 203, 119, 0.2);
+        color: var(--priority-low);
+      }
+
+      .badge-assignee {
+        background: rgba(121, 174, 240, 0.2);
+        color: var(--accent);
+      }
+
+      .badge-assignee.ai {
+        background: rgba(139, 92, 246, 0.2);
+        color: #a78bfa;
+      }
+
+      .badge-blocked {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+
+      .wip-count {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-weight: 400;
+        margin-left: 4px;
+      }
+
+      .wip-count.at-limit {
+        color: var(--priority-medium);
+      }
+
+      .wip-count.over-limit {
+        color: var(--priority-high);
+      }
+
+      .settings-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 4px;
+        color: var(--text-muted);
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .settings-btn:hover {
+        color: var(--text-primary);
+        background: var(--bg-tertiary);
+      }
+
+      .settings-modal {
+        max-width: 400px;
+      }
+
+      .settings-section {
+        margin-bottom: 20px;
+      }
+
+      .settings-section h3 {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+
+      .settings-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+      }
+
+      .settings-label {
+        font-size: 14px;
+        color: var(--text-primary);
+      }
+
+      .settings-hint {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .settings-input {
+        width: 80px;
+        padding: 6px 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .settings-toggle {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        background: var(--bg-tertiary);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .settings-toggle.active {
+        background: var(--accent);
+      }
+
+      .settings-toggle::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.2s;
+      }
+
+      .settings-toggle.active::after {
+        transform: translateX(20px);
+      }
+
+      /* Blocked task card styling */
+      .task-card.blocked {
+        opacity: 0.7;
+      }
+
+      .task-card.blocked::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        border: 1px dashed rgba(239, 68, 68, 0.4);
+        border-radius: inherit;
+      }
+
+      /* Dependency info in detail view */
+      .detail-dependencies {
+        margin-top: 12px;
+        padding: 12px;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+      }
+
+      .detail-dependencies h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .dependency-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .dependency-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .dependency-status {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+      }
+
+      .dependency-status.done {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--column-done);
+      }
+
+      .dependency-status.pending {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+
+      .dependency-title {
+        flex: 1;
+        color: var(--text-primary);
+      }
+
+      .dependency-column {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .dependency-remove {
+        width: 18px;
+        height: 18px;
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: all 0.15s;
+      }
+
+      .dependency-remove:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+
+      .dependency-add-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .dependency-select {
+        flex: 1;
+        padding: 6px 28px 6px 10px;
+        font-size: 12px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-primary);
+      }
+
+      .dependency-select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .dependency-add-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        background: var(--accent);
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .dependency-add-btn:hover {
+        background: var(--accent-hover);
+      }
+
+      .dependency-add-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Automation settings section in detail view */
+      .detail-automation {
+        margin-top: 12px;
+        padding: 12px;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+      }
+
+      .detail-automation h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .automation-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        font-size: 13px;
+      }
+
+      .automation-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .automation-row label {
+        flex: 1;
+        color: var(--text-secondary);
+      }
+
+      .automation-row select {
+        min-width: 120px;
+        padding: 4px 28px 4px 8px;
+        font-size: 12px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        color: var(--text-primary);
+      }
+
+      .automation-row input[type="number"] {
+        width: 70px;
+        padding: 4px 8px;
+        font-size: 12px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        color: var(--text-primary);
+      }
+
+      .automation-row input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* Toast notifications */
+      .toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .toast {
+        padding: 12px 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        font-size: 13px;
+        color: var(--text-primary);
+        animation: toastIn 0.3s ease-out;
+        max-width: 300px;
+      }
+
+      .toast.error {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      .toast.success {
+        border-color: var(--column-done);
+        background: rgba(16, 185, 129, 0.1);
+      }
+
+      .toast.fade-out {
+        animation: toastOut 0.3s ease-out forwards;
+      }
+
+      @keyframes toastIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes toastOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 4px;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+
+      .task-card:hover .task-actions {
+        opacity: 1;
+      }
+
+      .task-action {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .task-action:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+      }
+
+      .task-action.delete:hover {
+        color: var(--priority-high);
+      }
+
+      /* Hide footer when empty and no hover */
+      .task-footer:empty {
+        display: none;
+      }
+
+      .task-footer {
+        min-height: 20px;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-overlay.visible {
+        display: flex;
+      }
+
+      .modal {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        width: 90%;
+        max-width: 480px;
+        padding: 24px;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 20px;
+        padding: 4px;
+      }
+
+      .modal-close:hover {
+        color: var(--text-primary);
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--text-secondary);
+      }
+
+      .form-input,
+      .form-textarea,
+      .form-select {
+        width: 100%;
+        padding: 10px 12px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-family: inherit;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 12px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all 0.15s;
+      }
+
+      .btn-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+      }
+
+      .btn-secondary:hover {
+        background: #333;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #000;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-hover);
+      }
+
+      .btn-danger {
+        background: rgba(255, 107, 107, 0.2);
+        color: var(--priority-high);
+      }
+
+      .btn-danger:hover {
+        background: rgba(255, 107, 107, 0.3);
+      }
+
+      /* Automation Section */
+      .automation-section {
+        margin-top: 16px;
+        padding: 12px;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      .automation-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .automation-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .automation-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      .form-label-small {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      /* Comments */
+      .comments-section {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .comments-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .comments-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .comments-list {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-bottom: 12px;
+      }
+
+      .comment {
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+      }
+
+      .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .comment-author {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .comment-author.human {
+        background: rgba(121, 174, 240, 0.2);
+        color: var(--accent);
+      }
+
+      .comment-author.ai {
+        background: rgba(139, 92, 246, 0.2);
+        color: #a78bfa;
+      }
+
+      .comment-time {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .comment-content {
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+      }
+
+      .comment-input-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .comment-input {
+        flex: 1;
+        padding: 8px 12px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-primary);
+        font-size: 13px;
+        font-family: inherit;
+        resize: none;
+      }
+
+      .comment-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .btn-small {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .comment-count {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .comment-count::before {
+        content: "💬";
+        font-size: 10px;
+      }
+
+      .no-comments {
+        text-align: center;
+        padding: 16px;
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+
+      /* Empty state */
+      .empty-column {
+        text-align: center;
+        padding: 24px;
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #444;
+      }
+
+      /* Detail View Modal */
+      .detail-modal {
+        max-width: 640px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .detail-title-row {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .detail-title {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 0;
+        word-wrap: break-word;
+      }
+
+      .detail-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .detail-body {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 16px 12px 16px 0;
+      }
+
+      .detail-description {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-primary);
+        overflow-x: hidden;
+      }
+
+      .detail-description code {
+        word-break: break-word;
+      }
+
+      .detail-description:empty::before {
+        content: "No description";
+        color: var(--text-muted);
+        font-style: italic;
+      }
+
+      /* Detail view checkbox styling - larger for readability */
+      .detail-description .md-checkbox-item {
+        padding: 8px 8px;
+        margin: 4px -8px;
+      }
+
+      .detail-description .md-checkbox-item:hover {
+        background: var(--bg-tertiary);
+      }
+
+      .detail-description .md-checkbox {
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+      }
+
+      .detail-description .md-checkbox-label {
+        font-size: 14px;
+      }
+
+      /* Comments section in detail view */
+      .detail-comments-section {
+        margin-top: 12px;
+        padding: 12px;
+        background: var(--bg-tertiary);
+        border-radius: 8px;
+      }
+
+      .detail-comments-section h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .comments-list:empty::before {
+        content: "No comments yet";
+        color: var(--text-muted);
+        font-style: italic;
+        font-size: 13px;
+      }
+
+      .comment {
+        padding: 10px 12px;
+        background: var(--bg-tertiary);
+        border-radius: 6px;
+        font-size: 13px;
+      }
+
+      .comment.ai {
+        border-left: 3px solid var(--accent);
+      }
+
+      .comment.human {
+        border-left: 3px solid var(--column-done);
+      }
+
+      .comment-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .comment-author {
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+
+      .comment-content {
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .comment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .comment-form textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-family: inherit;
+        font-size: 13px;
+        resize: vertical;
+        min-height: 60px;
+      }
+
+      .comment-form textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .comment-form .btn {
+        align-self: flex-end;
+      }
+
+      .detail-description h1,
+      .detail-description h2,
+      .detail-description h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 16px 0 8px 0;
+      }
+
+      .detail-description h1:first-child,
+      .detail-description h2:first-child,
+      .detail-description h3:first-child {
+        margin-top: 0;
+      }
+
+      .detail-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .detail-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .detail-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .detail-column-select {
+        padding: 6px 10px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-primary);
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .detail-column-select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      /* Description section with edit toggle */
+      .detail-description-wrapper {
+        position: relative;
+      }
+
+      .detail-description-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+
+      .detail-description-header h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin: 0;
+      }
+
+      .edit-toggle-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.15s;
+      }
+
+      .edit-toggle-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+      }
+
+      .detail-description-edit {
+        display: none;
+        width: 100%;
+        min-height: 150px;
+        padding: 12px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-family: inherit;
+        line-height: 1.6;
+        resize: vertical;
+      }
+
+      .detail-description-edit:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .detail-description-wrapper.editing .detail-description {
+        display: none;
+      }
+
+      .detail-description-wrapper.editing .detail-description-edit {
+        display: block;
+      }
+
+      /* Make card clickable */
+      .task-card {
+        cursor: pointer;
+      }
+
+      .task-card .task-actions {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ===== Mobile Responsive Styles ===== */
+      @media (max-width: 768px) {
+        body {
+          padding: 12px;
+          height: calc(100vh - 24px);
+        }
+
+        .header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .board-header-left {
+          display: flex;
+          align-items: center;
+          width: 100%;
+        }
+
+        .board-title {
+          flex: 1;
+          max-width: none !important;
+          font-size: 18px;
+        }
+
+        .board-switcher {
+          margin-left: auto;
+        }
+
+        .stats {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px 16px;
+          font-size: 12px;
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .settings-btn {
+          margin-left: auto;
+        }
+
+        .search-container {
+          width: 100%;
+        }
+
+        .search-input {
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .column {
+          min-width: 280px;
+        }
+
+        .task-card {
+          padding: 10px;
+        }
+
+        .task-actions button {
+          min-width: 28px;
+          min-height: 28px;
+        }
+
+        /* Make settings button touch-friendly */
+        .settings-btn,
+        .add-task-btn,
+        .board-switcher-btn {
+          min-width: 44px;
+          min-height: 44px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 8px;
+          height: calc(100vh - 16px);
+        }
+
+        .header {
+          gap: 8px;
+          padding-bottom: 8px;
+          margin-bottom: 8px;
+        }
+
+        .board-title {
+          max-width: 140px;
+          font-size: 16px;
+        }
+
+        .stats {
+          font-size: 12px;
+          gap: 6px 12px;
+        }
+
+        .stat {
+          gap: 4px;
+        }
+
+        .column-header h2 {
+          font-size: 13px;
+        }
+
+        .column {
+          min-width: 260px;
+        }
+
+        .task-title {
+          font-size: 13px;
+        }
+
+        .task-context {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="board-header-left">
+        <h1
+          class="board-title"
+          id="board-title"
+          contenteditable="true"
+          spellcheck="false"
+          onclick="selectTitle()"
+          onblur="saveTitle()"
+          onkeydown="handleTitleKey(event)"
+        >
+          Loading...
+        </h1>
+        <div class="board-switcher">
+          <button
+            class="board-switcher-btn"
+            onclick="toggleBoardMenu()"
+            title="Switch board"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+          </button>
+          <div class="board-menu" id="board-menu">
+            <div class="board-menu-header">Switch Board</div>
+            <div class="board-menu-list" id="board-menu-list"></div>
+            <div class="board-menu-divider"></div>
+            <button
+              class="board-menu-item board-menu-new"
+              onclick="
+                showNewBoardModal();
+                closeBoardMenu();
+              "
+            >
+              <span>+ New Board</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="Search tasks..."
+          oninput="filterTasks(this.value)"
+        />
+        <span
+          class="search-clear"
+          id="search-clear"
+          onclick="clearSearch()"
+          style="display: none"
+          >&times;</span
+        >
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <span>Total:</span>
+          <span class="stat-value" id="stat-total">0</span>
+        </div>
+        <div class="stat">
+          <span>In Progress:</span>
+          <span class="stat-value" id="stat-progress">0</span>
+        </div>
+        <div class="stat">
+          <span>AI Tasks:</span>
+          <span class="stat-value" id="stat-ai">0</span>
+        </div>
+        <button
+          class="settings-btn"
+          onclick="openSettings()"
+          title="Board Settings"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <!-- Task Modal -->
+    <div class="modal-overlay" id="task-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-title">Add Task</h2>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <form id="task-form" onsubmit="saveTask(event)">
+          <input type="hidden" id="task-id" />
+          <input type="hidden" id="task-column" />
+
+          <div class="form-group">
+            <label class="form-label" for="task-title">Title *</label>
+            <input
+              type="text"
+              class="form-input"
+              id="task-title"
+              required
+              placeholder="Enter task title"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-description">Description</label>
+            <textarea
+              class="form-textarea"
+              id="task-description"
+              placeholder="Optional description"
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="task-priority">Priority</label>
+              <select class="form-select" id="task-priority">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="task-assignee">Assignee</label>
+              <select class="form-select" id="task-assignee">
+                <option value="">Unassigned</option>
+                <option value="human">Human</option>
+                <option value="ai">AI</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Automation Settings (only for Backlog cards) -->
+          <div
+            class="automation-section"
+            id="automation-section"
+            style="display: none"
+          >
+            <div class="automation-header">
+              <span class="automation-title">⚡ Automation</span>
+              <span class="automation-hint"
+                >Only applies when card is in Backlog</span
+              >
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label form-label-small" for="task-auto-pull"
+                  >Auto-Pull</label
+                >
+                <select class="form-select" id="task-auto-pull">
+                  <option value="">Never</option>
+                  <option value="1">When In Progress &lt; 1</option>
+                  <option value="2">When In Progress &lt; 2</option>
+                  <option value="3">
+                    When In Progress &lt; 3 (Recommended)
+                  </option>
+                  <option value="5">When In Progress &lt; 5</option>
+                  <option value="10">When In Progress &lt; 10</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label
+                  class="form-label form-label-small"
+                  for="task-auto-release"
+                  >Auto-Release</label
+                >
+                <select class="form-select" id="task-auto-release">
+                  <option value="">Never</option>
+                  <option value="15">Every 15 minutes</option>
+                  <option value="30">Every 30 minutes</option>
+                  <option value="60">Every hour</option>
+                  <option value="120">Every 2 hours</option>
+                  <option value="240">Every 4 hours</option>
+                  <option value="1440">Every day</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comments Section (only shown when editing) -->
+          <div
+            class="comments-section"
+            id="comments-section"
+            style="display: none"
+          >
+            <div class="comments-header">
+              <span class="comments-title">Comments</span>
+            </div>
+            <div class="comments-list" id="comments-list"></div>
+            <div class="comment-input-row">
+              <textarea
+                class="comment-input"
+                id="comment-input"
+                rows="2"
+                placeholder="Add a comment..."
+              ></textarea>
+              <button
+                type="button"
+                class="btn btn-secondary btn-small"
+                onclick="addComment()"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="delete-btn"
+              style="display: none; margin-right: auto"
+              onclick="deleteTask()"
+            >
+              Delete
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Board Modal -->
+    <div class="modal-overlay" id="new-board-modal">
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-header">
+          <h2 class="modal-title">Create New Board</h2>
+          <button class="modal-close" onclick="closeNewBoardModal()">
+            &times;
+          </button>
+        </div>
+        <form id="new-board-form" onsubmit="createNewBoard(event)">
+          <div class="form-group">
+            <label class="form-label" for="new-board-name">Board Name *</label>
+            <input
+              type="text"
+              class="form-input"
+              id="new-board-name"
+              required
+              placeholder="e.g., my-project"
+              pattern="[a-zA-Z0-9-_]+"
+              title="Only letters, numbers, hyphens and underscores allowed"
+            />
+            <small
+              style="
+                color: var(--text-muted);
+                font-size: 12px;
+                margin-top: 4px;
+                display: block;
+              "
+              >Only letters, numbers, hyphens and underscores</small
+            >
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeNewBoardModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Create Board</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+      <div class="modal settings-modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Board Settings</h2>
+          <button class="modal-close" onclick="closeSettings()">&times;</button>
+        </div>
+        <div class="settings-section">
+          <h3>WIP Limits</h3>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Enable WIP Limit</div>
+              <div class="settings-hint">Limit cards in "In Progress"</div>
+            </div>
+            <div
+              class="settings-toggle"
+              id="settings-wip-enabled"
+              onclick="toggleSetting('wip-enabled')"
+            ></div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">WIP Limit</div>
+              <div class="settings-hint">Max cards in progress</div>
+            </div>
+            <input
+              type="number"
+              class="settings-input"
+              id="settings-wip-limit"
+              min="1"
+              max="20"
+              value="10"
+            />
+          </div>
+        </div>
+        <div class="settings-section">
+          <h3>Automation</h3>
+          <div class="settings-info">
+            <p
+              style="
+                font-size: 12px;
+                color: var(--text-muted);
+                margin: 0 0 12px 0;
+              "
+            >
+              ⚡ Auto-pull is now <strong>card-specific</strong>. Edit a Backlog
+              card to set its auto-pull threshold.
+            </p>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Morning Pull Count</div>
+              <div class="settings-hint">Cards to pull from Backlog daily</div>
+            </div>
+            <input
+              type="number"
+              class="settings-input"
+              id="settings-morning-pull"
+              min="0"
+              max="10"
+              value="3"
+            />
+          </div>
+          <div class="settings-row">
+            <div>
+              <div class="settings-label">Stale Task Days</div>
+              <div class="settings-hint">Move inactive tasks to Backlog</div>
+            </div>
+            <input
+              type="number"
+              class="settings-input"
+              id="settings-stale-days"
+              min="1"
+              max="30"
+              value="7"
+            />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="closeSettings()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="saveSettings()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay" id="confirm-modal">
+      <div class="modal" style="max-width: 360px">
+        <div class="modal-header">
+          <h2 class="modal-title">Delete Task</h2>
+          <button class="modal-close" onclick="closeConfirmModal()">
+            &times;
+          </button>
+        </div>
+        <p style="color: var(--text-secondary); margin: 0 0 20px 0">
+          Are you sure you want to delete this task? This action cannot be
+          undone.
+        </p>
+        <div class="modal-actions" style="justify-content: flex-end">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="closeConfirmModal()"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail View Modal -->
+    <div class="modal-overlay" id="detail-modal">
+      <div class="modal detail-modal">
+        <div class="detail-header">
+          <div class="detail-title-row">
+            <h2 class="detail-title" id="detail-title"></h2>
+            <div class="detail-meta">
+              <span class="badge" id="detail-priority"></span>
+              <span
+                class="badge badge-assignee"
+                id="detail-assignee"
+                style="display: none"
+              ></span>
+              <span
+                class="badge badge-blocked"
+                id="detail-blocked"
+                style="display: none"
+                >🔒 Blocked</span
+              >
+              <span
+                class="comment-count"
+                id="detail-comments"
+                style="display: none"
+              ></span>
+            </div>
+          </div>
+          <button class="modal-close" onclick="closeDetailView()">
+            &times;
+          </button>
+        </div>
+        <div class="detail-body">
+          <div
+            class="detail-description-wrapper"
+            id="detail-description-wrapper"
+          >
+            <div class="detail-description-header">
+              <h4>Description</h4>
+              <button
+                class="edit-toggle-btn"
+                onclick="toggleDescriptionEdit()"
+                title="Edit description"
+              >
+                ✏️
+              </button>
+            </div>
+            <div
+              class="detail-description task-description"
+              id="detail-description"
+            ></div>
+            <textarea
+              class="detail-description-edit"
+              id="detail-description-edit"
+              placeholder="Add a description..."
+            ></textarea>
+          </div>
+          <div class="detail-comments-section" id="detail-comments-section">
+            <h4>Comments</h4>
+            <div class="comments-list" id="detail-comments-list"></div>
+            <div class="comment-form">
+              <textarea
+                id="new-comment"
+                placeholder="Add a comment..."
+                rows="2"
+              ></textarea>
+              <button class="btn btn-primary" onclick="addCommentFromDetail()">
+                Add Comment
+              </button>
+            </div>
+          </div>
+          <div class="detail-dependencies" id="detail-dependencies">
+            <h4>Dependencies</h4>
+            <div class="dependency-list" id="dependency-list"></div>
+            <div class="dependency-add-row">
+              <select class="dependency-select" id="dependency-select">
+                <option value="">Add dependency...</option>
+              </select>
+              <button class="dependency-add-btn" onclick="addDependency()">
+                Add
+              </button>
+            </div>
+          </div>
+          <div class="detail-automation" id="detail-automation">
+            <h4>Automation</h4>
+            <div class="automation-row">
+              <label>Auto-pull when In Progress &lt;</label>
+              <input
+                type="number"
+                id="auto-pull-threshold"
+                min="0"
+                max="10"
+                value="0"
+              />
+            </div>
+            <div class="automation-row">
+              <label>Schedule move to</label>
+              <select id="scheduled-column">
+                <option value="">Don't schedule</option>
+              </select>
+              <select id="scheduled-time">
+                <option value="">Select time</option>
+                <option value="15">in 15 min</option>
+                <option value="30">in 30 min</option>
+                <option value="60">in 1 hour</option>
+                <option value="120">in 2 hours</option>
+                <option value="480">in 8 hours</option>
+                <option value="1440">tomorrow</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="detail-footer">
+          <div class="detail-footer-left">
+            <select class="detail-column-select" id="detail-column"></select>
+            <button class="btn btn-danger" onclick="deleteFromDetail()">
+              Delete
+            </button>
+          </div>
+          <div class="detail-actions">
+            <button class="btn btn-secondary" onclick="cancelDetailChanges()">
+              Cancel
+            </button>
+            <button class="btn btn-primary" onclick="saveDetailChanges()">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Runtime error reporting - catches JS errors and reports back to AI/developer
+      const jsErrors = [];
+      window.onerror = (message, source, line, col, error) => {
+        const errorInfo = {
+          message: String(message),
+          source: source?.replace(window.location.origin, ""),
+          line,
+          col,
+          stack: error?.stack,
+          timestamp: new Date().toISOString(),
+        };
+        jsErrors.push(errorInfo);
+        console.error("[Kanban UI Error]", errorInfo);
+
+        // Report to parent (Beam) for logging - skip in MCP Apps context
+        if (!window.__MCP_APPS_CONTEXT__) {
+          window.parent.postMessage(
+            {
+              type: "photon:js-error",
+              photon: "kanban",
+              error: errorInfo,
+            },
+            "*",
+          );
+        }
+
+        // Also try to report via MCP if available
+        if (window.photon) {
+          window.photon
+            .invoke("reportError", {
+              board: currentInstanceName,
+              error: errorInfo,
+            })
+            .catch(() => {}); // Ignore if method doesn't exist
+        }
+      };
+
+      // Board state
+      let board = window.__PHOTON_DATA__ || { columns: [], tasks: [] };
+      let currentInstanceName = board.name || "default";
+      let draggedTask = null;
+      let autoMode = false;
+      let autoModeInterval = null;
+      const AUTO_MODE_POLL_MS = 10000;
+      const BOARD_PREF_KEY = "kanban:selectedBoard";
+
+      // WIP and auto-pull state (fetched from getConfig/getStats)
+      let wipLimit = 3;
+      let wipEnabled = false;
+      let autoPullEnabled = false;
+      let morningPullCount = 3;
+      let staleTaskDays = 7;
+
+      // Event replay tracking for reliable real-time sync
+      // When we reconnect, we send lastEventId so server can replay missed events
+      let lastEventId = null;
+
+      // Notify parent about which board we're viewing (for on-demand subscriptions)
+      // Parent will use photonId from selected photon, we just provide the itemId
+      // Includes lastEventId for replay of missed events on reconnect
+      // Note: Skip in MCP Apps context (Claude Desktop) - only needed for Beam
+      function notifyViewingBoard() {
+        if (window.__MCP_APPS_CONTEXT__) return;
+        window.parent.postMessage(
+          {
+            type: "photon:viewing",
+            itemId: currentInstanceName,
+            lastEventId: lastEventId,
+          },
+          "*",
+        );
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", async () => {
+        renderBoard();
+        updateStats();
+        await loadInstancesAndRestore();
+        await fetchWipConfig();
+      });
+
+      // Listen for MCP Apps tool result (data arrives after DOMContentLoaded in Claude Desktop)
+      window.addEventListener("photon:data-ready", (e) => {
+        const data = e.detail;
+        if (data && (data.columns || data.tasks || data.name)) {
+          board = data;
+          currentInstanceName = data.name || currentInstanceName;
+          const titleEl = document.getElementById("board-title");
+          const savedTitle = localStorage.getItem(
+            `kanban:title:${currentInstanceName}`,
+          );
+          titleEl.textContent = savedTitle || currentInstanceName;
+          renderBoard();
+          updateStats();
+          notifyViewingBoard();
+        }
+      });
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // Real-time event handling via unified bridge API (works in Beam AND Claude Desktop)
+      // ═══════════════════════════════════════════════════════════════════════════
+
+      // Set up event listeners once window.photon is available
+      function setupPhotonEventListeners() {
+        if (!window.photon) {
+          // Retry after a short delay (bridge may not be loaded yet)
+          setTimeout(setupPhotonEventListeners, 100);
+          return;
+        }
+
+        // Theme changes via unified API
+        window.photon.onThemeChange((theme) => {
+          if (theme === "light") {
+            document.documentElement.classList.add("light");
+          } else {
+            document.documentElement.classList.remove("light");
+          }
+        });
+
+        // All emit events via unified API (channel events, board updates, status)
+        window.photon.onEmit(async (params) => {
+          if (!params) return;
+
+          // Handle channel events (task-moved, task-updated, etc.) - apply delta directly
+          if (params.channel && params.event) {
+            const { channel, event: eventType, data, _eventId } = params;
+            // Track last received event ID for replay on reconnect
+            if (
+              _eventId !== undefined &&
+              (_eventId > lastEventId || lastEventId === null)
+            ) {
+              lastEventId = _eventId;
+            }
+            // Extract board name from channel (e.g., "kanban:photon" -> "photon")
+            const boardName = channel?.split(":")[1];
+            if (boardName === currentInstanceName && data) {
+              applyBoardEvent(eventType, data);
+            }
+            return;
+          }
+
+          // Handle board-update (general refresh signal)
+          if (params.emit === "board-update") {
+            const updatedBoard = params.board;
+            // Skip if we have a pending move operation (our own event echoing back)
+            if (pendingMoveOperation) {
+              return;
+            }
+            // In auto mode, follow the board that just had activity
+            if (
+              autoMode &&
+              updatedBoard &&
+              updatedBoard !== currentInstanceName
+            ) {
+              await switchToInstance(updatedBoard);
+              return;
+            }
+            // Refresh current board if it matches or we're in auto mode
+            if (autoMode || updatedBoard === currentInstanceName) {
+              await refreshCurrentBoard();
+            }
+            return;
+          }
+
+          // Handle refresh-needed signal (lastEventId was too old, full sync required)
+          if (params.emit === "refresh-needed") {
+            console.log(
+              "📡 Refresh needed - lastEventId too old, reloading board",
+            );
+            lastEventId = null; // Reset so we start fresh
+            await refreshCurrentBoard();
+          }
+        });
+
+        console.log(
+          "📡 Kanban: Real-time event listeners registered via window.photon API",
+        );
+      }
+
+      // Initialize event listeners
+      setupPhotonEventListeners();
+
+      // Apply a specific event to the local board state (event sourcing)
+      async function applyBoardEvent(eventType, data) {
+        switch (eventType) {
+          case "task-created":
+            if (
+              data.task &&
+              !board.tasks.find((t) => t.id === data.task.id) &&
+              pendingOptimisticIds.size === 0
+            ) {
+              board.tasks.push(data.task);
+              renderBoard();
+              updateStats();
+              // Add flash animation to new card
+              highlightCard(data.task.id, "just-created");
+            }
+            break;
+
+          case "task-moved":
+          case "task-reordered":
+            // Skip refresh if this task was just moved locally (prevents race condition)
+            const taskId = data.task?.id;
+            const movedTime = recentlyMovedTasks.get(taskId);
+            if (movedTime && Date.now() - movedTime < 1500) {
+              // This is our own event echoing back - just highlight, don't refresh
+              highlightCard(taskId, "just-updated");
+            } else {
+              // External change - full refresh needed
+              await refreshCurrentBoard();
+              highlightCard(taskId, "just-updated");
+            }
+            break;
+
+          case "task-updated":
+            if (data.task) {
+              const idx = board.tasks.findIndex((t) => t.id === data.task.id);
+              if (idx !== -1) {
+                board.tasks[idx] = { ...board.tasks[idx], ...data.task };
+                renderBoard();
+                updateStats();
+                // Add highlight animation to updated card
+                highlightCard(data.task.id, "just-updated");
+              }
+            }
+            break;
+
+          case "task-deleted":
+            if (data.taskId) {
+              const idx = board.tasks.findIndex((t) => t.id === data.taskId);
+              if (idx !== -1) {
+                board.tasks.splice(idx, 1);
+                renderBoard();
+                updateStats();
+              }
+            }
+            break;
+
+          case "comment-added":
+            if (data.taskId && data.comment) {
+              const task = board.tasks.find((t) => t.id === data.taskId);
+              if (task) {
+                if (!task.comments) task.comments = [];
+                // Only add if not already present (avoid duplicates)
+                if (!task.comments.find((c) => c.id === data.comment.id)) {
+                  task.comments.push(data.comment);
+                  renderBoard();
+                  highlightCard(data.taskId, "just-updated");
+                  // Update detail modal if open for this task
+                  if (currentDetailTaskId === data.taskId) {
+                    renderDetailComments(task.comments);
+                    const commentsEl =
+                      document.getElementById("detail-comments");
+                    commentsEl.textContent = task.comments.length;
+                    commentsEl.style.display = "";
+                  }
+                }
+              }
+            }
+            break;
+
+          default:
+            // Unknown event type - refresh to be safe
+            refreshCurrentBoard();
+        }
+      }
+
+      // Track heat timers for cleanup
+      const heatTimers = new Map();
+
+      // Highlight a card with animation and persistent heat display
+      // Heat fades over ~60 seconds: high (0-20s) → medium (20-40s) → low (40-60s) → none
+      function highlightCard(taskId, animationClass) {
+        requestAnimationFrame(() => {
+          const card = document.querySelector(`[data-task-id="${taskId}"]`);
+          if (!card) return;
+
+          // Clear any existing heat timers for this card
+          const existingTimers = heatTimers.get(taskId);
+          if (existingTimers) {
+            existingTimers.forEach((t) => clearTimeout(t));
+          }
+
+          // Brief flash animation to attract attention
+          card.classList.add(animationClass);
+          card.addEventListener(
+            "animationend",
+            () => {
+              card.classList.remove(animationClass);
+            },
+            { once: true },
+          );
+
+          // Apply heat-high immediately
+          card.classList.remove("heat-medium", "heat-low");
+          card.classList.add("heat-high");
+
+          // Set up heat decay timers
+          const timers = [];
+
+          // After 20s: transition to medium
+          timers.push(
+            setTimeout(() => {
+              const c = document.querySelector(`[data-task-id="${taskId}"]`);
+              if (c) {
+                c.classList.remove("heat-high");
+                c.classList.add("heat-medium");
+              }
+            }, 20000),
+          );
+
+          // After 40s: transition to low
+          timers.push(
+            setTimeout(() => {
+              const c = document.querySelector(`[data-task-id="${taskId}"]`);
+              if (c) {
+                c.classList.remove("heat-medium");
+                c.classList.add("heat-low");
+              }
+            }, 40000),
+          );
+
+          // After 60s: remove heat entirely
+          timers.push(
+            setTimeout(() => {
+              const c = document.querySelector(`[data-task-id="${taskId}"]`);
+              if (c) {
+                c.classList.remove("heat-low");
+              }
+              heatTimers.delete(taskId);
+            }, 60000),
+          );
+
+          heatTimers.set(taskId, timers);
+        });
+      }
+
+      async function refreshCurrentBoard() {
+        if (!window.photon) return;
+        try {
+          const fullBoard = await window.photon.invoke("board", {});
+          board = fullBoard;
+          currentInstanceName = board.name || currentInstanceName;
+          renderBoard();
+          updateStats();
+          await loadInstanceList();
+
+          // Update detail modal if it's open
+          if (currentDetailTaskId) {
+            updateDetailModal(currentDetailTaskId);
+          }
+        } catch (err) {
+          console.error("Failed to refresh board:", err);
+        }
+      }
+
+      // Update the detail modal content without closing it
+      function updateDetailModal(taskId) {
+        const task = board.tasks.find((t) => t.id === taskId);
+        if (!task) {
+          closeDetailView();
+          return;
+        }
+
+        // Update title
+        document.getElementById("detail-title").textContent = task.title;
+
+        // Update priority badge
+        const priorityEl = document.getElementById("detail-priority");
+        priorityEl.textContent = task.priority;
+        priorityEl.className = `badge badge-priority-${task.priority}`;
+
+        // Update assignee badge
+        const assigneeEl = document.getElementById("detail-assignee");
+        if (task.assignee) {
+          assigneeEl.textContent = task.assignee;
+          assigneeEl.className = `badge badge-assignee ${task.assignee === "ai" ? "ai" : ""}`;
+          assigneeEl.style.display = "";
+        } else {
+          assigneeEl.style.display = "none";
+        }
+
+        // Update comment count
+        const commentsEl = document.getElementById("detail-comments");
+        const commentCount = task.comments?.length || 0;
+        if (commentCount > 0) {
+          commentsEl.textContent = commentCount;
+          commentsEl.style.display = "";
+        } else {
+          commentsEl.style.display = "none";
+        }
+
+        // Update description with animated checkbox transitions
+        const descContainer = document.getElementById("detail-description");
+        const newHtml = renderMarkdown(task.description || "", taskId);
+
+        // Animate checkbox changes
+        const oldCheckboxes = descContainer.querySelectorAll(".md-checkbox");
+        const oldStates = new Map();
+        oldCheckboxes.forEach((cb, idx) => oldStates.set(idx, cb.checked));
+
+        descContainer.innerHTML = newHtml;
+
+        // Apply animation to changed checkboxes
+        const newCheckboxes = descContainer.querySelectorAll(".md-checkbox");
+        newCheckboxes.forEach((cb, idx) => {
+          if (oldStates.has(idx) && oldStates.get(idx) !== cb.checked) {
+            cb.classList.add("checkbox-updated");
+            setTimeout(() => cb.classList.remove("checkbox-updated"), 500);
+          }
+        });
+
+        // Update column select
+        const columnSelect = document.getElementById("detail-column");
+        columnSelect.value = task.column;
+      }
+
+      // Title editing functions
+      function selectTitle() {
+        const titleEl = document.getElementById("board-title");
+        const range = document.createRange();
+        range.selectNodeContents(titleEl);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+
+      function saveTitle() {
+        const titleEl = document.getElementById("board-title");
+        const newTitle = titleEl.textContent.trim();
+        if (newTitle) {
+          localStorage.setItem(`kanban:title:${currentInstanceName}`, newTitle);
+        } else {
+          // Reset to board name if empty
+          titleEl.textContent = currentInstanceName;
+          localStorage.removeItem(`kanban:title:${currentInstanceName}`);
+        }
+      }
+
+      function handleTitleKey(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          document.getElementById("board-title").blur();
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          // Restore saved title
+          const savedTitle = localStorage.getItem(
+            `kanban:title:${currentInstanceName}`,
+          );
+          document.getElementById("board-title").textContent =
+            savedTitle || currentInstanceName;
+          document.getElementById("board-title").blur();
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // Board/Instance switching (uses Photon runtime _instances / _use)
+      // ═══════════════════════════════════════════════════════════════════════════
+
+      // Load instances and restore saved preference (or default to Auto)
+      async function loadInstancesAndRestore() {
+        if (!window.photon) return;
+        try {
+          const result = await window.photon.invoke("_instances", {});
+          const instances = result.instances || ["default"];
+          const current = result.current || "default";
+          const autoInstance = result.autoInstance || "default";
+          currentInstanceName = current;
+
+          const savedBoard = localStorage.getItem(BOARD_PREF_KEY);
+          const useAutoMode = !savedBoard || savedBoard === "__auto__";
+
+          if (useAutoMode) {
+            autoMode = true;
+            // Switch to the most recently modified board
+            if (autoInstance !== currentInstanceName) {
+              await switchToInstance(autoInstance);
+            }
+          } else if (instances.includes(savedBoard)) {
+            // Saved instance exists, switch to it
+            await switchToInstance(savedBoard);
+          } else {
+            // Saved instance no longer exists, fall back to auto
+            localStorage.removeItem(BOARD_PREF_KEY);
+            autoMode = true;
+          }
+
+          updateBoardMenu(instances);
+          updateTitleFromInstance();
+        } catch (err) {
+          console.error("Failed to load instances:", err);
+        }
+      }
+
+      // Load instance list and update menu
+      async function loadInstanceList() {
+        if (!window.photon) return;
+        try {
+          const result = await window.photon.invoke("_instances", {});
+          const instances = result.instances || ["default"];
+          updateBoardMenu(instances);
+        } catch (err) {
+          console.error("Failed to load instances:", err);
+        }
+      }
+
+      // Update board menu with list of instances
+      function updateBoardMenu(instances) {
+        const menuList = document.getElementById("board-menu-list");
+        updateTitleFromInstance();
+
+        let html = `
+        <button class="board-menu-item board-menu-auto ${autoMode ? "active" : ""}" onclick="selectAutoMode(); closeBoardMenu();">
+          <span>🔄 Auto${autoMode ? ` (${currentInstanceName})` : ""}</span>
+        </button>
+      `;
+
+        instances.forEach((name) => {
+          const isActive = !autoMode && name === currentInstanceName;
+          html += `
+          <button class="board-menu-item ${isActive ? "active" : ""}" onclick="selectInstance('${name}'); closeBoardMenu();">
+            <span>${name}</span>
+          </button>
+        `;
+        });
+
+        menuList.innerHTML = html;
+      }
+
+      function updateTitleFromInstance() {
+        const titleEl = document.getElementById("board-title");
+        const savedTitle = localStorage.getItem(
+          `kanban:title:${currentInstanceName}`,
+        );
+        titleEl.textContent = savedTitle || currentInstanceName;
+      }
+
+      // Toggle board menu visibility
+      function toggleBoardMenu() {
+        const menu = document.getElementById("board-menu");
+        const btn = document.querySelector(".board-switcher-btn");
+        const isVisible = menu.classList.toggle("visible");
+        btn.setAttribute("aria-expanded", isVisible);
+
+        if (isVisible) {
+          const btnRect = btn.getBoundingClientRect();
+          const menuWidth = Math.max(220, menu.offsetWidth);
+          if (btnRect.left + menuWidth > window.innerWidth) {
+            menu.style.left = "auto";
+            menu.style.right = "0";
+          } else {
+            menu.style.left = "0";
+            menu.style.right = "auto";
+          }
+        }
+      }
+
+      function closeBoardMenu() {
+        const menu = document.getElementById("board-menu");
+        const btn = document.querySelector(".board-switcher-btn");
+        menu.classList.remove("visible");
+        btn?.setAttribute("aria-expanded", "false");
+      }
+
+      // Switch to a specific instance using _use
+      async function switchToInstance(name) {
+        if (!window.photon) return;
+        try {
+          await window.photon.invoke("_use", { name: name });
+          currentInstanceName = name;
+          // Reload the board for the new instance
+          const fullBoard = await window.photon.invoke("board", {});
+          board = fullBoard;
+          notifyViewingBoard();
+          renderBoard();
+          updateStats();
+          await loadInstanceList();
+          await fetchWipConfig();
+        } catch (err) {
+          console.error("Failed to switch instance:", err);
+        }
+      }
+
+      // Select a specific instance (manual mode)
+      async function selectInstance(name) {
+        autoMode = false;
+        localStorage.setItem(BOARD_PREF_KEY, name);
+        if (name !== currentInstanceName) {
+          await switchToInstance(name);
+        }
+        await loadInstanceList();
+      }
+
+      // Enable auto mode
+      async function selectAutoMode() {
+        autoMode = true;
+        localStorage.setItem(BOARD_PREF_KEY, "__auto__");
+        // Fetch instances to determine the most recently updated board
+        if (window.photon) {
+          try {
+            const result = await window.photon.invoke("_instances", {});
+            const autoInstance = result.autoInstance || "default";
+            if (autoInstance !== currentInstanceName) {
+              await switchToInstance(autoInstance);
+            }
+          } catch (err) {
+            console.error("Failed to resolve auto instance:", err);
+          }
+        }
+        await loadInstanceList();
+      }
+
+      // New board modal
+      function showNewBoardModal() {
+        document.getElementById("new-board-modal").classList.add("visible");
+        document.getElementById("new-board-name").focus();
+      }
+
+      function closeNewBoardModal() {
+        document.getElementById("new-board-modal").classList.remove("visible");
+        document.getElementById("new-board-form").reset();
+      }
+
+      async function createNewBoard(e) {
+        e.preventDefault();
+        const name = document.getElementById("new-board-name").value.trim();
+        if (!name || !window.photon) return;
+
+        try {
+          // _use with a new name creates the instance
+          await window.photon.invoke("_use", { name: name });
+          currentInstanceName = name;
+          autoMode = false;
+          localStorage.setItem(BOARD_PREF_KEY, name);
+          closeNewBoardModal();
+
+          // Load the new (empty) board
+          const fullBoard = await window.photon.invoke("board", {});
+          board = fullBoard;
+          notifyViewingBoard();
+          renderBoard();
+          updateStats();
+          await loadInstanceList();
+        } catch (err) {
+          console.error("Failed to create new board:", err);
+          alert("Failed to create board: " + err.message);
+        }
+      }
+
+      // Render the entire board
+      function renderBoard() {
+        const boardEl = document.getElementById("board");
+        boardEl.innerHTML = "";
+
+        board.columns.forEach((column) => {
+          const columnEl = createColumn(column);
+          boardEl.appendChild(columnEl);
+        });
+
+        // Reapply search filter if active
+        if (currentSearchQuery) {
+          filterTasks(currentSearchQuery);
+        }
+      }
+
+      // Create a column element
+      function createColumn(columnName) {
+        const tasks = board.tasks.filter((t) => t.column === columnName);
+
+        const columnEl = document.createElement("div");
+        columnEl.className = "column";
+        columnEl.dataset.column = columnName;
+
+        // WIP indicator for In Progress column
+        let wipHtml = "";
+        if (columnName === "In Progress" && wipEnabled) {
+          const wipClass =
+            tasks.length >= wipLimit
+              ? tasks.length > wipLimit
+                ? "over-limit"
+                : "at-limit"
+              : "";
+          wipHtml = `<span class="wip-count ${wipClass}">(${tasks.length}/${wipLimit})</span>`;
+        }
+
+        columnEl.innerHTML = `
+        <div class="column-header">
+          <div class="column-title">
+            <span class="column-dot"></span>
+            ${columnName}
+            <span class="column-count">${tasks.length}</span>
+            ${wipHtml}
+          </div>
+          <button class="add-task-btn" onclick="openAddTask('${columnName}')" title="Add task">+</button>
+        </div>
+        <div class="column-tasks"
+             ondragover="handleDragOver(event)"
+             ondragleave="handleDragLeave(event)"
+             ondrop="handleDrop(event, '${columnName}')">
+          ${tasks.length === 0 ? '<div class="empty-column">No tasks</div>' : ""}
+        </div>
+      `;
+
+        const tasksContainer = columnEl.querySelector(".column-tasks");
+        // Render in stored order (reorderTask handles positioning)
+        tasks.forEach((task) => {
+          tasksContainer.appendChild(createTaskCard(task));
+        });
+
+        return columnEl;
+      }
+
+      // Parse checkbox groups from description for compact card view
+      function parseCheckboxGroups(text) {
+        if (!text) return [];
+
+        const groups = [];
+        const lines = text.split("\n");
+        let currentGroup = null;
+
+        for (const line of lines) {
+          // Check for header (## or ###) - starts a new group
+          const headerMatch = line.match(/^#{1,3}\s+(.+)$/);
+          if (headerMatch) {
+            if (currentGroup && currentGroup.total > 0) {
+              groups.push(currentGroup);
+            }
+            currentGroup = {
+              label: headerMatch[1].trim(),
+              checked: 0,
+              total: 0,
+            };
+            continue;
+          }
+
+          // Check for checkbox
+          const checkboxMatch = line.match(/^(\s*)- \[([ xX])\]/);
+          if (checkboxMatch) {
+            // If no current group, create a default one
+            if (!currentGroup) {
+              currentGroup = { label: "Tasks", checked: 0, total: 0 };
+            }
+            currentGroup.total++;
+            if (checkboxMatch[2].toLowerCase() === "x") {
+              currentGroup.checked++;
+            }
+          }
+        }
+
+        // Push the last group
+        if (currentGroup && currentGroup.total > 0) {
+          groups.push(currentGroup);
+        }
+
+        return groups;
+      }
+
+      // Simple markdown renderer with interactive checkboxes
+      function renderMarkdown(text, taskId) {
+        if (!text) return "";
+
+        // Handle fenced code blocks BEFORE escaping (preserve content as-is)
+        const codeBlocks = [];
+        let processed = text.replace(
+          /```(\w*)\n?([\s\S]*?)```/g,
+          (match, lang, code) => {
+            const idx = codeBlocks.length;
+            codeBlocks.push({ lang, code: code.trim() });
+            return `__CODE_BLOCK_${idx}__`;
+          },
+        );
+
+        let html = escapeHtml(processed);
+
+        // Restore code blocks with proper formatting
+        codeBlocks.forEach((block, idx) => {
+          const escapedCode = escapeHtml(block.code);
+          const langClass = block.lang ? ` data-lang="${block.lang}"` : "";
+          html = html.replace(
+            `__CODE_BLOCK_${idx}__`,
+            `<pre class="code-block"${langClass}><code>${escapedCode}</code></pre>`,
+          );
+        });
+
+        // Convert checkboxes: - [ ] and - [x]
+        // We'll use a unique index for each checkbox to track them
+        let checkboxIndex = 0;
+        html = html.replace(
+          /^(\s*)- \[([ xX])\] (.*)$/gm,
+          (match, indent, checked, label) => {
+            const isChecked = checked.toLowerCase() === "x";
+            const idx = checkboxIndex++;
+            return `<div class="md-checkbox-item"><input type="checkbox" class="md-checkbox" data-task-id="${taskId}" data-checkbox-idx="${idx}" ${isChecked ? "checked" : ""} onclick="handleCheckboxToggle(event, '${taskId}', ${idx})"><span class="md-checkbox-label ${isChecked ? "checked" : ""}">${label}</span></div>`;
+          },
+        );
+
+        // Convert regular list items: - item (not checkboxes)
+        html = html.replace(
+          /^- (?!\[)(.*)$/gm,
+          '<div class="md-list-item">• $1</div>',
+        );
+
+        // Headers (## and ###)
+        html = html.replace(/^### (.*)$/gm, "<h3>$1</h3>");
+        html = html.replace(/^## (.*)$/gm, "<h2>$1</h2>");
+        html = html.replace(/^# (.*)$/gm, "<h1>$1</h1>");
+
+        // Bold **text** or __text__
+        html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        html = html.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+
+        // Italic *text* or _text_
+        html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+        html = html.replace(/_([^_]+)_/g, "<em>$1</em>");
+
+        // Inline code `code`
+        html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+        // Links [text](url)
+        html = html.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          '<a href="$2" target="_blank" onclick="event.stopPropagation()">$1</a>',
+        );
+
+        // Line breaks - but not after block elements
+        html = html.replace(/(<\/div>|<\/h[123]>)\n/g, "$1");
+        html = html.replace(/\n/g, "<br>");
+
+        return html;
+      }
+
+      // Handle checkbox toggle - update task description
+      async function handleCheckboxToggle(event, taskId, checkboxIdx) {
+        event.stopPropagation(); // Prevent card drag
+
+        const task = board.tasks.find((t) => t.id === taskId);
+        if (!task || !task.description) return;
+
+        // Find and toggle the checkbox in the raw description
+        let idx = 0;
+        const newDescription = task.description.replace(
+          /^(\s*)- \[([ xX])\] (.*)$/gm,
+          (match, indent, checked, label) => {
+            if (idx === checkboxIdx) {
+              idx++;
+              const newChecked = checked === " " ? "x" : " ";
+              return `${indent}- [${newChecked}] ${label}`;
+            }
+            idx++;
+            return match;
+          },
+        );
+
+        // Update local state
+        task.description = newDescription;
+
+        // Update the label styling immediately
+        const checkbox = event.target;
+        const label = checkbox.nextElementSibling;
+        if (label) {
+          label.classList.toggle("checked", checkbox.checked);
+        }
+
+        // Persist via MCP
+        try {
+          if (window.photon) {
+            await window.photon.invoke("edit", {
+              id: taskId,
+              description: newDescription,
+            });
+          }
+        } catch (err) {
+          console.error("Failed to update task checkbox:", err);
+        }
+      }
+
+      // Create a task card element
+      // Calculate warmth level based on how recently the task was updated
+      function getWarmthClass(updatedAt) {
+        if (!updatedAt) return "";
+
+        const now = Date.now();
+        const updated = new Date(updatedAt).getTime();
+        const minutesAgo = (now - updated) / (1000 * 60);
+
+        if (minutesAgo < 5) return "changed-hot"; // < 5 minutes
+        if (minutesAgo < 30) return "changed-warm"; // < 30 minutes
+        if (minutesAgo < 120) return "changed-cool"; // < 2 hours
+        return "";
+      }
+
+      function createTaskCard(task) {
+        const card = document.createElement("div");
+        const warmthClass = getWarmthClass(task.updatedAt);
+        const isBlocked =
+          task.blockedBy &&
+          task.blockedBy.length > 0 &&
+          hasUnresolvedDependencies(task);
+        card.className =
+          "task-card" +
+          (warmthClass ? " " + warmthClass : "") +
+          (isBlocked ? " blocked" : "");
+        card.draggable = true;
+        card.dataset.taskId = task.id;
+
+        card.ondragstart = (e) => handleDragStart(e, task);
+        card.ondragend = handleDragEnd;
+
+        // Click to open detail view
+        card.onclick = (e) => {
+          // Don't open detail view if clicking on action buttons
+          if (e.target.closest(".task-actions")) return;
+          openDetailView(task.id);
+        };
+
+        const priorityBadge = `<span class="badge badge-priority-${task.priority}">${task.priority}</span>`;
+
+        const assigneeBadge = task.assignee
+          ? `<span class="badge badge-assignee ${task.assignee === "ai" ? "ai" : ""}">${task.assignee}</span>`
+          : "";
+
+        const blockedBadge = isBlocked
+          ? `<span class="badge badge-blocked">🔒</span>`
+          : "";
+
+        const commentCount = task.comments?.length || 0;
+        const commentBadge =
+          commentCount > 0
+            ? `<span class="comment-count">${commentCount}</span>`
+            : "";
+
+        // Parse checkbox groups for compact progress view
+        const checkboxGroups = parseCheckboxGroups(task.description);
+        let progressHtml = "";
+
+        // Plain-text description preview (only when no checkboxes — those render as progress bars)
+        const descriptionHtml =
+          task.description && checkboxGroups.length === 0
+            ? `<div class="task-description">${escapeHtml(task.description.trim())}</div>`
+            : "";
+
+        if (checkboxGroups.length > 0) {
+          const progressRows = checkboxGroups
+            .map((group) => {
+              const percent =
+                group.total > 0
+                  ? Math.round((group.checked / group.total) * 100)
+                  : 0;
+              const isComplete = group.checked === group.total;
+              // Determine progress color class based on percentage
+              let progressClass = "progress-0";
+              if (percent >= 100) progressClass = "progress-100";
+              else if (percent >= 75) progressClass = "progress-75";
+              else if (percent >= 50) progressClass = "progress-50";
+              else if (percent > 0) progressClass = "progress-25";
+              return `
+            <div class="progress-row">
+              <span class="progress-count ${progressClass}">${group.checked}/${group.total}</span>
+              <span class="progress-label">${escapeHtml(group.label)}</span>
+              <div class="progress-bar">
+                <div class="progress-bar-fill ${isComplete ? "complete" : ""}" style="width: ${percent}%"></div>
+              </div>
+            </div>
+          `;
+            })
+            .join("");
+          progressHtml = `<div class="task-progress">${progressRows}</div>`;
+        }
+
+        card.innerHTML = `
+        <div class="task-badges">
+          ${priorityBadge}
+          ${assigneeBadge}
+          ${blockedBadge}
+          ${commentBadge}
+        </div>
+        <div class="task-title">${escapeHtml(task.title)}</div>
+        ${descriptionHtml}
+        ${progressHtml}
+        <div class="task-footer">
+          <div class="task-actions">
+            <button class="task-action" onclick="event.stopPropagation(); openEditTask('${task.id}')" title="Edit">&#9998;</button>
+            <button class="task-action delete" onclick="event.stopPropagation(); confirmDelete('${task.id}')" title="Delete">&times;</button>
+          </div>
+        </div>
+      `;
+
+        return card;
+      }
+
+      // Check if task has unresolved dependencies (blocking tasks not in Done)
+      function hasUnresolvedDependencies(task) {
+        if (!task.blockedBy || task.blockedBy.length === 0) return false;
+        return task.blockedBy.some((blockerId) => {
+          const blocker = board.tasks.find((t) => t.id === blockerId);
+          return blocker && blocker.column !== "Done";
+        });
+      }
+
+      // Drag and Drop
+      let dropTargetId = null; // Track which card to insert before
+      const recentlyMovedTasks = new Map(); // taskId -> timestamp (to skip redundant refreshes)
+      let pendingMoveOperation = false; // True while a move is being persisted
+      const pendingOptimisticIds = new Set(); // Temp IDs of optimistically-added tasks awaiting invoke
+
+      function handleDragStart(e, task) {
+        draggedTask = task;
+        e.target.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", task.id);
+      }
+
+      function handleDragEnd(e) {
+        e.target.classList.remove("dragging");
+        document.querySelectorAll(".column-tasks").forEach((el) => {
+          el.classList.remove("drag-over");
+        });
+        document.querySelectorAll(".task-card").forEach((el) => {
+          el.classList.remove("drop-above");
+        });
+        draggedTask = null;
+        dropTargetId = null;
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add("drag-over");
+
+        // Find which card we're hovering over for insert position
+        const cards = e.currentTarget.querySelectorAll(
+          ".task-card:not(.dragging)",
+        );
+        let foundTarget = false;
+
+        cards.forEach((card, index) => {
+          const rect = card.getBoundingClientRect();
+          const midY = rect.top + rect.height / 2;
+
+          // For the FIRST card: if cursor is anywhere above the card's bottom,
+          // treat it as "insert at top" to make drag-to-top more intuitive
+          const isFirstCard = index === 0;
+          const shouldInsertBefore = isFirstCard
+            ? e.clientY < rect.bottom // First card: anywhere above its bottom
+            : e.clientY < midY; // Other cards: above midpoint
+
+          if (shouldInsertBefore && !foundTarget) {
+            card.classList.add("drop-above");
+            dropTargetId = card.dataset.taskId;
+            foundTarget = true;
+          } else {
+            card.classList.remove("drop-above");
+          }
+        });
+
+        if (!foundTarget) {
+          dropTargetId = null; // Drop at end
+        }
+      }
+
+      function handleDragLeave(e) {
+        // Only remove if leaving the container, not entering a child
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          e.currentTarget.classList.remove("drag-over");
+          e.currentTarget.querySelectorAll(".task-card").forEach((el) => {
+            el.classList.remove("drop-above");
+          });
+        }
+      }
+
+      async function handleDrop(e, columnName) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("drag-over");
+        e.currentTarget.querySelectorAll(".task-card").forEach((el) => {
+          el.classList.remove("drop-above");
+        });
+
+        if (!draggedTask) return;
+
+        // Skip if dropping on itself in same position
+        if (
+          draggedTask.column === columnName &&
+          dropTargetId === draggedTask.id
+        )
+          return;
+
+        // Prevent moving blocked tasks to Review or Done
+        if (
+          hasUnresolvedDependencies(draggedTask) &&
+          (columnName === "Review" || columnName === "Done")
+        ) {
+          const blockerNames = (draggedTask.blockedBy || [])
+            .map((id) => board.tasks.find((t) => t.id === id))
+            .filter((t) => t && t.column !== "Done")
+            .map((t) => t.title)
+            .join(", ");
+          showToast(`Can't move: blocked by "${blockerNames}"`, "error");
+          draggedTask = null;
+          dropTargetId = null;
+          return;
+        }
+
+        // FLIP Animation Step 1: Record FIRST positions
+        const cardPositions = new Map();
+        document.querySelectorAll(".task-card").forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          cardPositions.set(card.dataset.taskId, {
+            top: rect.top,
+            left: rect.left,
+          });
+        });
+
+        // Store old state for rollback
+        const oldIndex = board.tasks.findIndex((t) => t.id === draggedTask.id);
+        const oldColumn = draggedTask.column;
+        const oldTasks = [...board.tasks];
+        const movedTaskId = draggedTask.id;
+
+        // Update local state immediately for responsiveness
+        board.tasks.splice(oldIndex, 1);
+        draggedTask.column = columnName;
+
+        if (dropTargetId) {
+          const beforeIndex = board.tasks.findIndex(
+            (t) => t.id === dropTargetId,
+          );
+          if (beforeIndex !== -1) {
+            board.tasks.splice(beforeIndex, 0, draggedTask);
+          } else {
+            board.tasks.push(draggedTask);
+          }
+        } else {
+          // Insert at TOP of column (most visible position) - find first task in this column
+          const firstInColumn = board.tasks.findIndex(
+            (t) => t.column === columnName,
+          );
+          if (firstInColumn === -1) {
+            board.tasks.push(draggedTask);
+          } else {
+            board.tasks.splice(firstInColumn, 0, draggedTask);
+          }
+        }
+
+        // FLIP Animation Step 2: Render new DOM (LAST position)
+        renderBoard();
+        updateStats();
+
+        // FLIP Animation Step 3: INVERT - calculate deltas and apply inverse transform
+        document.querySelectorAll(".task-card").forEach((card) => {
+          const taskId = card.dataset.taskId;
+          const oldPos = cardPositions.get(taskId);
+          if (oldPos) {
+            const newRect = card.getBoundingClientRect();
+            const deltaX = oldPos.left - newRect.left;
+            const deltaY = oldPos.top - newRect.top;
+
+            if (deltaX !== 0 || deltaY !== 0) {
+              // Apply inverse transform (card appears at old position)
+              card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+              card.style.transition = "none";
+
+              // FLIP Animation Step 4: PLAY - remove transform to animate
+              requestAnimationFrame(() => {
+                card.classList.add("flip-animate");
+                card.style.transform = "";
+                card.style.transition = "";
+
+                // Cleanup after animation
+                card.addEventListener(
+                  "transitionend",
+                  function cleanup() {
+                    card.classList.remove("flip-animate");
+                    card.removeEventListener("transitionend", cleanup);
+                  },
+                  { once: true },
+                );
+              });
+            }
+          }
+        });
+
+        // Add settle animation to dropped card
+        const droppedCard = document.querySelector(
+          `[data-task-id="${movedTaskId}"]`,
+        );
+        if (droppedCard) {
+          droppedCard.classList.add("just-dropped");
+          droppedCard.addEventListener(
+            "animationend",
+            () => {
+              droppedCard.classList.remove("just-dropped");
+            },
+            { once: true },
+          );
+        }
+
+        // Call MCP method to persist
+        try {
+          if (window.photon) {
+            pendingMoveOperation = true;
+            await window.photon.invoke("reorder", {
+              id: movedTaskId,
+              column: columnName,
+              beforeId: dropTargetId || undefined,
+            });
+            // Mark as recently moved to skip redundant pub/sub refresh
+            recentlyMovedTasks.set(movedTaskId, Date.now());
+            // Clean up old entries after 2 seconds
+            setTimeout(() => recentlyMovedTasks.delete(movedTaskId), 2000);
+            // Reset pending flag after a brief delay to skip echoed events
+            setTimeout(() => {
+              pendingMoveOperation = false;
+            }, 500);
+          }
+        } catch (err) {
+          console.error("Failed to reorder task:", err);
+          pendingMoveOperation = false;
+          // Revert on error
+          board.tasks = oldTasks;
+          renderBoard();
+          updateStats();
+        }
+
+        dropTargetId = null;
+      }
+
+      // Modal functions
+      function openAddTask(column) {
+        document.getElementById("modal-title").textContent = "Add Task";
+        document.getElementById("task-id").value = "";
+        document.getElementById("task-column").value = column;
+        document.getElementById("task-title").value = "";
+        document.getElementById("task-description").value = "";
+        document.getElementById("task-priority").value = "medium";
+        document.getElementById("task-assignee").value = "";
+        document.getElementById("delete-btn").style.display = "none";
+        document.getElementById("comments-section").style.display = "none";
+
+        // Show automation section only for Backlog
+        const isBacklog = column === "Backlog";
+        document.getElementById("automation-section").style.display = isBacklog
+          ? "block"
+          : "none";
+        document.getElementById("task-auto-pull").value = "";
+        document.getElementById("task-auto-release").value = "";
+
+        document.getElementById("task-modal").classList.add("visible");
+        document.getElementById("task-title").focus();
+      }
+
+      function openEditTask(taskId) {
+        const task = board.tasks.find((t) => t.id === taskId);
+        if (!task) return;
+
+        document.getElementById("modal-title").textContent = "Edit Task";
+        document.getElementById("task-id").value = task.id;
+        document.getElementById("task-column").value = task.column;
+        document.getElementById("task-title").value = task.title;
+        document.getElementById("task-description").value =
+          task.description || "";
+        document.getElementById("task-priority").value = task.priority;
+        document.getElementById("task-assignee").value = task.assignee || "";
+        document.getElementById("delete-btn").style.display = "block";
+        document.getElementById("comments-section").style.display = "block";
+        document.getElementById("comment-input").value = "";
+        renderComments(task.comments || []);
+
+        // Show automation section only for Backlog cards
+        const isBacklog = task.column === "Backlog";
+        document.getElementById("automation-section").style.display = isBacklog
+          ? "block"
+          : "none";
+        document.getElementById("task-auto-pull").value =
+          task.autoPullThreshold || "";
+        document.getElementById("task-auto-release").value =
+          task.autoReleaseMinutes || "";
+
+        document.getElementById("task-modal").classList.add("visible");
+        document.getElementById("task-title").focus();
+      }
+
+      function closeModal() {
+        document.getElementById("task-modal").classList.remove("visible");
+      }
+
+      // Detail View Modal
+      let currentDetailTaskId = null;
+      let detailEditState = null; // Tracks unsaved changes
+
+      function initDetailEditState(task) {
+        detailEditState = {
+          description: task.description || "",
+          blockedBy: [...(task.blockedBy || [])],
+          autoPullThreshold: task.autoPullThreshold || 0,
+          scheduledColumn: "",
+          scheduledTime: "",
+          column: task.column,
+        };
+      }
+
+      function openDetailView(taskId) {
+        const task = board.tasks.find((t) => t.id === taskId);
+        if (!task) return;
+
+        currentDetailTaskId = taskId;
+        initDetailEditState(task);
+
+        // Reset description to view mode
+        document
+          .getElementById("detail-description-wrapper")
+          .classList.remove("editing");
+        document.getElementById("detail-description-edit").value =
+          task.description || "";
+
+        // Set title
+        document.getElementById("detail-title").textContent = task.title;
+
+        // Set priority badge
+        const priorityEl = document.getElementById("detail-priority");
+        priorityEl.textContent = task.priority;
+        priorityEl.className = `badge badge-priority-${task.priority}`;
+
+        // Set assignee badge
+        const assigneeEl = document.getElementById("detail-assignee");
+        if (task.assignee) {
+          assigneeEl.textContent = task.assignee;
+          assigneeEl.className = `badge badge-assignee ${task.assignee === "ai" ? "ai" : ""}`;
+          assigneeEl.style.display = "";
+        } else {
+          assigneeEl.style.display = "none";
+        }
+
+        // Set comment count
+        const commentsEl = document.getElementById("detail-comments");
+        const commentCount = task.comments?.length || 0;
+        if (commentCount > 0) {
+          commentsEl.textContent = commentCount;
+          commentsEl.style.display = "";
+        } else {
+          commentsEl.style.display = "none";
+        }
+
+        // Set blocked badge
+        const blockedEl = document.getElementById("detail-blocked");
+        const isBlocked = hasUnresolvedDependencies(task);
+        blockedEl.style.display = isBlocked ? "" : "none";
+
+        // Render dependencies with remove buttons
+        const depsListEl = document.getElementById("dependency-list");
+        if (task.blockedBy && task.blockedBy.length > 0) {
+          depsListEl.innerHTML = task.blockedBy
+            .map((blockerId) => {
+              const blocker = board.tasks.find((t) => t.id === blockerId);
+              if (!blocker) return "";
+              const isDone = blocker.column === "Done";
+              return `
+            <div class="dependency-item">
+              <span class="dependency-status ${isDone ? "done" : "pending"}">${isDone ? "✓" : "○"}</span>
+              <span class="dependency-title">${escapeHtml(blocker.title)}</span>
+              <span class="dependency-column">${blocker.column}</span>
+              <button class="dependency-remove" onclick="removeDependency('${blockerId}')" title="Remove dependency">&times;</button>
+            </div>
+          `;
+            })
+            .join("");
+        } else {
+          depsListEl.innerHTML =
+            '<div style="color: var(--text-muted); font-size: 12px; font-style: italic;">No dependencies</div>';
+        }
+
+        // Populate dependency dropdown (exclude current task and existing dependencies)
+        const depSelect = document.getElementById("dependency-select");
+        const existingDeps = task.blockedBy || [];
+        const availableTasks = board.tasks.filter(
+          (t) =>
+            t.id !== taskId &&
+            !existingDeps.includes(t.id) &&
+            t.column !== "Done", // Only show non-completed tasks
+        );
+        depSelect.innerHTML =
+          '<option value="">Add dependency...</option>' +
+          availableTasks
+            .map(
+              (t) =>
+                `<option value="${t.id}">${escapeHtml(t.title)} (${t.column})</option>`,
+            )
+            .join("");
+
+        // Populate automation settings
+        const autoPullInput = document.getElementById("auto-pull-threshold");
+        autoPullInput.value = task.autoPullThreshold || 0;
+
+        // Populate scheduled column dropdown
+        const schedColSelect = document.getElementById("scheduled-column");
+        schedColSelect.innerHTML =
+          '<option value="">Don\'t schedule</option>' +
+          board.columns
+            .filter((col) => col !== task.column)
+            .map((col) => `<option value="${col}">${col}</option>`)
+            .join("");
+
+        // Reset scheduled time
+        document.getElementById("scheduled-time").value = "";
+
+        // Render description with interactive checkboxes
+        document.getElementById("detail-description").innerHTML =
+          renderMarkdown(task.description || "", taskId);
+
+        // Render comments
+        renderDetailComments(task.comments || []);
+
+        // Clear comment input
+        document.getElementById("new-comment").value = "";
+
+        // Populate column select
+        const columnSelect = document.getElementById("detail-column");
+        columnSelect.innerHTML = board.columns
+          .map(
+            (col) =>
+              `<option value="${col}" ${col === task.column ? "selected" : ""}>${col}</option>`,
+          )
+          .join("");
+
+        document.getElementById("detail-modal").classList.add("visible");
+      }
+
+      function closeDetailView() {
+        document.getElementById("detail-modal").classList.remove("visible");
+        document
+          .getElementById("detail-description-wrapper")
+          .classList.remove("editing");
+        currentDetailTaskId = null;
+        detailEditState = null;
+      }
+
+      function toggleDescriptionEdit() {
+        const wrapper = document.getElementById("detail-description-wrapper");
+        const textarea = document.getElementById("detail-description-edit");
+        const isEditing = wrapper.classList.toggle("editing");
+
+        if (isEditing) {
+          // Entering edit mode - sync textarea with current state
+          textarea.value = detailEditState.description;
+          textarea.focus();
+        } else {
+          // Exiting edit mode - update state from textarea
+          detailEditState.description = textarea.value;
+          // Re-render the markdown preview with current state
+          document.getElementById("detail-description").innerHTML =
+            renderMarkdown(detailEditState.description, currentDetailTaskId);
+        }
+      }
+
+      function cancelDetailChanges() {
+        closeDetailView();
+      }
+
+      async function saveDetailChanges() {
+        if (!currentDetailTaskId || !detailEditState) return;
+
+        const task = board.tasks.find((t) => t.id === currentDetailTaskId);
+        if (!task) return;
+
+        // Get current values from form
+        const wrapper = document.getElementById("detail-description-wrapper");
+        if (wrapper.classList.contains("editing")) {
+          detailEditState.description = document.getElementById(
+            "detail-description-edit",
+          ).value;
+        }
+
+        const newColumn = document.getElementById("detail-column").value;
+        const autoPullThreshold =
+          parseInt(document.getElementById("auto-pull-threshold").value) || 0;
+        const scheduledColumn =
+          document.getElementById("scheduled-column").value;
+        const scheduledTime =
+          parseInt(document.getElementById("scheduled-time").value) || 0;
+
+        // Check if task is blocked and trying to move to Review or Done
+        if (
+          hasUnresolvedDependencies(task) &&
+          (newColumn === "Review" || newColumn === "Done")
+        ) {
+          const blockerNames = detailEditState.blockedBy
+            .map((id) => board.tasks.find((t) => t.id === id))
+            .filter((t) => t && t.column !== "Done")
+            .map((t) => t.title)
+            .join(", ");
+          showToast(`Blocked by: ${blockerNames}`, "error");
+          return;
+        }
+
+        try {
+          // Prepare update payload
+          const updates = {
+            id: currentDetailTaskId,
+            description: detailEditState.description,
+            blockedBy: detailEditState.blockedBy,
+            autoPullThreshold: autoPullThreshold,
+          };
+
+          // Add scheduled move info if set
+          if (scheduledColumn && scheduledTime) {
+            updates.autoReleaseMinutes = scheduledTime;
+            // Store target column in context
+            const scheduleNote = `[Scheduled: Move to ${scheduledColumn} in ${scheduledTime} min]`;
+            if (!updates.description.includes("[Scheduled:")) {
+              updates.description = updates.description
+                ? `${updates.description}\n\n${scheduleNote}`
+                : scheduleNote;
+            }
+          }
+
+          // Save the task
+          await window.photon.invoke("edit", updates);
+
+          // Move task if column changed
+          if (newColumn !== task.column) {
+            await window.photon.invoke("move", {
+              id: currentDetailTaskId,
+              column: newColumn,
+            });
+            task.column = newColumn;
+          }
+
+          // Update local state
+          task.description = detailEditState.description;
+          task.blockedBy = detailEditState.blockedBy;
+          task.autoPullThreshold = autoPullThreshold;
+
+          renderBoard();
+          closeDetailView();
+          showToast("Changes saved");
+        } catch (err) {
+          console.error("Failed to save changes:", err);
+          showToast("Failed to save changes", "error");
+        }
+      }
+
+      function deleteFromDetail() {
+        if (!currentDetailTaskId) return;
+        closeDetailView();
+        confirmDelete(currentDetailTaskId);
+      }
+
+      // Add a dependency to the current task (updates local state only - saved on Save button)
+      function addDependency() {
+        if (!currentDetailTaskId || !detailEditState) return;
+        const select = document.getElementById("dependency-select");
+        const blockerId = select.value;
+        if (!blockerId) return;
+
+        // Add to edit state
+        if (!detailEditState.blockedBy.includes(blockerId)) {
+          detailEditState.blockedBy.push(blockerId);
+        }
+
+        // Re-render dependencies in the modal
+        renderDependencyList();
+
+        // Reset dropdown
+        select.value = "";
+      }
+
+      // Remove a dependency from the current task (updates local state only - saved on Save button)
+      function removeDependency(blockerId) {
+        if (!currentDetailTaskId || !detailEditState) return;
+
+        // Remove from edit state
+        detailEditState.blockedBy = detailEditState.blockedBy.filter(
+          (id) => id !== blockerId,
+        );
+
+        // Re-render dependencies in the modal
+        renderDependencyList();
+      }
+
+      // Render the dependency list based on current edit state
+      function renderDependencyList() {
+        const depsListEl = document.getElementById("dependency-list");
+        if (detailEditState.blockedBy.length > 0) {
+          depsListEl.innerHTML = detailEditState.blockedBy
+            .map((blockerId) => {
+              const blocker = board.tasks.find((t) => t.id === blockerId);
+              if (!blocker) return "";
+              const isDone = blocker.column === "Done";
+              return `
+            <div class="dependency-item">
+              <span class="dependency-status ${isDone ? "done" : "pending"}">${isDone ? "✓" : "○"}</span>
+              <span class="dependency-title">${escapeHtml(blocker.title)}</span>
+              <span class="dependency-column">${blocker.column}</span>
+              <button class="dependency-remove" onclick="removeDependency('${blockerId}')" title="Remove dependency">&times;</button>
+            </div>
+          `;
+            })
+            .join("");
+        } else {
+          depsListEl.innerHTML =
+            '<div style="color: var(--text-muted); font-size: 12px; font-style: italic;">No dependencies</div>';
+        }
+
+        // Update dropdown to exclude already selected dependencies
+        const depSelect = document.getElementById("dependency-select");
+        const availableTasks = board.tasks.filter(
+          (t) =>
+            t.id !== currentDetailTaskId &&
+            !detailEditState.blockedBy.includes(t.id) &&
+            t.column !== "Done",
+        );
+        depSelect.innerHTML =
+          '<option value="">Add dependency...</option>' +
+          availableTasks
+            .map(
+              (t) =>
+                `<option value="${t.id}">${escapeHtml(t.title)} (${t.column})</option>`,
+            )
+            .join("");
+      }
+
+      function formatDuration(minutes) {
+        if (minutes < 60) return `${minutes} min`;
+        if (minutes < 1440)
+          return `${Math.floor(minutes / 60)} hour${minutes >= 120 ? "s" : ""}`;
+        return "tomorrow";
+      }
+
+      function renderDetailComments(comments) {
+        const listEl = document.getElementById("detail-comments-list");
+        if (!comments || comments.length === 0) {
+          listEl.innerHTML = "";
+          return;
+        }
+
+        listEl.innerHTML = comments
+          .map((comment) => {
+            const date = new Date(comment.createdAt).toLocaleString();
+            return `
+          <div class="comment ${comment.author}">
+            <div class="comment-meta">
+              <span class="comment-author">${escapeHtml(comment.author)}</span>
+              <span class="comment-date">${date}</span>
+            </div>
+            <div class="comment-content">${escapeHtml(comment.content)}</div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      async function addCommentFromDetail() {
+        if (!currentDetailTaskId) return;
+
+        const textarea = document.getElementById("new-comment");
+        const content = textarea.value.trim();
+        if (!content) return;
+
+        try {
+          const result = await window.photon.invoke("comment", {
+            id: currentDetailTaskId,
+            content: content,
+            author: "human",
+          });
+
+          // Use the returned comment with real ID to update local state
+          const task = board.tasks.find((t) => t.id === currentDetailTaskId);
+          if (task) {
+            if (!task.comments) task.comments = [];
+            // Only add if not already present (real-time event may have arrived first)
+            const comment = result.comment || {
+              id: result.id || Date.now().toString(),
+              author: "human",
+              content: content,
+              createdAt: new Date().toISOString(),
+            };
+            if (!task.comments.find((c) => c.id === comment.id)) {
+              task.comments.push(comment);
+            }
+            renderDetailComments(task.comments);
+
+            // Update comment count in header
+            const commentsEl = document.getElementById("detail-comments");
+            commentsEl.textContent = task.comments.length;
+            commentsEl.style.display = "";
+
+            // Update card in board
+            renderBoard();
+          }
+
+          textarea.value = "";
+        } catch (err) {
+          console.error("Failed to add comment:", err);
+        }
+      }
+
+      // Settings Modal
+      function openSettings() {
+        // Populate current values
+        document.getElementById("settings-wip-limit").value = wipLimit;
+        document
+          .getElementById("settings-wip-enabled")
+          .classList.toggle("active", wipEnabled);
+        document.getElementById("settings-morning-pull").value =
+          morningPullCount;
+        document.getElementById("settings-stale-days").value = staleTaskDays;
+        document.getElementById("settings-modal").classList.add("visible");
+      }
+
+      function closeSettings() {
+        document.getElementById("settings-modal").classList.remove("visible");
+      }
+
+      function toggleSetting(id) {
+        const el = document.getElementById("settings-" + id);
+        el.classList.toggle("active");
+      }
+
+      async function saveSettings() {
+        if (!window.photon) {
+          alert("Photon connection not available");
+          return;
+        }
+
+        const newWipEnabled = document
+          .getElementById("settings-wip-enabled")
+          .classList.contains("active");
+        const newWipLimit =
+          parseInt(document.getElementById("settings-wip-limit").value) || 10;
+        const newMorningPull =
+          parseInt(document.getElementById("settings-morning-pull").value) || 3;
+        const newStaleDays =
+          parseInt(document.getElementById("settings-stale-days").value) || 7;
+
+        try {
+          await window.photon.invoke("settings", {
+            wipLimit: newWipLimit,
+            morningPullCount: newMorningPull,
+            staleTaskDays: newStaleDays,
+          });
+
+          // Update local state
+          wipEnabled = newWipEnabled;
+          wipLimit = newWipLimit;
+          morningPullCount = newMorningPull;
+          staleTaskDays = newStaleDays;
+
+          closeSettings();
+          renderBoard(); // Re-render to show WIP indicators
+        } catch (err) {
+          alert("Failed to save settings: " + err.message);
+        }
+      }
+
+      // Search/Filter tasks
+      let currentSearchQuery = "";
+
+      function filterTasks(query) {
+        currentSearchQuery = query.toLowerCase().trim();
+        const clearBtn = document.getElementById("search-clear");
+        clearBtn.style.display = currentSearchQuery ? "block" : "none";
+
+        const cards = document.querySelectorAll(".task-card");
+        cards.forEach((card) => {
+          if (!currentSearchQuery) {
+            card.classList.remove("hidden");
+            return;
+          }
+
+          const title =
+            card.querySelector(".task-title")?.textContent?.toLowerCase() || "";
+          const description =
+            card
+              .querySelector(".task-description")
+              ?.textContent?.toLowerCase() || "";
+          const labels = Array.from(card.querySelectorAll(".label"))
+            .map((l) => l.textContent.toLowerCase())
+            .join(" ");
+          const assignee =
+            card.querySelector(".assignee")?.textContent?.toLowerCase() || "";
+
+          const matches =
+            title.includes(currentSearchQuery) ||
+            description.includes(currentSearchQuery) ||
+            labels.includes(currentSearchQuery) ||
+            assignee.includes(currentSearchQuery);
+
+          card.classList.toggle("hidden", !matches);
+        });
+      }
+
+      function clearSearch() {
+        document.getElementById("search-input").value = "";
+        filterTasks("");
+      }
+
+      // Comments
+      function renderComments(comments) {
+        const list = document.getElementById("comments-list");
+        if (comments.length === 0) {
+          list.innerHTML = '<div class="no-comments">No comments yet</div>';
+          return;
+        }
+        list.innerHTML = comments
+          .map(
+            (c) => `
+        <div class="comment">
+          <div class="comment-header">
+            <span class="comment-author ${c.author}">${c.author}</span>
+            <span class="comment-time">${formatTime(c.createdAt)}</span>
+          </div>
+          <div class="comment-content">${escapeHtml(c.content)}</div>
+        </div>
+      `,
+          )
+          .join("");
+        list.scrollTop = list.scrollHeight;
+      }
+
+      function formatTime(isoString) {
+        const date = new Date(isoString);
+        const now = new Date();
+        const diff = now - date;
+        if (diff < 60000) return "just now";
+        if (diff < 3600000) return Math.floor(diff / 60000) + "m ago";
+        if (diff < 86400000) return Math.floor(diff / 3600000) + "h ago";
+        return date.toLocaleDateString();
+      }
+
+      async function addComment() {
+        const taskId = document.getElementById("task-id").value;
+        const content = document.getElementById("comment-input").value.trim();
+        if (!taskId || !content) return;
+
+        const task = board.tasks.find((t) => t.id === taskId);
+        if (!task) return;
+
+        // Add to local state
+        const comment = {
+          id: Date.now().toString(36),
+          author: "human",
+          content,
+          createdAt: new Date().toISOString(),
+        };
+        if (!task.comments) task.comments = [];
+        task.comments.push(comment);
+
+        // Update UI
+        document.getElementById("comment-input").value = "";
+        renderComments(task.comments);
+        renderBoard();
+
+        // Persist via MCP
+        try {
+          if (window.photon) {
+            await window.photon.invoke("comment", {
+              id: taskId,
+              content,
+              author: "human",
+            });
+          }
+        } catch (err) {
+          console.error("Failed to add comment:", err);
+        }
+      }
+
+      async function saveTask(e) {
+        e.preventDefault();
+
+        const id = document.getElementById("task-id").value;
+        const column = document.getElementById("task-column").value;
+        const title = document.getElementById("task-title").value.trim();
+        const description = document
+          .getElementById("task-description")
+          .value.trim();
+        const priority = document.getElementById("task-priority").value;
+        const assignee = document.getElementById("task-assignee").value;
+
+        // Automation fields (only for Backlog)
+        const autoPullValue = document.getElementById("task-auto-pull").value;
+        const autoReleaseValue =
+          document.getElementById("task-auto-release").value;
+        const autoPullThreshold = autoPullValue
+          ? parseInt(autoPullValue)
+          : undefined;
+        const autoReleaseMinutes = autoReleaseValue
+          ? parseInt(autoReleaseValue)
+          : undefined;
+
+        if (!title) return;
+
+        // Keep form data in case of error
+        const formData = {
+          id,
+          column,
+          title,
+          description,
+          priority,
+          assignee,
+          autoPullThreshold,
+          autoReleaseMinutes,
+        };
+
+        closeModal();
+
+        try {
+          if (id) {
+            // Update existing task
+            const task = board.tasks.find((t) => t.id === id);
+            if (task) {
+              task.title = title;
+              task.description = description;
+              task.priority = priority;
+              task.assignee = assignee || undefined;
+              task.autoPullThreshold = autoPullThreshold;
+              task.autoReleaseMinutes = autoReleaseMinutes;
+            }
+
+            if (window.photon) {
+              await window.photon.invoke("edit", {
+                id,
+                title,
+                description: description || undefined,
+                priority,
+                assignee: assignee || undefined,
+                autoPullThreshold,
+                autoReleaseMinutes,
+              });
+            }
+          } else {
+            // Create new task
+            const newTask = {
+              id:
+                Date.now().toString(36) +
+                Math.random().toString(36).substr(2, 5),
+              title,
+              description: description || undefined,
+              column,
+              priority,
+              assignee: assignee || undefined,
+              autoPullThreshold,
+              autoReleaseMinutes,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              createdBy: "human",
+            };
+            board.tasks.push(newTask);
+            pendingOptimisticIds.add(newTask.id);
+
+            if (window.photon) {
+              try {
+                const result = await window.photon.invoke("add", {
+                  title,
+                  description: description || undefined,
+                  column,
+                  priority,
+                  assignee: assignee || undefined,
+                  autoPullThreshold,
+                  autoReleaseMinutes,
+                });
+                // Replace temp task with server-assigned ID so task-created dedup works
+                if (result) {
+                  const idx = board.tasks.findIndex((t) => t.id === newTask.id);
+                  if (idx !== -1) board.tasks.splice(idx, 1, result);
+                }
+              } finally {
+                pendingOptimisticIds.delete(newTask.id);
+              }
+            } else {
+              pendingOptimisticIds.delete(newTask.id);
+            }
+          }
+
+          renderBoard();
+          updateStats();
+        } catch (err) {
+          console.error("Failed to save task:", err);
+          // Show error and reopen modal with data
+          alert("Failed to save task: " + (err.message || "Unknown error"));
+          // Reopen modal with form data
+          document.getElementById("modal-title").textContent = formData.id
+            ? "Edit Task"
+            : "New Task";
+          document.getElementById("task-id").value = formData.id || "";
+          document.getElementById("task-column").value = formData.column;
+          document.getElementById("task-title").value = formData.title;
+          document.getElementById("task-description").value =
+            formData.description;
+          document.getElementById("task-priority").value = formData.priority;
+          document.getElementById("task-assignee").value = formData.assignee;
+          document.getElementById("task-auto-pull").value =
+            formData.autoPullThreshold || "";
+          document.getElementById("task-auto-release").value =
+            formData.autoReleaseMinutes || "";
+          document.getElementById("task-modal").classList.add("visible");
+        }
+      }
+
+      // Confirmation modal state
+      let pendingDeleteTaskId = null;
+
+      function confirmDelete(taskId) {
+        pendingDeleteTaskId = taskId;
+        document.getElementById("confirm-modal").classList.add("visible");
+        document.getElementById("confirm-delete-btn").onclick = async () => {
+          const id = pendingDeleteTaskId; // Save ID before closing modal
+          closeConfirmModal();
+          await deleteTaskById(id);
+        };
+      }
+
+      function closeConfirmModal() {
+        document.getElementById("confirm-modal").classList.remove("visible");
+        pendingDeleteTaskId = null;
+      }
+
+      async function deleteTask() {
+        const id = document.getElementById("task-id").value;
+        if (!id) return;
+        closeModal();
+        confirmDelete(id);
+      }
+
+      async function deleteTaskById(id) {
+        board.tasks = board.tasks.filter((t) => t.id !== id);
+        renderBoard();
+        updateStats();
+
+        try {
+          if (window.photon) {
+            await window.photon.invoke("drop", { id });
+          }
+        } catch (err) {
+          console.error("Failed to delete task:", err);
+        }
+      }
+
+      // Update stats
+      function updateStats() {
+        document.getElementById("stat-total").textContent = board.tasks.length;
+        document.getElementById("stat-progress").textContent =
+          board.tasks.filter((t) => t.column === "In Progress").length;
+        document.getElementById("stat-ai").textContent = board.tasks.filter(
+          (t) => t.assignee === "ai",
+        ).length;
+      }
+
+      // Fetch WIP and auto-pull config
+      async function fetchWipConfig() {
+        if (!window.photon) return;
+        try {
+          // Get stats for WIP info
+          const stats = await window.photon.invoke("stats", {});
+          if (stats && stats.wip) {
+            wipLimit = stats.wip.limit || 3;
+            wipEnabled = stats.wip.enabled !== false;
+          }
+
+          // Get full config for other settings
+          const settingsResult = await window.photon.invoke("settings", {});
+          const config = settingsResult?.config || settingsResult;
+          if (config) {
+            autoPullEnabled = config.autoPullEnabled || false;
+            morningPullCount = config.morningPullCount || 3;
+            staleTaskDays = config.staleTaskDays || 7;
+            if (config.wipLimit) wipLimit = config.wipLimit;
+          }
+
+          // Re-render to show WIP indicators
+          renderBoard();
+        } catch (err) {
+          // Config may not be available, use defaults
+          console.log("Config not available:", err.message);
+        }
+      }
+
+      // Utility
+      function escapeHtml(str) {
+        if (!str) return "";
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        const searchInput = document.getElementById("search-input");
+        const isInInput =
+          document.activeElement.tagName === "INPUT" ||
+          document.activeElement.tagName === "TEXTAREA";
+
+        if (e.key === "Escape") {
+          if (document.activeElement === searchInput) {
+            clearSearch();
+            searchInput.blur();
+          } else {
+            closeModal();
+          }
+        }
+
+        // / or Cmd+K to focus search (when not in an input)
+        if (!isInInput && (e.key === "/" || (e.metaKey && e.key === "k"))) {
+          e.preventDefault();
+          searchInput.focus();
+        }
+      });
+
+      document.getElementById("task-modal").addEventListener("click", (e) => {
+        if (e.target.id === "task-modal") {
+          closeModal();
+        }
+      });
+
+      document
+        .getElementById("settings-modal")
+        .addEventListener("click", (e) => {
+          if (e.target.id === "settings-modal") {
+            closeSettings();
+          }
+        });
+
+      document
+        .getElementById("new-board-modal")
+        .addEventListener("click", (e) => {
+          if (e.target.id === "new-board-modal") {
+            closeNewBoardModal();
+          }
+        });
+
+      // Close board menu when clicking outside
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("board-menu");
+        const btn = document.querySelector(".board-switcher-btn");
+        if (
+          menu.classList.contains("visible") &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target)
+        ) {
+          closeBoardMenu();
+        }
+      });
+      // Toast notification system
+      function showToast(message, type = "success") {
+        let container = document.querySelector(".toast-container");
+        if (!container) {
+          container = document.createElement("div");
+          container.className = "toast-container";
+          document.body.appendChild(container);
+        }
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+          toast.classList.add("fade-out");
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
