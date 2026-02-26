@@ -21,7 +21,13 @@ const execAsync = promisify(exec);
  */
 export class GitBoxPhoton extends PhotonMCP {
   private configPath = path.join(os.homedir(), '.photon', 'git-box.json');
-  private defaultProjectsRoot = path.join(os.homedir(), 'Projects');
+
+  /**
+   * @property projectsRoot Root folder containing git repositories
+   */
+  protected settings = {
+    projectsRoot: path.join(os.homedir(), 'Projects'),
+  };
 
   /**
    * Escape a string for safe shell usage
@@ -59,59 +65,8 @@ export class GitBoxPhoton extends PhotonMCP {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // CONFIGURATION
+  // MAIN VIEW
   // ═══════════════════════════════════════════════════════════════════════════
-
-  /**
-   * Configure the Git Box photon
-   *
-   * Call this before using repository methods. Three behaviors:
-   * 1. **AI with known values**: Pass params directly to skip elicitation
-   * 2. **Already configured**: Loads existing config from disk
-   * 3. **First-time human**: Prompts user to enter values via elicitation
-   *
-   * @param projectsRoot Root folder containing git repositories (e.g., ~/Projects)
-   *
-   * @example
-   * // AI knows the values - skip elicitation
-   * await configure({ projectsRoot: '/home/user/Projects' })
-   *
-   * @example
-   * // Ensure config exists (will elicit if needed)
-   * await configure()
-   */
-  async *configure(params?: {
-    projectsRoot?: string;
-  }): AsyncGenerator<any, { configured: boolean; config?: { repos: string[]; projectsRoot?: string } }> {
-    // AI provided values directly - use them
-    if (params?.projectsRoot) {
-      const config = this._loadConfig();
-      config.projectsRoot = params.projectsRoot;
-      this._saveConfig(config);
-      return { configured: true, config };
-    }
-
-    // Already configured - just return existing config
-    if (fs.existsSync(this.configPath)) {
-      return { configured: true, config: this._loadConfig() };
-    }
-
-    // Human user - elicit values
-    const values: Record<string, any> = yield io.ask.form('Configure Git Box', {
-      type: 'object',
-      properties: {
-        projectsRoot: { type: 'string', title: 'Projects Root', default: this.defaultProjectsRoot },
-      },
-      required: ['projectsRoot'],
-    });
-
-    const config = {
-      repos: [],
-      projectsRoot: values.projectsRoot || this.defaultProjectsRoot,
-    };
-    this._saveConfig(config);
-    return { configured: true, config };
-  }
 
   /**
    * Opens the mailbox interface for managing git repositories.
@@ -119,14 +74,11 @@ export class GitBoxPhoton extends PhotonMCP {
    * @ui mailbox
    */
   async *main() {
-    // Ensure configuration exists (will elicit if needed)
-    yield* this.configure();
-
     const repos = await this.repos();
     return { repos };
   }
 
-  private _loadConfig(): { repos: string[]; projectsRoot?: string } {
+  private _loadConfig(): { repos: string[] } {
     try {
       if (fs.existsSync(this.configPath)) {
         return JSON.parse(fs.readFileSync(this.configPath, 'utf-8'));
@@ -139,10 +91,10 @@ export class GitBoxPhoton extends PhotonMCP {
         return config;
       }
     } catch {}
-    return { repos: [], projectsRoot: this.defaultProjectsRoot };
+    return { repos: [] };
   }
 
-  private _saveConfig(config: { repos: string[]; projectsRoot?: string }) {
+  private _saveConfig(config: { repos: string[] }) {
     fs.writeFileSync(this.configPath, JSON.stringify(config, null, 2));
   }
 
@@ -323,7 +275,7 @@ export class GitBoxPhoton extends PhotonMCP {
    */
   async availableRepos() {
     const config = this._loadConfig();
-    const projectsRoot = config.projectsRoot || path.join(os.homedir(), 'Projects');
+    const projectsRoot = this.settings.projectsRoot;
     const available: Array<{
       name: string;
       path: string;
@@ -372,25 +324,6 @@ export class GitBoxPhoton extends PhotonMCP {
     });
 
     return { projectsRoot, available };
-  }
-
-  /**
-   * Set the projects root folder
-   * @param rootPath Path to folder containing git repositories
-   * @locked git-box:config
-   */
-  async projectsRootSet(params: { rootPath: string }) {
-    const fullPath = path.resolve(params.rootPath.replace(/^~/, os.homedir()));
-
-    if (!fs.existsSync(fullPath)) {
-      throw new Error(`Path does not exist: ${fullPath}`);
-    }
-
-    const config = this._loadConfig();
-    config.projectsRoot = fullPath;
-    this._saveConfig(config);
-
-    return { projectsRoot: fullPath };
   }
 
   /**

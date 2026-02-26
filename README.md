@@ -46,11 +46,11 @@ We welcome contributions! Submit pull requests for:
 | [**Docker**](docker.md) | Container management | 10 | - |
 | [**Email**](email.md) | SMTP and IMAP email operations | 8 | - |
 | [**Expenses**](expenses.md) | Expenses — Track spending with budgets and summaries | 4 | - |
-| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. | 12 | ⚡📡 |
+| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. | 10 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 12 | - |
 | [**Form Inbox**](form-inbox.md) | Webhook-powered form submission collector | 8 | 📡 |
 | [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output. | 27 | 📡 |
-| [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 58 | ⚡🎨💬 |
+| [**Git Box**](git-box.md) | Mailbox-style Git interface, manage repos like an inbox | 56 | ⚡🎨💬 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage repository issues | 7 | - |
 | [**Google Calendar**](google-calendar.md) | Schedule and manage events | 9 | - |
@@ -58,7 +58,7 @@ We welcome contributions! Submit pull requests for:
 | [**Input Showcase**](input-showcase.md) | Input Showcase | 0 | - |
 | [**Integration Demo**](integration-demo.md) | Integration Demo — Dependencies, Assets, Stateful Workflows | 5 | ⚡🎨 |
 | [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
-| [**Kanban**](kanban.md) | Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 20 | ⚡🎨📡 |
+| [**Kanban**](kanban.md) | Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 19 | ⚡🎨📡 |
 | [**Kitchen Sink**](kitchen-sink.md) | Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons. | 25 | ⚡🎨 |
 | [**Calculator**](math.md) | Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc. | 1 | - |
 | [**MCP Orchestrator**](mcp-orchestrator.md) | Combine multiple MCPs into powerful workflows | 10 | 🔌 |

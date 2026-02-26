@@ -2,7 +2,7 @@
 
 Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.
 
-> **20 tools** · Streaming Photon · v4.0.3 · MIT
+> **19 tools** · Streaming Photon · v4.0.3 · MIT
 
 **Platform Features:** `generator` `custom-ui` `stateful` `channels`
 
@@ -20,7 +20,6 @@ Kanban Board Photon Task management for humans and AI. Use named instances (`_us
 
 | Method | Description |
 |--------|-------------|
-| `configure` ⚡ | Configure the Kanban photon. |
 | `hooks` | Install Claude Code hooks in a project folder. |
 | `main` ⚡ | Open the Kanban board. |
 | `list` | Get all tasks, optionally filtered. |
@@ -43,31 +42,6 @@ Kanban Board Photon Task management for humans and AI. Use named instances (`_us
 
 
 ## 🔧 Tools
-
-
-### `configure` ⚡
-
-Configure the Kanban photon. Call this before using any board methods. Three behaviors: 1. **AI with known values**: Pass params directly to skip elicitation 2. **Already configured**: Loads existing config from disk 3. **First-time human**: Prompts user to enter values via elicitation
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `projectsRoot` | any | Yes | Root folder containing project directories (e.g., ~/Projects) |
-| `wipLimit` | number | No | Maximum cards allowed in "In Progress" column
-   * |
-
-
-
-
-**Example:**
-
-```typescript
-// AI knows the values - skip elicitation
-await configure({ projectsRoot: '/home/user/Projects', wipLimit: 5 })
-```
-
-
----
 
 
 ### `hooks`
@@ -331,46 +305,44 @@ flowchart LR
     subgraph kanban["📦 Kanban"]
         direction TB
         PHOTON((🎯))
-        T0[🌊 configure (stream)]
+        T0[🔧 hooks]
         PHOTON --> T0
-        T1[🔧 hooks]
+        T1[🌊 main (stream)]
         PHOTON --> T1
-        T2[🌊 main (stream)]
+        T2[📖 list]
         PHOTON --> T2
-        T3[📖 list]
+        T3[🔧 mine]
         PHOTON --> T3
-        T4[🔧 mine]
+        T4[✏️ add]
         PHOTON --> T4
-        T5[✏️ add]
+        T5[🔧 move]
         PHOTON --> T5
-        T6[🔧 move]
+        T6[🔧 reorder]
         PHOTON --> T6
-        T7[🔧 reorder]
+        T7[🔄 edit]
         PHOTON --> T7
-        T8[🔄 edit]
+        T8[🗑️ drop]
         PHOTON --> T8
-        T9[🗑️ drop]
+        T9[📖 search]
         PHOTON --> T9
-        T10[📖 search]
+        T10[🔧 comment]
         PHOTON --> T10
-        T11[🔧 comment]
+        T11[🔧 comments]
         PHOTON --> T11
-        T12[🔧 comments]
+        T12[🔧 show]
         PHOTON --> T12
-        T13[🔧 show]
+        T13[🔧 board]
         PHOTON --> T13
-        T14[🔧 board]
+        T14[🔧 column]
         PHOTON --> T14
-        T15[🔧 column]
+        T15[🗑️ clear]
         PHOTON --> T15
-        T16[🗑️ clear]
+        T16[🔧 stats]
         PHOTON --> T16
-        T17[🔧 stats]
+        T17[🔧 block]
         PHOTON --> T17
-        T18[🔧 block]
+        T18[🔧 sweep]
         PHOTON --> T18
-        T19[🔧 sweep]
-        PHOTON --> T19
     end
 ```
 

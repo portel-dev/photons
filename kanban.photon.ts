@@ -17,7 +17,7 @@ import { io } from '@portel/photon-core';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { existsSync } from 'fs';
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -84,41 +84,11 @@ function createEmptyBoard(name: string): Board {
 // Default to ~/.photon for user photons (can be overridden via PHOTON_DIR or PHOTONS_DIR)
 const PHOTONS_DIR = process.env.PHOTON_DIR || process.env.PHOTONS_DIR || path.join(os.homedir(), '.photon');
 
-// Config stored persistently so all instances (MCP, Beam, etc.) use same settings
-interface KanbanConfig {
-  projectsRoot: string;
-  // WIP & Auto-pull settings
-  wipLimit?: number;           // Max cards in "In Progress" (default: 3)
-  autoPullEnabled?: boolean;   // Auto-pull when under WIP limit
-  autoPullSource?: string;     // Column to pull from (default: "Todo")
-  morningPullCount?: number;   // Cards to pull each morning (default: 3)
-  staleTaskDays?: number;      // Days before task is stale (default: 7)
-}
-
 const DEFAULT_WIP_LIMIT = 10;
 const DEFAULT_AUTO_PULL_SOURCE = 'Todo';
 const DEFAULT_MORNING_PULL_COUNT = 3;
 const DEFAULT_STALE_TASK_DAYS = 7;
-
-const CONFIG_PATH = path.join(PHOTONS_DIR, 'kanban', 'config.json');
 const DEFAULT_PROJECTS_ROOT = path.join(os.homedir(), 'Projects');
-
-function loadConfig(): KanbanConfig {
-  try {
-    if (existsSync(CONFIG_PATH)) {
-      return JSON.parse(readFileSync(CONFIG_PATH, 'utf-8'));
-    }
-  } catch {}
-  return { projectsRoot: DEFAULT_PROJECTS_ROOT };
-}
-
-function saveConfig(config: KanbanConfig): void {
-  const dir = path.dirname(CONFIG_PATH);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
-  writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
-}
 
 // State directory for cross-instance access (scheduled jobs, webhooks)
 const STATE_DIR = path.join(PHOTONS_DIR, 'state', 'kanban');
@@ -133,10 +103,22 @@ export default class KanbanPhoton {
   declare withLock: (lockName: string, fn: () => Promise<any>) => Promise<any>;
   declare instanceName: string;
 
-  // projectsRoot is loaded from config file, not constructor
-  private get projectsRoot(): string {
-    return loadConfig().projectsRoot;
-  }
+  /**
+   * @property projectsRoot Root folder containing project directories
+   * @property wipLimit Maximum cards allowed in "In Progress" column
+   * @property autoPullEnabled Auto-pull when under WIP limit
+   * @property autoPullSource Column to pull from
+   * @property morningPullCount Cards to pull each morning
+   * @property staleTaskDays Days before a task is considered stale
+   */
+  protected settings = {
+    projectsRoot: DEFAULT_PROJECTS_ROOT,
+    wipLimit: DEFAULT_WIP_LIMIT,
+    autoPullEnabled: undefined as boolean | undefined,
+    autoPullSource: DEFAULT_AUTO_PULL_SOURCE,
+    morningPullCount: DEFAULT_MORNING_PULL_COUNT,
+    staleTaskDays: DEFAULT_STALE_TASK_DAYS,
+  };
 
   constructor(boardData: Board = createEmptyBoard('default')) {
     this.boardData = boardData;
@@ -168,58 +150,8 @@ export default class KanbanPhoton {
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
-  // CONFIGURATION
+  // CONFIGURATION (now handled by `protected settings` property above)
   // ══════════════════════════════════════════════════════════════════════════════
-
-  /**
-   * Configure the Kanban photon
-   *
-   * Call this before using any board methods. Three behaviors:
-   * 1. **AI with known values**: Pass params directly to skip elicitation
-   * 2. **Already configured**: Loads existing config from disk
-   * 3. **First-time human**: Prompts user to enter values via elicitation
-   *
-   * @param projectsRoot Root folder containing project directories (e.g., ~/Projects)
-   * @param wipLimit Maximum cards allowed in "In Progress" column
-   *
-   * @example
-   * // AI knows the values - skip elicitation
-   * await configure({ projectsRoot: '/home/user/Projects', wipLimit: 5 })
-   *
-   * @example
-   * // Ensure config exists (will elicit if needed)
-   * await configure()
-   */
-  async *configure(params?: {
-    projectsRoot?: string;
-    wipLimit?: number;
-    autoPullEnabled?: boolean;
-    morningPullCount?: number;
-    staleTaskDays?: number;
-  }): AsyncGenerator<any, { configured: boolean; config?: KanbanConfig }> {
-    // AI/UI provided values directly - merge with existing and save
-    if (params && Object.keys(params).length > 0) {
-      const existing = loadConfig();
-      const config: KanbanConfig = {
-        projectsRoot: params.projectsRoot ?? existing.projectsRoot,
-        wipLimit: params.wipLimit ?? existing.wipLimit ?? DEFAULT_WIP_LIMIT,
-        autoPullEnabled: params.autoPullEnabled ?? existing.autoPullEnabled,
-        morningPullCount: params.morningPullCount ?? existing.morningPullCount,
-        staleTaskDays: params.staleTaskDays ?? existing.staleTaskDays,
-      };
-      saveConfig(config);
-      return { configured: true, config };
-    }
-
-    // Already configured - just return existing config
-    if (existsSync(CONFIG_PATH)) {
-      return { configured: true, config: loadConfig() };
-    }
-
-    // No config and no params - return defaults without eliciting
-    // (elicitation happens in main() for first-time interactive setup)
-    return { configured: false, config: loadConfig() };
-  }
 
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
@@ -326,8 +258,7 @@ export default class KanbanPhoton {
    * When In Progress count < card's threshold, that card gets pulled.
    */
   private checkWipAndAutoPull(): void {
-    const config = loadConfig();
-    const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
+    const wipLimit = this.settings.wipLimit ?? DEFAULT_WIP_LIMIT;
     const inProgressCount = this.boardData.tasks.filter(t => t.column === 'In Progress').length;
 
     // Hard WIP limit - never exceed
@@ -425,7 +356,7 @@ export default class KanbanPhoton {
     if (params?.folder) {
       projectRoot = path.isAbsolute(params.folder)
         ? params.folder
-        : path.join(this.projectsRoot, params.folder);
+        : path.join(this.settings.projectsRoot, params.folder);
     } else {
       projectRoot = process.cwd();
     }
@@ -727,14 +658,6 @@ process.exit(0);
    * @ui board
    */
   async *main() {
-    // First-time setup: create config with defaults (user can run `configure` to customize)
-    if (!existsSync(CONFIG_PATH)) {
-      saveConfig({
-        projectsRoot: DEFAULT_PROJECTS_ROOT,
-        wipLimit: DEFAULT_WIP_LIMIT,
-      });
-    }
-
     // Migrate old board files on first access
     const migrated = await this.migrateOldBoards();
     if (migrated) {
@@ -1292,7 +1215,6 @@ process.exit(0);
     wip: { current: number; limit: number; autoPullEnabled: boolean };
     blockedCount: number;
   }> {
-    const config = loadConfig();
     const byColumn: Record<string, number> = {};
     const byPriority: Record<string, number> = { low: 0, medium: 0, high: 0 };
     const byAssignee: Record<string, number> = {};
@@ -1319,8 +1241,8 @@ process.exit(0);
       byAssignee,
       wip: {
         current: byColumn['In Progress'] || 0,
-        limit: config.wipLimit ?? DEFAULT_WIP_LIMIT,
-        autoPullEnabled: config.autoPullEnabled ?? false,
+        limit: this.settings.wipLimit ?? DEFAULT_WIP_LIMIT,
+        autoPullEnabled: this.settings.autoPullEnabled ?? false,
       },
       blockedCount,
     };
@@ -1474,8 +1396,7 @@ process.exit(0);
    * @queued 1
    */
   async scheduledMorningPull(): Promise<{ pulled: number; boards: string[] }> {
-    const config = loadConfig();
-    const pullCount = config.morningPullCount ?? DEFAULT_MORNING_PULL_COUNT;
+    const pullCount = this.settings.morningPullCount ?? DEFAULT_MORNING_PULL_COUNT;
     const boardNames = await this.allBoardNames();
     const affectedBoards: string[] = [];
     let totalPulled = 0;
@@ -1530,8 +1451,7 @@ process.exit(0);
 
     for (const name of boardNames) {
       const board = await this.loadInstanceBoard(name);
-      const config = loadConfig();
-      const wipLimit = config.wipLimit ?? DEFAULT_WIP_LIMIT;
+      const wipLimit = this.settings.wipLimit ?? DEFAULT_WIP_LIMIT;
       let inProgressCount = board.tasks.filter(t => t.column === 'In Progress').length;
 
       if (inProgressCount >= wipLimit) continue;
@@ -1610,8 +1530,7 @@ process.exit(0);
    * @queued 1
    */
   async scheduledStaleTaskCheck(): Promise<{ moved: number; boards: string[] }> {
-    const config = loadConfig();
-    const staleDays = config.staleTaskDays ?? DEFAULT_STALE_TASK_DAYS;
+    const staleDays = this.settings.staleTaskDays ?? DEFAULT_STALE_TASK_DAYS;
     const staleThreshold = Date.now() - staleDays * 24 * 60 * 60 * 1000;
 
     const boardNames = await this.allBoardNames();

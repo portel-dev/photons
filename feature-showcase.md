@@ -2,7 +2,7 @@
 
 Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.
 
-> **12 tools** · Streaming Photon · v1.0.0 · MIT
+> **10 tools** · Streaming Photon · v1.0.0 · MIT
 
 **Platform Features:** `generator` `channels`
 
@@ -16,8 +16,6 @@ No configuration required.
 
 | Method | Description |
 |--------|-------------|
-| `configure` | Set configuration values |
-| `getConfig` | Get current configuration |
 | `emits` ⚡ | Demonstrates all io.emit types in a single generator. |
 | `asks` ⚡ | Demonstrates all io.ask types interactively. |
 | `review` | A code review prompt template. |
@@ -31,35 +29,6 @@ No configuration required.
 
 
 ## 🔧 Tools
-
-
-### `configure`
-
-Set configuration values
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `theme` | 'light' | 'dark' | 'auto' | No | UI theme preference |
-| `maxItems` | number | No | Maximum items to display {@default 10} [min: 1, max: 100] |
-| `verbose` | boolean | No | Enable verbose logging |
-
-
-
-
-
----
-
-
-### `getConfig`
-
-Get current configuration
-
-
-
-
-
----
 
 
 ### `emits` ⚡
@@ -194,30 +163,26 @@ flowchart LR
     subgraph feature_showcase["📦 Feature Showcase"]
         direction TB
         PHOTON((🎯))
-        T0[⚙️ configure]
+        T0[🌊 emits (stream)]
         PHOTON --> T0
-        T1[📖 getConfig]
+        T1[🌊 asks (stream)]
         PHOTON --> T1
-        T2[🌊 emits (stream)]
+        T2[🔧 review]
         PHOTON --> T2
-        T3[🌊 asks (stream)]
+        T3[🔧 formatPrimitive]
         PHOTON --> T3
-        T4[🔧 review]
+        T4[🔧 formatJson]
         PHOTON --> T4
-        T5[🔧 formatPrimitive]
+        T5[🔧 formatTable]
         PHOTON --> T5
-        T6[🔧 formatJson]
+        T6[🔧 formatMarkdown]
         PHOTON --> T6
-        T7[🔧 formatTable]
+        T7[🔧 increment]
         PHOTON --> T7
-        T8[🔧 formatMarkdown]
+        T8[🔧 count]
         PHOTON --> T8
-        T9[🔧 increment]
+        T9[🔧 broadcast]
         PHOTON --> T9
-        T10[🔧 count]
-        PHOTON --> T10
-        T11[🔧 broadcast]
-        PHOTON --> T11
     end
 ```
 

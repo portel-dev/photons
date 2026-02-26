@@ -2,7 +2,7 @@
 
 Mailbox-style Git interface, manage repos like an inbox
 
-> **58 tools** · Streaming Photon · v2.0.0 · MIT
+> **56 tools** · Streaming Photon · v2.0.0 · MIT
 
 **Platform Features:** `generator` `custom-ui` `elicitation`
 
@@ -16,12 +16,10 @@ No configuration required.
 
 | Method | Description |
 |--------|-------------|
-| `configure` ⚡ | Configure the Git Box photon. |
 | `main` ⚡ | Opens the mailbox interface for managing git repositories. |
 | `repoAdd` ⚡ | Add a repository to track — prompts interactively if the folder isn't a git repo |
 | `repoInit` | Initialize a new git repository |
 | `availableRepos` | Scan projects root folder for available git repositories and folders |
-| `projectsRootSet` | Set the projects root folder |
 | `repoRemove` | Remove a repository from tracking |
 | `repos` | List all tracked repositories with status counts |
 | `commits` | Get commit history for a repository (like inbox messages) |
@@ -79,30 +77,6 @@ No configuration required.
 ## 🔧 Tools
 
 
-### `configure` ⚡
-
-Configure the Git Box photon. Call this before using repository methods. Three behaviors: 1. **AI with known values**: Pass params directly to skip elicitation 2. **Already configured**: Loads existing config from disk 3. **First-time human**: Prompts user to enter values via elicitation
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `projectsRoot` | any | Yes | Root folder containing git repositories (e.g., ~/Projects)
-   * |
-
-
-
-
-**Example:**
-
-```typescript
-// AI knows the values - skip elicitation
-await configure({ projectsRoot: '/home/user/Projects' })
-```
-
-
----
-
-
 ### `main` ⚡
 
 Opens the mailbox interface for managing git repositories. Displays tracked repos with their status, commit history, and working changes.
@@ -150,22 +124,6 @@ Initialize a new git repository
 ### `availableRepos`
 
 Scan projects root folder for available git repositories and folders
-
-
-
-
-
----
-
-
-### `projectsRootSet`
-
-Set the projects root folder
-
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `rootPath` | string | Yes | Path to folder containing git repositories |
 
 
 
@@ -1074,122 +1032,118 @@ flowchart LR
     subgraph git_box["📦 Git Box"]
         direction TB
         PHOTON((🎯))
-        T0[🌊 configure (stream)]
+        T0[🌊 main (stream)]
         PHOTON --> T0
-        T1[🌊 main (stream)]
+        T1[🌊 repoAdd (stream)]
         PHOTON --> T1
-        T2[🌊 repoAdd (stream)]
+        T2[🔧 repoInit]
         PHOTON --> T2
-        T3[🔧 repoInit]
+        T3[🔧 availableRepos]
         PHOTON --> T3
-        T4[🔧 availableRepos]
+        T4[🔧 repoRemove]
         PHOTON --> T4
-        T5[🔧 projectsRootSet]
+        T5[🔧 repos]
         PHOTON --> T5
-        T6[🔧 repoRemove]
+        T6[🔧 commits]
         PHOTON --> T6
-        T7[🔧 repos]
+        T7[🔧 commitFiles]
         PHOTON --> T7
-        T8[🔧 commits]
+        T8[🔧 status]
         PHOTON --> T8
-        T9[🔧 commitFiles]
+        T9[🔧 fileStage]
         PHOTON --> T9
-        T10[🔧 status]
+        T10[🔧 fileUnstage]
         PHOTON --> T10
-        T11[🔧 fileStage]
+        T11[🔧 commit]
         PHOTON --> T11
-        T12[🔧 fileUnstage]
+        T12[🔧 pull]
         PHOTON --> T12
-        T13[🔧 commit]
+        T13[📤 push]
         PHOTON --> T13
-        T14[🔧 pull]
+        T14[📖 fetch]
         PHOTON --> T14
-        T15[📤 push]
+        T15[🔧 branches]
         PHOTON --> T15
-        T16[📖 fetch]
+        T16[🔧 branchSwitch]
         PHOTON --> T16
-        T17[🔧 branches]
+        T17[🔧 diff]
         PHOTON --> T17
-        T18[🔧 branchSwitch]
+        T18[🔧 changesDiscard]
         PHOTON --> T18
-        T19[🔧 diff]
+        T19[🔧 commitDiff]
         PHOTON --> T19
-        T20[🔧 changesDiscard]
+        T20[🔧 fileContent]
         PHOTON --> T20
-        T21[🔧 commitDiff]
+        T21[🔧 branchCreate]
         PHOTON --> T21
-        T22[🔧 fileContent]
+        T22[🔧 branchCreateSwitch]
         PHOTON --> T22
-        T23[🔧 branchCreate]
+        T23[🔧 branchDelete]
         PHOTON --> T23
-        T24[🔧 branchCreateSwitch]
+        T24[🔧 branchMerge]
         PHOTON --> T24
-        T25[🔧 branchDelete]
+        T25[🔧 mergeAbort]
         PHOTON --> T25
-        T26[🔧 branchMerge]
+        T26[🔧 reflog]
         PHOTON --> T26
-        T27[🔧 mergeAbort]
+        T27[🔧 undoLast]
         PHOTON --> T27
-        T28[🔧 reflog]
+        T28[🔧 commitReset]
         PHOTON --> T28
-        T29[🔧 undoLast]
+        T29[🔧 commitRecover]
         PHOTON --> T29
-        T30[🔧 commitReset]
+        T30[🔧 stashes]
         PHOTON --> T30
-        T31[🔧 commitRecover]
+        T31[🔧 stashCreate]
         PHOTON --> T31
-        T32[🔧 stashes]
+        T32[🔧 stashApply]
         PHOTON --> T32
-        T33[🔧 stashCreate]
+        T33[🔧 stashPop]
         PHOTON --> T33
-        T34[🔧 stashApply]
+        T34[🔧 stashDrop]
         PHOTON --> T34
-        T35[🔧 stashPop]
+        T35[🔧 stashShow]
         PHOTON --> T35
-        T36[🔧 stashDrop]
+        T36[🔧 stashesClear]
         PHOTON --> T36
-        T37[🔧 stashShow]
+        T37[🔧 commitsSquash]
         PHOTON --> T37
-        T38[🔧 stashesClear]
+        T38[🔧 commitMessageAmend]
         PHOTON --> T38
-        T39[🔧 commitsSquash]
+        T39[🔧 fileRemoveFromHistory]
         PHOTON --> T39
-        T40[🔧 commitMessageAmend]
+        T40[🔧 cherryPick]
         PHOTON --> T40
-        T41[🔧 fileRemoveFromHistory]
+        T41[🔧 cherryPickAbort]
         PHOTON --> T41
-        T42[🔧 cherryPick]
+        T42[🔧 cherryPickContinue]
         PHOTON --> T42
-        T43[🔧 cherryPickAbort]
+        T43[🔧 commitRevert]
         PHOTON --> T43
-        T44[🔧 cherryPickContinue]
+        T44[🔧 revertAbort]
         PHOTON --> T44
-        T45[🔧 commitRevert]
+        T45[🔧 commitFixup]
         PHOTON --> T45
-        T46[🔧 revertAbort]
+        T46[🔧 rebasePreview]
         PHOTON --> T46
-        T47[🔧 commitFixup]
+        T47[🔧 rebaseScripted]
         PHOTON --> T47
-        T48[🔧 rebasePreview]
+        T48[🔧 rebaseContinue]
         PHOTON --> T48
-        T49[🔧 rebaseScripted]
+        T49[🔧 rebaseAbort]
         PHOTON --> T49
-        T50[🔧 rebaseContinue]
+        T50[🔧 conflicts]
         PHOTON --> T50
-        T51[🔧 rebaseAbort]
+        T51[🔧 conflictMarkResolved]
         PHOTON --> T51
-        T52[🔧 conflicts]
+        T52[🔧 conflictResolve]
         PHOTON --> T52
-        T53[🔧 conflictMarkResolved]
+        T53[🔧 blame]
         PHOTON --> T53
-        T54[🔧 conflictResolve]
+        T54[🔧 commitsSearch]
         PHOTON --> T54
-        T55[🔧 blame]
+        T55[🔧 changeFind]
         PHOTON --> T55
-        T56[🔧 commitsSearch]
-        PHOTON --> T56
-        T57[🔧 changeFind]
-        PHOTON --> T57
     end
 ```
 

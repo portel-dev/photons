@@ -40,12 +40,14 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../boards.photon.ts",
-      "hash": "sha256:76089e26eaabcb9a47eed87aea1ed3436000fabcbcd06d6334239437af40b184",
+      "hash": "sha256:a43a0cdda1a7dfa4aa368931b73d8b3d52768e703ca6dbb966f9bb576708a975",
       "contentHash": "sha256:76089e26eaabcb9a47eed87aea1ed3436000fabcbcd06d6334239437af40b184",
       "tools": [
         "main"
       ],
-      "assets": [],
+      "assets": [
+        "boards/ui/board.html"
+      ],
       "photonType": "streaming",
       "features": [
         "generator",
@@ -84,8 +86,8 @@
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:435ea198388a5f1f786375a7a32eb15e0d14ac66a2c3408522dda02a656a973c",
-      "contentHash": "sha256:435ea198388a5f1f786375a7a32eb15e0d14ac66a2c3408522dda02a656a973c",
+      "hash": "sha256:7e9deaf103307bb8bab5fcd3f78c46db3ad7669555f233794bf3e938e4684b79",
+      "contentHash": "sha256:5d4f1c6f59f8ebceaf17e632603dde4b801a2383d9b4670c7ad79a7c3cdacd0c",
       "tools": [
         "start",
         "drop",
@@ -95,7 +97,9 @@
         "stats",
         "replay"
       ],
-      "assets": [],
+      "assets": [
+        "connect-four/ui/board.html"
+      ],
       "photonType": "api",
       "features": [
         "stateful",
@@ -310,11 +314,9 @@
       "license": "MIT",
       "icon": "🎯",
       "source": "../feature-showcase.photon.ts",
-      "hash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
-      "contentHash": "sha256:6ea8779a1147ecd48b04453d774a7b077bac46a4032b687e4d9cbd4eb46ea72c",
+      "hash": "sha256:eaac203dde8e85ec595248e9d00dde52dde643307ad9b1cf4ababa1f3b3aaf50",
+      "contentHash": "sha256:eaac203dde8e85ec595248e9d00dde52dde643307ad9b1cf4ababa1f3b3aaf50",
       "tools": [
-        "configure",
-        "getConfig",
         "emits",
         "asks",
         "review",
@@ -441,15 +443,13 @@
       "license": "MIT",
       "icon": "📬",
       "source": "../git-box.photon.ts",
-      "hash": "sha256:c87d76800998ec7e612de8494ffdabfc3b90828ad5d4bcce47f6f66a69aed6f7",
-      "contentHash": "sha256:0d74b950729300b9d776b6ae055b1c84f29b8d95f22ebade2478e55c5d598f90",
+      "hash": "sha256:277004061acd21905dda8c24363e90619843ffaa85b877893cb9043c6d19992f",
+      "contentHash": "sha256:2ed5f36b1b8af5eb2077e495a0a82b4fa25db4bf887923bebaba39719aa7de5b",
       "tools": [
-        "configure",
         "main",
         "repoAdd",
         "repoInit",
         "availableRepos",
-        "projectsRootSet",
         "repoRemove",
         "repos",
         "commits",
@@ -680,10 +680,9 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:cc2aadce31d7b8e42df26171717449b8ee3693eefddfaa760ddcfe22e2cf53a4",
-      "contentHash": "sha256:bf058881eeaf2593455363b91133cf9fca37f93d4c4af8a3c3fc3a14382de9a6",
+      "hash": "sha256:a60fe04ad0ae802237e19a359783ed36bf4afffdfb99e5c0206981ec58505c64",
+      "contentHash": "sha256:d064d0af1a5b3c092065a5bdd833b5d90e6dc9feea33726c8d8a50afda1678f6",
       "tools": [
-        "configure",
         "hooks",
         "main",
         "list",

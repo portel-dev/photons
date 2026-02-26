@@ -33,8 +33,18 @@ export default class FeatureShowcasePhoton extends PhotonMCP {
   private counter = 0;
   private initializeRan = false;
   private shutdownRan = false;
-  private configStore: Record<string, any> = {};
   private emitLog: string[] = [];
+
+  /**
+   * @property theme UI theme preference
+   * @property maxItems Maximum items to display (1-100)
+   * @property verbose Enable verbose logging
+   */
+  protected settings = {
+    theme: 'auto' as 'light' | 'dark' | 'auto',
+    maxItems: 10,
+    verbose: false,
+  };
 
   // ══════════════════════════════════════════════════════════════════════════════
   // LIFECYCLE HOOKS
@@ -48,33 +58,6 @@ export default class FeatureShowcasePhoton extends PhotonMCP {
   async onShutdown(): Promise<void> {
     this.shutdownRan = true;
     this.emitLog.push('onShutdown');
-  }
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // CONFIGURE / GETCONFIG CONVENTION
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /**
-   * Set configuration values
-   *
-   * @param theme UI theme preference
-   * @param maxItems Maximum items to display {@min 1} {@max 100} {@default 10}
-   * @param verbose Enable verbose logging
-   */
-  async configure(params: {
-    theme?: 'light' | 'dark' | 'auto';
-    maxItems?: number;
-    verbose?: boolean;
-  }): Promise<{ success: boolean; applied: Record<string, any> }> {
-    Object.assign(this.configStore, params);
-    return { success: true, applied: { ...params } };
-  }
-
-  /**
-   * Get current configuration
-   */
-  async getConfig(): Promise<Record<string, any>> {
-    return { ...this.configStore };
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -337,26 +320,20 @@ All features are operational.
   }
 
   /**
-   * Verify configure/getConfig roundtrip
+   * Verify settings property reads work
    * @internal
    */
-  async testConfigureRoundtrip(): Promise<{ passed: boolean; message: string }> {
-    await this.configure({ theme: 'dark', maxItems: 42, verbose: true });
-    const config = await this.getConfig();
-
-    if (config.theme !== 'dark') {
-      return { passed: false, message: `Expected theme=dark, got ${config.theme}` };
+  async testSettingsRead(): Promise<{ passed: boolean; message: string }> {
+    if (this.settings.theme !== 'auto') {
+      return { passed: false, message: `Expected default theme=auto, got ${this.settings.theme}` };
     }
-    if (config.maxItems !== 42) {
-      return { passed: false, message: `Expected maxItems=42, got ${config.maxItems}` };
+    if (this.settings.maxItems !== 10) {
+      return { passed: false, message: `Expected default maxItems=10, got ${this.settings.maxItems}` };
     }
-    if (config.verbose !== true) {
-      return { passed: false, message: `Expected verbose=true, got ${config.verbose}` };
+    if (this.settings.verbose !== false) {
+      return { passed: false, message: `Expected default verbose=false, got ${this.settings.verbose}` };
     }
-
-    // Clean up
-    this.configStore = {};
-    return { passed: true, message: 'configure() stores values, getConfig() retrieves them' };
+    return { passed: true, message: 'settings property reads work with defaults' };
   }
 
   /**
