@@ -19,7 +19,23 @@ import { io } from '@portel/photon-core';
 
 export default class Web {
     private turndown: TurndownService;
-    private readonly userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3';
+    private readonly userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+    private readonly baseHeaders = {
+        'User-Agent': this.userAgent,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Sec-Ch-Ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'Sec-Ch-Ua-Platform': '"macOS"',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+    };
 
     constructor() {
         this.turndown = new TurndownService({
@@ -43,7 +59,7 @@ export default class Web {
             yield io.emit.status('Searching Brave...');
 
             const { data } = await axios.get(url, {
-                headers: { 'User-Agent': this.userAgent },
+                headers: this.baseHeaders,
                 timeout: 10000
             });
 
@@ -99,8 +115,8 @@ export default class Web {
 
             // 1. Fetch the raw HTML
             const { data: html } = await axios.get(params.url, {
-                headers: { 'User-Agent': this.userAgent },
-                timeout: 10000 // 10s timeout
+                headers: { ...this.baseHeaders, 'Referer': 'https://www.google.com/' },
+                timeout: 15000
             });
 
             yield io.emit.status('Extracting content...');

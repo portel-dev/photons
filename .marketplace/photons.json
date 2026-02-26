@@ -84,8 +84,8 @@
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:e63715135cc88c8d53c55e224a6567b3e8904da9fb8ef6a47e9a2328e421a2b6",
-      "contentHash": "sha256:e63715135cc88c8d53c55e224a6567b3e8904da9fb8ef6a47e9a2328e421a2b6",
+      "hash": "sha256:435ea198388a5f1f786375a7a32eb15e0d14ac66a2c3408522dda02a656a973c",
+      "contentHash": "sha256:435ea198388a5f1f786375a7a32eb15e0d14ac66a2c3408522dda02a656a973c",
       "tools": [
         "start",
         "drop",
@@ -680,7 +680,7 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../kanban.photon.ts",
-      "hash": "sha256:14b629fb67862ddc65e9251163de89f8b27816bf7c96b4302c8c3f2a4a0b9762",
+      "hash": "sha256:cc2aadce31d7b8e42df26171717449b8ee3693eefddfaa760ddcfe22e2cf53a4",
       "contentHash": "sha256:bf058881eeaf2593455363b91133cf9fca37f93d4c4af8a3c3fc3a14382de9a6",
       "tools": [
         "configure",
@@ -1163,8 +1163,8 @@
       "license": "MIT",
       "icon": "🌐",
       "source": "../web.photon.ts",
-      "hash": "sha256:29c339e2b616d9acd5d029f6914cddeccaed533b70fe865c200d0a29ecff13fc",
-      "contentHash": "sha256:29c339e2b616d9acd5d029f6914cddeccaed533b70fe865c200d0a29ecff13fc",
+      "hash": "sha256:11159163d4516295250d0cf14421cf39a09131ab85ab2d6626ea33522b0c778c",
+      "contentHash": "sha256:11159163d4516295250d0cf14421cf39a09131ab85ab2d6626ea33522b0c778c",
       "tools": [
         "search",
         "read"
