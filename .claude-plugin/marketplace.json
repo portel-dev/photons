@@ -622,7 +622,7 @@
     },
     {
       "name": "spreadsheet",
-      "description": "Spreadsheet API - Read, update and manage CSV files with formula support Common use cases: - Load a CSV file and interact with it like a spreadsheet - Read specific cells, rows, or columns - Update cells (supports formulas starting with =) - Compute values based on formulas",
+      "description": "Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.",
       "source": "./",
       "strict": false,
       "hooks": [
