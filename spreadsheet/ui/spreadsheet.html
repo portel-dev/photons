@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProSheet - Professional Spreadsheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #217346;
+            --primary-hover: #1e623c;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f3f2f1;
+            --border: #e1e4e8;
+            --border-dark: #d0d7de;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --text-muted: #8c959f;
+            --accent: #0969da;
+            --error: #cf222e;
+            --formula-bar-bg: #f6f8fa;
+            --header-bg: #f6f8fa;
+            --grid-line: #d0d7de;
+            --selection: #0969da;
+            --selection-bg: rgba(9, 105, 218, 0.1);
+            --cell-active: #ffffff;
+            --cell-empty: rgba(0, 0, 0, 0.03);
+            --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.04);
+            --shadow-md: 0 3px 6px rgba(31, 35, 40, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --primary: #2ea043;
+            --primary-hover: #3fb950;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --border-dark: #484f58;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --error: #f85149;
+            --formula-bar-bg: #161b22;
+            --header-bg: #161b22;
+            --grid-line: #30363d;
+            --selection: #58a6ff;
+            --selection-bg: rgba(88, 166, 255, 0.15);
+            --cell-active: #0d1117;
+            --cell-empty: rgba(255, 255, 255, 0.03);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+        }
+
+        .toolbar-section {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-right: 12px;
+            border-right: 1px solid var(--border);
+        }
+
+        .toolbar-section:last-child {
+            border-right: none;
+            padding-right: 0;
+        }
+
+        .btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text-primary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-dark);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-icon {
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
+        .btn.active {
+            background: var(--selection-bg);
+            border-color: var(--selection);
+            color: var(--selection);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.15s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* View Controls */
+        .view-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .view-btn:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .view-btn.active {
+            background: var(--selection);
+            color: white;
+            border-color: var(--selection);
+        }
+
+        /* Formula Bar */
+        .formula-container {
+            background: var(--formula-bar-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cell-reference {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 80px;
+            text-align: center;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .formula-input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0 12px;
+            transition: border-color 0.15s;
+        }
+
+        .formula-input-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--selection-bg);
+        }
+
+        .formula-indicator {
+            color: var(--primary);
+            font-size: 16px;
+            margin-right: 8px;
+            display: none;
+            user-select: none;
+        }
+
+        .formula-input-wrapper.has-formula .formula-indicator {
+            display: inline;
+        }
+
+        #formulaInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 6px 0;
+            font-size: 14px;
+            font-family: 'SF Mono', Monaco, monospace;
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        /* Field Type Selector */
+        .field-type-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            border-left: 1px solid var(--border);
+            margin-left: 8px;
+        }
+
+        .field-type-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .field-type-dropdown {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar for Views */
+        .sidebar {
+            width: 240px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.2s;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sidebar-section {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .view-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .view-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s;
+        }
+
+        .view-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .view-item.active {
+            background: var(--selection-bg);
+            color: var(--selection);
+            font-weight: 500;
+        }
+
+        .filter-group {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .filter-group-header {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-condition {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+
+        /* Sheet Container */
+        .sheet-container {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: var(--bg-secondary);
+        }
+
+        /* Grid */
+        .grid-wrapper {
+            position: relative;
+            min-width: fit-content;
+            min-height: fit-content;
+            background: var(--bg-primary);
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border-right: 1px solid var(--grid-line);
+            border-bottom: 1px solid var(--grid-line);
+            padding: 0;
+            position: relative;
+        }
+
+        /* Headers */
+        th {
+            background: var(--header-bg);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: center;
+            position: sticky;
+            z-index: 10;
+        }
+
+        th.corner {
+            position: sticky;
+            top: 0;
+            left: 0;
+            z-index: 20;
+            width: 50px;
+            height: 25px;
+            background: var(--header-bg);
+            border-right: 1px solid var(--border-dark);
+            border-bottom: 1px solid var(--border-dark);
+            cursor: pointer;
+        }
+
+        th.corner:hover {
+            background: var(--bg-tertiary);
+        }
+
+        th.col-header {
+            top: 0;
+            height: 25px;
+            min-width: 100px;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        th.row-header {
+            left: 0;
+            width: 50px;
+            height: 24px;
+            border-right: 1px solid var(--border-dark);
+        }
+
+        th.col-header:hover, th.row-header:hover {
+            background: var(--bg-tertiary);
+            cursor: pointer;
+        }
+
+        th.selected, td.selected {
+            background: var(--selection-bg);
+            outline: 2px solid var(--selection);
+            outline-offset: -2px;
+        }
+
+        /* Cells */
+        td {
+            background: var(--bg-primary);
+            height: 24px;
+            min-width: 100px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        td:hover {
+            background: var(--bg-secondary);
+        }
+
+        td.selected {
+            background: var(--bg-primary);
+        }
+
+        td.empty {
+            background: var(--cell-empty);
+        }
+
+        td.empty:hover {
+            background: var(--cell-empty);
+            opacity: 0.8;
+        }
+
+        .cell-content {
+            padding: 0 6px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+
+        td.empty .cell-content {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .cell-number {
+            text-align: right;
+            justify-content: flex-end;
+        }
+
+        .cell-error {
+            color: var(--error);
+        }
+
+        /* Cell Types */
+        .cell-checkbox {
+            justify-content: center;
+        }
+
+        .cell-checkbox input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .cell-link {
+            color: var(--accent);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .cell-select {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cell-attachment {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .attachment-badge {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+        }
+
+        /* Grouped Rows */
+        .group-header {
+            background: var(--bg-tertiary) !important;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .group-header td {
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border-dark);
+        }
+
+        .group-toggle {
+            margin-right: 8px;
+            font-size: 10px;
+        }
+
+        .grouped-row {
+            display: table-row;
+        }
+
+        .grouped-row.collapsed {
+            display: none;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 6px 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-left {
+            display: flex;
+            gap: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Resize handles */
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            cursor: col-resize;
+            z-index: 5;
+        }
+
+        .resize-handle:hover {
+            background: var(--accent);
+        }
+
+        /* CSV Import/Export Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 20px;
+            flex: 1;
+            overflow: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        textarea.csv-input {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            resize: vertical;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Helper text */
+        .formula-help {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .formula-help code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, monospace;
+            color: var(--text-primary);
+        }
+
+        /* Linked Record Modal */
+        .linked-record-modal {
+            max-width: 800px;
+        }
+
+        .record-list {
+            max-height: 400px;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .record-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.15s;
+        }
+
+        .record-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .record-item.selected {
+            background: var(--selection-bg);
+        }
+
+        .record-checkbox {
+            width: 18px;
+            height: 18px;
+        }
+
+        .record-preview {
+            flex: 1;
+            display: flex;
+            gap: 16px;
+        }
+
+        .record-field {
+            font-size: 13px;
+        }
+
+        .record-field-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        /* Toggle sidebar button */
+        .sidebar-toggle {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            padding: 8px 4px;
+            cursor: pointer;
+            z-index: 50;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .sheet-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-section">
+            <button class="btn btn-primary" onclick="spreadsheet.newFile()">
+                <span>+</span> New
+            </button>
+            <button class="btn" onclick="spreadsheet.openImportModal()">
+                Import CSV
+            </button>
+            <button class="btn" onclick="spreadsheet.exportCSV()">
+                Export CSV
+            </button>
+        </div>
+        <div class="toolbar-section">
+            <button class="btn btn-icon" onclick="spreadsheet.addRow()" title="Add Row">Add Row</button>
+            <button class="btn btn-icon" onclick="spreadsheet.addColumn()" title="Add Column">Add Col</button>
+            <button class="btn btn-icon" onclick="spreadsheet.deleteRow()" title="Delete Row" style="color: var(--error)">Delete Row</button>
+            <button class="btn btn-icon" onclick="spreadsheet.deleteColumn()" title="Delete Column" style="color: var(--error)">Delete Col</button>
+        </div>
+        <div class="toolbar-section">
+            <button class="btn" onclick="spreadsheet.toggleView('grid')" id="btn-grid">Grid</button>
+            <button class="btn" onclick="spreadsheet.toggleView('gallery')" id="btn-gallery">Gallery</button>
+            <button class="btn" onclick="spreadsheet.toggleView('kanban')" id="btn-kanban">Kanban</button>
+        </div>
+        <div class="toolbar-section">
+            <button class="theme-toggle" onclick="spreadsheet.toggleTheme()" title="Toggle Dark Mode">🌓</button>
+        </div>
+    </div>
+
+    <!-- Formula Bar -->
+    <div class="formula-container">
+        <div class="cell-reference" id="cellRef">A1</div>
+        <div class="formula-input-wrapper" id="formulaWrapper">
+            <span class="formula-indicator">ƒ</span>
+            <input type="text" id="formulaInput" placeholder="Enter formula (start with =) or value..." autocomplete="off">
+        </div>
+        <div class="field-type-selector">
+            <span class="field-type-label">Type:</span>
+            <select class="field-type-dropdown" id="fieldType" onchange="spreadsheet.setFieldType()">
+                <option value="text">Single Line Text</option>
+                <option value="longtext">Long Text</option>
+                <option value="number">Number</option>
+                <option value="checkbox">Checkbox</option>
+                <option value="select">Single Select</option>
+                <option value="multiselect">Multiple Select</option>
+                <option value="date">Date</option>
+                <option value="attachment">Attachment</option>
+                <option value="link">Linked Record</option>
+                <option value="formula">Formula</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Views & Filters</span>
+                <button class="btn-icon" onclick="spreadsheet.toggleSidebar()">←</button>
+            </div>
+            
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Views</div>
+                <div class="view-list" id="viewList">
+                    <div class="view-item active" onclick="spreadsheet.switchView('grid')">
+                        <span>⊞</span> Grid view
+                    </div>
+                    <div class="view-item" onclick="spreadsheet.switchView('grouped')">
+                        <span>☰</span> Grouped by Status
+                    </div>
+                    <div class="view-item" onclick="spreadsheet.switchView('calendar')">
+                        <span>📅</span> Calendar
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Group By</div>
+                <select class="filter-select" id="groupBySelect" onchange="spreadsheet.applyGrouping()">
+                    <option value="">None</option>
+                </select>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Filters</div>
+                <div id="filterContainer">
+                    <div class="filter-group">
+                        <div class="filter-condition">
+                            <select class="filter-select" id="filterColumn">
+                                <option value="">Select column...</option>
+                            </select>
+                        </div>
+                        <div class="filter-condition">
+                            <select class="filter-select" id="filterOperator">
+                                <option value="equals">equals</option>
+                                <option value="contains">contains</option>
+                                <option value="greater">greater than</option>
+                                <option value="less">less than</option>
+                                <option value="empty">is empty</option>
+                            </select>
+                        </div>
+                        <input type="text" class="filter-select" id="filterValue" placeholder="Value...">
+                        <button class="btn btn-primary" onclick="spreadsheet.addFilter()" style="width: 100%; margin-top: 8px;">Apply Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Sort</div>
+                <div class="filter-condition">
+                    <select class="filter-select" id="sortColumn" onchange="spreadsheet.applySort()">
+                        <option value="">Select column...</option>
+                    </select>
+                    <select class="filter-select" id="sortDirection" onchange="spreadsheet.applySort()">
+                        <option value="asc">A → Z</option>
+                        <option value="desc">Z → A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sheet -->
+        <div class="sheet-wrapper">
+            <button class="sidebar-toggle" onclick="spreadsheet.toggleSidebar()" id="sidebarToggle">▶</button>
+            <div class="sheet-container" id="sheetContainer">
+                <div class="grid-wrapper" id="gridWrapper">
+                    <table id="spreadsheet">
+                        <thead id="tableHead"></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">
+            <span class="status-item" id="cellCount">Ready</span>
+            <span class="status-item" id="sumDisplay"></span>
+            <span class="status-item" id="recordCount"></span>
+        </div>
+        <div class="status-right">
+            <span class="status-item">ProSheet v2.0</span>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Import CSV Data</span>
+                <button class="modal-close" onclick="spreadsheet.closeImportModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <textarea class="csv-input" id="csvInput" placeholder="Paste your CSV data here...
+Example:
+Name,Age,City,Status
+John,30,New York,Active
+Jane,25,London,Inactive"></textarea>
+                <div class="formula-help">
+                    <strong>Supported formulas:</strong> Start with <code>=</code> to create formulas.<br>
+                    Use <code>A1</code>, <code>B2</code> notation or <code>Name1</code>, <code>Age2</code> (header + row).<br>
+                    Functions: <code>SUM</code>, <code>AVG</code>, <code>MAX</code>, <code>MIN</code>, <code>COUNT</code>, <code>IF</code>, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>^</code>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="spreadsheet.closeImportModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="spreadsheet.importCSV()">Import</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linked Record Modal -->
+    <div class="modal-overlay" id="linkedRecordModal">
+        <div class="modal linked-record-modal">
+            <div class="modal-header">
+                <span class="modal-title">Link Records</span>
+                <button class="modal-close" onclick="spreadsheet.closeLinkedRecordModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="record-list" id="recordList">
+                    <!-- Records will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="spreadsheet.closeLinkedRecordModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="spreadsheet.confirmLinkRecords()">Link Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SpreadsheetEngine {
+            constructor(rows = 20, cols = 10) {
+                this.data = [];
+                this.formulas = [];
+                this.headers = [];
+                this.fieldTypes = []; // Store field types for each column
+                this.selectOptions = []; // Options for select fields
+                this.linkedRecords = []; // Store linked record relationships
+                this.rowCount = rows;
+                this.colCount = cols;
+                this.selectedCell = { row: 0, col: 0 };
+                this.isEditing = false;
+                this.editStartValue = '';
+                this.columnWidths = new Array(cols).fill(100);
+                this.darkMode = false;
+                this.sidebarVisible = true;
+                this.currentView = 'grid';
+                this.groupByColumn = null;
+                this.filters = [];
+                this.sortConfig = { column: null, direction: 'asc' };
+                this.hiddenRows = new Set();
+                this.init();
+            }
+
+            init() {
+                this.generateHeaders();
+                this.initializeData();
+                this.initializeFieldTypes();
+                this.render();
+                this.setupEventListeners();
+                this.updateFilterOptions();
+                this.selectCell(0, 0);
+            }
+
+            initializeFieldTypes() {
+                this.fieldTypes = new Array(this.colCount).fill('text');
+                this.selectOptions = new Array(this.colCount).fill(null).map(() => []);
+                this.linkedRecords = new Array(this.colCount).fill(null).map(() => []);
+            }
+
+            toggleTheme() {
+                this.darkMode = !this.darkMode;
+                document.documentElement.setAttribute('data-theme', this.darkMode ? 'dark' : 'light');
+            }
+
+            toggleSidebar() {
+                this.sidebarVisible = !this.sidebarVisible;
+                document.getElementById('sidebar').classList.toggle('collapsed', !this.sidebarVisible);
+                document.getElementById('sidebarToggle').textContent = this.sidebarVisible ? '◀' : '▶';
+            }
+
+            toggleView(view) {
+                this.currentView = view;
+                document.querySelectorAll('.toolbar .btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`btn-${view}`)?.classList.add('active');
+                
+                if (view === 'grid') {
+                    this.render();
+                } else if (view === 'gallery') {
+                    this.renderGallery();
+                } else if (view === 'kanban') {
+                    this.renderKanban();
+                }
+            }
+
+            switchView(viewName) {
+                document.querySelectorAll('.view-item').forEach(item => item.classList.remove('active'));
+                event.target.closest('.view-item').classList.add('active');
+                
+                if (viewName === 'grouped') {
+                    this.applyGrouping();
+                } else {
+                    this.groupByColumn = null;
+                    this.render();
+                }
+            }
+
+            renderGallery() {
+                // Simplified gallery view
+                const container = document.getElementById('gridWrapper');
+                let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; padding: 16px;">';
+                
+                for (let row = 0; row < this.rowCount; row++) {
+                    if (this.hiddenRows.has(row)) continue;
+                    
+                    html += `<div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; box-shadow: var(--shadow-sm);">`;
+                    html += `<div style="font-weight: 600; margin-bottom: 8px; color: var(--text-primary);">Record ${row + 1}</div>`;
+                    
+                    for (let col = 0; col < this.colCount; col++) {
+                        const value = this.data[row][col];
+                        if (value) {
+                            html += `<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">
+                                <span style="font-weight: 500;">${this.headers[col]}:</span> ${value}
+                            </div>`;
+                        }
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+                container.innerHTML = html;
+            }
+
+            renderKanban() {
+                // Find a status-like column or use first column
+                let statusCol = this.fieldTypes.findIndex(type => type === 'select');
+                if (statusCol === -1) statusCol = 0;
+                
+                const groups = {};
+                for (let row = 0; row < this.rowCount; row++) {
+                    const status = this.data[row][statusCol] || 'Uncategorized';
+                    if (!groups[status]) groups[status] = [];
+                    groups[status].push(row);
+                }
+
+                const container = document.getElementById('gridWrapper');
+                let html = '<div style="display: flex; gap: 16px; padding: 16px; overflow-x: auto; height: 100%;">';
+                
+                for (const [status, rows] of Object.entries(groups)) {
+                    html += `<div style="min-width: 280px; background: var(--bg-secondary); border-radius: 8px; padding: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 12px; padding: 8px; background: var(--bg-primary); border-radius: 6px; color: var(--text-primary);">
+                            ${status} (${rows.length})
+                        </div>`;
+                    
+                    for (const row of rows) {
+                        html += `<div style="background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 8px; cursor: pointer;" onclick="spreadsheet.selectCell(${row}, 0)">`;
+                        for (let col = 0; col < Math.min(3, this.colCount); col++) {
+                            const value = this.data[row][col];
+                            if (value) {
+                                html += `<div style="font-size: 12px; margin-bottom: 4px; color: var(--text-primary);">${value}</div>`;
+                            }
+                        }
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+                container.innerHTML = html;
+            }
+
+            generateHeaders() {
+                this.headers = [];
+                for (let i = 0; i < this.colCount; i++) {
+                    this.headers.push(this.numberToColumnName(i));
+                }
+            }
+
+            numberToColumnName(num) {
+                let result = '';
+                num++;
+                while (num > 0) {
+                    num--;
+                    result = String.fromCharCode(65 + (num % 26)) + result;
+                    num = Math.floor(num / 26);
+                }
+                return result;
+            }
+
+            columnNameToNumber(name) {
+                let result = 0;
+                for (let i = 0; i < name.length; i++) {
+                    result = result * 26 + (name.charCodeAt(i) - 64);
+                }
+                return result - 1;
+            }
+
+            initializeData() {
+                this.data = [];
+                this.formulas = [];
+                for (let i = 0; i < this.rowCount; i++) {
+                    this.data[i] = new Array(this.colCount).fill('');
+                    this.formulas[i] = new Array(this.colCount).fill('');
+                }
+            }
+
+            updateFilterOptions() {
+                const filterColumn = document.getElementById('filterColumn');
+                const groupBySelect = document.getElementById('groupBySelect');
+                const sortColumn = document.getElementById('sortColumn');
+                
+                const options = this.headers.map((h, i) => `<option value="${i}">${h}</option>`).join('');
+                
+                filterColumn.innerHTML = '<option value="">Select column...</option>' + options;
+                groupBySelect.innerHTML = '<option value="">None</option>' + options;
+                sortColumn.innerHTML = '<option value="">Select column...</option>' + options;
+            }
+
+            applyGrouping() {
+                const select = document.getElementById('groupBySelect');
+                this.groupByColumn = select.value !== '' ? parseInt(select.value) : null;
+                this.render();
+            }
+
+            addFilter() {
+                const col = document.getElementById('filterColumn').value;
+                const operator = document.getElementById('filterOperator').value;
+                const value = document.getElementById('filterValue').value;
+                
+                if (col === '') return;
+                
+                this.filters.push({ col: parseInt(col), operator, value });
+                this.applyFilters();
+            }
+
+            applyFilters() {
+                this.hiddenRows.clear();
+                
+                for (let row = 0; row < this.rowCount; row++) {
+                    let hide = false;
+                    
+                    for (const filter of this.filters) {
+                        const cellValue = this.data[row][filter.col];
+                        const cellStr = String(cellValue).toLowerCase();
+                        const filterVal = filter.value.toLowerCase();
+                        
+                        switch (filter.operator) {
+                            case 'equals':
+                                if (cellStr !== filterVal) hide = true;
+                                break;
+                            case 'contains':
+                                if (!cellStr.includes(filterVal)) hide = true;
+                                break;
+                            case 'greater':
+                                if (parseFloat(cellValue) <= parseFloat(filter.value)) hide = true;
+                                break;
+                            case 'less':
+                                if (parseFloat(cellValue) >= parseFloat(filter.value)) hide = true;
+                                break;
+                            case 'empty':
+                                if (cellValue !== '') hide = true;
+                                break;
+                        }
+                    }
+                    
+                    if (hide) this.hiddenRows.add(row);
+                }
+                
+                this.render();
+                this.updateRecordCount();
+            }
+
+            applySort() {
+                const col = document.getElementById('sortColumn').value;
+                const direction = document.getElementById('sortDirection').value;
+                
+                if (col === '') return;
+                
+                this.sortConfig = { column: parseInt(col), direction };
+                
+                // Create array of indices and sort
+                const indices = Array.from({length: this.rowCount}, (_, i) => i);
+                indices.sort((a, b) => {
+                    const valA = this.data[a][this.sortConfig.column];
+                    const valB = this.data[b][this.sortConfig.column];
+                    
+                    let comparison = 0;
+                    if (valA < valB) comparison = -1;
+                    if (valA > valB) comparison = 1;
+                    
+                    return this.sortConfig.direction === 'asc' ? comparison : -comparison;
+                });
+                
+                // Reorder data
+                const newData = indices.map(i => this.data[i]);
+                const newFormulas = indices.map(i => this.formulas[i]);
+                
+                this.data = newData;
+                this.formulas = newFormulas;
+                
+                this.render();
+            }
+
+            setFieldType() {
+                const type = document.getElementById('fieldType').value;
+                const { col } = this.selectedCell;
+                this.fieldTypes[col] = type;
+                
+                if (type === 'select' || type === 'multiselect') {
+                    const options = prompt('Enter options separated by commas:', 'Option 1, Option 2, Option 3');
+                    if (options) {
+                        this.selectOptions[col] = options.split(',').map(o => o.trim());
+                    }
+                } else if (type === 'link') {
+                    this.openLinkedRecordModal();
+                }
+                
+                this.render();
+            }
+
+            openLinkedRecordModal() {
+                const modal = document.getElementById('linkedRecordModal');
+                const list = document.getElementById('recordList');
+                
+                let html = '';
+                for (let row = 0; row < this.rowCount; row++) {
+                    const firstCell = this.data[row][0] || `Record ${row + 1}`;
+                    html += `
+                        <div class="record-item" data-row="${row}" onclick="this.classList.toggle('selected')">
+                            <input type="checkbox" class="record-checkbox" onchange="event.stopPropagation()">
+                            <div class="record-preview">
+                                <div class="record-field">
+                                    <div class="record-field-label">Primary Field</div>
+                                    <div>${firstCell}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                list.innerHTML = html;
+                modal.classList.add('active');
+            }
+
+            closeLinkedRecordModal() {
+                document.getElementById('linkedRecordModal').classList.remove('active');
+            }
+
+            confirmLinkRecords() {
+                const selected = document.querySelectorAll('.record-item.selected');
+                const { row, col } = this.selectedCell;
+                
+                const links = Array.from(selected).map(el => parseInt(el.dataset.row));
+                this.linkedRecords[col] = links;
+                
+                this.data[row][col] = `${links.length} linked records`;
+                this.closeLinkedRecordModal();
+                this.render();
+            }
+
+            render() {
+                if (this.currentView !== 'grid') {
+                    this.toggleView('grid');
+                    return;
+                }
+
+                const thead = document.getElementById('tableHead');
+                const tbody = document.getElementById('tableBody');
+                
+                // Render headers
+                let headerHTML = '<tr><th class="corner" onclick="spreadsheet.selectAll()"></th>';
+                for (let col = 0; col < this.colCount; col++) {
+                    const fieldType = this.fieldTypes[col];
+                    const typeIcon = this.getFieldTypeIcon(fieldType);
+                    headerHTML += `<th class="col-header" data-col="${col}" style="min-width: ${this.columnWidths[col]}px">
+                        ${typeIcon} ${this.headers[col]}
+                        <div class="resize-handle" data-col="${col}"></div>
+                    </th>`;
+                }
+                headerHTML += '</tr>';
+                thead.innerHTML = headerHTML;
+
+                // Group data if needed
+                let rowsToRender = [];
+                if (this.groupByColumn !== null) {
+                    const groups = {};
+                    for (let row = 0; row < this.rowCount; row++) {
+                        const key = this.data[row][this.groupByColumn] || '(Empty)';
+                        if (!groups[key]) groups[key] = [];
+                        groups[key].push(row);
+                    }
+                    
+                    for (const [key, rows] of Object.entries(groups)) {
+                        rowsToRender.push({ type: 'group', key, count: rows.length });
+                        rows.forEach(row => rowsToRender.push({ type: 'row', index: row }));
+                    }
+                } else {
+                    for (let row = 0; row < this.rowCount; row++) {
+                        rowsToRender.push({ type: 'row', index: row });
+                    }
+                }
+
+                // Render body
+                let bodyHTML = '';
+                let visibleRowCount = 0;
+                
+                for (const item of rowsToRender) {
+                    if (item.type === 'group') {
+                        bodyHTML += `<tr class="group-header" onclick="spreadsheet.toggleGroup('${item.key}')">
+                            <th class="row-header"><span class="group-toggle">▼</span></th>
+                            <td colspan="${this.colCount}" style="text-align: left; padding-left: 12px;">
+                                ${item.key} (${item.count})
+                            </td>
+                        </tr>`;
+                    } else {
+                        const row = item.index;
+                        
+                        if (this.hiddenRows.has(row)) continue;
+                        visibleRowCount++;
+                        
+                        const groupClass = this.groupByColumn !== null ? 'grouped-row' : '';
+                        bodyHTML += `<tr class="${groupClass}" data-row="${row}"><th class="row-header" data-row="${row}">${row + 1}</th>`;
+                        
+                        for (let col = 0; col < this.colCount; col++) {
+                            const value = this.data[row][col];
+                            const hasFormula = this.formulas[row][col] !== '';
+                            const isEmpty = value === '' || value === undefined;
+                            const fieldType = this.fieldTypes[col];
+                            
+                            let displayValue = value;
+                            let cellClass = '';
+                            
+                            // Apply field type rendering
+                            if (fieldType === 'checkbox') {
+                                cellClass = 'cell-checkbox';
+                                displayValue = `<input type="checkbox" ${value ? 'checked' : ''} onclick="event.stopPropagation(); spreadsheet.toggleCheckbox(${row}, ${col})">`;
+                            } else if (fieldType === 'select' && value) {
+                                displayValue = `<span class="cell-select">${value}</span>`;
+                            } else if (fieldType === 'link' && value) {
+                                cellClass = 'cell-link';
+                                displayValue = value;
+                            } else if (!isNaN(value) && value !== '' && !hasFormula && fieldType === 'number') {
+                                cellClass = 'cell-number';
+                            } else if (hasFormula && value === '#ERROR') {
+                                cellClass = 'cell-error';
+                            }
+                            
+                            const emptyClass = isEmpty ? 'empty' : '';
+                            
+                            bodyHTML += `<td data-row="${row}" data-col="${col}" class="${cellClass} ${emptyClass}">
+                                <div class="cell-content">${isEmpty ? '' : displayValue}</div>
+                            </td>`;
+                        }
+                        bodyHTML += '</tr>';
+                    }
+                }
+                tbody.innerHTML = bodyHTML;
+
+                this.setupCellListeners();
+                this.setupResizeHandles();
+                this.updateRecordCount(visibleRowCount);
+            }
+
+            getFieldTypeIcon(type) {
+                const icons = {
+                    'text': 'T',
+                    'longtext': '¶',
+                    'number': '#',
+                    'checkbox': '☐',
+                    'select': '▼',
+                    'multiselect': '☰',
+                    'date': '📅',
+                    'attachment': '📎',
+                    'link': '🔗',
+                    'formula': 'ƒ'
+                };
+                return `<span style="opacity: 0.5; margin-right: 4px;">${icons[type] || 'T'}</span>`;
+            }
+
+            toggleGroup(key) {
+                // Simple toggle - in real implementation would track expanded state
+                this.render();
+            }
+
+            toggleCheckbox(row, col) {
+                this.data[row][col] = !this.data[row][col];
+                this.recalculateAll();
+                this.render();
+            }
+
+            setupCellListeners() {
+                const cells = document.querySelectorAll('td:not(.group-header td)');
+                cells.forEach(cell => {
+                    cell.addEventListener('click', (e) => {
+                        if (e.target.tagName === 'INPUT') return;
+                        if (this.isEditing) {
+                            this.commitEdit();
+                        }
+                        const row = parseInt(cell.dataset.row);
+                        const col = parseInt(cell.dataset.col);
+                        if (!isNaN(row) && !isNaN(col)) {
+                            this.selectCell(row, col);
+                        }
+                    });
+
+                    cell.addEventListener('dblclick', (e) => {
+                        if (e.target.tagName === 'INPUT') return;
+                        const row = parseInt(cell.dataset.row);
+                        const col = parseInt(cell.dataset.col);
+                        if (!isNaN(row) && !isNaN(col)) {
+                            this.startEditing(row, col);
+                        }
+                    });
+                });
+
+                const rowHeaders = document.querySelectorAll('.row-header');
+                rowHeaders.forEach(header => {
+                    header.addEventListener('click', () => {
+                        if (this.isEditing) this.commitEdit();
+                        const row = parseInt(header.dataset.row);
+                        if (!isNaN(row)) this.selectRow(row);
+                    });
+                });
+
+                const colHeaders = document.querySelectorAll('.col-header');
+                colHeaders.forEach(header => {
+                    header.addEventListener('click', () => {
+                        if (this.isEditing) this.commitEdit();
+                        const col = parseInt(header.dataset.col);
+                        this.selectColumn(col);
+                    });
+                });
+            }
+
+            setupResizeHandles() {
+                const handles = document.querySelectorAll('.resize-handle');
+                handles.forEach(handle => {
+                    let isResizing = false;
+                    let startX, startWidth, colIndex;
+
+                    handle.addEventListener('mousedown', (e) => {
+                        isResizing = true;
+                        startX = e.clientX;
+                        colIndex = parseInt(handle.dataset.col);
+                        startWidth = this.columnWidths[colIndex];
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+
+                    document.addEventListener('mousemove', (e) => {
+                        if (!isResizing) return;
+                        const diff = e.clientX - startX;
+                        this.columnWidths[colIndex] = Math.max(50, startWidth + diff);
+                        this.render();
+                        this.selectCell(this.selectedCell.row, this.selectedCell.col);
+                    });
+
+                    document.addEventListener('mouseup', () => {
+                        isResizing = false;
+                    });
+                });
+            }
+
+            setupEventListeners() {
+                const formulaInput = document.getElementById('formulaInput');
+                const formulaWrapper = document.getElementById('formulaWrapper');
+                
+                formulaInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.commitEdit();
+                        this.moveSelection(1, 0);
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        this.cancelEdit();
+                    }
+                });
+
+                formulaInput.addEventListener('input', (e) => {
+                    const value = formulaInput.value;
+                    if (value.startsWith('=')) {
+                        formulaWrapper.classList.add('has-formula');
+                    } else {
+                        formulaWrapper.classList.remove('has-formula');
+                    }
+                });
+
+                formulaInput.addEventListener('blur', () => {
+                    if (this.isEditing) {
+                        this.commitEdit();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (this.isEditing) return;
+                    
+                    if (e.ctrlKey || e.metaKey || e.altKey) return;
+                    
+                    if (e.key.startsWith('Arrow')) {
+                        e.preventDefault();
+                        const rowDelta = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+                        const colDelta = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+                        this.moveSelection(rowDelta, colDelta);
+                    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                        e.preventDefault();
+                        this.clearCell(this.selectedCell.row, this.selectedCell.col);
+                    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                        this.startEditing(this.selectedCell.row, this.selectedCell.col, e.key);
+                    }
+                });
+            }
+
+            selectCell(row, col) {
+                document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+                
+                this.selectedCell = { row, col };
+                
+                const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                const colHeader = document.querySelector(`th.col-header[data-col="${col}"]`);
+                const rowHeader = document.querySelector(`th.row-header[data-row="${row}"]`);
+                
+                if (cell) cell.classList.add('selected');
+                if (colHeader) colHeader.classList.add('selected');
+                if (rowHeader) rowHeader.classList.add('selected');
+                
+                const cellRef = this.headers[col] + (row + 1);
+                document.getElementById('cellRef').textContent = cellRef;
+                
+                const formulaInput = document.getElementById('formulaInput');
+                const formulaWrapper = document.getElementById('formulaWrapper');
+                const fieldTypeSelect = document.getElementById('fieldType');
+                
+                const formula = this.formulas[row][col];
+                const value = this.data[row][col];
+                
+                if (formula) {
+                    formulaInput.value = formula;
+                    formulaWrapper.classList.add('has-formula');
+                    fieldTypeSelect.value = 'formula';
+                } else {
+                    formulaInput.value = value || '';
+                    formulaWrapper.classList.remove('has-formula');
+                    fieldTypeSelect.value = this.fieldTypes[col] || 'text';
+                }
+                
+                this.updateStatusBar();
+            }
+
+            selectRow(row) {
+                document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll(`td[data-row="${row}"]`).forEach(cell => cell.classList.add('selected'));
+                document.querySelector(`th.row-header[data-row="${row}"]`).classList.add('selected');
+            }
+
+            selectColumn(col) {
+                document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+                document.querySelectorAll(`td[data-col="${col}"]`).forEach(cell => cell.classList.add('selected'));
+                document.querySelector(`th.col-header[data-col="${col}"]`).classList.add('selected');
+            }
+
+            selectAll() {
+                document.querySelectorAll('td').forEach(cell => cell.classList.add('selected'));
+            }
+
+            moveSelection(rowDelta, colDelta) {
+                const newRow = Math.max(0, Math.min(this.rowCount - 1, this.selectedCell.row + rowDelta));
+                const newCol = Math.max(0, Math.min(this.colCount - 1, this.selectedCell.col + colDelta));
+                this.selectCell(newRow, newCol);
+            }
+
+            startEditing(row, col, initialChar = null) {
+                this.isEditing = true;
+                this.editStartValue = initialChar || this.formulas[row][col] || this.data[row][col] || '';
+                
+                const formulaInput = document.getElementById('formulaInput');
+                const formulaWrapper = document.getElementById('formulaWrapper');
+                
+                formulaInput.value = this.editStartValue;
+                formulaInput.focus();
+                
+                if (initialChar) {
+                    formulaInput.setSelectionRange(1, 1);
+                } else {
+                    formulaInput.select();
+                }
+                
+                if (this.editStartValue.startsWith('=')) {
+                    formulaWrapper.classList.add('has-formula');
+                } else {
+                    formulaWrapper.classList.remove('has-formula');
+                }
+            }
+
+            commitEdit() {
+                if (!this.isEditing) return;
+                
+                const { row, col } = this.selectedCell;
+                const formulaInput = document.getElementById('formulaInput');
+                const value = formulaInput.value;
+                
+                if (value.startsWith('=')) {
+                    this.formulas[row][col] = value;
+                    this.data[row][col] = this.evaluateFormula(value.substring(1), row, col);
+                    this.fieldTypes[col] = 'formula';
+                } else {
+                    this.formulas[row][col] = '';
+                    this.data[row][col] = value;
+                }
+                
+                this.isEditing = false;
+                this.editStartValue = '';
+                
+                this.recalculateAll();
+                this.render();
+                this.selectCell(row, col);
+            }
+
+            cancelEdit() {
+                this.isEditing = false;
+                this.editStartValue = '';
+                this.selectCell(this.selectedCell.row, this.selectedCell.col);
+            }
+
+            clearCell(row, col) {
+                this.data[row][col] = '';
+                this.formulas[row][col] = '';
+                this.recalculateAll();
+                this.render();
+                this.selectCell(row, col);
+            }
+
+            evaluateFormula(formula, currentRow, currentCol) {
+                try {
+                    let processedFormula = formula.trim();
+                    
+                    const functionNames = ['SUM', 'AVG', 'AVERAGE', 'MAX', 'MIN', 'COUNT', 'IF'];
+                    processedFormula = processedFormula.replace(/([A-Za-z_][A-Za-z0-9_]*)\s*(\d+)/g, (match, header, rowNum) => {
+                        if (functionNames.includes(header.toUpperCase())) return match;
+                        const colIndex = this.headers.indexOf(header);
+                        if (colIndex !== -1 && rowNum > 0 && rowNum <= this.rowCount) {
+                            const value = this.data[rowNum - 1][colIndex];
+                            if (value === '' || value === undefined) return '0';
+                            return isNaN(value) ? `"${value}"` : value;
+                        }
+                        return '0';
+                    });
+                    
+                    processedFormula = processedFormula.replace(/([A-Z]+)(\d+)(?::([A-Z]+)(\d+))?/g, (match, col, row, endCol, endRow) => {
+                        if (endCol && endRow) {
+                            return this.getRangeValue(col, parseInt(row), endCol, parseInt(endRow));
+                        } else {
+                            const colIndex = this.columnNameToNumber(col);
+                            const rowIndex = parseInt(row) - 1;
+                            if (rowIndex >= 0 && rowIndex < this.rowCount && colIndex >= 0 && colIndex < this.colCount) {
+                                const value = this.data[rowIndex][colIndex];
+                                if (value === '' || value === undefined) return '0';
+                                return isNaN(value) ? `"${value}"` : value;
+                            }
+                            return '0';
+                        }
+                    });
+                    
+                    processedFormula = this.evaluateFunctions(processedFormula);
+                    
+                    const result = this.safeEval(processedFormula);
+                    return isNaN(result) ? result : Math.round(result * 100000000) / 100000000;
+                } catch (e) {
+                    return '#ERROR';
+                }
+            }
+
+            getRangeValue(startCol, startRow, endCol, endRow) {
+                const startColIndex = this.columnNameToNumber(startCol);
+                const endColIndex = this.columnNameToNumber(endCol);
+                const startRowIndex = startRow - 1;
+                const endRowIndex = endRow - 1;
+                
+                const values = [];
+                for (let r = startRowIndex; r <= endRowIndex; r++) {
+                    for (let c = startColIndex; c <= endColIndex; c++) {
+                        if (r >= 0 && r < this.rowCount && c >= 0 && c < this.colCount) {
+                            const val = parseFloat(this.data[r][c]);
+                            if (!isNaN(val)) values.push(val);
+                        }
+                    }
+                }
+                return `[${values.join(',')}]`;
+            }
+
+            evaluateFunctions(formula) {
+                formula = formula.replace(/SUM\(([^)]+)\)/gi, (match, range) => {
+                    const values = this.parseRange(range);
+                    return values.reduce((a, b) => a + b, 0);
+                });
+                
+                formula = formula.replace(/AVG\(([^)]+)\)/gi, (match, range) => {
+                    const values = this.parseRange(range);
+                    return values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+                });
+                
+                formula = formula.replace(/AVERAGE\(([^)]+)\)/gi, (match, range) => {
+                    const values = this.parseRange(range);
+                    return values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+                });
+                
+                formula = formula.replace(/MAX\(([^)]+)\)/gi, (match, range) => {
+                    const values = this.parseRange(range);
+                    return values.length ? Math.max(...values) : 0;
+                });
+                
+                formula = formula.replace(/MIN\(([^)]+)\)/gi, (match, range) => {
+                    const values = this.parseRange(range);
+                    return values.length ? Math.min(...values) : 0;
+                });
+                
+                formula = formula.replace(/COUNT\(([^)]+)\)/gi, (match, range) => {
+                    const values = this.parseRange(range);
+                    return values.length;
+                });
+                
+                formula = formula.replace(/IF\(([^,]+),([^,]+),([^)]+)\)/gi, (match, condition, trueVal, falseVal) => {
+                    const cond = this.safeEval(condition);
+                    return cond ? trueVal.trim() : falseVal.trim();
+                });
+                
+                return formula;
+            }
+
+            parseRange(range) {
+                if (range.startsWith('[') && range.endsWith(']')) {
+                    const content = range.slice(1, -1);
+                    if (!content) return [];
+                    return content.split(',').filter(x => x !== '').map(Number);
+                }
+                
+                const num = parseFloat(range);
+                if (!isNaN(num)) return [num];
+                
+                return [];
+            }
+
+            safeEval(expression) {
+                const sanitized = expression
+                    .replace(/[^0-9+\-*/().,[\]<>!=\s&|]/g, '')
+                    .replace(/&&/g, '&&')
+                    .replace(/\|\|/g, '||');
+                
+                try {
+                    return new Function('return ' + sanitized)();
+                } catch (e) {
+                    return '#ERROR';
+                }
+            }
+
+            recalculateAll() {
+                for (let row = 0; row < this.rowCount; row++) {
+                    for (let col = 0; col < this.colCount; col++) {
+                        if (this.formulas[row][col]) {
+                            this.data[row][col] = this.evaluateFormula(this.formulas[row][col].substring(1), row, col);
+                        }
+                    }
+                }
+            }
+
+            updateStatusBar() {
+                const { row, col } = this.selectedCell;
+                const value = this.data[row][col];
+                const formula = this.formulas[row][col];
+                document.getElementById('cellCount').textContent = `Cell ${this.headers[col]}${row + 1}`;
+                
+                if (formula) {
+                    document.getElementById('sumDisplay').textContent = `Formula Result: ${value}`;
+                } else if (!isNaN(value) && value !== '') {
+                    document.getElementById('sumDisplay').textContent = `Value: ${value}`;
+                } else {
+                    document.getElementById('sumDisplay').textContent = '';
+                }
+            }
+
+            updateRecordCount(count) {
+                const total = this.rowCount - this.hiddenRows.size;
+                const visible = count !== undefined ? count : total;
+                document.getElementById('recordCount').textContent = `${visible} of ${this.rowCount} records`;
+            }
+
+            // Public API methods
+            newFile() {
+                if (confirm('Create new spreadsheet? Unsaved changes will be lost.')) {
+                    this.rowCount = 20;
+                    this.colCount = 10;
+                    this.filters = [];
+                    this.hiddenRows.clear();
+                    this.groupByColumn = null;
+                    this.init();
+                }
+            }
+
+            openImportModal() {
+                document.getElementById('importModal').classList.add('active');
+                document.getElementById('csvInput').focus();
+            }
+
+            closeImportModal() {
+                document.getElementById('importModal').classList.remove('active');
+            }
+
+            importCSV() {
+                const csv = document.getElementById('csvInput').value.trim();
+                if (!csv) return;
+                
+                const lines = csv.split('\n');
+                if (lines.length === 0) return;
+                
+                const parsed = lines.map(line => {
+                    const result = [];
+                    let current = '';
+                    let inQuotes = false;
+                    
+                    for (let char of line) {
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            result.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    result.push(current.trim());
+                    return result;
+                });
+                
+                const maxCols = Math.max(...parsed.map(row => row.length));
+                this.rowCount = parsed.length;
+                this.colCount = maxCols;
+                
+                this.generateHeaders();
+                this.initializeData();
+                this.initializeFieldTypes();
+                
+                for (let row = 0; row < parsed.length; row++) {
+                    for (let col = 0; col < parsed[row].length; col++) {
+                        const value = parsed[row][col];
+                        if (value.startsWith('=')) {
+                            this.formulas[row][col] = value;
+                            this.data[row][col] = this.evaluateFormula(value.substring(1), row, col);
+                        } else {
+                            this.data[row][col] = value;
+                        }
+                    }
+                }
+                
+                this.columnWidths = new Array(this.colCount).fill(100);
+                this.updateFilterOptions();
+                this.closeImportModal();
+                this.render();
+                this.selectCell(0, 0);
+            }
+
+            exportCSV() {
+                let csv = '';
+                for (let row = 0; row < this.rowCount; row++) {
+                    const rowData = [];
+                    for (let col = 0; col < this.colCount; col++) {
+                        const formula = this.formulas[row][col];
+                        const value = this.data[row][col];
+                        const cellValue = formula || value;
+                        if (cellValue.includes(',') || cellValue.includes('"')) {
+                            rowData.push('"' + cellValue.replace(/"/g, '""') + '"');
+                        } else {
+                            rowData.push(cellValue);
+                        }
+                    }
+                    csv += rowData.join(',') + '\n';
+                }
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'spreadsheet.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            }
+
+            addRow() {
+                this.rowCount++;
+                this.data.push(new Array(this.colCount).fill(''));
+                this.formulas.push(new Array(this.colCount).fill(''));
+                this.render();
+                this.selectCell(this.selectedCell.row, this.selectedCell.col);
+            }
+
+            addColumn() {
+                this.colCount++;
+                this.headers.push(this.numberToColumnName(this.colCount - 1));
+                this.columnWidths.push(100);
+                this.fieldTypes.push('text');
+                this.selectOptions.push([]);
+                this.linkedRecords.push([]);
+                
+                for (let row = 0; row < this.rowCount; row++) {
+                    this.data[row].push('');
+                    this.formulas[row].push('');
+                }
+                
+                this.updateFilterOptions();
+                this.render();
+                this.selectCell(this.selectedCell.row, this.selectedCell.col);
+            }
+
+            deleteRow() {
+                if (this.rowCount <= 1) return;
+                const row = this.selectedCell.row;
+                this.data.splice(row, 1);
+                this.formulas.splice(row, 1);
+                this.rowCount--;
+                if (this.selectedCell.row >= this.rowCount) {
+                    this.selectedCell.row = this.rowCount - 1;
+                }
+                this.recalculateAll();
+                this.render();
+                this.selectCell(this.selectedCell.row, this.selectedCell.col);
+            }
+
+            deleteColumn() {
+                if (this.colCount <= 1) return;
+                const col = this.selectedCell.col;
+                this.headers.splice(col, 1);
+                this.columnWidths.splice(col, 1);
+                this.fieldTypes.splice(col, 1);
+                this.selectOptions.splice(col, 1);
+                this.linkedRecords.splice(col, 1);
+                
+                for (let row = 0; row < this.rowCount; row++) {
+                    this.data[row].splice(col, 1);
+                    this.formulas[row].splice(col, 1);
+                }
+                
+                this.colCount--;
+                if (this.selectedCell.col >= this.colCount) {
+                    this.selectedCell.col = this.colCount - 1;
+                }
+                
+                this.updateFilterOptions();
+                this.recalculateAll();
+                this.render();
+                this.selectCell(this.selectedCell.row, this.selectedCell.col);
+            }
+        }
+
+        const spreadsheet = new SpreadsheetEngine();
+        
+        // Setup MCP Bridge
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.photon) {
+                // Remove standalone specific UI elements if needed
+                initMCPBridge(spreadsheet);
+            }
+        });
+    </script>
+    <script src="mcp-bridge.js"></script>
+</body>
+</html>

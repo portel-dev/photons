@@ -1,9 +1,10 @@
 /**
  * Spreadsheet — CSV-backed spreadsheet with formulas
  *
- * A spreadsheet engine that persists data as CSV files. Supports cell references,
- * formulas (SUM, AVG, MAX, MIN, COUNT, IF), sorting, and filtering. Use named
- * instances for separate spreadsheets: `_use('budget')`, `_use('inventory')`.
+ * A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.)
+ * are stored directly in CSV cells and evaluated at runtime. Named instances map
+ * to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder.
+ * Pass a full path to open any CSV: `_use('/path/to/data.csv')`.
  *
  * @version 1.0.0
  * @author Portel
@@ -19,142 +20,112 @@ import * as path from 'path';
 import * as os from 'os';
 import { existsSync, mkdirSync } from 'fs';
 
-interface SpreadsheetState {
-  data: string[][];
-  formulas: string[][];
-  headers: string[];
-  rowCount: number;
-  colCount: number;
-}
-
 export default class Spreadsheet {
-  private data: string[][] = [];
-  private formulas: string[][] = [];
+  // Raw cell contents — plain values or formula strings (=SUM(...))
+  private cells: string[][] = [];
   private headers: string[] = [];
-  private rowCount = 20;
-  private colCount = 10;
+  private rowCount = 0;
+  private colCount = 0;
   private loaded = false;
 
   declare emit: (data: any) => void;
   declare instanceName: string;
 
-  // --- Persistence ---
+  protected settings = {
+    /** @property Directory where spreadsheet CSV files are stored */
+    folder: path.join(os.homedir(), 'Documents', 'Spreadsheets'),
+  };
 
-  private get stateDir(): string {
-    const dir = path.join(os.homedir(), '.photon', 'state', 'spreadsheet');
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-    return dir;
-  }
+  // --- File resolution ---
 
-  private get instanceId(): string {
-    return this.instanceName || 'default';
+  private get defaultFolder(): string {
+    return this.settings?.folder || path.join(os.homedir(), 'Documents', 'Spreadsheets');
   }
 
   private get csvPath(): string {
-    return path.join(this.stateDir, `${this.instanceId}.csv`);
+    const name = this.instanceName || 'default';
+
+    // Absolute path — use as-is
+    if (path.isAbsolute(name)) {
+      return name.endsWith('.csv') ? name : name + '.csv';
+    }
+
+    // Relative path with directory separators — resolve from cwd
+    if (name.includes('/') || name.includes('\\')) {
+      const resolved = path.resolve(name);
+      return resolved.endsWith('.csv') ? resolved : resolved + '.csv';
+    }
+
+    // Simple name — resolve from spreadsheets folder
+    const dir = this.defaultFolder;
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+    return path.join(dir, name.endsWith('.csv') ? name : name + '.csv');
   }
 
-  private get formulasPath(): string {
-    return path.join(this.stateDir, `${this.instanceId}.formulas.json`);
-  }
+  // --- Persistence ---
 
   private async load(): Promise<void> {
     if (this.loaded) return;
 
-    if (existsSync(this.csvPath)) {
-      const csv = await fs.readFile(this.csvPath, 'utf-8');
+    const csvPath = this.csvPath;
+    if (existsSync(csvPath)) {
+      const csv = await fs.readFile(csvPath, 'utf-8');
       const lines = csv.split('\n').filter(l => l.length > 0);
 
       if (lines.length > 0) {
         this.headers = this.parseCSVLine(lines[0]);
         this.colCount = this.headers.length;
         this.rowCount = lines.length - 1;
+        this.cells = [];
 
-        this.data = [];
-        this.formulas = [];
         for (let i = 1; i < lines.length; i++) {
           const row = this.parseCSVLine(lines[i]);
           while (row.length < this.colCount) row.push('');
-          this.data.push(row);
-          this.formulas.push(new Array(this.colCount).fill(''));
+          this.cells.push(row);
         }
 
-        // Load formulas sidecar
-        if (existsSync(this.formulasPath)) {
-          try {
-            const raw = await fs.readFile(this.formulasPath, 'utf-8');
-            const saved: Record<string, string> = JSON.parse(raw);
-            for (const [cell, formula] of Object.entries(saved)) {
-              const { row, col } = this.cellToIndex(cell);
-              if (row < this.rowCount && col < this.colCount) {
-                this.formulas[row][col] = formula;
-              }
-            }
-          } catch {}
-        }
-
-        this.recalculateAll();
         this.loaded = true;
         return;
       }
     }
 
-    // Initialize empty grid
-    this.initEmpty();
-    this.loaded = true;
-  }
-
-  private initEmpty(): void {
+    // New empty spreadsheet
+    this.colCount = 10;
+    this.rowCount = 0;
     this.headers = [];
     for (let i = 0; i < this.colCount; i++) {
       this.headers.push(this.numberToColumnName(i));
     }
-    this.data = [];
-    this.formulas = [];
-    for (let i = 0; i < this.rowCount; i++) {
-      this.data.push(new Array(this.colCount).fill(''));
-      this.formulas.push(new Array(this.colCount).fill(''));
-    }
+    this.cells = [];
+    this.loaded = true;
   }
 
   private async save(): Promise<void> {
+    // Ensure parent directory exists
+    const dir = path.dirname(this.csvPath);
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+
     // Trim trailing empty rows
     let lastDataRow = -1;
-    for (let r = this.data.length - 1; r >= 0; r--) {
-      if (this.data[r].some(v => v !== '')) {
+    for (let r = this.cells.length - 1; r >= 0; r--) {
+      if (this.cells[r].some(v => v !== '')) {
         lastDataRow = r;
         break;
       }
     }
 
-    const rows = this.data.slice(0, lastDataRow + 1);
+    const rows = this.cells.slice(0, lastDataRow + 1);
     const csvLines = [this.headers.map(h => this.escapeCSV(h)).join(',')];
     for (const row of rows) {
-      csvLines.push(row.map(v => this.escapeCSV(String(v))).join(','));
+      csvLines.push(row.map(v => this.escapeCSV(v)).join(','));
     }
     await fs.writeFile(this.csvPath, csvLines.join('\n') + '\n', 'utf-8');
-
-    // Save formulas sidecar
-    const formulaMap: Record<string, string> = {};
-    for (let r = 0; r < this.formulas.length; r++) {
-      for (let c = 0; c < this.formulas[r].length; c++) {
-        if (this.formulas[r][c]) {
-          const cell = this.headers[c] + (r + 1);
-          formulaMap[cell] = this.formulas[r][c];
-        }
-      }
-    }
-    if (Object.keys(formulaMap).length > 0) {
-      await fs.writeFile(this.formulasPath, JSON.stringify(formulaMap, null, 2), 'utf-8');
-    } else if (existsSync(this.formulasPath)) {
-      await fs.unlink(this.formulasPath);
-    }
   }
 
   // --- CSV helpers ---
 
   private escapeCSV(value: string): string {
-    if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+    if (value.includes(',') || value.includes('"') || value.includes('\n') || value.startsWith('=')) {
       return '"' + value.replace(/"/g, '""') + '"';
     }
     return value;
@@ -165,9 +136,16 @@ export default class Spreadsheet {
     let current = '';
     let inQuotes = false;
 
-    for (const char of line) {
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
       if (char === '"') {
-        inQuotes = !inQuotes;
+        if (inQuotes && line[i + 1] === '"') {
+          // Escaped quote ("") → literal "
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
       } else if (char === ',' && !inQuotes) {
         result.push(current.trim());
         current = '';
@@ -210,52 +188,40 @@ export default class Spreadsheet {
   }
 
   private rangeToIndices(range: string): { startRow: number; startCol: number; endRow: number; endCol: number } {
-    // Handle column-only ranges like "B:B"
     const colMatch = range.match(/^([A-Za-z]+):([A-Za-z]+)$/);
     if (colMatch) {
       return {
         startCol: this.columnNameToNumber(colMatch[1]),
         startRow: 0,
         endCol: this.columnNameToNumber(colMatch[2]),
-        endRow: this.rowCount - 1,
+        endRow: Math.max(this.cells.length - 1, 0),
       };
     }
-
     const parts = range.split(':');
     if (parts.length !== 2) throw new Error(`Invalid range: ${range}`);
     const start = this.cellToIndex(parts[0]);
     const end = this.cellToIndex(parts[1]);
-    return {
-      startRow: start.row,
-      startCol: start.col,
-      endRow: end.row,
-      endCol: end.col,
-    };
+    return { startRow: start.row, startCol: start.col, endRow: end.row, endCol: end.col };
   }
 
   private resolveColumnIndex(name: string): number {
-    // Try as header name first (e.g., "Name", "Age")
     const headerIdx = this.headers.indexOf(name);
     if (headerIdx !== -1) return headerIdx;
-    // Try case-insensitive header match
     const lowerName = name.toLowerCase();
     const ciIdx = this.headers.findIndex(h => h.toLowerCase() === lowerName);
     if (ciIdx !== -1) return ciIdx;
-    // Fall back to column letter (e.g., "A", "B")
     return this.columnNameToNumber(name);
   }
 
   private ensureCapacity(row: number, col: number): void {
-    while (this.rowCount <= row) {
-      this.data.push(new Array(this.colCount).fill(''));
-      this.formulas.push(new Array(this.colCount).fill(''));
-      this.rowCount++;
+    while (this.cells.length <= row) {
+      this.cells.push(new Array(this.colCount).fill(''));
     }
+    this.rowCount = this.cells.length;
     if (col >= this.colCount) {
       const newColCount = col + 1;
-      for (let r = 0; r < this.rowCount; r++) {
-        while (this.data[r].length < newColCount) this.data[r].push('');
-        while (this.formulas[r].length < newColCount) this.formulas[r].push('');
+      for (const r of this.cells) {
+        while (r.length < newColCount) r.push('');
       }
       while (this.headers.length < newColCount) {
         this.headers.push(this.numberToColumnName(this.headers.length));
@@ -264,48 +230,73 @@ export default class Spreadsheet {
     }
   }
 
-  // --- Formula engine (ported from HTML prototype) ---
+  // --- Formula engine ---
+
+  /** Evaluate a single cell, returning the computed value */
+  private evaluate(row: number, col: number): string {
+    const raw = this.cells[row]?.[col] ?? '';
+    if (!raw.startsWith('=')) return raw;
+    const result = this.evaluateFormula(raw.substring(1), row, col);
+    return String(result);
+  }
+
+  /** Build a fully-evaluated snapshot of all cells */
+  private evaluateAll(): string[][] {
+    const result: string[][] = [];
+    for (let r = 0; r < this.cells.length; r++) {
+      const row: string[] = [];
+      for (let c = 0; c < this.colCount; c++) {
+        row.push(this.evaluate(r, c));
+      }
+      result.push(row);
+    }
+    return result;
+  }
 
   private evaluateFormula(formula: string, currentRow: number, currentCol: number): string | number {
     try {
       let processed = formula.trim();
-
       const functionNames = ['SUM', 'AVG', 'AVERAGE', 'MAX', 'MIN', 'COUNT', 'IF', 'LEN', 'CONCAT', 'ABS', 'ROUND'];
 
-      // Step 1: Replace cell range references FIRST (A1:B2 format) before individual refs
-      processed = processed.replace(/([A-Z]+)(\d+):([A-Z]+)(\d+)/gi, (match, col, row, endCol, endRow) => {
-        return this.getRangeValue(col.toUpperCase(), parseInt(row), endCol.toUpperCase(), parseInt(endRow));
+      // Step 1: Replace cell range references FIRST (A1:B2)
+      processed = processed.replace(/([A-Z]+)(\d+):([A-Z]+)(\d+)/gi, (_m, col, row, endCol, endRow) => {
+        return this.getRangeValues(col.toUpperCase(), parseInt(row), endCol.toUpperCase(), parseInt(endRow));
       });
 
-      // Step 2: Replace single cell references (A1 format) and header-based references
+      // Step 2: Replace single cell references and header-based references
       processed = processed.replace(/([A-Za-z_][A-Za-z0-9_]*)(\d+)/g, (match, header, rowNum) => {
         if (functionNames.includes(header.toUpperCase())) return match;
 
-        // Try as column letter reference first (A1 notation)
-        const colIndex = this.columnNameToNumber(header.toUpperCase());
-        const rowIndex = parseInt(rowNum) - 1;
-        if (header === header.toUpperCase() && colIndex >= 0 && colIndex < this.colCount &&
-            rowIndex >= 0 && rowIndex < this.rowCount) {
-          const value = this.data[rowIndex][colIndex];
-          if (value === '' || value === undefined) return '0';
-          return isNaN(Number(value)) ? `"${value}"` : value;
+        // Column letter reference (A1)
+        if (header === header.toUpperCase()) {
+          const colIndex = this.columnNameToNumber(header);
+          const rowIndex = parseInt(rowNum) - 1;
+          if (colIndex >= 0 && colIndex < this.colCount && rowIndex >= 0 && rowIndex < this.cells.length) {
+            const value = this.evaluate(rowIndex, colIndex);
+            if (value === '') return '0';
+            return isNaN(Number(value)) ? `"${value}"` : value;
+          }
         }
 
-        // Try as header name reference (e.g., Name2)
+        // Header name reference (Name2)
         const headerIdx = this.headers.indexOf(header);
-        if (headerIdx !== -1 && parseInt(rowNum) > 0 && parseInt(rowNum) <= this.rowCount) {
-          const value = this.data[parseInt(rowNum) - 1][headerIdx];
-          if (value === '' || value === undefined) return '0';
+        if (headerIdx !== -1 && parseInt(rowNum) > 0 && parseInt(rowNum) <= this.cells.length) {
+          const value = this.evaluate(parseInt(rowNum) - 1, headerIdx);
+          if (value === '') return '0';
           return isNaN(Number(value)) ? `"${value}"` : value;
         }
 
-        return match; // Don't replace unknown patterns with 0
+        return match;
       });
 
-      // Evaluate spreadsheet functions
       processed = this.evaluateFunctions(processed);
 
-      // Safe evaluation
+      // If the result is a quoted string, return it directly (don't run through safeEval which strips letters)
+      const trimmedResult = processed.trim();
+      if (trimmedResult.startsWith('"') && trimmedResult.endsWith('"')) {
+        return trimmedResult.slice(1, -1);
+      }
+
       const result = this.safeEval(processed);
       if (typeof result === 'number' && !isNaN(result)) {
         return Math.round(result * 100000000) / 100000000;
@@ -316,17 +307,17 @@ export default class Spreadsheet {
     }
   }
 
-  private getRangeValue(startCol: string, startRow: number, endCol: string, endRow: number): string {
-    const startColIndex = this.columnNameToNumber(startCol);
-    const endColIndex = this.columnNameToNumber(endCol);
-    const startRowIndex = startRow - 1;
-    const endRowIndex = endRow - 1;
+  private getRangeValues(startCol: string, startRow: number, endCol: string, endRow: number): string {
+    const sc = this.columnNameToNumber(startCol);
+    const ec = this.columnNameToNumber(endCol);
+    const sr = startRow - 1;
+    const er = endRow - 1;
 
     const values: number[] = [];
-    for (let r = startRowIndex; r <= endRowIndex; r++) {
-      for (let c = startColIndex; c <= endColIndex; c++) {
-        if (r >= 0 && r < this.rowCount && c >= 0 && c < this.colCount) {
-          const val = parseFloat(this.data[r][c] as string);
+    for (let r = sr; r <= er; r++) {
+      for (let c = sc; c <= ec; c++) {
+        if (r >= 0 && r < this.cells.length && c >= 0 && c < this.colCount) {
+          const val = parseFloat(this.evaluate(r, c));
           if (!isNaN(val)) values.push(val);
         }
       }
@@ -335,38 +326,29 @@ export default class Spreadsheet {
   }
 
   private evaluateFunctions(formula: string): string {
-    formula = formula.replace(/SUM\(([^)]+)\)/gi, (_match, range) => {
-      const values = this.parseRangeValues(range);
-      return String(values.reduce((a, b) => a + b, 0));
+    formula = formula.replace(/SUM\(([^)]+)\)/gi, (_m, range) => {
+      const v = this.parseRangeValues(range);
+      return String(v.reduce((a, b) => a + b, 0));
     });
-
-    formula = formula.replace(/(?:AVG|AVERAGE)\(([^)]+)\)/gi, (_match, range) => {
-      const values = this.parseRangeValues(range);
-      return String(values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0);
+    formula = formula.replace(/(?:AVG|AVERAGE)\(([^)]+)\)/gi, (_m, range) => {
+      const v = this.parseRangeValues(range);
+      return String(v.length ? v.reduce((a, b) => a + b, 0) / v.length : 0);
     });
-
-    formula = formula.replace(/MAX\(([^)]+)\)/gi, (_match, range) => {
-      const values = this.parseRangeValues(range);
-      return String(values.length ? Math.max(...values) : 0);
+    formula = formula.replace(/MAX\(([^)]+)\)/gi, (_m, range) => {
+      const v = this.parseRangeValues(range);
+      return String(v.length ? Math.max(...v) : 0);
     });
-
-    formula = formula.replace(/MIN\(([^)]+)\)/gi, (_match, range) => {
-      const values = this.parseRangeValues(range);
-      return String(values.length ? Math.min(...values) : 0);
+    formula = formula.replace(/MIN\(([^)]+)\)/gi, (_m, range) => {
+      const v = this.parseRangeValues(range);
+      return String(v.length ? Math.min(...v) : 0);
     });
-
-    formula = formula.replace(/COUNT\(([^)]+)\)/gi, (_match, range) => {
-      const values = this.parseRangeValues(range);
-      return String(values.length);
+    formula = formula.replace(/COUNT\(([^)]+)\)/gi, (_m, range) => {
+      return String(this.parseRangeValues(range).length);
     });
-
-    formula = formula.replace(/IF\(([^,]+),([^,]+),([^)]+)\)/gi, (_match, condition, trueVal, falseVal) => {
-      const cond = this.safeEval(condition);
-      return cond ? trueVal.trim() : falseVal.trim();
+    formula = formula.replace(/IF\(([^,]+),([^,]+),([^)]+)\)/gi, (_m, cond, t, f) => {
+      return this.safeEval(cond) ? t.trim() : f.trim();
     });
-
-    formula = formula.replace(/LEN\(([^)]+)\)/gi, (_match, arg) => {
-      // Handle quoted strings directly without safeEval
+    formula = formula.replace(/LEN\(([^)]+)\)/gi, (_m, arg) => {
       const trimmed = arg.trim();
       if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
         return String(trimmed.slice(1, -1).length);
@@ -374,26 +356,20 @@ export default class Spreadsheet {
       const val = String(this.safeEval(trimmed));
       return String(val.replace(/"/g, '').length);
     });
-
-    formula = formula.replace(/ABS\(([^)]+)\)/gi, (_match, arg) => {
+    formula = formula.replace(/ABS\(([^)]+)\)/gi, (_m, arg) => {
       return String(Math.abs(Number(this.safeEval(arg))));
     });
-
-    formula = formula.replace(/ROUND\(([^,]+)(?:,([^)]+))?\)/gi, (_match, arg, decimals) => {
+    formula = formula.replace(/ROUND\(([^,]+)(?:,([^)]+))?\)/gi, (_m, arg, dec) => {
       const val = Number(this.safeEval(arg));
-      const dec = decimals ? Number(this.safeEval(decimals)) : 0;
-      return String(Math.round(val * Math.pow(10, dec)) / Math.pow(10, dec));
+      const d = dec ? Number(this.safeEval(dec)) : 0;
+      return String(Math.round(val * Math.pow(10, d)) / Math.pow(10, d));
     });
-
-    formula = formula.replace(/CONCAT\(([^)]+)\)/gi, (_match, args) => {
+    formula = formula.replace(/CONCAT\(([^)]+)\)/gi, (_m, args) => {
       const parts = args.split(',').map((a: string) => {
-        const trimmed = a.trim();
-        const evaled = this.safeEval(trimmed);
-        return String(evaled).replace(/"/g, '');
+        return String(this.safeEval(a.trim())).replace(/"/g, '');
       });
       return `"${parts.join('')}"`;
     });
-
     return formula;
   }
 
@@ -420,31 +396,21 @@ export default class Spreadsheet {
     }
   }
 
-  private recalculateAll(): void {
-    for (let row = 0; row < this.rowCount; row++) {
-      for (let col = 0; col < this.colCount; col++) {
-        if (this.formulas[row] && this.formulas[row][col]) {
-          this.data[row][col] = String(this.evaluateFormula(this.formulas[row][col].substring(1), row, col));
-        }
-      }
-    }
-  }
-
   // --- Response formatting ---
 
-  private formatTable(startRow = 0, endRow?: number, startCol = 0, endCol?: number): string {
-    const er = endRow ?? this.data.length - 1;
+  private formatTable(evaluated: string[][], startRow = 0, endRow?: number, startCol = 0, endCol?: number): string {
+    const er = endRow ?? evaluated.length - 1;
     const ec = endCol ?? this.colCount - 1;
 
     const visibleHeaders = ['Row', ...this.headers.slice(startCol, ec + 1)];
     const widths = visibleHeaders.map(h => h.length);
 
     const rows: string[][] = [];
-    for (let r = startRow; r <= er && r < this.data.length; r++) {
-      if (this.data[r].every(v => v === '')) continue;
+    for (let r = startRow; r <= er && r < evaluated.length; r++) {
+      if (evaluated[r].every(v => v === '')) continue;
       const row = [String(r + 1)];
       for (let c = startCol; c <= ec; c++) {
-        const val = String(this.data[r]?.[c] ?? '');
+        const val = evaluated[r]?.[c] ?? '';
         row.push(val);
         if (val.length > (widths[c - startCol + 1] || 0)) {
           widths[c - startCol + 1] = val.length;
@@ -455,7 +421,6 @@ export default class Spreadsheet {
 
     if (rows.length === 0) return '(empty spreadsheet)';
 
-    // Update Row column width
     for (const row of rows) {
       if (row[0].length > widths[0]) widths[0] = row[0].length;
     }
@@ -468,35 +433,34 @@ export default class Spreadsheet {
     return [header, sep, ...body].join('\n');
   }
 
-  private buildResponse(message: string, extraData?: Record<string, any>): Record<string, any> {
-    // Collect non-empty data
+  private buildResponse(message: string): Record<string, any> {
+    const evaluated = this.evaluateAll();
+
+    // Evaluated data (non-empty rows only)
     const data: string[][] = [];
-    for (let r = 0; r < this.data.length; r++) {
-      if (this.data[r].some(v => v !== '')) {
-        data.push([...this.data[r]]);
-      }
+    for (const row of evaluated) {
+      if (row.some(v => v !== '')) data.push([...row]);
     }
 
-    // Collect non-empty formulas for UI
-    const formulasMap: Record<string, string> = {};
-    for (let r = 0; r < this.formulas.length; r++) {
-      for (let c = 0; c < (this.formulas[r]?.length || 0); c++) {
-        if (this.formulas[r][c]) {
-          formulasMap[this.headers[c] + (r + 1)] = this.formulas[r][c];
+    // Raw formulas map for UI formula bar
+    const formulas: Record<string, string> = {};
+    for (let r = 0; r < this.cells.length; r++) {
+      for (let c = 0; c < this.colCount; c++) {
+        if (this.cells[r][c]?.startsWith('=')) {
+          formulas[this.headers[c] + (r + 1)] = this.cells[r][c];
         }
       }
     }
 
     return {
-      table: this.formatTable(),
+      table: this.formatTable(evaluated),
       data,
-      formulas: formulasMap,
+      formulas,
       headers: [...this.headers],
       message,
-      rows: this.rowCount,
+      rows: this.cells.length,
       cols: this.colCount,
-      instance: this.instanceId,
-      ...extraData,
+      file: this.csvPath,
     };
   }
 
@@ -510,7 +474,7 @@ export default class Spreadsheet {
    */
   async main() {
     await this.load();
-    return this.buildResponse(`Spreadsheet "${this.instanceId}" loaded`);
+    return this.buildResponse(`Opened ${path.basename(this.csvPath)}`);
   }
 
   /**
@@ -526,19 +490,20 @@ export default class Spreadsheet {
 
     if (params?.range) {
       const { startRow, startCol, endRow, endCol } = this.rangeToIndices(params.range);
+      const evaluated = this.evaluateAll();
       return {
         ...this.buildResponse(`Viewing range ${params.range}`),
-        table: this.formatTable(startRow, endRow, startCol, endCol),
+        table: this.formatTable(evaluated, startRow, endRow, startCol, endCol),
       };
     }
 
-    return this.buildResponse(`Spreadsheet "${this.instanceId}"`);
+    return this.buildResponse(path.basename(this.csvPath));
   }
 
   /**
    * Get a cell value
    *
-   * Returns the evaluated value and formula (if any) for a single cell.
+   * Returns the evaluated value and raw content (formula if any) for a single cell.
    *
    * @param cell Cell reference in A1 notation (e.g., "B3")
    */
@@ -546,19 +511,19 @@ export default class Spreadsheet {
     await this.load();
     const { row, col } = this.cellToIndex(params.cell);
 
-    if (row >= this.rowCount || col >= this.colCount) {
-      return { cell: params.cell, value: '', formula: '', message: 'Cell is empty (out of range)' };
+    if (row >= this.cells.length || col >= this.colCount) {
+      return { cell: params.cell, value: '', raw: '', message: 'Cell is empty' };
     }
 
-    const value = this.data[row][col];
-    const formula = this.formulas[row]?.[col] || '';
+    const raw = this.cells[row][col];
+    const value = this.evaluate(row, col);
 
     return {
       cell: params.cell,
       value,
-      formula,
-      message: formula
-        ? `${params.cell} = ${value} (formula: ${formula})`
+      raw,
+      message: raw.startsWith('=')
+        ? `${params.cell} = ${value} (${raw})`
         : `${params.cell} = ${value || '(empty)'}`,
     };
   }
@@ -579,23 +544,16 @@ export default class Spreadsheet {
     const { row, col } = this.cellToIndex(params.cell);
     this.ensureCapacity(row, col);
 
-    const oldValue = this.data[row][col];
-    const value = String(params.value);
+    const oldRaw = this.cells[row][col];
+    this.cells[row][col] = String(params.value);
 
-    if (value.startsWith('=')) {
-      this.formulas[row][col] = value;
-      this.data[row][col] = String(this.evaluateFormula(value.substring(1), row, col));
-    } else {
-      this.formulas[row][col] = '';
-      this.data[row][col] = value;
-    }
-
-    this.recalculateAll();
     await this.save();
 
-    const msg = oldValue
-      ? `Set ${params.cell} = ${this.data[row][col]} (was: ${oldValue})`
-      : `Set ${params.cell} = ${this.data[row][col]}`;
+    const evaluated = this.evaluate(row, col);
+    const oldDisplay = oldRaw.startsWith('=') ? this.evaluateFormula(oldRaw.substring(1), row, col) : oldRaw;
+    const msg = oldRaw
+      ? `Set ${params.cell} = ${evaluated} (was: ${oldDisplay})`
+      : `Set ${params.cell} = ${evaluated}`;
 
     this.emit({ emit: 'data', ...this.buildResponse(msg) });
     return this.buildResponse(msg);
@@ -606,16 +564,16 @@ export default class Spreadsheet {
    *
    * Add a new row to the bottom of the spreadsheet. Pass column values by header name.
    *
-   * @param values Key-value pairs mapping column names to values (e.g., {"A": "Alice", "B": "30"})
-   * @example add({ values: { A: 'Alice', B: '30', C: 'Engineering' } })
+   * @param values Key-value pairs mapping column names to values (e.g., {"Name": "Alice", "Age": "30"})
+   * @example add({ values: { Name: 'Alice', Age: '30' } })
    */
   async add(params: { values: Record<string, string> }) {
     await this.load();
 
-    // Find first empty row
-    let targetRow = this.data.length;
-    for (let r = 0; r < this.data.length; r++) {
-      if (this.data[r].every(v => v === '')) {
+    // Find first empty row or append
+    let targetRow = this.cells.length;
+    for (let r = 0; r < this.cells.length; r++) {
+      if (this.cells[r].every(v => v === '')) {
         targetRow = r;
         break;
       }
@@ -627,17 +585,10 @@ export default class Spreadsheet {
       const colIndex = this.resolveColumnIndex(colName);
       if (colIndex >= 0) {
         this.ensureCapacity(targetRow, colIndex);
-        const val = String(value);
-        if (val.startsWith('=')) {
-          this.formulas[targetRow][colIndex] = val;
-          this.data[targetRow][colIndex] = String(this.evaluateFormula(val.substring(1), targetRow, colIndex));
-        } else {
-          this.data[targetRow][colIndex] = val;
-        }
+        this.cells[targetRow][colIndex] = String(value);
       }
     }
 
-    this.recalculateAll();
     await this.save();
 
     const msg = `Added row ${targetRow + 1}`;
@@ -654,15 +605,13 @@ export default class Spreadsheet {
     await this.load();
     const idx = params.row - 1;
 
-    if (idx < 0 || idx >= this.data.length) {
+    if (idx < 0 || idx >= this.cells.length) {
       throw new Error(`Row ${params.row} does not exist`);
     }
 
-    this.data.splice(idx, 1);
-    this.formulas.splice(idx, 1);
-    this.rowCount = Math.max(this.data.length, 1);
+    this.cells.splice(idx, 1);
+    this.rowCount = this.cells.length;
 
-    this.recalculateAll();
     await this.save();
 
     const msg = `Removed row ${params.row}`;
@@ -675,13 +624,13 @@ export default class Spreadsheet {
    *
    * @param row Row number to update (1-indexed)
    * @param values Key-value pairs mapping column names to new values
-   * @example update({ row: 3, values: { B: '42', C: 'Updated' } })
+   * @example update({ row: 3, values: { Age: '42' } })
    */
   async update(params: { row: number; values: Record<string, string> }) {
     await this.load();
     const idx = params.row - 1;
 
-    if (idx < 0 || idx >= this.data.length) {
+    if (idx < 0 || idx >= this.cells.length) {
       throw new Error(`Row ${params.row} does not exist`);
     }
 
@@ -689,19 +638,11 @@ export default class Spreadsheet {
     for (const [colName, value] of Object.entries(params.values)) {
       const colIndex = this.resolveColumnIndex(colName);
       this.ensureCapacity(idx, colIndex);
-      const old = this.data[idx][colIndex];
-      const val = String(value);
-      if (val.startsWith('=')) {
-        this.formulas[idx][colIndex] = val;
-        this.data[idx][colIndex] = String(this.evaluateFormula(val.substring(1), idx, colIndex));
-      } else {
-        this.formulas[idx][colIndex] = '';
-        this.data[idx][colIndex] = val;
-      }
-      changes.push(`${colName}: ${old} -> ${this.data[idx][colIndex]}`);
+      const old = this.evaluate(idx, colIndex);
+      this.cells[idx][colIndex] = String(value);
+      changes.push(`${colName}: ${old} -> ${this.evaluate(idx, colIndex)}`);
     }
 
-    this.recalculateAll();
     await this.save();
 
     const msg = `Updated row ${params.row}: ${changes.join(', ')}`;
@@ -712,11 +653,11 @@ export default class Spreadsheet {
   /**
    * Query rows by condition
    *
-   * Filter rows where a column matches a condition. Supports operators: =, !=, >, <, >=, <=, contains.
+   * Filter rows where a column matches a condition. Supports: =, !=, >, <, >=, <=, contains.
    *
-   * @param where Condition string (e.g., "B > 25", "A contains Alice", "C = Done")
+   * @param where Condition string (e.g., "Age > 25", "Name contains Ali")
    * @param limit Max rows to return
-   * @example query({ where: 'B > 25' })
+   * @example query({ where: 'Age > 25' })
    */
   async query(params: { where: string; limit?: number }) {
     await this.load();
@@ -728,18 +669,18 @@ export default class Spreadsheet {
       throw new Error(`Unknown column: ${col}`);
     }
 
+    const evaluated = this.evaluateAll();
     const matching: number[] = [];
-    for (let r = 0; r < this.data.length; r++) {
-      if (this.data[r].every(v => v === '')) continue;
-      const cellVal = this.data[r][colIndex];
-      if (this.matchCondition(cellVal, op, value)) {
+    for (let r = 0; r < evaluated.length; r++) {
+      if (evaluated[r].every(v => v === '')) continue;
+      if (this.matchCondition(evaluated[r][colIndex], op, value)) {
         matching.push(r);
         if (params.limit && matching.length >= params.limit) break;
       }
     }
 
-    const filteredData = matching.map(r => [...this.data[r]]);
-    const table = this.formatFilteredTable(matching);
+    const filteredData = matching.map(r => [...evaluated[r]]);
+    const table = this.formatFilteredTable(evaluated, matching);
 
     return {
       table,
@@ -747,8 +688,6 @@ export default class Spreadsheet {
       headers: [...this.headers],
       message: `Found ${matching.length} row(s) matching "${params.where}"`,
       matchCount: matching.length,
-      rows: this.rowCount,
-      cols: this.colCount,
     };
   }
 
@@ -757,9 +696,9 @@ export default class Spreadsheet {
    *
    * Sorts all data rows by the specified column.
    *
-   * @param column Column name to sort by (e.g., "B")
+   * @param column Column name or letter to sort by
    * @param order Sort order: "asc" or "desc" (default: "asc")
-   * @example sort({ column: 'B', order: 'desc' })
+   * @example sort({ column: 'Age', order: 'desc' })
    */
   async sort(params: { column: string; order?: string }) {
     await this.load();
@@ -770,28 +709,23 @@ export default class Spreadsheet {
     }
 
     const direction = params.order === 'desc' ? -1 : 1;
+    const evaluated = this.evaluateAll();
 
-    // Build index of non-empty rows to sort
-    const indices = Array.from({ length: this.data.length }, (_, i) => i);
+    const indices = Array.from({ length: this.cells.length }, (_, i) => i);
     indices.sort((a, b) => {
-      const va = this.data[a][colIndex];
-      const vb = this.data[b][colIndex];
-      // Empty rows go to bottom
+      const va = evaluated[a][colIndex];
+      const vb = evaluated[b][colIndex];
       if (va === '' && vb === '') return 0;
       if (va === '') return 1;
       if (vb === '') return -1;
-      // Numeric comparison if both are numbers
       const na = Number(va);
       const nb = Number(vb);
       if (!isNaN(na) && !isNaN(nb)) return (na - nb) * direction;
-      // String comparison
       return va < vb ? -1 * direction : va > vb ? 1 * direction : 0;
     });
 
-    this.data = indices.map(i => this.data[i]);
-    this.formulas = indices.map(i => this.formulas[i]);
+    this.cells = indices.map(i => this.cells[i]);
 
-    this.recalculateAll();
     await this.save();
 
     const msg = `Sorted by ${params.column} (${params.order || 'asc'})`;
@@ -802,10 +736,8 @@ export default class Spreadsheet {
   /**
    * Fill a range with values or a pattern
    *
-   * Fill cells with a repeating pattern or arithmetic series.
-   *
    * @param range Cell range (e.g., "A1:A10")
-   * @param pattern Comma-separated values to repeat (e.g., "1,2,3" fills 1,2,3,1,2,3...)
+   * @param pattern Comma-separated values to repeat (e.g., "1,2,3")
    * @example fill({ range: 'A1:A10', pattern: '1,2,3' })
    */
   async fill(params: { range: string; pattern: string }) {
@@ -818,13 +750,11 @@ export default class Spreadsheet {
     for (let r = startRow; r <= endRow; r++) {
       for (let c = startCol; c <= endCol; c++) {
         this.ensureCapacity(r, c);
-        this.data[r][c] = values[idx % values.length];
-        this.formulas[r][c] = '';
+        this.cells[r][c] = values[idx % values.length];
         idx++;
       }
     }
 
-    this.recalculateAll();
     await this.save();
 
     const msg = `Filled ${params.range} with pattern [${params.pattern}]`;
@@ -839,12 +769,13 @@ export default class Spreadsheet {
    */
   async schema() {
     await this.load();
+    const evaluated = this.evaluateAll();
 
     const schema = this.headers.map((h, i) => {
-      const values = this.data.map(r => r[i]).filter(v => v !== '');
+      const values = evaluated.map(r => r[i]).filter(v => v !== '');
       const numericCount = values.filter(v => !isNaN(Number(v))).length;
       const type = values.length === 0 ? 'empty' : numericCount > values.length / 2 ? 'number' : 'text';
-      return { column: h, type, nonEmpty: values.length, total: this.data.length };
+      return { column: h, type, nonEmpty: values.length, total: evaluated.length };
     });
 
     const table = '| Column | Type | Non-empty | Total |\n|--------|------|-----------|-------|\n' +
@@ -854,9 +785,8 @@ export default class Spreadsheet {
       table,
       schema,
       headers: [...this.headers],
-      message: `${this.colCount} columns, ${this.rowCount} rows`,
-      rows: this.rowCount,
-      cols: this.colCount,
+      message: `${this.colCount} columns, ${this.cells.length} rows`,
+      file: this.csvPath,
     };
   }
 
@@ -870,39 +800,32 @@ export default class Spreadsheet {
     await this.load();
 
     if (params.rows !== undefined) {
-      while (this.data.length < params.rows) {
-        this.data.push(new Array(this.colCount).fill(''));
-        this.formulas.push(new Array(this.colCount).fill(''));
+      while (this.cells.length < params.rows) {
+        this.cells.push(new Array(this.colCount).fill(''));
       }
-      if (params.rows < this.data.length) {
-        this.data.length = params.rows;
-        this.formulas.length = params.rows;
+      if (params.rows < this.cells.length) {
+        this.cells.length = params.rows;
       }
-      this.rowCount = params.rows;
+      this.rowCount = this.cells.length;
     }
 
     if (params.cols !== undefined) {
-      const newColCount = params.cols;
-      if (newColCount > this.colCount) {
-        for (let r = 0; r < this.rowCount; r++) {
-          while (this.data[r].length < newColCount) this.data[r].push('');
-          while (this.formulas[r].length < newColCount) this.formulas[r].push('');
+      if (params.cols > this.colCount) {
+        for (const r of this.cells) {
+          while (r.length < params.cols) r.push('');
         }
-        while (this.headers.length < newColCount) {
+        while (this.headers.length < params.cols) {
           this.headers.push(this.numberToColumnName(this.headers.length));
         }
       } else {
-        for (let r = 0; r < this.rowCount; r++) {
-          this.data[r].length = newColCount;
-          this.formulas[r].length = newColCount;
-        }
-        this.headers.length = newColCount;
+        for (const r of this.cells) r.length = params.cols;
+        this.headers.length = params.cols;
       }
-      this.colCount = newColCount;
+      this.colCount = params.cols;
     }
 
     await this.save();
-    return this.buildResponse(`Resized to ${this.rowCount} rows x ${this.colCount} cols`);
+    return this.buildResponse(`Resized to ${this.cells.length} rows x ${this.colCount} cols`);
   }
 
   /**
@@ -931,37 +854,24 @@ export default class Spreadsheet {
     const parsed = lines.map(l => this.parseCSVLine(l));
     const maxCols = Math.max(...parsed.map(r => r.length));
 
-    // First row as headers
     this.headers = parsed[0];
     while (this.headers.length < maxCols) {
       this.headers.push(this.numberToColumnName(this.headers.length));
     }
 
     this.colCount = maxCols;
-    this.rowCount = parsed.length - 1;
-    this.data = [];
-    this.formulas = [];
-
+    this.cells = [];
     for (let i = 1; i < parsed.length; i++) {
       const row = parsed[i];
       while (row.length < maxCols) row.push('');
-      this.data.push(row);
-      const formulaRow = new Array(maxCols).fill('');
-      // Detect formulas
-      for (let c = 0; c < row.length; c++) {
-        if (row[c].startsWith('=')) {
-          formulaRow[c] = row[c];
-          row[c] = String(this.evaluateFormula(row[c].substring(1), i - 1, c));
-        }
-      }
-      this.formulas.push(formulaRow);
+      this.cells.push(row);
     }
-
-    this.recalculateAll();
+    this.rowCount = this.cells.length;
     this.loaded = true;
+
     await this.save();
 
-    const msg = `Imported ${this.rowCount} rows x ${this.colCount} cols`;
+    const msg = `Imported ${this.cells.length} rows x ${this.colCount} cols`;
     this.emit({ emit: 'data', ...this.buildResponse(msg) });
     return this.buildResponse(msg);
   }
@@ -969,7 +879,7 @@ export default class Spreadsheet {
   /**
    * Export as CSV
    *
-   * Export the spreadsheet data as CSV text, or save to a file.
+   * Returns the raw CSV content (with formulas preserved), or saves to a file.
    *
    * @param file Optional file path to save CSV to
    */
@@ -977,13 +887,15 @@ export default class Spreadsheet {
     await this.load();
 
     const csvLines = [this.headers.map(h => this.escapeCSV(h)).join(',')];
-    for (const row of this.data) {
+    for (const row of this.cells) {
       if (row.every(v => v === '')) continue;
-      csvLines.push(row.map(v => this.escapeCSV(String(v))).join(','));
+      csvLines.push(row.map(v => this.escapeCSV(v)).join(','));
     }
     const csvText = csvLines.join('\n') + '\n';
 
     if (params?.file) {
+      const dir = path.dirname(params.file);
+      if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
       await fs.writeFile(params.file, csvText, 'utf-8');
       return { message: `Exported to ${params.file}`, file: params.file };
     }
@@ -1003,21 +915,19 @@ export default class Spreadsheet {
 
     if (params?.range) {
       const { startRow, startCol, endRow, endCol } = this.rangeToIndices(params.range);
-      for (let r = startRow; r <= endRow && r < this.rowCount; r++) {
+      for (let r = startRow; r <= endRow && r < this.cells.length; r++) {
         for (let c = startCol; c <= endCol && c < this.colCount; c++) {
-          this.data[r][c] = '';
-          this.formulas[r][c] = '';
+          this.cells[r][c] = '';
         }
       }
-      this.recalculateAll();
       await this.save();
       const msg = `Cleared range ${params.range}`;
       this.emit({ emit: 'data', ...this.buildResponse(msg) });
       return this.buildResponse(msg);
     }
 
-    this.initEmpty();
-    this.recalculateAll();
+    this.cells = [];
+    this.rowCount = 0;
     await this.save();
     const msg = 'Cleared all cells';
     this.emit({ emit: 'data', ...this.buildResponse(msg) });
@@ -1027,7 +937,7 @@ export default class Spreadsheet {
   /**
    * Rename a column header
    *
-   * @param column Column letter (e.g., "A")
+   * @param column Column letter or current header name
    * @param name New header name
    * @example rename({ column: 'A', name: 'Product' })
    */
@@ -1042,7 +952,7 @@ export default class Spreadsheet {
     this.headers[colIndex] = params.name;
     await this.save();
 
-    return this.buildResponse(`Renamed column ${params.column}: "${old}" -> "${params.name}"`);
+    return this.buildResponse(`Renamed column: "${old}" -> "${params.name}"`);
   }
 
   // --- Query helpers ---
@@ -1050,17 +960,27 @@ export default class Spreadsheet {
   private parseCondition(where: string): { col: string; op: string; value: string } {
     const ops = ['>=', '<=', '!=', '>', '<', '=', 'contains'];
     for (const op of ops) {
-      const idx = where.toLowerCase().indexOf(` ${op} `) !== -1
-        ? where.toLowerCase().indexOf(` ${op} `)
-        : where.indexOf(op);
-      if (idx !== -1) {
-        const col = where.substring(0, idx).trim();
-        const opLen = where.toLowerCase().indexOf(` ${op} `) !== -1 ? op.length + 2 : op.length;
-        const value = where.substring(idx + opLen).trim();
-        return { col, op, value };
+      const spaced = where.toLowerCase().indexOf(` ${op} `);
+      if (spaced !== -1) {
+        return {
+          col: where.substring(0, spaced).trim(),
+          op,
+          value: where.substring(spaced + op.length + 2).trim(),
+        };
       }
     }
-    throw new Error(`Cannot parse condition: ${where}. Use format: "COLUMN OP VALUE" (e.g., "B > 25")`);
+    // Try without spaces for operators like > < =
+    for (const op of ops.filter(o => o.length <= 2)) {
+      const idx = where.indexOf(op);
+      if (idx !== -1) {
+        return {
+          col: where.substring(0, idx).trim(),
+          op,
+          value: where.substring(idx + op.length).trim(),
+        };
+      }
+    }
+    throw new Error(`Cannot parse condition: "${where}". Use: "COLUMN OP VALUE" (e.g., "Age > 25")`);
   }
 
   private matchCondition(cellVal: string, op: string, value: string): boolean {
@@ -1080,7 +1000,7 @@ export default class Spreadsheet {
     }
   }
 
-  private formatFilteredTable(rowIndices: number[]): string {
+  private formatFilteredTable(evaluated: string[][], rowIndices: number[]): string {
     const visibleHeaders = ['Row', ...this.headers];
     const widths = visibleHeaders.map(h => h.length);
 
@@ -1088,7 +1008,7 @@ export default class Spreadsheet {
     for (const r of rowIndices) {
       const row = [String(r + 1)];
       for (let c = 0; c < this.colCount; c++) {
-        const val = String(this.data[r]?.[c] ?? '');
+        const val = evaluated[r]?.[c] ?? '';
         row.push(val);
         if (val.length > (widths[c + 1] || 0)) widths[c + 1] = val.length;
       }
