@@ -86,10 +86,10 @@
       "license": "MIT",
       "icon": "🔴",
       "source": "../connect-four.photon.ts",
-      "hash": "sha256:7e9deaf103307bb8bab5fcd3f78c46db3ad7669555f233794bf3e938e4684b79",
-      "contentHash": "sha256:5d4f1c6f59f8ebceaf17e632603dde4b801a2383d9b4670c7ad79a7c3cdacd0c",
+      "hash": "sha256:3910de03ab1077e4a0a6e63c22b0e570b65f1aff6d444de2d91df4d168e6e566",
+      "contentHash": "sha256:dbe30918db82eacdc48e215b457167cf42ff63aa04c223ab9311c1f67c9c7474",
       "tools": [
-        "start",
+        "main",
         "drop",
         "board",
         "games",
@@ -100,8 +100,10 @@
       "assets": [
         "connect-four/ui/board.html"
       ],
-      "photonType": "api",
+      "photonType": "streaming",
       "features": [
+        "generator",
+        "custom-ui",
         "stateful",
         "channels"
       ]
@@ -971,6 +973,33 @@
       "assets": [],
       "photonType": "api",
       "features": []
+    },
+    {
+      "name": "spreadsheet",
+      "version": "1.0.0",
+      "description": "Spreadsheet API - Read, update and manage CSV files with formula support Common use cases: - Load a CSV file and interact with it like a spreadsheet - Read specific cells, rows, or columns - Update cells (supports formulas starting with =) - Compute values based on formulas",
+      "author": "Arul",
+      "license": "MIT",
+      "icon": "📊",
+      "source": "../spreadsheet.photon.ts",
+      "hash": "sha256:0d6b8dcde62ad76b6625633254a574476a06621748c1d564d04d3d2c81a82730",
+      "contentHash": "sha256:8ce508d3e90e63c971bd8a7a654f4330e54c6b3990978c4c6cd5fbdb995f87e8",
+      "tools": [
+        "main",
+        "load",
+        "get",
+        "getFormula",
+        "set",
+        "view"
+      ],
+      "assets": [
+        "spreadsheet/ui/mcp-bridge.js",
+        "spreadsheet/ui/spreadsheet.html"
+      ],
+      "photonType": "api",
+      "features": [
+        "custom-ui"
+      ]
     },
     {
       "name": "sqlite",

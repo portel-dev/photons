@@ -37,7 +37,7 @@ We welcome contributions! Submit pull requests for:
 | [**AWS S3**](aws-s3.md) | Cloud object storage | 11 | - |
 | [**Boards**](boards.md) | Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 1 | ⚡🎨📡 |
 | [**Code Diagram**](code-diagram.md) | Mermaid visualization from source code | 3 | 🔌📦 |
-| [**Connect Four**](connect-four.md) | Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. | 7 | 📡 |
+| [**Connect Four**](connect-four.md) | Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game. | 7 | ⚡🎨📡 |
 | [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 4 | 📡 |
 | [**Dashboard**](dashboard.md) | Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json | 6 | 🎨🎨 |
 | [**Data Sync Workflow**](data-sync.md) | Synchronizes data between sources | 3 | ⚡⚡ |
@@ -68,6 +68,7 @@ We welcome contributions! Submit pull requests for:
 | [**Progressive Rendering**](progressive-rendering.md) | Same Data, Better Display Six methods return the same team data, each progressively enhanced. | 6 | - |
 | [**Redis**](redis.md) | High-performance in-memory data store | 18 | - |
 | [**Slack**](slack.md) | Send and manage messages | 7 | - |
+| [**Spreadsheet API**](spreadsheet.md) | Read, update and manage CSV files with formula support Common use cases: - Load a CSV file and interact with it like a spreadsheet - Read specific cells, rows, or columns - Update cells (supports formulas starting with =) - Compute values based on formulas | 6 | 🎨 |
 | [**SQLite**](sqlite.md) | File or in-memory SQL database | 9 | - |
 | [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
 | [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |
@@ -79,7 +80,7 @@ We welcome contributions! Submit pull requests for:
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
 
-**Total:** 43 photons ready to use
+**Total:** 44 photons ready to use
 
 ---
 
@@ -123,7 +124,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 43 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 44 focused tools at its fingertips.
 
 ---
 
@@ -189,7 +190,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 43 production-ready photons available
+- 📦 44 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

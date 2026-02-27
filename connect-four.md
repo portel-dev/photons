@@ -2,9 +2,9 @@
 
 Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.
 
-> **7 tools** · API Photon · v1.0.0 · MIT
+> **7 tools** · Streaming Photon · v1.0.0 · MIT
 
-**Platform Features:** `stateful` `channels`
+**Platform Features:** `generator` `custom-ui` `stateful` `channels`
 
 ## ⚙️ Configuration
 
@@ -16,7 +16,7 @@ No configuration required.
 
 | Method | Description |
 |--------|-------------|
-| `start` | Start a new Connect Four game. |
+| `main` ⚡ | Open the Connect Four board |
 | `drop` | Drop a piece into a column. |
 | `board` | View the current board |
 | `games` | List your games. |
@@ -28,18 +28,12 @@ No configuration required.
 ## 🔧 Tools
 
 
-### `start`
+### `main` ⚡
 
-Start a new Connect Four game. You play as 🔴 (Red), opponent plays as 🟡 (Yellow). Player always goes first. In "builtin" mode, a minimax AI responds automatically after each move. In "mcp" mode, the MCP client (you, the AI assistant) plays as 🟡 by calling drop on your turn.
-
-
+Open the Connect Four board
 
 
-**Example:**
 
-```typescript
-start()
-```
 
 
 ---
@@ -139,7 +133,7 @@ flowchart LR
     subgraph connect_four["📦 Connect Four"]
         direction TB
         PHOTON((🎯))
-        T0[▶️ start]
+        T0[🌊 main (stream)]
         PHOTON --> T0
         T1[🗑️ drop]
         PHOTON --> T1
