@@ -96,12 +96,19 @@ function initMCPBridge(spreadsheet) {
 
     // --- Override addRow ---
     spreadsheet.addRow = async function () {
-        // Add locally for instant feedback, server will reconcile
+        // Add locally for instant feedback
         this.rowCount++;
         this.data.push(new Array(this.colCount).fill(''));
         this.formulas.push(new Array(this.colCount).fill(''));
         this.render();
         this.selectCell(this.rowCount - 1, 0);
+
+        // Persist via photon add() tool
+        try {
+            await window.photon.callTool('add', { values: {} });
+        } catch (error) {
+            console.error('Failed to persist new row:', error);
+        }
     };
 
     // --- Override deleteRow ---
@@ -157,6 +164,49 @@ function initMCPBridge(spreadsheet) {
         }
     };
 
+    // --- Override addFilter → photon query() ---
+    const originalApplyFilters = spreadsheet.applyFilters.bind(spreadsheet);
+    spreadsheet.addFilter = async function () {
+        const colIdx = document.getElementById('filterColumn').value;
+        const operator = document.getElementById('filterOperator').value;
+        const filterValue = document.getElementById('filterValue').value;
+
+        if (colIdx === '') return;
+
+        const colName = this.headers[parseInt(colIdx)];
+
+        // Build where clause for query()
+        const opMap = { equals: '=', greater: '>', less: '<', contains: 'contains' };
+        const serverOp = opMap[operator];
+
+        if (serverOp && serverOp !== 'contains') {
+            try {
+                const where = `${colName} ${serverOp} ${filterValue}`;
+                const result = await window.photon.callTool('query', { where });
+                if (result && result.data) {
+                    // Build a set of matching row indices from server response
+                    const matchingData = result.data;
+                    this.hiddenRows.clear();
+                    for (let row = 0; row < this.rowCount; row++) {
+                        const rowData = this.data[row];
+                        const matches = matchingData.some(mRow =>
+                            mRow.every((val, c) => String(val || '') === String(rowData[c] || ''))
+                        );
+                        if (!matches) this.hiddenRows.add(row);
+                    }
+                    this.render();
+                    return;
+                }
+            } catch (error) {
+                console.warn('Server query failed, falling back to client filter:', error.message);
+            }
+        }
+
+        // Fallback to client-side filtering
+        this.filters.push({ col: parseInt(colIdx), operator, value: filterValue });
+        originalApplyFilters();
+    };
+
     // --- Listen for data events from the server ---
     if (window.photon.onEmit) {
         window.photon.onEmit((event) => {
@@ -175,6 +225,9 @@ function initMCPBridge(spreadsheet) {
         });
     }
 
+    // Setup context menu once
+    setupContextMenu();
+
     // Load initial data
     loadDataFromPhoton();
 }
@@ -187,6 +240,21 @@ async function loadDataFromPhoton() {
         const result = await window.photon.callTool('view', {});
         if (result) {
             applyServerData(result);
+        }
+        // Sync column types from server schema
+        try {
+            const schema = await window.photon.callTool('schema', {});
+            if (schema && schema.columns && _spreadsheet) {
+                for (const col of schema.columns) {
+                    const idx = _spreadsheet.headers.indexOf(col.name);
+                    if (idx >= 0 && col.type) {
+                        _spreadsheet.fieldTypes[idx] = col.type;
+                    }
+                }
+            }
+        } catch (schemaErr) {
+            // Schema sync is best-effort
+            console.warn('Schema sync skipped:', schemaErr.message);
         }
     } catch (error) {
         console.error('Failed to load data:', error);
@@ -251,4 +319,110 @@ function applyServerData(result) {
         Math.min(row, s.rowCount - 1),
         Math.min(col, s.colCount - 1)
     );
+
+    // Re-attach header rename handlers after re-render
+    attachHeaderRenameHandlers();
+}
+
+// --- Header rename via double-click (module-level for access from applyServerData) ---
+function attachHeaderRenameHandlers() {
+    if (!_spreadsheet) return;
+    document.querySelectorAll('th.col-header').forEach(th => {
+        th.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            const colIdx = parseInt(th.dataset.col);
+            const oldName = _spreadsheet.headers[colIdx];
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = oldName;
+            input.style.cssText = 'width:100%;border:1px solid var(--accent);border-radius:3px;padding:2px 4px;font-size:12px;font-weight:600;background:var(--bg-primary);color:var(--text-primary);';
+            th.textContent = '';
+            th.appendChild(input);
+            input.focus();
+            input.select();
+
+            const finish = async (save) => {
+                const newName = input.value.trim();
+                if (save && newName && newName !== oldName) {
+                    try {
+                        await window.photon.callTool('rename', { column: oldName, name: newName });
+                    } catch (err) {
+                        console.error('Failed to rename column:', err);
+                        th.textContent = oldName;
+                        return;
+                    }
+                } else {
+                    th.textContent = oldName;
+                }
+            };
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+                if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+            });
+            input.addEventListener('blur', () => finish(true));
+        });
+    });
+}
+
+// --- Context menu wiring ---
+function setupContextMenu() {
+    if (!_spreadsheet) return;
+    const menu = document.getElementById('contextMenu');
+    if (!menu) return;
+
+    document.querySelector('.grid-wrapper')?.addEventListener('contextmenu', (e) => {
+        const td = e.target.closest('td[data-row][data-col]');
+        if (!td) return;
+        e.preventDefault();
+
+        const row = parseInt(td.dataset.row);
+        const col = parseInt(td.dataset.col);
+        _spreadsheet.selectCell(row, col);
+
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+        menu.classList.add('visible');
+        menu._contextRow = row;
+        menu._contextCol = col;
+    });
+
+    menu.querySelectorAll('.context-menu-item').forEach(item => {
+        item.addEventListener('click', async () => {
+            menu.classList.remove('visible');
+            const action = item.dataset.action;
+            const row = menu._contextRow;
+            const col = menu._contextCol;
+
+            if (action === 'clear') {
+                const cellRef = _spreadsheet.headers[col] + (row + 1);
+                try {
+                    await window.photon.callTool('set', { cell: cellRef, value: '' });
+                } catch (err) {
+                    console.error('Failed to clear cell:', err);
+                }
+            } else if (action === 'fill') {
+                const pattern = prompt('Fill pattern (e.g. "1,2,3..." or "Mon,Tue,Wed..."):');
+                if (!pattern) return;
+                const colName = _spreadsheet.headers[col];
+                const range = `${colName}${row + 1}:${colName}${_spreadsheet.rowCount}`;
+                try {
+                    await window.photon.callTool('fill', { range, pattern });
+                } catch (err) {
+                    console.error('Failed to fill range:', err);
+                }
+            } else if (action === 'rename') {
+                const th = document.querySelector(`th.col-header[data-col="${col}"]`);
+                if (th) th.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+            }
+        });
+    });
+
+    // Dismiss on click-outside or Escape
+    document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target)) menu.classList.remove('visible');
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') menu.classList.remove('visible');
+    });
 }
