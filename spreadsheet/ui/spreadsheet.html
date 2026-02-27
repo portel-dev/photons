@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mcp:ui-size" content="minWidth=800;minHeight=400;maxHeight=900">
     <title>Spreadsheet</title>
     <style>
         * {
@@ -11,7 +12,33 @@
             box-sizing: border-box;
         }
 
+        /* Default: dark theme */
         :root {
+            --primary: #2ea043;
+            --primary-hover: #3fb950;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --border-dark: #484f58;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --error: #f85149;
+            --formula-bar-bg: #161b22;
+            --header-bg: #161b22;
+            --grid-line: #30363d;
+            --selection: #58a6ff;
+            --selection-bg: rgba(88, 166, 255, 0.15);
+            --cell-active: #0d1117;
+            --cell-empty: rgba(255, 255, 255, 0.03);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Light theme override via .light class on :root */
+        :root.light {
             --primary: #217346;
             --primary-hover: #1e623c;
             --bg-primary: #ffffff;
@@ -35,28 +62,20 @@
             --shadow-md: 0 3px 6px rgba(31, 35, 40, 0.08);
         }
 
-        [data-theme="dark"] {
-            --primary: #2ea043;
-            --primary-hover: #3fb950;
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --border: #30363d;
-            --border-dark: #484f58;
-            --text-primary: #c9d1d9;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            --accent: #58a6ff;
-            --error: #f85149;
-            --formula-bar-bg: #161b22;
-            --header-bg: #161b22;
-            --grid-line: #30363d;
-            --selection: #58a6ff;
-            --selection-bg: rgba(88, 166, 255, 0.15);
-            --cell-active: #0d1117;
-            --cell-empty: rgba(255, 255, 255, 0.03);
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.4);
+        /* Slim scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-dark);
         }
 
         body {
@@ -422,6 +441,7 @@
             flex: 1;
             display: flex;
             overflow: hidden;
+            min-height: 0;
         }
 
         /* Sidebar for Views */
@@ -961,9 +981,7 @@
             <button class="btn" onclick="spreadsheet.toggleView('gallery')" id="btn-gallery">Gallery</button>
             <button class="btn" onclick="spreadsheet.toggleView('kanban')" id="btn-kanban">Kanban</button>
         </div>
-        <div class="toolbar-section">
-            <button class="theme-toggle" onclick="spreadsheet.toggleTheme()" title="Toggle Dark Mode">🌓</button>
-        </div>
+        <!-- Theme controlled by host via onThemeChange -->
     </div>
 
     <!-- Formula Bar -->
@@ -1157,8 +1175,7 @@ Jane,25,London,Inactive"></textarea>
                 this.isEditing = false;
                 this.editStartValue = '';
                 this.columnWidths = new Array(cols).fill(100);
-                this.darkMode = false;
-                this.sidebarVisible = true;
+                this.sidebarVisible = false;
                 this.currentView = 'grid';
                 this.groupByColumn = null;
                 this.filters = [];
@@ -1191,6 +1208,10 @@ Jane,25,London,Inactive"></textarea>
                 this.setupEventListeners();
                 this.updateFilterOptions();
                 this.selectCell(0, 0);
+                // Start with sidebar collapsed
+                document.getElementById('sidebar')?.classList.add('collapsed');
+                const toggle = document.getElementById('sidebarToggle');
+                if (toggle) toggle.textContent = '▶';
             }
 
             initializeFieldTypes() {
@@ -1200,8 +1221,7 @@ Jane,25,London,Inactive"></textarea>
             }
 
             toggleTheme() {
-                this.darkMode = !this.darkMode;
-                document.documentElement.setAttribute('data-theme', this.darkMode ? 'dark' : 'light');
+                document.documentElement.classList.toggle('light');
             }
 
             toggleSidebar() {
@@ -2352,13 +2372,24 @@ Jane,25,London,Inactive"></textarea>
 
         const spreadsheet = new SpreadsheetEngine();
         
-        // Setup MCP Bridge
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.photon) {
-                // Remove standalone specific UI elements if needed
-                initMCPBridge(spreadsheet);
+        // Setup MCP Bridge + theme listener
+        function setupPhotonBridge() {
+            if (!window.photon) {
+                setTimeout(setupPhotonBridge, 100);
+                return;
             }
-        });
+            initMCPBridge(spreadsheet);
+            if (window.photon.onThemeChange) {
+                window.photon.onThemeChange((theme) => {
+                    if (theme === 'light') {
+                        document.documentElement.classList.add('light');
+                    } else {
+                        document.documentElement.classList.remove('light');
+                    }
+                });
+            }
+        }
+        document.addEventListener('DOMContentLoaded', setupPhotonBridge);
     </script>
     <script src="mcp-bridge.js"></script>
 </body>
