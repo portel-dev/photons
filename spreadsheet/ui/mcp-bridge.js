@@ -340,6 +340,23 @@ function applyServerData(result) {
 
     // Re-attach header rename handlers after re-render
     attachHeaderRenameHandlers();
+
+    // Process chart overlays from visual formulas
+    if (result.charts && result.charts.length > 0) {
+        // Defer to after render so cell DOM exists
+        requestAnimationFrame(() => {
+            s.renderCharts(result.charts);
+            // Re-render to show chart anchor icons
+            s.render();
+            s.selectCell(
+                Math.min(row, s.rowCount - 1),
+                Math.min(col, s.colCount - 1)
+            );
+        });
+    } else {
+        // No charts — clean up any existing overlays
+        s.renderCharts(null);
+    }
 }
 
 // --- Header rename via double-click (module-level for access from applyServerData) ---

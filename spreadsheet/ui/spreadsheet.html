@@ -156,6 +156,128 @@
             color: var(--selection);
         }
 
+        /* Source view toggle */
+        .btn-source-toggle {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-source-toggle.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Source view cell styling */
+        .source-view td .cell-content {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 12px;
+            opacity: 0.85;
+            color: var(--accent);
+        }
+
+        .source-view td.cell-formula .cell-content {
+            color: var(--primary);
+            opacity: 1;
+        }
+
+        /* Chart overlay styles */
+        .chart-overlay {
+            position: absolute;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            z-index: 50;
+            min-width: 200px;
+            min-height: 150px;
+            overflow: hidden;
+        }
+
+        .chart-overlay .chart-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            cursor: move;
+            font-size: 11px;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+        .chart-overlay .chart-titlebar .chart-type-label {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chart-overlay .chart-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .chart-overlay .chart-close:hover {
+            color: var(--error);
+        }
+
+        .chart-overlay .chart-body {
+            padding: 8px;
+            position: relative;
+        }
+
+        .chart-overlay .chart-resize {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            cursor: nwse-resize;
+            opacity: 0.3;
+        }
+
+        .chart-overlay .chart-resize:hover {
+            opacity: 0.6;
+        }
+
+        .chart-overlay .chart-resize::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid var(--text-muted);
+            border-bottom: 2px solid var(--text-muted);
+        }
+
+        /* Chart anchor cell indicator */
+        td.chart-anchor .cell-content::before {
+            content: attr(data-chart-icon);
+            margin-right: 4px;
+        }
+
+        /* Sparkline cell */
+        td .sparkline-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        td .sparkline-container svg {
+            width: 100%;
+            height: 24px;
+        }
+
         .theme-toggle {
             background: transparent;
             border: 1px solid var(--border);
@@ -981,6 +1103,9 @@
             <button class="btn" onclick="spreadsheet.toggleView('gallery')" id="btn-gallery">Gallery</button>
             <button class="btn" onclick="spreadsheet.toggleView('kanban')" id="btn-kanban">Kanban</button>
         </div>
+        <div class="toolbar-section">
+            <button class="btn btn-source-toggle" onclick="spreadsheet.toggleSourceView()" id="btn-source" title="Toggle source/runtime view">&lt;/&gt;</button>
+        </div>
         <!-- Theme controlled by host via onThemeChange -->
     </div>
 
@@ -1185,6 +1310,8 @@ Jane,25,London,Inactive"></textarea>
                 this.acIndex = -1; // autocomplete selected index
                 this.acItems = []; // current autocomplete matches
                 this._previewTimer = null;
+                this.viewMode = 'runtime'; // 'runtime' or 'source'
+                this.chartOverlays = new Map(); // cell ref → overlay element
                 this.formulaCatalog = [
                     { name: 'SUM',     syntax: 'SUM(range)',              desc: 'Adds all numbers in a range' },
                     { name: 'AVG',     syntax: 'AVG(range)',              desc: 'Average of numbers in a range' },
@@ -1197,6 +1324,11 @@ Jane,25,London,Inactive"></textarea>
                     { name: 'ABS',     syntax: 'ABS(number)',            desc: 'Absolute value' },
                     { name: 'ROUND',   syntax: 'ROUND(number, digits)',  desc: 'Round to N digits' },
                     { name: 'CONCAT',  syntax: 'CONCAT(a, b, ...)',     desc: 'Join values together' },
+                    { name: 'PIE',     syntax: 'PIE(labels, values)',   desc: 'Pie chart overlay' },
+                    { name: 'BAR',     syntax: 'BAR(labels, values)',   desc: 'Bar chart overlay' },
+                    { name: 'LINE',    syntax: 'LINE(labels, values)',  desc: 'Line chart overlay' },
+                    { name: 'SPARKLINE', syntax: 'SPARKLINE(range)',    desc: 'Inline sparkline' },
+                    { name: 'GAUGE',   syntax: 'GAUGE(value, min, max)', desc: 'Gauge meter overlay' },
                 ];
                 this.init();
             }
@@ -1243,6 +1375,26 @@ Jane,25,London,Inactive"></textarea>
                 } else if (view === 'kanban') {
                     this.renderKanban();
                 }
+            }
+
+            toggleSourceView() {
+                this.viewMode = this.viewMode === 'runtime' ? 'source' : 'runtime';
+                const btn = document.getElementById('btn-source');
+                const gridWrapper = document.getElementById('gridWrapper');
+
+                if (this.viewMode === 'source') {
+                    btn.classList.add('active');
+                    gridWrapper.classList.add('source-view');
+                    // Hide chart overlays in source view
+                    this.chartOverlays.forEach(overlay => overlay.style.display = 'none');
+                } else {
+                    btn.classList.remove('active');
+                    gridWrapper.classList.remove('source-view');
+                    // Show chart overlays back
+                    this.chartOverlays.forEach(overlay => overlay.style.display = '');
+                }
+                this.render();
+                this.selectCell(this.selectedCell.row, this.selectedCell.col);
             }
 
             switchView(viewName) {
@@ -1576,12 +1728,27 @@ Jane,25,London,Inactive"></textarea>
                             const hasFormula = this.formulas[row][col] !== '';
                             const isEmpty = value === '' || value === undefined;
                             const fieldType = this.fieldTypes[col];
-                            
+                            const isSourceView = this.viewMode === 'source';
+
                             let displayValue = value;
                             let cellClass = '';
-                            
-                            // Apply field type rendering
-                            if (fieldType === 'checkbox') {
+                            let extraAttrs = '';
+
+                            // Source view: show raw formulas
+                            if (isSourceView && hasFormula) {
+                                displayValue = this.escapeHtml(this.formulas[row][col]);
+                                cellClass = 'cell-formula';
+                            } else if (isSourceView) {
+                                displayValue = this.escapeHtml(value);
+                            // Check if this cell is a chart anchor
+                            } else if (this._chartAnchors && this._chartAnchors.has(`${row},${col}`)) {
+                                const chartType = this._chartAnchors.get(`${row},${col}`);
+                                const icons = { pie: '\u{1F4CA}', bar: '\u{1F4CA}', line: '\u{1F4C8}', gauge: '\u{1F3AF}' };
+                                cellClass = 'chart-anchor';
+                                displayValue = icons[chartType] || '\u{1F4CA}';
+                                extraAttrs = ` data-chart-icon=""`;
+                            // Apply field type rendering (runtime mode)
+                            } else if (fieldType === 'checkbox') {
                                 cellClass = 'cell-checkbox';
                                 displayValue = `<input type="checkbox" ${value ? 'checked' : ''} onclick="event.stopPropagation(); spreadsheet.toggleCheckbox(${row}, ${col})">`;
                             } else if (fieldType === 'select' && value) {
@@ -1594,14 +1761,14 @@ Jane,25,London,Inactive"></textarea>
                             } else if (hasFormula && value === '#ERROR') {
                                 cellClass = 'cell-error';
                             }
-                            
-                            const emptyClass = isEmpty ? 'empty' : '';
+
+                            const emptyClass = isEmpty && !cellClass.includes('chart-anchor') ? 'empty' : '';
                             const meta = this.columnMeta?.[col];
                             const alignStyle = meta?.align === 'right' ? 'text-align:right;justify-content:flex-end;'
                                 : meta?.align === 'center' ? 'text-align:center;justify-content:center;' : '';
 
-                            bodyHTML += `<td data-row="${row}" data-col="${col}" class="${cellClass} ${emptyClass}">
-                                <div class="cell-content" ${alignStyle ? `style="${alignStyle}"` : ''}>${isEmpty ? '' : displayValue}</div>
+                            bodyHTML += `<td data-row="${row}" data-col="${col}" class="${cellClass} ${emptyClass}"${extraAttrs}>
+                                <div class="cell-content" ${alignStyle ? `style="${alignStyle}"` : ''}>${isEmpty && !cellClass.includes('chart-anchor') ? '' : displayValue}</div>
                             </td>`;
                         }
                         bodyHTML += '</tr>';
@@ -1661,6 +1828,12 @@ Jane,25,London,Inactive"></textarea>
                         const row = parseInt(cell.dataset.row);
                         const col = parseInt(cell.dataset.col);
                         if (!isNaN(row) && !isNaN(col)) {
+                            // In source view, switch back to runtime and select
+                            if (this.viewMode === 'source') {
+                                this.toggleSourceView();
+                                this.selectCell(row, col);
+                                return;
+                            }
                             this.startEditing(row, col);
                         }
                     });
@@ -1772,9 +1945,14 @@ Jane,25,London,Inactive"></textarea>
                     }, 150);
                 });
 
+                // Reposition chart overlays on scroll
+                document.getElementById('gridWrapper')?.addEventListener('scroll', () => {
+                    this.repositionChartOverlays();
+                });
+
                 document.addEventListener('keydown', (e) => {
                     if (this.isEditing) return;
-                    
+
                     if (e.ctrlKey || e.metaKey || e.altKey) return;
                     
                     if (e.key.startsWith('Arrow')) {
@@ -1850,6 +2028,11 @@ Jane,25,London,Inactive"></textarea>
 
             selectAll() {
                 document.querySelectorAll('td').forEach(cell => cell.classList.add('selected'));
+            }
+
+            escapeHtml(str) {
+                if (!str) return '';
+                return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             }
 
             moveSelection(rowDelta, colDelta) {
@@ -2348,6 +2531,351 @@ Jane,25,London,Inactive"></textarea>
                 this.selectCell(this.selectedCell.row, this.selectedCell.col);
             }
 
+            // --- Chart Overlay Management ---
+
+            renderCharts(charts) {
+                if (!charts || !charts.length) {
+                    // Remove all existing overlays
+                    this.chartOverlays.forEach(overlay => overlay.remove());
+                    this.chartOverlays.clear();
+                    this._chartAnchors = null;
+                    return;
+                }
+
+                // Build chart anchor map for render()
+                this._chartAnchors = new Map();
+                const gridWrapper = document.getElementById('gridWrapper');
+
+                // Track which cells still have charts
+                const activeCells = new Set();
+
+                for (const chart of charts) {
+                    const cellRef = chart.cell;
+                    activeCells.add(cellRef);
+
+                    // Parse cell ref to row,col
+                    const match = cellRef.match(/^([A-Za-z]+)(\d+)$/);
+                    if (!match) continue;
+                    const col = this.columnNameToNumber(match[1]);
+                    const row = parseInt(match[2]) - 1;
+
+                    this._chartAnchors.set(`${row},${col}`, chart.type);
+
+                    // Sparkline: render inline, no overlay
+                    if (chart.type === 'sparkline') {
+                        this._renderSparklineInCell(row, col, chart.resolvedValues);
+                        continue;
+                    }
+
+                    // Create or update overlay
+                    let overlay = this.chartOverlays.get(cellRef);
+                    if (overlay) {
+                        // Update existing chart data
+                        this._updateChartData(overlay, chart);
+                    } else {
+                        overlay = this._createChartOverlay(chart, row, col, gridWrapper);
+                        this.chartOverlays.set(cellRef, overlay);
+                    }
+
+                    // Position relative to anchor cell
+                    this._positionOverlay(overlay, row, col);
+
+                    // Respect source view
+                    if (this.viewMode === 'source') {
+                        overlay.style.display = 'none';
+                    }
+                }
+
+                // Remove overlays for cells that no longer have charts
+                for (const [cellRef, overlay] of this.chartOverlays) {
+                    if (!activeCells.has(cellRef)) {
+                        overlay.remove();
+                        this.chartOverlays.delete(cellRef);
+                    }
+                }
+            }
+
+            _createChartOverlay(chart, row, col, container) {
+                const overlay = document.createElement('div');
+                overlay.className = 'chart-overlay';
+                overlay.dataset.cell = chart.cell;
+                overlay.style.width = '260px';
+                overlay.style.height = '200px';
+
+                const titlebar = document.createElement('div');
+                titlebar.className = 'chart-titlebar';
+                titlebar.innerHTML = `<span class="chart-type-label">${chart.type.toUpperCase()} \u2014 ${chart.cell}</span>`;
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'chart-close';
+                closeBtn.textContent = '\u00D7';
+                closeBtn.onclick = () => {
+                    // Delete the formula from the anchor cell
+                    this.clearCell(row, col);
+                };
+                titlebar.appendChild(closeBtn);
+
+                const body = document.createElement('div');
+                body.className = 'chart-body';
+                body.style.height = 'calc(100% - 28px)';
+
+                const canvas = document.createElement('canvas');
+                body.appendChild(canvas);
+
+                const resizeHandle = document.createElement('div');
+                resizeHandle.className = 'chart-resize';
+
+                overlay.appendChild(titlebar);
+                overlay.appendChild(body);
+                overlay.appendChild(resizeHandle);
+                container.appendChild(overlay);
+
+                // Create Chart.js instance
+                this._createChart(canvas, chart);
+
+                // Make draggable
+                this._makeDraggable(overlay, titlebar);
+
+                // Make resizable
+                this._makeResizable(overlay, resizeHandle, canvas, chart);
+
+                return overlay;
+            }
+
+            _createChart(canvas, chart) {
+                if (typeof Chart === 'undefined') return;
+
+                const isDark = !document.documentElement.classList.contains('light');
+                const textColor = isDark ? '#c9d1d9' : '#24292f';
+                const gridColor = isDark ? 'rgba(48,54,61,0.5)' : 'rgba(208,215,222,0.5)';
+
+                const palette = [
+                    '#58a6ff', '#3fb950', '#d29922', '#f85149',
+                    '#bc8cff', '#79c0ff', '#56d364', '#e3b341',
+                    '#ff7b72', '#d2a8ff'
+                ];
+
+                const config = { responsive: true, maintainAspectRatio: false };
+
+                let chartConfig;
+                if (chart.type === 'pie') {
+                    chartConfig = {
+                        type: 'pie',
+                        data: {
+                            labels: chart.resolvedLabels || [],
+                            datasets: [{
+                                data: chart.resolvedValues || [],
+                                backgroundColor: palette.slice(0, (chart.resolvedValues || []).length),
+                                borderWidth: 1,
+                                borderColor: isDark ? '#21262d' : '#ffffff',
+                            }]
+                        },
+                        options: {
+                            ...config,
+                            plugins: {
+                                legend: { position: 'right', labels: { color: textColor, font: { size: 10 } } }
+                            }
+                        }
+                    };
+                } else if (chart.type === 'bar') {
+                    chartConfig = {
+                        type: 'bar',
+                        data: {
+                            labels: chart.resolvedLabels || [],
+                            datasets: [{
+                                data: chart.resolvedValues || [],
+                                backgroundColor: palette[0],
+                                borderRadius: 3,
+                            }]
+                        },
+                        options: {
+                            ...config,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                x: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } },
+                                y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } }
+                            }
+                        }
+                    };
+                } else if (chart.type === 'line') {
+                    chartConfig = {
+                        type: 'line',
+                        data: {
+                            labels: chart.resolvedLabels || chart.resolvedValues.map((_, i) => i + 1),
+                            datasets: [{
+                                data: chart.resolvedValues || [],
+                                borderColor: palette[0],
+                                backgroundColor: 'rgba(88,166,255,0.1)',
+                                fill: true,
+                                tension: 0.3,
+                                pointRadius: 2,
+                            }]
+                        },
+                        options: {
+                            ...config,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                x: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } },
+                                y: { ticks: { color: textColor, font: { size: 9 } }, grid: { color: gridColor } }
+                            }
+                        }
+                    };
+                } else if (chart.type === 'gauge') {
+                    // Gauge as a doughnut chart
+                    const val = (chart.resolvedValues || [0])[0] || 0;
+                    const min = chart.min || 0;
+                    const max = chart.max || 100;
+                    const pct = Math.max(0, Math.min(1, (val - min) / (max - min)));
+                    chartConfig = {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [pct * 100, (1 - pct) * 100],
+                                backgroundColor: [palette[0], isDark ? '#21262d' : '#e1e4e8'],
+                                borderWidth: 0,
+                            }]
+                        },
+                        options: {
+                            ...config,
+                            circumference: 180,
+                            rotation: -90,
+                            cutout: '75%',
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { enabled: false }
+                            }
+                        }
+                    };
+                }
+
+                if (chartConfig) {
+                    const ctx = canvas.getContext('2d');
+                    canvas._chartInstance = new Chart(ctx, chartConfig);
+                }
+            }
+
+            _updateChartData(overlay, chart) {
+                const canvas = overlay.querySelector('canvas');
+                if (!canvas || !canvas._chartInstance) return;
+
+                const ci = canvas._chartInstance;
+                if (chart.type === 'gauge') {
+                    const val = (chart.resolvedValues || [0])[0] || 0;
+                    const min = chart.min || 0;
+                    const max = chart.max || 100;
+                    const pct = Math.max(0, Math.min(1, (val - min) / (max - min)));
+                    ci.data.datasets[0].data = [pct * 100, (1 - pct) * 100];
+                } else {
+                    if (chart.resolvedLabels) ci.data.labels = chart.resolvedLabels;
+                    ci.data.datasets[0].data = chart.resolvedValues || [];
+                }
+                ci.update('none');
+            }
+
+            _positionOverlay(overlay, row, col) {
+                const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                if (!cell) return;
+
+                // If manually dragged, don't reposition
+                if (overlay.dataset.dragged === 'true') return;
+
+                const cellRect = cell.getBoundingClientRect();
+                const wrapperRect = document.getElementById('gridWrapper').getBoundingClientRect();
+                overlay.style.left = (cellRect.left - wrapperRect.left + cellRect.width + 4) + 'px';
+                overlay.style.top = (cellRect.top - wrapperRect.top) + 'px';
+            }
+
+            _renderSparklineInCell(row, col, values) {
+                // Defer to after render completes
+                requestAnimationFrame(() => {
+                    const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                    if (!cell) return;
+
+                    const content = cell.querySelector('.cell-content');
+                    if (!content || !values || !values.length) return;
+
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    const range = max - min || 1;
+                    const w = 80;
+                    const h = 20;
+                    const step = w / (values.length - 1 || 1);
+
+                    const points = values.map((v, i) => {
+                        const x = i * step;
+                        const y = h - ((v - min) / range) * (h - 4) - 2;
+                        return `${x},${y}`;
+                    }).join(' ');
+
+                    const isDark = !document.documentElement.classList.contains('light');
+                    const color = isDark ? '#58a6ff' : '#0969da';
+
+                    content.innerHTML = `<div class="sparkline-container">
+                        <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+                            <polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+                        </svg>
+                    </div>`;
+                });
+            }
+
+            _makeDraggable(overlay, handle) {
+                let startX, startY, startLeft, startTop;
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startLeft = parseInt(overlay.style.left) || 0;
+                    startTop = parseInt(overlay.style.top) || 0;
+                    overlay.dataset.dragged = 'true';
+
+                    const move = (e) => {
+                        overlay.style.left = (startLeft + e.clientX - startX) + 'px';
+                        overlay.style.top = (startTop + e.clientY - startY) + 'px';
+                    };
+                    const up = () => {
+                        document.removeEventListener('mousemove', move);
+                        document.removeEventListener('mouseup', up);
+                    };
+                    document.addEventListener('mousemove', move);
+                    document.addEventListener('mouseup', up);
+                });
+            }
+
+            _makeResizable(overlay, handle, canvas, chart) {
+                let startX, startY, startW, startH;
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startW = overlay.offsetWidth;
+                    startH = overlay.offsetHeight;
+
+                    const move = (e) => {
+                        overlay.style.width = Math.max(200, startW + e.clientX - startX) + 'px';
+                        overlay.style.height = Math.max(150, startH + e.clientY - startY) + 'px';
+                        if (canvas._chartInstance) canvas._chartInstance.resize();
+                    };
+                    const up = () => {
+                        document.removeEventListener('mousemove', move);
+                        document.removeEventListener('mouseup', up);
+                    };
+                    document.addEventListener('mousemove', move);
+                    document.addEventListener('mouseup', up);
+                });
+            }
+
+            repositionChartOverlays() {
+                for (const [cellRef, overlay] of this.chartOverlays) {
+                    if (overlay.dataset.dragged === 'true') continue;
+                    const match = cellRef.match(/^([A-Za-z]+)(\d+)$/);
+                    if (!match) continue;
+                    const col = this.columnNameToNumber(match[1]);
+                    const row = parseInt(match[2]) - 1;
+                    this._positionOverlay(overlay, row, col);
+                }
+            }
+
             deleteColumn() {
                 if (this.colCount <= 1) return;
                 const col = this.selectedCell.col;
@@ -2395,6 +2923,7 @@ Jane,25,London,Inactive"></textarea>
         }
         document.addEventListener('DOMContentLoaded', setupPhotonBridge);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <script src="mcp-bridge.js"></script>
 </body>
 </html>

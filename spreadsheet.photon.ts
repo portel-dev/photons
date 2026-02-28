@@ -20,6 +20,20 @@ import * as path from 'path';
 import * as os from 'os';
 import { existsSync, mkdirSync } from 'fs';
 
+// Visual formula types that render as chart overlays instead of scalar values
+const VISUAL_FORMULAS = new Set(['PIE', 'BAR', 'LINE', 'SPARKLINE', 'GAUGE']);
+
+interface ChartDescriptor {
+  cell: string;
+  type: 'pie' | 'bar' | 'line' | 'sparkline' | 'gauge';
+  labelRange?: string;
+  valueRange?: string;
+  resolvedLabels: string[];
+  resolvedValues: number[];
+  min?: number;
+  max?: number;
+}
+
 export default class Spreadsheet {
   // Raw cell contents — plain values or formula strings (=SUM(...))
   private cells: string[][] = [];
@@ -347,9 +361,128 @@ export default class Spreadsheet {
     return result;
   }
 
+  /** Detect if a formula is a visual formula (returns marker instead of value) */
+  private isVisualFormula(formula: string): boolean {
+    const match = formula.trim().match(/^([A-Z]+)\s*\(/i);
+    return match ? VISUAL_FORMULAS.has(match[1].toUpperCase()) : false;
+  }
+
+  /** Parse a visual formula and return a ChartDescriptor */
+  private parseVisualFormula(formula: string, row: number, col: number): ChartDescriptor | null {
+    const match = formula.trim().match(/^([A-Z]+)\s*\((.+)\)$/i);
+    if (!match) return null;
+
+    const type = match[1].toUpperCase() as 'PIE' | 'BAR' | 'LINE' | 'SPARKLINE' | 'GAUGE';
+    const argsStr = match[2];
+    const args = this.splitFormulaArgs(argsStr);
+    const cellRef = this.numberToColumnName(col) + (row + 1);
+
+    if (type === 'SPARKLINE') {
+      // SPARKLINE(valueRange)
+      const values = this.resolveRangeToNumbers(args[0]?.trim());
+      return { cell: cellRef, type: 'sparkline', valueRange: args[0]?.trim(), resolvedLabels: [], resolvedValues: values };
+    }
+
+    if (type === 'GAUGE') {
+      // GAUGE(cell, min, max)
+      const val = this.resolveRangeToNumbers(args[0]?.trim());
+      const min = args[1] ? parseFloat(args[1].trim()) : 0;
+      const max = args[2] ? parseFloat(args[2].trim()) : 100;
+      return { cell: cellRef, type: 'gauge', resolvedLabels: [], resolvedValues: val, min, max };
+    }
+
+    // PIE, BAR, LINE: (labelRange, valueRange)
+    const labelRange = args[0]?.trim();
+    const valueRange = args[1]?.trim();
+
+    const labels = labelRange ? this.resolveRangeToStrings(labelRange) : [];
+    const values = valueRange ? this.resolveRangeToNumbers(valueRange) : [];
+
+    return {
+      cell: cellRef,
+      type: type.toLowerCase() as 'pie' | 'bar' | 'line',
+      labelRange,
+      valueRange,
+      resolvedLabels: labels,
+      resolvedValues: values,
+    };
+  }
+
+  /** Split formula arguments respecting nested parens */
+  private splitFormulaArgs(argsStr: string): string[] {
+    const result: string[] = [];
+    let depth = 0;
+    let current = '';
+    for (const ch of argsStr) {
+      if (ch === '(') depth++;
+      else if (ch === ')') depth--;
+      if (ch === ',' && depth === 0) {
+        result.push(current);
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    if (current) result.push(current);
+    return result;
+  }
+
+  /** Resolve a range reference (e.g., "A1:A5") to string values */
+  private resolveRangeToStrings(range: string): string[] {
+    try {
+      const { startRow, startCol, endRow, endCol } = this.rangeToIndices(range);
+      const values: string[] = [];
+      for (let r = startRow; r <= endRow && r < this.cells.length; r++) {
+        for (let c = startCol; c <= endCol && c < this.colCount; c++) {
+          values.push(this.evaluate(r, c) || '');
+        }
+      }
+      return values;
+    } catch {
+      // Single cell reference
+      try {
+        const { row, col } = this.cellToIndex(range);
+        return [this.evaluate(row, col) || ''];
+      } catch {
+        return [];
+      }
+    }
+  }
+
+  /** Resolve a range reference to numeric values */
+  private resolveRangeToNumbers(range: string): number[] {
+    try {
+      const { startRow, startCol, endRow, endCol } = this.rangeToIndices(range);
+      const values: number[] = [];
+      for (let r = startRow; r <= endRow && r < this.cells.length; r++) {
+        for (let c = startCol; c <= endCol && c < this.colCount; c++) {
+          const val = parseFloat(this.evaluate(r, c));
+          if (!isNaN(val)) values.push(val);
+        }
+      }
+      return values;
+    } catch {
+      // Single cell reference
+      try {
+        const { row, col } = this.cellToIndex(range);
+        const val = parseFloat(this.evaluate(row, col));
+        return isNaN(val) ? [] : [val];
+      } catch {
+        return [];
+      }
+    }
+  }
+
   private evaluateFormula(formula: string, currentRow: number, currentCol: number): string | number {
     try {
       let processed = formula.trim();
+
+      // Visual formulas return a marker — actual rendering happens in UI
+      if (this.isVisualFormula(processed)) {
+        const match = processed.match(/^([A-Z]+)/i);
+        return `[${match![1].toUpperCase()}]`;
+      }
+
       const functionNames = ['SUM', 'AVG', 'AVERAGE', 'MAX', 'MIN', 'COUNT', 'IF', 'LEN', 'CONCAT', 'ABS', 'ROUND'];
 
       // Step 1: Replace cell range references FIRST (A1:B2)
@@ -555,15 +688,26 @@ export default class Spreadsheet {
 
     // Raw formulas map for UI formula bar
     const formulas: Record<string, string> = {};
+    // Charts extracted from visual formulas
+    const charts: ChartDescriptor[] = [];
+
     for (let r = 0; r < this.cells.length; r++) {
       for (let c = 0; c < this.colCount; c++) {
-        if (this.cells[r][c]?.startsWith('=')) {
-          formulas[this.headers[c] + (r + 1)] = this.cells[r][c];
+        const raw = this.cells[r][c];
+        if (raw?.startsWith('=')) {
+          formulas[this.headers[c] + (r + 1)] = raw;
+
+          // Detect visual formulas and build chart descriptors
+          const formulaBody = raw.substring(1);
+          if (this.isVisualFormula(formulaBody)) {
+            const chart = this.parseVisualFormula(formulaBody, r, c);
+            if (chart) charts.push(chart);
+          }
         }
       }
     }
 
-    return {
+    const response: Record<string, any> = {
       table: this.formatTable(evaluated),
       data,
       formulas,
@@ -574,6 +718,12 @@ export default class Spreadsheet {
       cols: this.colCount,
       file: this.csvPath,
     };
+
+    if (charts.length > 0) {
+      response.charts = charts;
+    }
+
+    return response;
   }
 
   // --- Tool methods ---
