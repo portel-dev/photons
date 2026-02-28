@@ -68,7 +68,7 @@ We welcome contributions! Submit pull requests for:
 | [**Progressive Rendering**](progressive-rendering.md) | Same Data, Better Display Six methods return the same team data, each progressively enhanced. | 6 | - |
 | [**Redis**](redis.md) | High-performance in-memory data store | 18 | - |
 | [**Slack**](slack.md) | Send and manage messages | 7 | - |
-| [**Spreadsheet**](spreadsheet.md) | Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`. | 17 | 🎨 |
+| [**Spreadsheet**](spreadsheet.md) | Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`. | 20 | 🎨 |
 | [**SQLite**](sqlite.md) | File or in-memory SQL database | 9 | - |
 | [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
 | [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |

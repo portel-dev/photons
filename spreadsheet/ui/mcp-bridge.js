@@ -338,6 +338,16 @@ function applyServerData(result) {
         Math.min(col, s.colCount - 1)
     );
 
+    // Auto-scroll to bottom when new rows are streamed in
+    if (result.autoScroll) {
+        const gridWrapper = document.getElementById('gridWrapper');
+        if (gridWrapper) {
+            requestAnimationFrame(() => {
+                gridWrapper.scrollTop = gridWrapper.scrollHeight;
+            });
+        }
+    }
+
     // Re-attach header rename handlers after re-render
     attachHeaderRenameHandlers();
 

@@ -2,7 +2,7 @@
 
 Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.
 
-> **17 tools** · API Photon · v1.0.0 · MIT
+> **20 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful`
 
@@ -33,6 +33,9 @@ No configuration required.
 | `clear` | Clear cells. |
 | `rename` | Rename a column header |
 | `format` | Set column formatting. |
+| `tail` | Watch the CSV file for appended rows. |
+| `untail` | Stop watching the CSV file. |
+| `push` | Append rows to the spreadsheet. |
 
 
 ## 🔧 Tools
@@ -311,6 +314,50 @@ Set column formatting. Set alignment, type, or width for a column. This creates 
 ---
 
 
+### `tail`
+
+Watch the CSV file for appended rows. Starts watching the underlying CSV file. When external processes append rows, the spreadsheet updates in real-time. Use `unwatch` to stop.
+
+
+
+
+
+---
+
+
+### `untail`
+
+Stop watching the CSV file. Stops the file watcher started by `tail`.
+
+
+
+
+
+---
+
+
+### `push`
+
+Append rows to the spreadsheet. Batch-append one or more rows. Each row is a list of values matching the column order, or a key-value object mapping column names to values. Emits after all rows are added so charts and UIs update once.
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `rows` | any | Yes | Array of rows to append. Each row is either an array of values or a {column: value} object. |
+
+
+
+
+**Example:**
+
+```typescript
+push({ rows: [["Alice", "30"], ["Bob", "25"]] })
+```
+
+
+---
+
+
 
 
 
@@ -355,6 +402,12 @@ flowchart LR
         PHOTON --> T15
         T16[🔧 format]
         PHOTON --> T16
+        T17[🔧 tail]
+        PHOTON --> T17
+        T18[🔧 untail]
+        PHOTON --> T18
+        T19[📤 push]
+        PHOTON --> T19
     end
 ```
 

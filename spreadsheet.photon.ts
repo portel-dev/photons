@@ -18,7 +18,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as os from 'os';
-import { existsSync, mkdirSync } from 'fs';
+import { existsSync, mkdirSync, statSync, watch as fsWatch, type FSWatcher } from 'fs';
 
 // Visual formula types that render as chart overlays instead of scalar values
 const VISUAL_FORMULAS = new Set(['PIE', 'BAR', 'LINE', 'SPARKLINE', 'GAUGE']);
@@ -44,6 +44,11 @@ export default class Spreadsheet {
   private rowCount = 0;
   private colCount = 0;
   private loaded = false;
+
+  // File watcher state
+  private _watcher: FSWatcher | null = null;
+  private _lastFileSize = 0;
+  private _watchDebounce: ReturnType<typeof setTimeout> | null = null;
 
   declare emit: (data: any) => void;
   declare instanceName: string;
@@ -1286,6 +1291,155 @@ export default class Spreadsheet {
     const msg = `Formatted ${this.headers[colIndex]}: ${changes.join(', ')}`;
     this.emit({ emit: 'data', ...this.buildResponse(msg) });
     return this.buildResponse(msg);
+  }
+
+  /**
+   * Watch the CSV file for appended rows
+   *
+   * Starts watching the underlying CSV file. When external processes append rows,
+   * the spreadsheet updates in real-time. Use `unwatch` to stop.
+   */
+  async tail() {
+    await this.load();
+
+    if (this._watcher) {
+      return { message: `Already watching ${path.basename(this.csvPath)}`, file: this.csvPath, watching: true };
+    }
+
+    const csvPath = this.csvPath;
+    if (!existsSync(csvPath)) {
+      throw new Error(`File does not exist: ${csvPath}`);
+    }
+
+    // Record current file size as baseline
+    this._lastFileSize = statSync(csvPath).size;
+
+    this._watcher = fsWatch(csvPath, () => {
+      // Debounce rapid changes (e.g., multiple writes in quick succession)
+      if (this._watchDebounce) clearTimeout(this._watchDebounce);
+      this._watchDebounce = setTimeout(() => this._onFileChanged(), 200);
+    });
+
+    const msg = `Watching ${path.basename(csvPath)} for changes`;
+    return { ...this.buildResponse(msg), watching: true };
+  }
+
+  /**
+   * Stop watching the CSV file
+   *
+   * Stops the file watcher started by `tail`.
+   */
+  async untail() {
+    if (this._watcher) {
+      this._watcher.close();
+      this._watcher = null;
+      if (this._watchDebounce) {
+        clearTimeout(this._watchDebounce);
+        this._watchDebounce = null;
+      }
+    }
+
+    return { message: 'Stopped watching', watching: false };
+  }
+
+  /**
+   * Append rows to the spreadsheet
+   *
+   * Batch-append one or more rows. Each row is a list of values matching
+   * the column order, or a key-value object mapping column names to values.
+   * Emits after all rows are added so charts and UIs update once.
+   *
+   * @param rows Array of rows to append. Each row is either an array of values or a {column: value} object.
+   * @example push({ rows: [["Alice", "30"], ["Bob", "25"]] })
+   * @example push({ rows: [{"Name": "Alice", "Age": "30"}] })
+   */
+  async push(params: { rows: (string[] | Record<string, string>)[] }) {
+    await this.load();
+
+    let added = 0;
+    for (const row of params.rows) {
+      const targetRow = this.cells.length;
+      this.ensureCapacity(targetRow, this.colCount - 1);
+
+      if (Array.isArray(row)) {
+        for (let c = 0; c < row.length && c < this.colCount; c++) {
+          this.cells[targetRow][c] = String(row[c]);
+        }
+      } else {
+        for (const [colName, value] of Object.entries(row)) {
+          const colIndex = this.resolveColumnIndex(colName);
+          if (colIndex >= 0) {
+            this.ensureCapacity(targetRow, colIndex);
+            this.cells[targetRow][colIndex] = String(value);
+          }
+        }
+      }
+      added++;
+    }
+
+    await this.save();
+
+    const msg = `Pushed ${added} row(s) (${this.cells.length} total)`;
+    this.emit({ emit: 'data', ...this.buildResponse(msg), autoScroll: true });
+    return this.buildResponse(msg);
+  }
+
+  /** Handle file change detected by watcher */
+  private async _onFileChanged(): Promise<void> {
+    try {
+      const csvPath = this.csvPath;
+      if (!existsSync(csvPath)) return;
+
+      const currentSize = statSync(csvPath).size;
+      if (currentSize <= this._lastFileSize) {
+        // File was truncated or unchanged — do a full reload
+        if (currentSize < this._lastFileSize) {
+          this.loaded = false;
+          await this.load();
+          this._lastFileSize = currentSize;
+          this.emit({ emit: 'data', ...this.buildResponse('File reloaded (truncated)'), autoScroll: false });
+        }
+        return;
+      }
+
+      // Read only the new bytes appended since last check
+      const fd = await fs.open(csvPath, 'r');
+      const newBytes = Buffer.alloc(currentSize - this._lastFileSize);
+      await fd.read(newBytes, 0, newBytes.length, this._lastFileSize);
+      await fd.close();
+      this._lastFileSize = currentSize;
+
+      const newText = newBytes.toString('utf-8');
+      const newLines = newText.split('\n').filter(l => l.trim().length > 0);
+
+      if (newLines.length === 0) return;
+
+      // Parse and append new rows
+      let added = 0;
+      for (const line of newLines) {
+        const values = this.parseCSVLine(line);
+
+        // Skip if it looks like a header row (matches current headers)
+        if (values.length === this.headers.length && values.every((v, i) => v === this.headers[i])) continue;
+        // Skip format rows
+        if (this.isFormatRow(values)) continue;
+
+        const targetRow = this.cells.length;
+        this.ensureCapacity(targetRow, Math.max(this.colCount - 1, values.length - 1));
+        for (let c = 0; c < values.length; c++) {
+          this.cells[targetRow][c] = values[c];
+        }
+        added++;
+      }
+
+      if (added > 0) {
+        this.rowCount = this.cells.length;
+        const msg = `+${added} row(s) from file (${this.cells.length} total)`;
+        this.emit({ emit: 'data', ...this.buildResponse(msg), autoScroll: true });
+      }
+    } catch (err) {
+      console.error('File watch handler error:', err);
+    }
   }
 
   // --- Query helpers ---
