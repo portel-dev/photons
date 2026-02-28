@@ -304,11 +304,18 @@ Set column formatting. Set alignment, type, or width for a column. This creates 
 |-----------|------|----------|-------------|
 | `column` | string | Yes | Column letter or header name |
 | `align` | string | No | Alignment: "left", "right", or "center" |
-| `type` | string | No | Column type: "text", "number", "currency", "percent", "date", "bool", "select", "formula" |
+| `type` | string | No | Column type: "text", "number", "currency", "percent", "date", "bool", "select", "formula", "markdown", "longtext" |
 | `width` | number | No | Column width in pixels |
+| `wrap` | boolean | No | Enable text wrapping for this column |
 
 
 
+
+**Example:**
+
+```typescript
+format({ column: 'B', align: 'right', type: 'number' })
+```
 
 
 ---

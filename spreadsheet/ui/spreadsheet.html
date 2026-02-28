@@ -278,6 +278,71 @@
             height: 24px;
         }
 
+        /* Text wrapping columns */
+        td.cell-wrap .cell-content {
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.4;
+            padding: 4px 8px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        /* Markdown cell rendering */
+        td.cell-markdown .cell-content {
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.4;
+            padding: 4px 8px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        td.cell-markdown .cell-content strong { font-weight: 600; }
+        td.cell-markdown .cell-content em { font-style: italic; }
+        td.cell-markdown .cell-content code {
+            background: var(--bg-tertiary);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
+        }
+        td.cell-markdown .cell-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        td.cell-markdown .cell-content a:hover { text-decoration: underline; }
+
+        /* Change animation — warm glow on recently changed cells/rows */
+        @keyframes cell-warm {
+            0%   { background-color: rgba(88, 166, 255, 0.25); }
+            100% { background-color: transparent; }
+        }
+
+        @keyframes row-slide-in {
+            0%   { opacity: 0; transform: translateY(-8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        :root.light td.cell-changed { animation: cell-warm-light 2s ease-out; }
+        :root.light @keyframes cell-warm-light {
+            0%   { background-color: rgba(9, 105, 218, 0.15); }
+            100% { background-color: transparent; }
+        }
+
+        td.cell-changed {
+            animation: cell-warm 2s ease-out;
+        }
+
+        tr.row-new {
+            animation: row-slide-in 0.3s ease-out;
+        }
+
+        tr.row-changed td {
+            animation: cell-warm 2s ease-out;
+        }
+
         .theme-toggle {
             background: transparent;
             border: 1px solid var(--border);
@@ -1721,7 +1786,8 @@ Jane,25,London,Inactive"></textarea>
                         visibleRowCount++;
                         
                         const groupClass = this.groupByColumn !== null ? 'grouped-row' : '';
-                        bodyHTML += `<tr class="${groupClass}" data-row="${row}"><th class="row-header" data-row="${row}">${row + 1}</th>`;
+                        const rowAnimClass = this._newRows?.has(row) ? ' row-new' : this._changedRows?.has(row) ? ' row-changed' : '';
+                        bodyHTML += `<tr class="${groupClass}${rowAnimClass}" data-row="${row}"><th class="row-header" data-row="${row}">${row + 1}</th>`;
                         
                         for (let col = 0; col < this.colCount; col++) {
                             const value = this.data[row][col];
@@ -1762,12 +1828,28 @@ Jane,25,London,Inactive"></textarea>
                                 cellClass = 'cell-error';
                             }
 
-                            const emptyClass = isEmpty && !cellClass.includes('chart-anchor') ? 'empty' : '';
-                            const meta = this.columnMeta?.[col];
-                            const alignStyle = meta?.align === 'right' ? 'text-align:right;justify-content:flex-end;'
-                                : meta?.align === 'center' ? 'text-align:center;justify-content:center;' : '';
+                            // Markdown column type
+                            const colMeta = this.columnMeta?.[col];
+                            if (!isSourceView && colMeta?.type === 'markdown' && value && !cellClass) {
+                                cellClass = 'cell-markdown';
+                                displayValue = this.renderInlineMarkdown(value);
+                            } else if (!isSourceView && colMeta?.type === 'longtext' && value && !cellClass) {
+                                cellClass = 'cell-wrap';
+                            }
 
-                            bodyHTML += `<td data-row="${row}" data-col="${col}" class="${cellClass} ${emptyClass}"${extraAttrs}>
+                            // Wrap column property
+                            if (colMeta?.wrap && !cellClass.includes('cell-markdown')) {
+                                cellClass += ' cell-wrap';
+                            }
+
+                            const emptyClass = isEmpty && !cellClass.includes('chart-anchor') ? 'empty' : '';
+                            const alignStyle = colMeta?.align === 'right' ? 'text-align:right;justify-content:flex-end;'
+                                : colMeta?.align === 'center' ? 'text-align:center;justify-content:center;' : '';
+
+                            // Detect changed cells for warm glow
+                            const changedClass = this._changedCells?.has(`${row},${col}`) ? ' cell-changed' : '';
+
+                            bodyHTML += `<td data-row="${row}" data-col="${col}" class="${cellClass} ${emptyClass}${changedClass}"${extraAttrs}>
                                 <div class="cell-content" ${alignStyle ? `style="${alignStyle}"` : ''}>${isEmpty && !cellClass.includes('chart-anchor') ? '' : displayValue}</div>
                             </td>`;
                         }
@@ -2033,6 +2115,23 @@ Jane,25,London,Inactive"></textarea>
             escapeHtml(str) {
                 if (!str) return '';
                 return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+
+            renderInlineMarkdown(text) {
+                let html = this.escapeHtml(text);
+                // Bold: **text** or __text__
+                html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+                // Italic: *text* or _text_
+                html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+                html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+                // Inline code: `code`
+                html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+                // Links: [text](url)
+                html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+                // Line breaks
+                html = html.replace(/\\n/g, '<br>');
+                return html;
             }
 
             moveSelection(rowDelta, colDelta) {

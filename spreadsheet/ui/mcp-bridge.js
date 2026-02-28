@@ -275,6 +275,10 @@ function applyServerData(result) {
 
     if (!headers || !data) return;
 
+    // Track previous state for change detection
+    const prevRowCount = s.data ? s.data.filter(r => r && r.some(v => v !== '')).length : 0;
+    const prevData = s.data ? s.data.map(r => [...(r || [])]) : [];
+
     // Update grid dimensions
     s.colCount = cols;
     s.rowCount = Math.max(rows, data.length + 5); // Pad with some empty rows
@@ -315,7 +319,7 @@ function applyServerData(result) {
             if (columnMeta[i].width) s.columnWidths[i] = columnMeta[i].width;
             else if (!s.columnWidths[i]) s.columnWidths[i] = 100;
             // Map format-row types to field types
-            const typeMap = { number: 'number', currency: 'number', percent: 'number', date: 'date', bool: 'checkbox', select: 'select', formula: 'formula' };
+            const typeMap = { number: 'number', currency: 'number', percent: 'number', date: 'date', bool: 'checkbox', select: 'select', formula: 'formula', markdown: 'markdown', longtext: 'longtext' };
             if (typeMap[columnMeta[i].type]) {
                 s.fieldTypes[i] = typeMap[columnMeta[i].type];
             }
@@ -329,7 +333,38 @@ function applyServerData(result) {
     if (columnMeta.length === 0) s.columnWidths = new Array(s.colCount).fill(100);
     s.initializeFieldTypes();
     s.updateFilterOptions();
+
+    // Detect changed cells and new rows for animation
+    s._changedCells = new Set();
+    s._changedRows = new Set();
+    s._newRows = new Set();
+
+    const newDataRowCount = data.length;
+    for (let r = 0; r < newDataRowCount; r++) {
+        if (r >= prevRowCount) {
+            // New row
+            s._newRows.add(r);
+        } else {
+            // Check for changed cells
+            for (let c = 0; c < s.colCount; c++) {
+                const oldVal = prevData[r]?.[c] || '';
+                const newVal = s.data[r]?.[c] || '';
+                if (oldVal !== newVal) {
+                    s._changedCells.add(`${r},${c}`);
+                    s._changedRows.add(r);
+                }
+            }
+        }
+    }
+
     s.render();
+
+    // Clear change tracking after animations start (let CSS handle the rest)
+    setTimeout(() => {
+        s._changedCells = null;
+        s._changedRows = null;
+        s._newRows = null;
+    }, 100);
 
     // Reselect current cell
     const { row, col } = s.selectedCell || { row: 0, col: 0 };
@@ -338,8 +373,9 @@ function applyServerData(result) {
         Math.min(col, s.colCount - 1)
     );
 
-    // Auto-scroll to bottom when new rows are streamed in
-    if (result.autoScroll) {
+    // Auto-scroll to bottom when new rows appear (streaming data)
+    const dataGrew = data.length > prevRowCount && prevRowCount > 0;
+    if (dataGrew || result.autoScroll) {
         const gridWrapper = document.getElementById('gridWrapper');
         if (gridWrapper) {
             requestAnimationFrame(() => {

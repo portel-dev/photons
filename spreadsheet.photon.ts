@@ -38,7 +38,7 @@ export default class Spreadsheet {
   // Raw cell contents — plain values or formula strings (=SUM(...))
   private cells: string[][] = [];
   private headers: string[] = [];
-  private columnMeta: { align: string; type: string; width?: number; required?: boolean; sort?: string }[] = [];
+  private columnMeta: { align: string; type: string; width?: number; required?: boolean; sort?: string; wrap?: boolean }[] = [];
   private hasFormatRow = false;
   private metaCustomized = false; // true if user changed alignment/type/width after load
   private rowCount = 0;
@@ -214,26 +214,27 @@ export default class Spreadsheet {
 
   /** Detect if a row of cells is a format/separator row (all cells match dash pattern) */
   private isFormatRow(cells: string[]): boolean {
-    return cells.length > 0 && cells.every(c => /^[<>]?:?-{2,}[^,]*:?$/.test(c.trim()));
+    return cells.length > 0 && cells.every(c => /^[<>]?:?-{2,}[^,]*:?$/.test(c.trim().replace(/\+/g, '')));
   }
 
   /** Parse a single format cell like `:---#:` or `---$:` */
-  private parseFormatCell(cell: string): { align: string; type: string; width?: number; required?: boolean; sort?: string } {
+  private parseFormatCell(cell: string): { align: string; type: string; width?: number; required?: boolean; sort?: string; wrap?: boolean } {
     const s = cell.trim();
     const align = s.startsWith(':') && s.endsWith(':') ? 'center'
       : s.endsWith(':') ? 'right' : 'left';
 
-    const typeMap: Record<string, string> = { '#': 'number', '$': 'currency', '%': 'percent', 'D': 'date', '?': 'bool', '=': 'select', '~': 'formula' };
-    const typeMatch = s.match(/[#$%D?=~]/);
+    const typeMap: Record<string, string> = { '#': 'number', '$': 'currency', '%': 'percent', 'D': 'date', '?': 'bool', '=': 'select', '~': 'formula', 'M': 'markdown', 'T': 'longtext' };
+    const typeMatch = s.match(/[#$%D?=~MT]/);
     const type = typeMatch ? (typeMap[typeMatch[0]] || 'text') : 'text';
 
     const widthMatch = s.match(/w(\d+)/);
     const width = widthMatch ? parseInt(widthMatch[1]) : undefined;
 
     const required = s.includes('*');
+    const wrap = s.includes('+');
     const sort = s.startsWith('>') ? 'asc' : s.startsWith('<') ? 'desc' : undefined;
 
-    return { align, type, width, required, sort };
+    return { align, type, width, required, sort, wrap };
   }
 
   /** Build format row cells from current columnMeta */
@@ -244,9 +245,10 @@ export default class Spreadsheet {
       else if (m.sort === 'desc') cell += '<';
       if (m.align === 'center' || m.align === 'left') cell += ':';
       cell += '---';
-      const typeMap: Record<string, string> = { number: '#', currency: '$', percent: '%', date: 'D', bool: '?', select: '=', formula: '~' };
+      const typeMap: Record<string, string> = { number: '#', currency: '$', percent: '%', date: 'D', bool: '?', select: '=', formula: '~', markdown: 'M', longtext: 'T' };
       if (typeMap[m.type]) cell += typeMap[m.type];
       if (m.width) cell += `w${m.width}`;
+      if (m.wrap) cell += '+';
       if (m.required) cell += '*';
       if (m.align === 'center' || m.align === 'right') cell += ':';
       return cell;
@@ -255,7 +257,7 @@ export default class Spreadsheet {
 
   /** Initialize default metadata for columns (all left-aligned text) */
   private initDefaultMeta(): void {
-    this.columnMeta = this.headers.map(() => ({ align: 'left', type: 'text' }));
+    this.columnMeta = this.headers.map(() => ({ align: 'left', type: 'text', wrap: false }));
   }
 
   /** Should we write the format row on save? */
@@ -1256,11 +1258,13 @@ export default class Spreadsheet {
    *
    * @param column Column letter or header name
    * @param align Alignment: "left", "right", or "center"
-   * @param type Column type: "text", "number", "currency", "percent", "date", "bool", "select", "formula"
+   * @param type Column type: "text", "number", "currency", "percent", "date", "bool", "select", "formula", "markdown", "longtext"
    * @param width Column width in pixels
+   * @param wrap Enable text wrapping for this column
    * @example format({ column: 'B', align: 'right', type: 'number' })
+   * @example format({ column: 'C', type: 'markdown', wrap: true })
    */
-  async format(params: { column: string; align?: string; type?: string; width?: number }) {
+  async format(params: { column: string; align?: string; type?: string; width?: number; wrap?: boolean }) {
     await this.load();
     const colIndex = this.resolveColumnIndex(params.column);
     if (colIndex < 0 || colIndex >= this.colCount) {
@@ -1281,6 +1285,10 @@ export default class Spreadsheet {
     if (params.width !== undefined) {
       meta.width = params.width;
       changes.push(`width=${params.width}`);
+    }
+    if (params.wrap !== undefined) {
+      meta.wrap = params.wrap;
+      changes.push(`wrap=${params.wrap}`);
     }
 
     if (changes.length > 0) {

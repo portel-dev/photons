@@ -982,8 +982,8 @@
       "license": "MIT",
       "icon": "📊",
       "source": "../spreadsheet.photon.ts",
-      "hash": "sha256:f4ea7ebb60df1eef827ccd74dee836ac48022422de8bb04537e62e816bae5e87",
-      "contentHash": "sha256:54c63fcc143f22c4218997590522fea4d514bffb5e90cf62e56a3f91619ebd5a",
+      "hash": "sha256:f33aa386883689004e28edf4fbe8e92ffad58e4c2b08730f1692da4f957aaa78",
+      "contentHash": "sha256:b11b6fa4caf9cdfb27b42db36201d956f1fc1d239c5438977d7c1d513c49cb68",
       "tools": [
         "main",
         "view",
