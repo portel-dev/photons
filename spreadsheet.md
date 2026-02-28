@@ -2,7 +2,7 @@
 
 Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.
 
-> **16 tools** · API Photon · v1.0.0 · MIT
+> **17 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful`
 
@@ -32,6 +32,7 @@ No configuration required.
 | `dump` | Export as CSV. |
 | `clear` | Clear cells. |
 | `rename` | Rename a column header |
+| `format` | Set column formatting. |
 
 
 ## 🔧 Tools
@@ -291,6 +292,25 @@ Rename a column header
 ---
 
 
+### `format`
+
+Set column formatting. Set alignment, type, or width for a column. This creates a format row in the CSV when formatting is set to "auto" (default).
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `column` | string | Yes | Column letter or header name |
+| `align` | string | No | Alignment: "left", "right", or "center" |
+| `type` | string | No | Column type: "text", "number", "currency", "percent", "date", "bool", "select", "formula" |
+| `width` | number | No | Column width in pixels |
+
+
+
+
+
+---
+
+
 
 
 
@@ -333,6 +353,8 @@ flowchart LR
         PHOTON --> T14
         T15[🔧 rename]
         PHOTON --> T15
+        T16[🔧 format]
+        PHOTON --> T16
     end
 ```
 

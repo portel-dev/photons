@@ -26,6 +26,7 @@ export default class Spreadsheet {
   private headers: string[] = [];
   private columnMeta: { align: string; type: string; width?: number; required?: boolean; sort?: string }[] = [];
   private hasFormatRow = false;
+  private metaCustomized = false; // true if user changed alignment/type/width after load
   private rowCount = 0;
   private colCount = 0;
   private loaded = false;
@@ -36,6 +37,8 @@ export default class Spreadsheet {
   protected settings = {
     /** @property Directory where spreadsheet CSV files are stored */
     folder: path.join(os.homedir(), 'Documents', 'Spreadsheets'),
+    /** @property Save format row: true (always), false (never), auto (if original had one or formatting was customized) */
+    formatting: 'auto' as 'auto' | 'true' | 'false',
   };
 
   // --- File resolution ---
@@ -142,8 +145,7 @@ export default class Spreadsheet {
     const rows = this.cells.slice(0, lastDataRow + 1);
     const csvLines: string[] = [];
 
-    // Write format row if present
-    if (this.hasFormatRow) {
+    if (this.shouldWriteFormatRow()) {
       csvLines.push(this.buildFormatRow().join(','));
     }
 
@@ -235,6 +237,15 @@ export default class Spreadsheet {
   /** Initialize default metadata for columns (all left-aligned text) */
   private initDefaultMeta(): void {
     this.columnMeta = this.headers.map(() => ({ align: 'left', type: 'text' }));
+  }
+
+  /** Should we write the format row on save? */
+  private shouldWriteFormatRow(): boolean {
+    const fmt = this.settings?.formatting || 'auto';
+    if (fmt === 'true') return true;
+    if (fmt === 'false') return false;
+    // auto: write if original had one OR if user customized formatting
+    return this.hasFormatRow || this.metaCustomized;
   }
 
   // --- Cell reference helpers ---
@@ -1010,7 +1021,7 @@ export default class Spreadsheet {
     await this.load();
 
     const csvLines: string[] = [];
-    if (this.hasFormatRow) {
+    if (this.shouldWriteFormatRow()) {
       csvLines.push(this.buildFormatRow().join(','));
     }
     csvLines.push(this.headers.map(h => this.escapeCSV(h)).join(','));
@@ -1080,6 +1091,51 @@ export default class Spreadsheet {
     await this.save();
 
     return this.buildResponse(`Renamed column: "${old}" -> "${params.name}"`);
+  }
+
+  /**
+   * Set column formatting
+   *
+   * Set alignment, type, or width for a column. This creates a format row in the CSV
+   * when formatting is set to "auto" (default).
+   *
+   * @param column Column letter or header name
+   * @param align Alignment: "left", "right", or "center"
+   * @param type Column type: "text", "number", "currency", "percent", "date", "bool", "select", "formula"
+   * @param width Column width in pixels
+   * @example format({ column: 'B', align: 'right', type: 'number' })
+   */
+  async format(params: { column: string; align?: string; type?: string; width?: number }) {
+    await this.load();
+    const colIndex = this.resolveColumnIndex(params.column);
+    if (colIndex < 0 || colIndex >= this.colCount) {
+      throw new Error(`Unknown column: ${params.column}`);
+    }
+
+    const meta = this.columnMeta[colIndex];
+    const changes: string[] = [];
+
+    if (params.align && ['left', 'right', 'center'].includes(params.align)) {
+      meta.align = params.align;
+      changes.push(`align=${params.align}`);
+    }
+    if (params.type) {
+      meta.type = params.type;
+      changes.push(`type=${params.type}`);
+    }
+    if (params.width !== undefined) {
+      meta.width = params.width;
+      changes.push(`width=${params.width}`);
+    }
+
+    if (changes.length > 0) {
+      this.metaCustomized = true;
+      await this.save();
+    }
+
+    const msg = `Formatted ${this.headers[colIndex]}: ${changes.join(', ')}`;
+    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    return this.buildResponse(msg);
   }
 
   // --- Query helpers ---
