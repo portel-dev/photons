@@ -307,8 +307,26 @@ function applyServerData(result) {
         }
     }
 
+    // Apply column metadata from server (format row)
+    const columnMeta = result.columnMeta || [];
+    if (columnMeta.length > 0) {
+        s.columnMeta = columnMeta;
+        for (let i = 0; i < columnMeta.length && i < s.colCount; i++) {
+            if (columnMeta[i].width) s.columnWidths[i] = columnMeta[i].width;
+            else if (!s.columnWidths[i]) s.columnWidths[i] = 100;
+            // Map format-row types to field types
+            const typeMap = { number: 'number', currency: 'number', percent: 'number', date: 'date', bool: 'checkbox', select: 'select', formula: 'formula' };
+            if (typeMap[columnMeta[i].type]) {
+                s.fieldTypes[i] = typeMap[columnMeta[i].type];
+            }
+        }
+    } else {
+        s.columnMeta = [];
+        s.columnWidths = new Array(s.colCount).fill(100);
+    }
+
     // Regenerate field types and UI
-    s.columnWidths = new Array(s.colCount).fill(100);
+    if (columnMeta.length === 0) s.columnWidths = new Array(s.colCount).fill(100);
     s.initializeFieldTypes();
     s.updateFilterOptions();
     s.render();

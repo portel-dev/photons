@@ -24,6 +24,8 @@ export default class Spreadsheet {
   // Raw cell contents — plain values or formula strings (=SUM(...))
   private cells: string[][] = [];
   private headers: string[] = [];
+  private columnMeta: { align: string; type: string; width?: number; required?: boolean; sort?: string }[] = [];
+  private hasFormatRow = false;
   private rowCount = 0;
   private colCount = 0;
   private loaded = false;
@@ -73,15 +75,36 @@ export default class Spreadsheet {
       const lines = csv.split('\n').filter(l => l.length > 0);
 
       if (lines.length > 0) {
-        this.headers = this.parseCSVLine(lines[0]);
+        const firstRow = this.parseCSVLine(lines[0]);
+
+        // Check if row 0 is a format row
+        let dataStart: number;
+        if (this.isFormatRow(firstRow)) {
+          this.hasFormatRow = true;
+          this.columnMeta = firstRow.map(c => this.parseFormatCell(c));
+          this.headers = lines.length > 1 ? this.parseCSVLine(lines[1]) : firstRow.map((_, i) => this.numberToColumnName(i));
+          dataStart = 2;
+        } else {
+          this.hasFormatRow = false;
+          this.headers = firstRow;
+          dataStart = 1;
+        }
+
         this.colCount = this.headers.length;
-        this.rowCount = lines.length - 1;
+        this.rowCount = lines.length - dataStart;
         this.cells = [];
 
-        for (let i = 1; i < lines.length; i++) {
+        for (let i = dataStart; i < lines.length; i++) {
           const row = this.parseCSVLine(lines[i]);
           while (row.length < this.colCount) row.push('');
           this.cells.push(row);
+        }
+
+        // Ensure columnMeta matches header count
+        if (!this.hasFormatRow || this.columnMeta.length < this.colCount) {
+          while (this.columnMeta.length < this.colCount) {
+            this.columnMeta.push({ align: 'left', type: 'text' });
+          }
         }
 
         this.loaded = true;
@@ -97,6 +120,8 @@ export default class Spreadsheet {
       this.headers.push(this.numberToColumnName(i));
     }
     this.cells = [];
+    this.hasFormatRow = false;
+    this.initDefaultMeta();
     this.loaded = true;
   }
 
@@ -115,7 +140,14 @@ export default class Spreadsheet {
     }
 
     const rows = this.cells.slice(0, lastDataRow + 1);
-    const csvLines = [this.headers.map(h => this.escapeCSV(h)).join(',')];
+    const csvLines: string[] = [];
+
+    // Write format row if present
+    if (this.hasFormatRow) {
+      csvLines.push(this.buildFormatRow().join(','));
+    }
+
+    csvLines.push(this.headers.map(h => this.escapeCSV(h)).join(','));
     for (const row of rows) {
       csvLines.push(row.map(v => this.escapeCSV(v)).join(','));
     }
@@ -155,6 +187,54 @@ export default class Spreadsheet {
     }
     result.push(current.trim());
     return result;
+  }
+
+  // --- Format row helpers ---
+
+  /** Detect if a row of cells is a format/separator row (all cells match dash pattern) */
+  private isFormatRow(cells: string[]): boolean {
+    return cells.length > 0 && cells.every(c => /^[<>]?:?-{2,}[^,]*:?$/.test(c.trim()));
+  }
+
+  /** Parse a single format cell like `:---#:` or `---$:` */
+  private parseFormatCell(cell: string): { align: string; type: string; width?: number; required?: boolean; sort?: string } {
+    const s = cell.trim();
+    const align = s.startsWith(':') && s.endsWith(':') ? 'center'
+      : s.endsWith(':') ? 'right' : 'left';
+
+    const typeMap: Record<string, string> = { '#': 'number', '$': 'currency', '%': 'percent', 'D': 'date', '?': 'bool', '=': 'select', '~': 'formula' };
+    const typeMatch = s.match(/[#$%D?=~]/);
+    const type = typeMatch ? (typeMap[typeMatch[0]] || 'text') : 'text';
+
+    const widthMatch = s.match(/w(\d+)/);
+    const width = widthMatch ? parseInt(widthMatch[1]) : undefined;
+
+    const required = s.includes('*');
+    const sort = s.startsWith('>') ? 'asc' : s.startsWith('<') ? 'desc' : undefined;
+
+    return { align, type, width, required, sort };
+  }
+
+  /** Build format row cells from current columnMeta */
+  private buildFormatRow(): string[] {
+    return this.columnMeta.map(m => {
+      let cell = '';
+      if (m.sort === 'asc') cell += '>';
+      else if (m.sort === 'desc') cell += '<';
+      if (m.align === 'center' || m.align === 'left') cell += ':';
+      cell += '---';
+      const typeMap: Record<string, string> = { number: '#', currency: '$', percent: '%', date: 'D', bool: '?', select: '=', formula: '~' };
+      if (typeMap[m.type]) cell += typeMap[m.type];
+      if (m.width) cell += `w${m.width}`;
+      if (m.required) cell += '*';
+      if (m.align === 'center' || m.align === 'right') cell += ':';
+      return cell;
+    });
+  }
+
+  /** Initialize default metadata for columns (all left-aligned text) */
+  private initDefaultMeta(): void {
+    this.columnMeta = this.headers.map(() => ({ align: 'left', type: 'text' }));
   }
 
   // --- Cell reference helpers ---
@@ -225,6 +305,9 @@ export default class Spreadsheet {
       }
       while (this.headers.length < newColCount) {
         this.headers.push(this.numberToColumnName(this.headers.length));
+      }
+      while (this.columnMeta.length < newColCount) {
+        this.columnMeta.push({ align: 'left', type: 'text' });
       }
       this.colCount = newColCount;
     }
@@ -425,10 +508,27 @@ export default class Spreadsheet {
       if (row[0].length > widths[0]) widths[0] = row[0].length;
     }
 
+    const padAligned = (s: string, w: number, align: string) => {
+      const gap = Math.max(0, w - s.length);
+      if (align === 'right') return ' '.repeat(gap) + s;
+      if (align === 'center') return ' '.repeat(Math.floor(gap / 2)) + s + ' '.repeat(Math.ceil(gap / 2));
+      return s + ' '.repeat(gap);
+    };
     const pad = (s: string, w: number) => s + ' '.repeat(Math.max(0, w - s.length));
     const header = '| ' + visibleHeaders.map((h, i) => pad(h, widths[i])).join(' | ') + ' |';
-    const sep = '|' + widths.map(w => '-'.repeat(w + 2)).join('|') + '|';
-    const body = rows.map(row => '| ' + row.map((v, i) => pad(v, widths[i])).join(' | ') + ' |');
+    const sepCells = widths.map((w, i) => {
+      const meta = i === 0 ? null : this.columnMeta[i - 1 + startCol];
+      const align = meta?.align || 'left';
+      const dashes = '-'.repeat(w);
+      if (align === 'center') return ':' + dashes + ':';
+      if (align === 'right') return ' ' + dashes + ':';
+      return ':' + dashes + ' ';
+    });
+    const sep = '|' + sepCells.join('|') + '|';
+    const body = rows.map(row => '| ' + row.map((v, i) => {
+      const meta = i === 0 ? null : this.columnMeta[i - 1 + startCol];
+      return padAligned(v, widths[i], meta?.align || 'left');
+    }).join(' | ') + ' |');
 
     return [header, sep, ...body].join('\n');
   }
@@ -457,6 +557,7 @@ export default class Spreadsheet {
       data,
       formulas,
       headers: [...this.headers],
+      columnMeta: this.columnMeta.map(m => ({ ...m })),
       message,
       rows: this.cells.length,
       cols: this.colCount,
@@ -774,8 +875,9 @@ export default class Spreadsheet {
     const schema = this.headers.map((h, i) => {
       const values = evaluated.map(r => r[i]).filter(v => v !== '');
       const numericCount = values.filter(v => !isNaN(Number(v))).length;
-      const type = values.length === 0 ? 'empty' : numericCount > values.length / 2 ? 'number' : 'text';
-      return { column: h, type, nonEmpty: values.length, total: evaluated.length };
+      const detectedType = values.length === 0 ? 'empty' : numericCount > values.length / 2 ? 'number' : 'text';
+      const meta = this.columnMeta[i] || { align: 'left', type: 'text' };
+      return { column: h, type: meta.type !== 'text' ? meta.type : detectedType, align: meta.align, nonEmpty: values.length, total: evaluated.length };
     });
 
     const table = '| Column | Type | Non-empty | Total |\n|--------|------|-----------|-------|\n' +
@@ -854,19 +956,40 @@ export default class Spreadsheet {
     const parsed = lines.map(l => this.parseCSVLine(l));
     const maxCols = Math.max(...parsed.map(r => r.length));
 
-    this.headers = parsed[0];
+    // Detect format row
+    let dataStart: number;
+    if (this.isFormatRow(parsed[0])) {
+      this.hasFormatRow = true;
+      this.columnMeta = parsed[0].map(c => this.parseFormatCell(c));
+      this.headers = parsed.length > 1 ? parsed[1] : parsed[0].map((_, i) => this.numberToColumnName(i));
+      dataStart = 2;
+    } else {
+      this.hasFormatRow = false;
+      this.headers = parsed[0];
+      dataStart = 1;
+    }
+
     while (this.headers.length < maxCols) {
       this.headers.push(this.numberToColumnName(this.headers.length));
     }
 
     this.colCount = maxCols;
     this.cells = [];
-    for (let i = 1; i < parsed.length; i++) {
+    for (let i = dataStart; i < parsed.length; i++) {
       const row = parsed[i];
       while (row.length < maxCols) row.push('');
       this.cells.push(row);
     }
     this.rowCount = this.cells.length;
+
+    // Ensure columnMeta matches
+    if (!this.hasFormatRow) {
+      this.initDefaultMeta();
+    }
+    while (this.columnMeta.length < maxCols) {
+      this.columnMeta.push({ align: 'left', type: 'text' });
+    }
+
     this.loaded = true;
 
     await this.save();
@@ -886,7 +1009,11 @@ export default class Spreadsheet {
   async dump(params?: { file?: string }) {
     await this.load();
 
-    const csvLines = [this.headers.map(h => this.escapeCSV(h)).join(',')];
+    const csvLines: string[] = [];
+    if (this.hasFormatRow) {
+      csvLines.push(this.buildFormatRow().join(','));
+    }
+    csvLines.push(this.headers.map(h => this.escapeCSV(h)).join(','));
     for (const row of this.cells) {
       if (row.every(v => v === '')) continue;
       csvLines.push(row.map(v => this.escapeCSV(v)).join(','));

@@ -1176,6 +1176,7 @@ Jane,25,London,Inactive"></textarea>
                 this.editStartValue = '';
                 this.columnWidths = new Array(cols).fill(100);
                 this.sidebarVisible = false;
+                this.columnMeta = [];
                 this.currentView = 'grid';
                 this.groupByColumn = null;
                 this.filters = [];
@@ -1595,9 +1596,12 @@ Jane,25,London,Inactive"></textarea>
                             }
                             
                             const emptyClass = isEmpty ? 'empty' : '';
-                            
+                            const meta = this.columnMeta?.[col];
+                            const alignStyle = meta?.align === 'right' ? 'text-align:right;justify-content:flex-end;'
+                                : meta?.align === 'center' ? 'text-align:center;justify-content:center;' : '';
+
                             bodyHTML += `<td data-row="${row}" data-col="${col}" class="${cellClass} ${emptyClass}">
-                                <div class="cell-content">${isEmpty ? '' : displayValue}</div>
+                                <div class="cell-content" ${alignStyle ? `style="${alignStyle}"` : ''}>${isEmpty ? '' : displayValue}</div>
                             </td>`;
                         }
                         bodyHTML += '</tr>';
