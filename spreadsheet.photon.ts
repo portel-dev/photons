@@ -12,7 +12,7 @@
  * @tags spreadsheet, csv, formulas, data
  * @icon 📊
  * @stateful
- * @dependencies @portel/csv alasql
+ * @dependencies @portel/csv@^1.0.0, alasql@^4.0.0
  * @ui spreadsheet ./ui/spreadsheet.html
  */
 
@@ -587,7 +587,7 @@ export default class Spreadsheet {
    */
   async sql(params: { query: string }) {
     await this.load();
-    return this.engine.sql(params.query);
+    return await this.engine.sql(params.query);
   }
 
   /**
@@ -633,7 +633,7 @@ export default class Spreadsheet {
     // Run query immediately to check current state
     let currentMatches = 0;
     try {
-      const result = this.engine.sql(params.query);
+      const result = await this.engine.sql(params.query);
       currentMatches = Array.isArray(result.result) ? result.result.length : 0;
     } catch { /* validation happens on first real run */ }
 
@@ -726,7 +726,7 @@ export default class Spreadsheet {
 
     for (const [name, watch] of this._watches) {
       try {
-        const result = this.engine.sql(watch.query);
+        const result = await this.engine.sql(watch.query);
         if (Array.isArray(result.result) && result.result.length > 0) {
           watch.triggerCount++;
           watch.lastTriggered = new Date().toISOString();

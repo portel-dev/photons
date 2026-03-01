@@ -525,7 +525,7 @@ photon info spreadsheet --mcp
 
 
 ```
-@portel/csv alasql
+@portel/csv@^1.0.0, alasql@^4.0.0
 ```
 
 ---
