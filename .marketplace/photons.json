@@ -982,8 +982,8 @@
       "license": "MIT",
       "icon": "📊",
       "source": "../spreadsheet.photon.ts",
-      "hash": "sha256:f33aa386883689004e28edf4fbe8e92ffad58e4c2b08730f1692da4f957aaa78",
-      "contentHash": "sha256:b11b6fa4caf9cdfb27b42db36201d956f1fc1d239c5438977d7c1d513c49cb68",
+      "hash": "sha256:d8f4f8ea3c461789830a77b685355ade70fc75c7b01899a224ec7de54c4bc5bf",
+      "contentHash": "sha256:833f44f6d4d06f78697be9d945ee8764769643fa991e1c5f750961a0a85e6954",
       "tools": [
         "main",
         "view",
@@ -1004,7 +1004,11 @@
         "format",
         "tail",
         "untail",
-        "push"
+        "push",
+        "sql",
+        "watch",
+        "unwatch",
+        "watches"
       ],
       "assets": [
         "spreadsheet/ui/mcp-bridge.js",

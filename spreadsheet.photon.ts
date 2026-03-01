@@ -12,6 +12,7 @@
  * @tags spreadsheet, csv, formulas, data
  * @icon 📊
  * @stateful
+ * @dependencies alasql
  * @ui spreadsheet ./ui/spreadsheet.html
  */
 
@@ -22,6 +23,16 @@ import { existsSync, mkdirSync, statSync, watch as fsWatch, type FSWatcher } fro
 
 // Visual formula types that render as chart overlays instead of scalar values
 const VISUAL_FORMULAS = new Set(['PIE', 'BAR', 'LINE', 'SPARKLINE', 'GAUGE']);
+
+interface WatchDef {
+  name: string;
+  query: string;
+  action?: string;              // cross-photon call target: "photonName.method"
+  actionParams?: Record<string, any>;
+  once: boolean;                // fire once then auto-remove
+  lastTriggered?: string;       // ISO timestamp
+  triggerCount: number;
+}
 
 interface ChartDescriptor {
   cell: string;
@@ -51,7 +62,12 @@ export default class Spreadsheet {
   private _watchDebounce: ReturnType<typeof setTimeout> | null = null;
 
   declare emit: (data: any) => void;
+  declare call: (target: string, params?: Record<string, any>, options?: { instance?: string }) => Promise<any>;
   declare instanceName: string;
+
+  // SQL watch state
+  private _watches: Map<string, WatchDef> = new Map();
+  private _watcherAutoStarted = false;
 
   protected settings = {
     /** @property Directory where spreadsheet CSV files are stored */
@@ -824,7 +840,7 @@ export default class Spreadsheet {
       ? `Set ${params.cell} = ${evaluated} (was: ${oldDisplay})`
       : `Set ${params.cell} = ${evaluated}`;
 
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -861,7 +877,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Added row ${targetRow + 1}`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -884,7 +900,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Removed row ${params.row}`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -915,7 +931,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Updated row ${params.row}: ${changes.join(', ')}`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -998,7 +1014,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Sorted by ${params.column} (${params.order || 'asc'})`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -1027,7 +1043,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Filled ${params.range} with pattern [${params.pattern}]`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -1163,7 +1179,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Imported ${this.cells.length} rows x ${this.colCount} cols`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -1217,7 +1233,7 @@ export default class Spreadsheet {
       }
       await this.save();
       const msg = `Cleared range ${params.range}`;
-      this.emit({ emit: 'data', ...this.buildResponse(msg) });
+      await this._emitAndWatch(msg);
       return this.buildResponse(msg);
     }
 
@@ -1225,7 +1241,7 @@ export default class Spreadsheet {
     this.rowCount = 0;
     await this.save();
     const msg = 'Cleared all cells';
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -1297,7 +1313,7 @@ export default class Spreadsheet {
     }
 
     const msg = `Formatted ${this.headers[colIndex]}: ${changes.join(', ')}`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg) });
+    await this._emitAndWatch(msg);
     return this.buildResponse(msg);
   }
 
@@ -1314,21 +1330,10 @@ export default class Spreadsheet {
       return { message: `Already watching ${path.basename(this.csvPath)}`, file: this.csvPath, watching: true };
     }
 
-    const csvPath = this.csvPath;
-    if (!existsSync(csvPath)) {
-      throw new Error(`File does not exist: ${csvPath}`);
-    }
+    this._startFileWatching();
+    this._watcherAutoStarted = false; // explicit tail — don't auto-stop
 
-    // Record current file size as baseline
-    this._lastFileSize = statSync(csvPath).size;
-
-    this._watcher = fsWatch(csvPath, () => {
-      // Debounce rapid changes (e.g., multiple writes in quick succession)
-      if (this._watchDebounce) clearTimeout(this._watchDebounce);
-      this._watchDebounce = setTimeout(() => this._onFileChanged(), 200);
-    });
-
-    const msg = `Watching ${path.basename(csvPath)} for changes`;
+    const msg = `Watching ${path.basename(this.csvPath)} for changes`;
     return { ...this.buildResponse(msg), watching: true };
   }
 
@@ -1338,15 +1343,8 @@ export default class Spreadsheet {
    * Stops the file watcher started by `tail`.
    */
   async untail() {
-    if (this._watcher) {
-      this._watcher.close();
-      this._watcher = null;
-      if (this._watchDebounce) {
-        clearTimeout(this._watchDebounce);
-        this._watchDebounce = null;
-      }
-    }
-
+    this._watcherAutoStarted = false;
+    this._stopFileWatching();
     return { message: 'Stopped watching', watching: false };
   }
 
@@ -1388,7 +1386,7 @@ export default class Spreadsheet {
     await this.save();
 
     const msg = `Pushed ${added} row(s) (${this.cells.length} total)`;
-    this.emit({ emit: 'data', ...this.buildResponse(msg), autoScroll: true });
+    await this._emitAndWatch(msg, { autoScroll: true });
     return this.buildResponse(msg);
   }
 
@@ -1405,7 +1403,7 @@ export default class Spreadsheet {
           this.loaded = false;
           await this.load();
           this._lastFileSize = currentSize;
-          this.emit({ emit: 'data', ...this.buildResponse('File reloaded (truncated)'), autoScroll: false });
+          await this._emitAndWatch('File reloaded (truncated)', { autoScroll: false });
         }
         return;
       }
@@ -1443,10 +1441,232 @@ export default class Spreadsheet {
       if (added > 0) {
         this.rowCount = this.cells.length;
         const msg = `+${added} row(s) from file (${this.cells.length} total)`;
-        this.emit({ emit: 'data', ...this.buildResponse(msg), autoScroll: true });
+        await this._emitAndWatch(msg, { autoScroll: true });
       }
     } catch (err) {
       console.error('File watch handler error:', err);
+    }
+  }
+
+  // --- SQL & Watch tools ---
+
+  /**
+   * Run a SQL query on the spreadsheet data
+   *
+   * Query the spreadsheet using SQL syntax. Table name is `data`.
+   * Column names with spaces or special characters need double quotes.
+   *
+   * @param query SQL query string (e.g., "SELECT * FROM data WHERE Age > 25")
+   * @example sql({ query: "SELECT Name, Age FROM data WHERE Age > 25 ORDER BY Age DESC" })
+   * @example sql({ query: "SELECT COUNT(*) as total FROM data" })
+   */
+  async sql(params: { query: string }) {
+    await this.load();
+    const alasql = require('alasql');
+    const rows = this._dataAsObjects();
+
+    // Allow users to write "FROM data" — rewrite to "FROM ?" for alasql
+    const query = this._sqlRewrite(params.query);
+    const result = alasql(query, [rows]);
+    return { result, count: Array.isArray(result) ? result.length : 1, message: `Query returned ${Array.isArray(result) ? result.length : 1} result(s)` };
+  }
+
+  /**
+   * Create a live SQL watch
+   *
+   * Registers a named SQL query that re-runs after every data change.
+   * When the query returns rows, an alert is emitted. Optionally triggers
+   * a cross-photon action (e.g., "slack.send").
+   *
+   * @param name Unique watch name (e.g., "price-alert")
+   * @param query SQL query — fires when it returns rows (e.g., "SELECT * FROM data WHERE Price < 50")
+   * @param action Optional cross-photon call target (e.g., "slack.send")
+   * @param actionParams Optional parameters passed to the action
+   * @param once If true, auto-removes after first trigger
+   * @example watch({ name: "big-orders", query: "SELECT * FROM data WHERE Amount > 1000" })
+   * @example watch({ name: "notify", query: "SELECT * FROM data WHERE Status = 'critical'", action: "slack.send", actionParams: { text: "Critical row found!" }, once: true })
+   */
+  async watch(params: {
+    name: string;
+    query: string;
+    action?: string;
+    actionParams?: Record<string, any>;
+    once?: boolean;
+  }) {
+    await this.load();
+
+    const def: WatchDef = {
+      name: params.name,
+      query: params.query,
+      action: params.action,
+      actionParams: params.actionParams,
+      once: params.once ?? false,
+      triggerCount: 0,
+    };
+
+    this._watches.set(params.name, def);
+
+    // Auto-start file watching if not already active
+    if (!this._watcher) {
+      this._startFileWatching();
+      this._watcherAutoStarted = true;
+    }
+
+    // Run query immediately to check current state
+    const alasql = require('alasql');
+    const rows = this._dataAsObjects();
+    let currentMatches = 0;
+    try {
+      const q = this._sqlRewrite(params.query);
+      const result = alasql(q, [rows]);
+      currentMatches = Array.isArray(result) ? result.length : 0;
+    } catch { /* validation happens on first real run */ }
+
+    return {
+      message: `Watch "${params.name}" created${currentMatches > 0 ? ` (${currentMatches} rows match now)` : ''}`,
+      watch: params.name,
+      currentMatches,
+      watches: this._watches.size,
+    };
+  }
+
+  /**
+   * Remove a live SQL watch
+   *
+   * @param name Watch name to remove
+   */
+  async unwatch(params: { name: string }) {
+    const existed = this._watches.delete(params.name);
+
+    // Auto-stop file watching if no watches remain and it was auto-started
+    if (this._watches.size === 0 && this._watcherAutoStarted) {
+      this._stopFileWatching();
+      this._watcherAutoStarted = false;
+    }
+
+    return {
+      message: existed ? `Removed watch "${params.name}"` : `Watch "${params.name}" not found`,
+      watches: this._watches.size,
+    };
+  }
+
+  /**
+   * List active SQL watches
+   *
+   * Shows all registered watches with their trigger counts and status.
+   */
+  async watches() {
+    const list = Array.from(this._watches.values()).map(w => ({
+      name: w.name,
+      query: w.query,
+      action: w.action,
+      once: w.once,
+      triggerCount: w.triggerCount,
+      lastTriggered: w.lastTriggered || null,
+    }));
+
+    return {
+      watches: list,
+      count: list.length,
+      message: list.length > 0
+        ? `${list.length} active watch(es)`
+        : 'No active watches',
+    };
+  }
+
+  // --- File watching helpers ---
+
+  private _startFileWatching(): void {
+    if (this._watcher) return;
+
+    const csvPath = this.csvPath;
+    if (!existsSync(csvPath)) return;
+
+    this._lastFileSize = statSync(csvPath).size;
+    this._watcher = fsWatch(csvPath, () => {
+      if (this._watchDebounce) clearTimeout(this._watchDebounce);
+      this._watchDebounce = setTimeout(() => this._onFileChanged(), 200);
+    });
+  }
+
+  private _stopFileWatching(): void {
+    if (this._watcher) {
+      this._watcher.close();
+      this._watcher = null;
+      if (this._watchDebounce) {
+        clearTimeout(this._watchDebounce);
+        this._watchDebounce = null;
+      }
+    }
+  }
+
+  /** Rewrite "FROM data" to "FROM ?" for alasql parameter binding */
+  private _sqlRewrite(query: string): string {
+    return query.replace(/\bFROM\s+data\b/gi, 'FROM ?');
+  }
+
+  // --- Emit + watch pipeline ---
+
+  private async _emitAndWatch(msg: string, opts: Record<string, any> = {}): Promise<void> {
+    this.emit({ emit: 'data', ...this.buildResponse(msg), ...opts });
+    await this._rerunWatches();
+  }
+
+  private _dataAsObjects(): Record<string, any>[] {
+    const evaluated = this.evaluateAll();
+    const rows: Record<string, any>[] = [];
+
+    for (const row of evaluated) {
+      if (row.every(v => v === '')) continue;
+      const obj: Record<string, any> = {};
+      for (let c = 0; c < this.headers.length; c++) {
+        const raw = row[c] ?? '';
+        const meta = this.columnMeta[c];
+        // Coerce numeric types
+        if (meta && ['number', 'currency', 'percent'].includes(meta.type)) {
+          const cleaned = raw.replace(/[$%,]/g, '');
+          const num = Number(cleaned);
+          obj[this.headers[c]] = isNaN(num) ? raw : num;
+        } else {
+          // Auto-coerce if it looks numeric
+          const num = Number(raw);
+          obj[this.headers[c]] = raw !== '' && !isNaN(num) ? num : raw;
+        }
+      }
+      rows.push(obj);
+    }
+
+    return rows;
+  }
+
+  private async _rerunWatches(): Promise<void> {
+    if (this._watches.size === 0) return;
+
+    const alasql = require('alasql');
+    const rows = this._dataAsObjects();
+
+    for (const [name, watch] of this._watches) {
+      try {
+        const q = this._sqlRewrite(watch.query);
+        const result = alasql(q, [rows]);
+        if (Array.isArray(result) && result.length > 0) {
+          watch.triggerCount++;
+          watch.lastTriggered = new Date().toISOString();
+          this.emit({ emit: 'alert', watch: name, rows: result, count: result.length });
+
+          if (watch.action && this.call) {
+            try {
+              await this.call(watch.action, { ...watch.actionParams, _matchedRows: result });
+            } catch (err) {
+              console.error(`Watch "${name}" action failed:`, err);
+            }
+          }
+
+          if (watch.once) this._watches.delete(name);
+        }
+      } catch (err) {
+        console.error(`Watch "${name}" query error:`, err);
+      }
     }
   }
 

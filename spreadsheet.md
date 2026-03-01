@@ -2,7 +2,7 @@
 
 Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.
 
-> **20 tools** · API Photon · v1.0.0 · MIT
+> **24 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful`
 
@@ -36,6 +36,10 @@ No configuration required.
 | `tail` | Watch the CSV file for appended rows. |
 | `untail` | Stop watching the CSV file. |
 | `push` | Append rows to the spreadsheet. |
+| `sql` | Run a SQL query on the spreadsheet data. |
+| `watch` | Create a live SQL watch. |
+| `unwatch` | Remove a live SQL watch |
+| `watches` | List active SQL watches. |
 
 
 ## 🔧 Tools
@@ -365,6 +369,81 @@ push({ rows: [["Alice", "30"], ["Bob", "25"]] })
 ---
 
 
+### `sql`
+
+Run a SQL query on the spreadsheet data. Query the spreadsheet using SQL syntax. Table name is `data`. Column names with spaces or special characters need double quotes.
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | string | Yes | SQL query string (e.g., "SELECT * FROM data WHERE Age > 25") |
+
+
+
+
+**Example:**
+
+```typescript
+sql({ query: "SELECT Name, Age FROM data WHERE Age > 25 ORDER BY Age DESC" })
+```
+
+
+---
+
+
+### `watch`
+
+Create a live SQL watch. Registers a named SQL query that re-runs after every data change. When the query returns rows, an alert is emitted. Optionally triggers a cross-photon action (e.g., "slack.send").
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Unique watch name (e.g., "price-alert") |
+| `query` | string | Yes | SQL query — fires when it returns rows (e.g., "SELECT * FROM data WHERE Price < 50") |
+| `action` | string | No | Optional cross-photon call target (e.g., "slack.send") |
+| `actionParams` | Record<string | No | Optional parameters passed to the action |
+| `once` | boolean | No | If true, auto-removes after first trigger |
+
+
+
+
+**Example:**
+
+```typescript
+watch({ name: "big-orders", query: "SELECT * FROM data WHERE Amount > 1000" })
+```
+
+
+---
+
+
+### `unwatch`
+
+Remove a live SQL watch
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | string | Yes | Watch name to remove |
+
+
+
+
+
+---
+
+
+### `watches`
+
+List active SQL watches. Shows all registered watches with their trigger counts and status.
+
+
+
+
+
+---
+
+
 
 
 
@@ -415,6 +494,19 @@ flowchart LR
         PHOTON --> T18
         T19[📤 push]
         PHOTON --> T19
+        T20[🔧 sql]
+        PHOTON --> T20
+        T21[🔧 watch]
+        PHOTON --> T21
+        T22[🔧 unwatch]
+        PHOTON --> T22
+        T23[🔧 watches]
+        PHOTON --> T23
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 alasql]
     end
 ```
 
@@ -431,7 +523,10 @@ photon info spreadsheet --mcp
 
 ## 📦 Dependencies
 
-No external dependencies.
+
+```
+alasql
+```
 
 ---
 

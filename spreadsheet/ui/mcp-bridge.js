@@ -212,6 +212,8 @@ function initMCPBridge(spreadsheet) {
         window.photon.onEmit((event) => {
             if (event.emit === 'data' && event.data) {
                 applyServerData(event);
+            } else if (event.emit === 'alert') {
+                showAlertToast(event.watch, event.count);
             }
         });
     }
@@ -506,4 +508,28 @@ function setupContextMenu() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') menu.classList.remove('visible');
     });
+}
+
+// --- Alert toast for SQL watches ---
+function showAlertToast(watchName, matchCount) {
+    const toast = document.createElement('div');
+    toast.textContent = `Watch "${watchName}" triggered: ${matchCount} row(s) matched`;
+    toast.style.cssText = `
+        position: fixed; bottom: 20px; right: 20px; z-index: 10000;
+        padding: 12px 20px; border-radius: 8px;
+        background: var(--accent, #4f46e5); color: #fff;
+        font-size: 13px; font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        animation: toast-in 0.3s ease-out;
+        cursor: pointer;
+    `;
+    toast.addEventListener('click', () => toast.remove());
+    document.body.appendChild(toast);
+
+    // Auto-remove after 5s
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 5000);
 }
