@@ -2,7 +2,7 @@
 
 Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.
 
-> **24 tools** · API Photon · v1.0.0 · MIT
+> **24 tools** · API Photon · v1.1.0 · MIT
 
 **Platform Features:** `custom-ui` `stateful`
 
@@ -525,9 +525,9 @@ photon info spreadsheet --mcp
 
 
 ```
-alasql
+@portel/csv alasql
 ```
 
 ---
 
-MIT · v1.0.0 · Portel
+MIT · v1.1.0 · Portel

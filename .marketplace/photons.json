@@ -976,14 +976,14 @@
     },
     {
       "name": "spreadsheet",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📊",
       "source": "../spreadsheet.photon.ts",
-      "hash": "sha256:d8f4f8ea3c461789830a77b685355ade70fc75c7b01899a224ec7de54c4bc5bf",
-      "contentHash": "sha256:833f44f6d4d06f78697be9d945ee8764769643fa991e1c5f750961a0a85e6954",
+      "hash": "sha256:a964cb0fb3185d6e0f4a5305c4a0a7f4bd24fa43eecf0f8d38069593a9efe2dc",
+      "contentHash": "sha256:e5de0213f7223f251e142afbf9e827c93989e070fbcd1581b694c5948c7eb45a",
       "tools": [
         "main",
         "view",
