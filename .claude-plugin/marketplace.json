@@ -117,24 +117,6 @@
       }
     },
     {
-      "name": "data-sync",
-      "description": "Data Sync Workflow - Synchronizes data between sources",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "data-sync": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "data-sync"
-          ]
-        }
-      }
-    },
-    {
       "name": "demo",
       "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
       "source": "./",
@@ -184,24 +166,6 @@
           "args": [
             "mcp",
             "docker"
-          ]
-        }
-      }
-    },
-    {
-      "name": "email",
-      "description": "Email - SMTP and IMAP email operations",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "email": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "email"
           ]
         }
       }
@@ -261,24 +225,6 @@
       }
     },
     {
-      "name": "form-inbox",
-      "description": "Form Inbox - Webhook-powered form submission collector",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "form-inbox": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "form-inbox"
-          ]
-        }
-      }
-    },
-    {
       "name": "format-showcase",
       "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
       "source": "./",
@@ -292,24 +238,6 @@
           "args": [
             "mcp",
             "format-showcase"
-          ]
-        }
-      }
-    },
-    {
-      "name": "git-box",
-      "description": "Git Box - Mailbox-style Git interface, manage repos like an inbox",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "git-box": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "git-box"
           ]
         }
       }
@@ -351,24 +279,6 @@
       }
     },
     {
-      "name": "google-calendar",
-      "description": "Google Calendar - Schedule and manage events",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "google-calendar": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "google-calendar"
-          ]
-        }
-      }
-    },
-    {
       "name": "hello-world",
       "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
       "source": "./",
@@ -405,24 +315,6 @@
       }
     },
     {
-      "name": "integration-demo",
-      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "integration-demo": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "integration-demo"
-          ]
-        }
-      }
-    },
-    {
       "name": "jira",
       "description": "Jira - Issue tracking and project management",
       "source": "./",
@@ -441,42 +333,6 @@
       }
     },
     {
-      "name": "kanban",
-      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "kanban": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "kanban"
-          ]
-        }
-      }
-    },
-    {
-      "name": "kitchen-sink",
-      "description": "Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "kitchen-sink": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "kitchen-sink"
-          ]
-        }
-      }
-    },
-    {
       "name": "math",
       "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
       "source": "./",
@@ -490,24 +346,6 @@
           "args": [
             "mcp",
             "math"
-          ]
-        }
-      }
-    },
-    {
-      "name": "mcp-orchestrator",
-      "description": "MCP Orchestrator - Combine multiple MCPs into powerful workflows",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "mcp-orchestrator": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "mcp-orchestrator"
           ]
         }
       }
@@ -549,24 +387,6 @@
       }
     },
     {
-      "name": "preferences",
-      "description": "Preferences Photon - MCP App with UI assets and settings",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "preferences": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "preferences"
-          ]
-        }
-      }
-    },
-    {
       "name": "progressive-rendering",
       "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
       "source": "./",
@@ -603,6 +423,24 @@
       }
     },
     {
+      "name": "serum",
+      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "serum": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "serum"
+          ]
+        }
+      }
+    },
+    {
       "name": "slack",
       "description": "Slack - Send and manage messages",
       "source": "./",
@@ -616,24 +454,6 @@
           "args": [
             "mcp",
             "slack"
-          ]
-        }
-      }
-    },
-    {
-      "name": "spreadsheet",
-      "description": "Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "spreadsheet": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "spreadsheet"
           ]
         }
       }
@@ -688,24 +508,6 @@
           "args": [
             "mcp",
             "tasks-live"
-          ]
-        }
-      }
-    },
-    {
-      "name": "team-dashboard",
-      "description": "Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "team-dashboard": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "team-dashboard"
           ]
         }
       }

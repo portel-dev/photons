@@ -2,13 +2,29 @@
 
 Forces unfiltered honesty, no hedging or diplomacy
 
-> **10 tools** · API Photon · v1.8.4 · MIT
+> **10 tools** · API Photon · v1.9.0 · MIT
 
 
 ## ⚙️ Configuration
 
 No configuration required.
 
+
+
+## 📋 Quick Reference
+
+| Method | Description |
+|--------|-------------|
+| `truth` | Truth Serum - Forces unfiltered honesty, no hedging or diplomacy |
+| `clarity` | Clarity Serum - Cuts through complexity, forces simple explanations |
+| `challenger` | Challenger Serum - Injects healthy skepticism, stress-tests ideas |
+| `focus` | Focus Serum - Eliminates noise, surfaces what actually matters |
+| `perspective` | Perspective Serum - Forces genuine multi-stakeholder viewpoint |
+| `creative` | Creative Serum - Unlocks non-obvious solutions and connections |
+| `action` | Action Serum - Converts thinking into specific next steps |
+| `simplify` | Simplify Serum - Reduces complexity ruthlessly |
+| `empathy` | Empathy Serum - Forces genuine understanding of others |
+| `custom` | Custom Serum - Create your own behavioral injection |
 
 
 ## 🔧 Tools
@@ -174,4 +190,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.8.4
+MIT · v1.9.0

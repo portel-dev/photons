@@ -160,28 +160,6 @@
       ]
     },
     {
-      "name": "data-sync",
-      "version": "1.0.0",
-      "description": "Data Sync Workflow - Synchronizes data between sources",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🔄",
-      "source": "../data-sync.photon.ts",
-      "hash": "sha256:3590ef9cac2a681bec01e0939c1c5e7b231d95d4c62570b1daba1fb660bb98fc",
-      "contentHash": "sha256:3590ef9cac2a681bec01e0939c1c5e7b231d95d4c62570b1daba1fb660bb98fc",
-      "tools": [
-        "exportToJson",
-        "importFromJson",
-        "compare"
-      ],
-      "assets": [],
-      "photonType": "workflow",
-      "features": [
-        "generator",
-        "streaming"
-      ]
-    },
-    {
       "name": "demo",
       "version": "1.0.0",
       "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
@@ -257,30 +235,6 @@
         "images",
         "pull",
         "drop"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "email",
-      "version": "1.1.0",
-      "description": "Email - SMTP and IMAP email operations",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📧",
-      "source": "../email.photon.ts",
-      "hash": "sha256:a6c9c68b1eda10adbc40debcf2016344e9df3568e414857c1f08fe9b8dd5f790",
-      "contentHash": "sha256:a6c9c68b1eda10adbc40debcf2016344e9df3568e414857c1f08fe9b8dd5f790",
-      "tools": [
-        "send",
-        "attach",
-        "inbox",
-        "get",
-        "search",
-        "read",
-        "remove",
-        "move"
       ],
       "assets": [],
       "photonType": "api",
@@ -366,33 +320,6 @@
       "features": []
     },
     {
-      "name": "form-inbox",
-      "version": "1.0.0",
-      "description": "Form Inbox - Webhook-powered form submission collector",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📬",
-      "source": "../form-inbox.photon.ts",
-      "hash": "sha256:87dbf7d29ca04d7abc5dd03bd43c580ce3ce53d31a5d6e5fc83ae3d27dd37d8e",
-      "contentHash": "sha256:87dbf7d29ca04d7abc5dd03bd43c580ce3ce53d31a5d6e5fc83ae3d27dd37d8e",
-      "tools": [
-        "forms",
-        "create",
-        "delete",
-        "submissions",
-        "submission",
-        "remove",
-        "export",
-        "stats"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "stateful",
-        "channels"
-      ]
-    },
-    {
       "name": "format-showcase",
       "version": "1.0.0",
       "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
@@ -435,84 +362,6 @@
       "photonType": "api",
       "features": [
         "channels"
-      ]
-    },
-    {
-      "name": "git-box",
-      "version": "2.0.0",
-      "description": "Git Box - Mailbox-style Git interface, manage repos like an inbox",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📬",
-      "source": "../git-box.photon.ts",
-      "hash": "sha256:277004061acd21905dda8c24363e90619843ffaa85b877893cb9043c6d19992f",
-      "contentHash": "sha256:2ed5f36b1b8af5eb2077e495a0a82b4fa25db4bf887923bebaba39719aa7de5b",
-      "tools": [
-        "main",
-        "repoAdd",
-        "repoInit",
-        "availableRepos",
-        "repoRemove",
-        "repos",
-        "commits",
-        "commitFiles",
-        "status",
-        "fileStage",
-        "fileUnstage",
-        "commit",
-        "pull",
-        "push",
-        "fetch",
-        "branches",
-        "branchSwitch",
-        "diff",
-        "changesDiscard",
-        "commitDiff",
-        "fileContent",
-        "branchCreate",
-        "branchCreateSwitch",
-        "branchDelete",
-        "branchMerge",
-        "mergeAbort",
-        "reflog",
-        "undoLast",
-        "commitReset",
-        "commitRecover",
-        "stashes",
-        "stashCreate",
-        "stashApply",
-        "stashPop",
-        "stashDrop",
-        "stashShow",
-        "stashesClear",
-        "commitsSquash",
-        "commitMessageAmend",
-        "fileRemoveFromHistory",
-        "cherryPick",
-        "cherryPickAbort",
-        "cherryPickContinue",
-        "commitRevert",
-        "revertAbort",
-        "commitFixup",
-        "rebasePreview",
-        "rebaseScripted",
-        "rebaseContinue",
-        "rebaseAbort",
-        "conflicts",
-        "conflictMarkResolved",
-        "conflictResolve",
-        "blame",
-        "commitsSearch",
-        "changeFind"
-      ],
-      "assets": [
-        "git-box/ui/mailbox.html"
-      ],
-      "photonType": "streaming",
-      "features": [
-        "generator",
-        "custom-ui",
-        "elicitation"
       ]
     },
     {
@@ -566,31 +415,6 @@
       "features": []
     },
     {
-      "name": "google-calendar",
-      "version": "1.0.0",
-      "description": "Google Calendar - Schedule and manage events",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📅",
-      "source": "../google-calendar.photon.ts",
-      "hash": "sha256:c9b9f41f68548067370b5bd2316b82f041fef613d470e799d4b02c6dfba18566",
-      "contentHash": "sha256:c9b9f41f68548067370b5bd2316b82f041fef613d470e799d4b02c6dfba18566",
-      "tools": [
-        "list",
-        "get",
-        "create",
-        "update",
-        "remove",
-        "calendars",
-        "availability",
-        "search",
-        "upcoming"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
       "name": "hello-world",
       "version": "1.0.0",
       "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
@@ -621,34 +445,6 @@
       "features": []
     },
     {
-      "name": "integration-demo",
-      "version": "1.0.0",
-      "description": "Integration Demo — Dependencies, Assets, Stateful Workflows",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🔗",
-      "source": "../integration-demo.photon.ts",
-      "hash": "sha256:a13efd8a1fe963d9065547c60ca8cb37f6c50142f8b9b71355f52a41de1a6671",
-      "contentHash": "sha256:e12b85fef935f7bb4be2570ddee2eacd29f559282084d56a21219eaf4ba15b77",
-      "tools": [
-        "info",
-        "workflow",
-        "status",
-        "assets",
-        "report"
-      ],
-      "assets": [
-        "integration-demo/ui/result-viewer.html",
-        "ui/result-viewer.html"
-      ],
-      "photonType": "streaming",
-      "features": [
-        "generator",
-        "custom-ui",
-        "stateful"
-      ]
-    },
-    {
       "name": "jira",
       "version": "1.0.0",
       "description": "Jira - Issue tracking and project management",
@@ -675,96 +471,6 @@
       "features": []
     },
     {
-      "name": "kanban",
-      "version": "4.0.3",
-      "description": "Kanban Board Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📋",
-      "source": "../kanban.photon.ts",
-      "hash": "sha256:a60fe04ad0ae802237e19a359783ed36bf4afffdfb99e5c0206981ec58505c64",
-      "contentHash": "sha256:d064d0af1a5b3c092065a5bdd833b5d90e6dc9feea33726c8d8a50afda1678f6",
-      "tools": [
-        "hooks",
-        "main",
-        "list",
-        "mine",
-        "add",
-        "move",
-        "reorder",
-        "edit",
-        "drop",
-        "search",
-        "comment",
-        "comments",
-        "show",
-        "board",
-        "column",
-        "clear",
-        "stats",
-        "block",
-        "sweep"
-      ],
-      "assets": [
-        "kanban/ui/board.html"
-      ],
-      "photonType": "streaming",
-      "features": [
-        "generator",
-        "custom-ui",
-        "stateful",
-        "channels"
-      ]
-    },
-    {
-      "name": "kitchen-sink",
-      "version": "1.0.0",
-      "description": "Kitchen Sink Photon Demonstrates every feature of the Photon runtime with meaningfully named functions. Use this as a reference for building your own photons.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🍳",
-      "source": "../kitchen-sink.photon.ts",
-      "hash": "sha256:ffbed9e87b4ebd1eeb5e71ae210ed66fee3f3c4322d74cd00058e9deb2c762cf",
-      "contentHash": "sha256:3e9d69baa4017fbc7d6506dd92b2e6e38c838d613afb7e6f2ee9599e2a2941fa",
-      "tools": [
-        "basicStringReturn",
-        "basicNumberReturn",
-        "basicBooleanReturn",
-        "basicObjectReturn",
-        "basicArrayReturn",
-        "paramString",
-        "paramNumber",
-        "paramBoolean",
-        "paramEnum",
-        "paramOptional",
-        "paramArray",
-        "paramObject",
-        "paramMultipleRequired",
-        "streamingText",
-        "streamingNumbers",
-        "streamingObjects",
-        "progressDemo",
-        "memoryCounter",
-        "memoryTodoList",
-        "uiGetUsers",
-        "uiGetDashboard",
-        "uiSearch",
-        "errorHandlingDemo",
-        "errorValidation",
-        "showConfig"
-      ],
-      "assets": [
-        "kitchen-sink/ui/dashboard.html",
-        "kitchen-sink/ui/search-results.html",
-        "kitchen-sink/ui/users.html"
-      ],
-      "photonType": "streaming",
-      "features": [
-        "generator",
-        "custom-ui"
-      ]
-    },
-    {
       "name": "math",
       "version": "1.1.0",
       "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
@@ -780,34 +486,6 @@
       "assets": [],
       "photonType": "api",
       "features": []
-    },
-    {
-      "name": "mcp-orchestrator",
-      "version": "1.0.0",
-      "description": "MCP Orchestrator - Combine multiple MCPs into powerful workflows",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🔗",
-      "source": "../mcp-orchestrator.photon.ts",
-      "hash": "sha256:c0b1681646914fa2218fdf72a7ef8129ad205cb3f343d83778a6174d0804a3a1",
-      "contentHash": "sha256:c0b1681646914fa2218fdf72a7ef8129ad205cb3f343d83778a6174d0804a3a1",
-      "tools": [
-        "discover",
-        "check",
-        "call",
-        "research",
-        "reason",
-        "shell",
-        "parallel",
-        "chain",
-        "inspect",
-        "tools"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "mcp-bridge"
-      ]
     },
     {
       "name": "mongodb",
@@ -861,39 +539,6 @@
       "assets": [],
       "photonType": "api",
       "features": []
-    },
-    {
-      "name": "preferences",
-      "version": "1.0.0",
-      "description": "Preferences Photon - MCP App with UI assets and settings",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "⚙️",
-      "source": "../preferences.photon.ts",
-      "hash": "sha256:248c41655c4aa7bad4c340c53e57fc053f30b0ad68ebd38b48c06dc1a7066741",
-      "contentHash": "sha256:864bd01a493ba7d11958af9b384f13cc1646f557d13da3fa9680346501a1d6c5",
-      "tools": [
-        "list",
-        "get",
-        "editSettings",
-        "previewTheme",
-        "resetToDefaults",
-        "import",
-        "export"
-      ],
-      "assets": [
-        "preferences/ui/settings.html",
-        "preferences/ui/theme-preview.html",
-        "preferences/prompts/welcome.md",
-        "preferences/resources/defaults.json"
-      ],
-      "photonType": "workflow",
-      "features": [
-        "generator",
-        "custom-ui",
-        "elicitation",
-        "streaming"
-      ]
     },
     {
       "name": "progressive-rendering",
@@ -952,6 +597,32 @@
       "features": []
     },
     {
+      "name": "serum",
+      "version": "1.9.0",
+      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
+      "author": "Unknown",
+      "license": "MIT",
+      "icon": "💉",
+      "source": "../serum.photon.ts",
+      "hash": "sha256:84cab982d704f2b18d1d71285d993661551ee772bb3fb23f973cc9dfa27ecbb3",
+      "contentHash": "sha256:84cab982d704f2b18d1d71285d993661551ee772bb3fb23f973cc9dfa27ecbb3",
+      "tools": [
+        "truth",
+        "clarity",
+        "challenger",
+        "focus",
+        "perspective",
+        "creative",
+        "action",
+        "simplify",
+        "empathy",
+        "custom"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
       "name": "slack",
       "version": "1.0.0",
       "description": "Slack - Send and manage messages",
@@ -973,53 +644,6 @@
       "assets": [],
       "photonType": "api",
       "features": []
-    },
-    {
-      "name": "spreadsheet",
-      "version": "1.1.0",
-      "description": "Spreadsheet — CSV-backed spreadsheet with formulas A spreadsheet engine that works on plain CSV files. Formulas (=SUM, =AVG, etc.) are stored directly in CSV cells and evaluated at runtime. Named instances map to CSV files: `_use('budget')` → `budget.csv` in your spreadsheets folder. Pass a full path to open any CSV: `_use('/path/to/data.csv')`.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📊",
-      "source": "../spreadsheet.photon.ts",
-      "hash": "sha256:430819b42851633e827fc9275cebe27f9ef207a6607b4ade719849daa8f42029",
-      "contentHash": "sha256:ec831a7076ba1b1fca998b90ced1d23e74bf9942b3e73a7142ffaf24dd7346b7",
-      "tools": [
-        "main",
-        "view",
-        "get",
-        "set",
-        "add",
-        "remove",
-        "update",
-        "query",
-        "sort",
-        "fill",
-        "schema",
-        "resize",
-        "ingest",
-        "dump",
-        "clear",
-        "rename",
-        "format",
-        "tail",
-        "untail",
-        "push",
-        "sql",
-        "watch",
-        "unwatch",
-        "watches"
-      ],
-      "assets": [
-        "spreadsheet/ui/mcp-bridge.js",
-        "spreadsheet/ui/spreadsheet.html",
-        "ui/spreadsheet.html"
-      ],
-      "photonType": "api",
-      "features": [
-        "custom-ui",
-        "stateful"
-      ]
     },
     {
       "name": "sqlite",
@@ -1086,47 +710,6 @@
       "photonType": "api",
       "features": [
         "stateful"
-      ]
-    },
-    {
-      "name": "team-dashboard",
-      "version": "1.0.0",
-      "description": "Team Dashboard Photon A TV/monitor-optimized dashboard that aggregates data from multiple photons to give the whole team visibility into project progress. Perfect for office displays, war rooms, or remote team syncs.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📺",
-      "source": "../team-dashboard.photon.ts",
-      "hash": "sha256:914232936b8048e1cd7c0235f0b95accf3e3ee2a0b9faa40d9ce850c5193a362",
-      "contentHash": "sha256:4259d9b30f92c83f32547fcc83ae5d075d04bbbee79f6c57a17552688b98b953",
-      "tools": [
-        "main",
-        "getDashboardData",
-        "getDebugPaths",
-        "getKanbanStats",
-        "getRecentCommits",
-        "checkServices",
-        "getGitHubStats",
-        "getTodaysFocus",
-        "getSummary",
-        "getConfig",
-        "updateConfig",
-        "addService",
-        "removeService",
-        "setGitRepo",
-        "setTeamName",
-        "addGitHubRepo",
-        "removeGitHubRepo",
-        "listGitHubRepos",
-        "listKanbanBoards",
-        "setKanbanBoard"
-      ],
-      "assets": [
-        "team-dashboard/ui/dashboard.html"
-      ],
-      "photonType": "api",
-      "features": [
-        "custom-ui",
-        "dashboard"
       ]
     },
     {
