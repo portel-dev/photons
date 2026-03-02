@@ -79,36 +79,6 @@
       ]
     },
     {
-      "name": "connect-four",
-      "version": "1.0.0",
-      "description": "Connect Four - Play against AI with distributed locks Classic Connect Four game where you drop discs into columns trying to get four in a row. The AI opponent uses minimax with alpha-beta pruning to play strategically. Distributed locks ensure no two moves happen simultaneously - critical when multiple clients connect to the same game.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🔴",
-      "source": "../connect-four.photon.ts",
-      "hash": "sha256:3910de03ab1077e4a0a6e63c22b0e570b65f1aff6d444de2d91df4d168e6e566",
-      "contentHash": "sha256:dbe30918db82eacdc48e215b457167cf42ff63aa04c223ab9311c1f67c9c7474",
-      "tools": [
-        "main",
-        "drop",
-        "board",
-        "games",
-        "resign",
-        "stats",
-        "replay"
-      ],
-      "assets": [
-        "connect-four/ui/board.html"
-      ],
-      "photonType": "streaming",
-      "features": [
-        "generator",
-        "custom-ui",
-        "stateful",
-        "channels"
-      ]
-    },
-    {
       "name": "daemon-features",
       "version": "1.0.0",
       "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub",
