@@ -25,7 +25,7 @@ export default class ProgressiveRendering extends PhotonMCP {
    * Level 1: Raw return — auto-UI guesses the layout
    * @autorun
    */
-  async v1_raw() {
+  async raw() {
     return this.team;
   }
 
@@ -36,7 +36,7 @@ export default class ProgressiveRendering extends PhotonMCP {
    * Returns the full engineering team roster.
    * @autorun
    */
-  async v2_described() {
+  async described() {
     return this.team;
   }
 
@@ -45,7 +45,7 @@ export default class ProgressiveRendering extends PhotonMCP {
    * @autorun
    * @format table
    */
-  async v3_format_basic() {
+  async formatted() {
     return this.team;
   }
 
@@ -54,7 +54,7 @@ export default class ProgressiveRendering extends PhotonMCP {
    * @autorun
    * @format list {@title name, @subtitle role, @icon avatar, @badge status}
    */
-  async v4_format_rich() {
+  async rich() {
     return this.team;
   }
 
@@ -62,7 +62,7 @@ export default class ProgressiveRendering extends PhotonMCP {
    * Level 5: UI type class — programmatic control over card layout
    * @autorun
    */
-  async v5_ui_type() {
+  async typed() {
     return new Cards()
       .heading('name')
       .subtitle('role')
@@ -72,10 +72,10 @@ export default class ProgressiveRendering extends PhotonMCP {
   }
 
   /**
-   * Level 6: Table with typed Fields — maximum control over columns and formatting
+   * Level 6: Table with typed fields — maximum control over columns and formatting
    * @autorun
    */
-  async v6_table_fields() {
+  async columns() {
     return new Table()
       .avatar('avatar', { label: '' })
       .text('name', { label: 'Name' })

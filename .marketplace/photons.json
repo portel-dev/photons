@@ -518,15 +518,15 @@
       "license": "MIT",
       "icon": "🎨",
       "source": "../progressive-rendering.photon.ts",
-      "hash": "sha256:9e3da4402cace6804332c27abc31e221afd7ee968dd4864dde0c8fa76dfca44d",
-      "contentHash": "sha256:9e3da4402cace6804332c27abc31e221afd7ee968dd4864dde0c8fa76dfca44d",
+      "hash": "sha256:7b68561343a0ef9be02794bcc2e1c0465f969729cb1bd6eed92220e36ea88f19",
+      "contentHash": "sha256:7b68561343a0ef9be02794bcc2e1c0465f969729cb1bd6eed92220e36ea88f19",
       "tools": [
-        "v1_raw",
-        "v2_described",
-        "v3_format_basic",
-        "v4_format_rich",
-        "v5_ui_type",
-        "v6_table_fields"
+        "raw",
+        "described",
+        "formatted",
+        "rich",
+        "typed",
+        "columns"
       ],
       "assets": [],
       "photonType": "api",

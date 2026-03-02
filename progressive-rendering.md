@@ -15,18 +15,18 @@ No configuration required.
 
 | Method | Description |
 |--------|-------------|
-| `v1_raw` | Level 1: Raw return — auto-UI guesses the layout |
-| `v2_described` | Level 2: Rich description — method card gets context, rendering still auto-detected. |
-| `v3_format_basic` | Level 3: Format hint — Beam renders as a table instead of guessing |
-| `v4_format_rich` | Level 4: Rich format — field mappings produce a polished list with avatars and badges |
-| `v5_ui_type` | Level 5: UI type class — programmatic control over card layout |
-| `v6_table_fields` | Level 6: Table with typed Fields — maximum control over columns and formatting |
+| `raw` | Level 1: Raw return — auto-UI guesses the layout |
+| `described` | Level 2: Rich description — method card gets context, rendering still auto-detected. |
+| `formatted` | Level 3: Format hint — Beam renders as a table instead of guessing |
+| `rich` | Level 4: Rich format — field mappings produce a polished list with avatars and badges |
+| `typed` | Level 5: UI type class — programmatic control over card layout |
+| `columns` | Level 6: Table with typed fields — maximum control over columns and formatting |
 
 
 ## 🔧 Tools
 
 
-### `v1_raw`
+### `raw`
 
 Level 1: Raw return — auto-UI guesses the layout
 
@@ -37,7 +37,7 @@ Level 1: Raw return — auto-UI guesses the layout
 ---
 
 
-### `v2_described`
+### `described`
 
 Level 2: Rich description — method card gets context, rendering still auto-detected. Team members with roles and availability status. Returns the full engineering team roster.
 
@@ -48,7 +48,7 @@ Level 2: Rich description — method card gets context, rendering still auto-det
 ---
 
 
-### `v3_format_basic`
+### `formatted`
 
 Level 3: Format hint — Beam renders as a table instead of guessing
 
@@ -59,7 +59,7 @@ Level 3: Format hint — Beam renders as a table instead of guessing
 ---
 
 
-### `v4_format_rich`
+### `rich`
 
 Level 4: Rich format — field mappings produce a polished list with avatars and badges
 
@@ -70,7 +70,7 @@ Level 4: Rich format — field mappings produce a polished list with avatars and
 ---
 
 
-### `v5_ui_type`
+### `typed`
 
 Level 5: UI type class — programmatic control over card layout
 
@@ -81,9 +81,9 @@ Level 5: UI type class — programmatic control over card layout
 ---
 
 
-### `v6_table_fields`
+### `columns`
 
-Level 6: Table with typed Fields — maximum control over columns and formatting
+Level 6: Table with typed fields — maximum control over columns and formatting
 
 
 
@@ -102,17 +102,17 @@ flowchart LR
     subgraph progressive_rendering["📦 Progressive Rendering"]
         direction TB
         PHOTON((🎯))
-        T0[🔧 v1_raw]
+        T0[🔧 raw]
         PHOTON --> T0
-        T1[🔧 v2_described]
+        T1[🔧 described]
         PHOTON --> T1
-        T2[🔧 v3_format_basic]
+        T2[🔧 formatted]
         PHOTON --> T2
-        T3[🔧 v4_format_rich]
+        T3[🔧 rich]
         PHOTON --> T3
-        T4[🔧 v5_ui_type]
+        T4[🔧 typed]
         PHOTON --> T4
-        T5[🔧 v6_table_fields]
+        T5[🔧 columns]
         PHOTON --> T5
     end
 ```
