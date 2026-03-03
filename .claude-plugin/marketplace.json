@@ -81,24 +81,6 @@
       }
     },
     {
-      "name": "dashboard",
-      "description": "Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "dashboard": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "dashboard"
-          ]
-        }
-      }
-    },
-    {
       "name": "demo",
       "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
       "source": "./",
@@ -532,7 +514,7 @@
     },
     {
       "name": "todo",
-      "description": "Todo List - Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
+      "description": "Todo List - Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status.",
       "source": "./",
       "strict": false,
       "hooks": [

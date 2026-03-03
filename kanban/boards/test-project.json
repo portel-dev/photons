@@ -1,0 +1,13 @@
+{
+  "name": "test-project",
+  "columns": [
+    "Backlog",
+    "Todo",
+    "In Progress",
+    "Review",
+    "Done"
+  ],
+  "tasks": [],
+  "createdAt": "2026-02-18T08:49:25.208Z",
+  "updatedAt": "2026-02-18T08:49:25.208Z"
+}

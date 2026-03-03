@@ -101,35 +101,6 @@
       ]
     },
     {
-      "name": "dashboard",
-      "version": "1.0.0",
-      "description": "Dashboard Photon A sleek dashboard demonstrating MCP Apps with UI templates. Each tool returns data that can be rendered in its linked UI. Data is persisted to ~/.photon/dashboard/data.json",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📋",
-      "source": "../dashboard.photon.ts",
-      "hash": "sha256:270aa88c99c7cf9250a4d148d835a31a0c5f74b05beb7fb627844136f49b9cf7",
-      "contentHash": "sha256:343bd7e47dd3913b16602f7d4c95c41050124670aafe81caf7cab132adf08a65",
-      "tools": [
-        "overview",
-        "main",
-        "activity",
-        "add",
-        "update",
-        "delete"
-      ],
-      "assets": [
-        "dashboard/ui/activity.html",
-        "dashboard/ui/overview.html",
-        "dashboard/ui/tasks.html"
-      ],
-      "photonType": "api",
-      "features": [
-        "custom-ui",
-        "dashboard"
-      ]
-    },
-    {
       "name": "demo",
       "version": "1.0.0",
       "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
@@ -725,18 +696,20 @@
     },
     {
       "name": "todo",
-      "version": "1.0.0",
-      "description": "Todo List - Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.",
+      "version": "1.1.0",
+      "description": "Todo List - Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status.",
       "author": "Portel",
       "license": "MIT",
       "icon": "✅",
       "source": "../todo.photon.ts",
-      "hash": "sha256:223cd03ac648a6a1b3cd3b3a9f6eefc97695ebd61273635c37cfd3b163cf4265",
-      "contentHash": "sha256:223cd03ac648a6a1b3cd3b3a9f6eefc97695ebd61273635c37cfd3b163cf4265",
+      "hash": "sha256:60694297429ee795ebac804579b4fa09e66c8423c32be764d01a21afc9026697",
+      "contentHash": "sha256:60694297429ee795ebac804579b4fa09e66c8423c32be764d01a21afc9026697",
       "tools": [],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [
+        "stateful"
+      ]
     },
     {
       "name": "weather",

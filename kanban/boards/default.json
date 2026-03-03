@@ -1,0 +1,23 @@
+{
+  "name": "default",
+  "columns": [
+    "Backlog",
+    "Todo",
+    "In Progress",
+    "Review",
+    "Done"
+  ],
+  "tasks": [
+    {
+      "id": "mlu1vdfuppdkx",
+      "title": "Test from CLI",
+      "column": "Backlog",
+      "priority": "high",
+      "createdAt": "2026-02-19T22:46:07.818Z",
+      "updatedAt": "2026-02-19T22:46:07.818Z",
+      "createdBy": "ai"
+    }
+  ],
+  "createdAt": "2026-02-18T08:42:19.400Z",
+  "updatedAt": "2026-02-20T00:14:36.791Z"
+}

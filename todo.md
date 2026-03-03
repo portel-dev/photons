@@ -1,9 +1,10 @@
 # Todo List
 
-Reactive collections in action Demonstrates Photon's reactive arrays: just use normal array methods (push, splice, filter) and the runtime automatically emits events so connected UIs update in real-time.
+Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status.
 
-> **0 tools** · API Photon · v1.0.0 · MIT
+> **0 tools** · API Photon · v1.1.0 · MIT
 
+**Platform Features:** `stateful`
 
 ## ⚙️ Configuration
 
@@ -47,4 +48,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.0.0 · Portel
+MIT · v1.1.0 · Portel

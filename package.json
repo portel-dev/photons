@@ -9,6 +9,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@portel/photon-core": "file:../photon-core"
+    "@portel/photon-core": "file:../photon-core",
+    "@types/node": "^25.3.2",
+    "undici-types": "^7.22.0"
   }
 }

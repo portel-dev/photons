@@ -1,0 +1,25 @@
+{
+  "name": "photon",
+  "columns": [
+    "Backlog",
+    "Todo",
+    "In Progress",
+    "Review",
+    "Done"
+  ],
+  "tasks": [
+    {
+      "id": "mltk20w5211zy",
+      "title": "First",
+      "description": "Task",
+      "column": "Backlog",
+      "priority": "medium",
+      "assignee": "human",
+      "createdAt": "2026-02-19T14:27:25.061Z",
+      "updatedAt": "2026-02-19T14:27:25.061Z",
+      "createdBy": "ai"
+    }
+  ],
+  "createdAt": "2026-02-19T14:18:58.383Z",
+  "updatedAt": "2026-02-19T14:27:25.061Z"
+}
