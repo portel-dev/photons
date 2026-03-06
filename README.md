@@ -50,6 +50,7 @@ We welcome contributions! Submit pull requests for:
 | [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 0 | - |
 | [**Input Showcase**](input-showcase.md) | Input Showcase | 0 | - |
 | [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
+| [**List**](list.md) | List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients. | 0 | - |
 | [**Calculator**](math.md) | Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc. | 1 | - |
 | [**MongoDB**](mongodb.md) | Flexible document-oriented database | 14 | - |
 | [**PostgreSQL**](postgres.md) | Powerful relational database | 7 | - |
@@ -67,7 +68,7 @@ We welcome contributions! Submit pull requests for:
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
 
-**Total:** 31 photons ready to use
+**Total:** 32 photons ready to use
 
 ---
 
@@ -111,7 +112,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 31 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 32 focused tools at its fingertips.
 
 ---
 
@@ -177,7 +178,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 31 production-ready photons available
+- 📦 32 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

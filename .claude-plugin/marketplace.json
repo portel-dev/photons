@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official photons MCP servers",
-    "version": "1.9.0"
+    "version": "1.11.0"
   },
   "plugins": [
     {
@@ -292,6 +292,24 @@
           "args": [
             "mcp",
             "jira"
+          ]
+        }
+      }
+    },
+    {
+      "name": "list",
+      "description": "List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients.",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "list": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "list"
           ]
         }
       }

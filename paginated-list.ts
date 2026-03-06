@@ -8,29 +8,17 @@
  * - Applies JSON Patch updates to local state
  * - Syncs changes across multiple clients via state-changed events
  *
+ * @stateful
  * @runtime ^1.6.0
- * @internal
  */
 
 import type { PhotonRequest } from '@portel/photon-core';
-
-interface PaginationMetadata {
-  totalCount: number;
-  start: number;
-  end: number;
-  hasMore: boolean;
-}
 
 interface Item {
   id: string;
   title: string;
   description: string;
   createdAt: string;
-}
-
-interface PaginatedResponse {
-  items: Item[];
-  _pagination: PaginationMetadata;
 }
 
 export default class PaginatedListPhoton {
@@ -46,50 +34,36 @@ export default class PaginatedListPhoton {
   }
 
   /**
-   * Get paginated items with metadata
+   * Get paginated items
    *
-   * Called by ViewportAwareProxy when viewport changes.
-   * Returns paginated response with _pagination metadata that includes:
-   * - totalCount: Total items available
-   * - start: Start index of returned items
-   * - end: End index (exclusive) of returned items
-   * - hasMore: Whether more items exist beyond current range
+   * Framework automatically:
+   * - Detects this returns an array
+   * - Wraps with _pagination metadata
+   * - Creates ViewportAwareProxy for smart pagination
+   * - Tracks viewport and auto-fetches missing ranges
    *
    * @param start Start index (inclusive)
    * @param limit Number of items to return
-   * @returns Paginated response with items and metadata
+   * @returns Array of items (framework wraps with pagination metadata)
    *
    * @example
-   * // Get first 20 items
-   * const response = await photon.list(0, 20);
-   * // { items: [...20 items...], _pagination: { totalCount: 1000, start: 0, end: 20, hasMore: true } }
-   *
-   * // ViewportAwareProxy then automatically:
-   * // 1. Caches these items
-   * // 2. Watches for viewport changes via IntersectionObserver
-   * // 3. Fetches missing ranges on demand
-   * // 4. Applies patches from state-changed events
-   * // 5. Updates local state without full refresh
+   * // Just return the subset!
+   * const items = await photon.list(0, 20);
+   * // Returns: [item0, item1, ..., item19]
+   * //
+   * // Framework automatically wraps to:
+   * // { items: [...], _pagination: { totalCount: 100, start: 0, end: 20, hasMore: true } }
    */
-  async list(start: number = 0, limit: number = 20): Promise<PaginatedResponse> {
+  async list(start: number = 0, limit: number = 20): Promise<Item[]> {
     // Validate inputs
     start = Math.max(0, Math.floor(start));
     limit = Math.max(1, Math.floor(limit));
 
     // Calculate bounds
     const end = Math.min(start + limit, this._allItems.length);
-    const items = this._allItems.slice(start, end);
 
-    // Return paginated response with metadata
-    return {
-      items,
-      _pagination: {
-        totalCount: this._allItems.length,
-        start,
-        end,
-        hasMore: end < this._allItems.length,
-      },
-    };
+    // Just return the subset - framework handles pagination!
+    return this._allItems.slice(start, end);
   }
 
   /**
