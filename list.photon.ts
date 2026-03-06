@@ -24,7 +24,7 @@ export default class List {
 
   /**
    * Add a new item
-   * @param text Item description
+   * @param item Item description
    */
   add(item: string): string {
     this.remove(item);

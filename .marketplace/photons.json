@@ -419,8 +419,8 @@
       "license": "MIT",
       "icon": "📋",
       "source": "../list.photon.ts",
-      "hash": "sha256:ea6ddf7c9f8bc6101ffba0016e640b268f888198dda476c087ff113c9dc5b53b",
-      "contentHash": "sha256:ea6ddf7c9f8bc6101ffba0016e640b268f888198dda476c087ff113c9dc5b53b",
+      "hash": "sha256:fb4016cbc99703d4d3c4a640f5bca616630256f29daeee3a161fe08a7d6e5fef",
+      "contentHash": "sha256:fb4016cbc99703d4d3c4a640f5bca616630256f29daeee3a161fe08a7d6e5fef",
       "tools": [],
       "assets": [],
       "photonType": "api",
@@ -691,6 +691,21 @@
       "features": [
         "stateful"
       ]
+    },
+    {
+      "name": "test-formats",
+      "version": "1.11.0",
+      "description": "Test format-based input validation",
+      "author": "Unknown",
+      "license": "MIT",
+      "icon": null,
+      "source": "../test-formats.photon.ts",
+      "hash": "sha256:f512b3460b035f4be7799fa767b7a2c9f50f1407d0b74d330e54dba5ce801a78",
+      "contentHash": "sha256:f512b3460b035f4be7799fa767b7a2c9f50f1407d0b74d330e54dba5ce801a78",
+      "tools": [],
+      "assets": [],
+      "photonType": "api",
+      "features": []
     },
     {
       "name": "time",

@@ -62,13 +62,14 @@ We welcome contributions! Submit pull requests for:
 | [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
 | [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |
 | [**Team Pulse**](team-pulse.md) | Team Pulse — Async standup with team feed | 4 | - |
+| [**Test Formats**](test-formats.md) | Test format-based input validation | 0 | - |
 | [**Time**](time.md) | Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies). | 3 | - |
 | [**Todo List**](todo.md) | Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status. | 0 | - |
 | [**Weather**](weather.md) | Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required). | 2 | - |
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
 
-**Total:** 32 photons ready to use
+**Total:** 33 photons ready to use
 
 ---
 
@@ -112,7 +113,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 32 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 33 focused tools at its fingertips.
 
 ---
 
@@ -178,7 +179,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 32 production-ready photons available
+- 📦 33 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

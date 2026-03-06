@@ -513,6 +513,24 @@
       }
     },
     {
+      "name": "test-formats",
+      "description": "Test format-based input validation",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "test-formats": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "test-formats"
+          ]
+        }
+      }
+    },
+    {
       "name": "time",
       "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
       "source": "./",
