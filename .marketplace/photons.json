@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "owner": {
     "name": "Portel"
   },
@@ -372,7 +372,7 @@
     },
     {
       "name": "input-showcase",
-      "version": "1.11.0",
+      "version": "1.12.0",
       "description": "Input Showcase",
       "author": "Unknown",
       "license": "MIT",
@@ -556,7 +556,7 @@
     },
     {
       "name": "serum",
-      "version": "1.11.0",
+      "version": "1.12.0",
       "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
       "author": "Unknown",
       "license": "MIT",
@@ -629,6 +629,33 @@
       "features": []
     },
     {
+      "name": "tags",
+      "version": "1.12.0",
+      "description": "Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.",
+      "author": "Unknown",
+      "license": "MIT",
+      "icon": "🏷️",
+      "source": "../tags.photon.ts",
+      "hash": "sha256:75bdf4f54b0d6fc864e70cb5c4b07c9691452cc00d17a0ae6b69609d63999288",
+      "contentHash": "sha256:75bdf4f54b0d6fc864e70cb5c4b07c9691452cc00d17a0ae6b69609d63999288",
+      "tools": [
+        "listItems",
+        "nuke",
+        "upsert",
+        "weather",
+        "localOnly",
+        "safeQuery",
+        "userOnly",
+        "assistantOnly",
+        "bothAudience",
+        "createTask",
+        "lookup"
+      ],
+      "assets": [],
+      "photonType": "api",
+      "features": []
+    },
+    {
       "name": "tasks-basic",
       "version": "1.0.0",
       "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
@@ -694,7 +721,7 @@
     },
     {
       "name": "test-formats",
-      "version": "1.11.0",
+      "version": "1.12.0",
       "description": "Test format-based input validation",
       "author": "Unknown",
       "license": "MIT",

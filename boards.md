@@ -11,9 +11,9 @@ Modern Kanban Boards Photon Task management for humans and AI. Use named instanc
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `BOARDS_TASKS` | No | Task[] | No description available (default: `[]`) |
-| `BOARDS_COLUMNS` | No | string[] | No description available (default: `[...DEFAULT_COLUMNS]`) |
-| `BOARDS_CONFIG` | No | BoardConfig | No description available (default: `{ wipLimit: DEFAULT_WIP_LIMIT }`) |
+| `BOARDS_TASKS` | No | Task[] | No description available |
+| `BOARDS_COLUMNS` | No | string[] | No description available |
+| `BOARDS_CONFIG` | No | BoardConfig | No description available |
 
 
 

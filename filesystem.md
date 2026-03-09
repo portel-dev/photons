@@ -10,7 +10,7 @@ File and directory operations
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `FILESYSTEM_WORKDIR` | No | string | No description available (default: `path.join(homedir(), '.photon')`) |
+| `FILESYSTEM_WORKDIR` | No | string | No description available |
 | `FILESYSTEM_MAXFILESIZE` | No | number | No description available (default: `10485760`) |
 | `FILESYSTEM_ALLOWHIDDEN` | No | boolean | No description available (default: `true`) |
 

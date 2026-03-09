@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official photons MCP servers",
-    "version": "1.11.0"
+    "version": "1.12.0"
   },
   "plugins": [
     {
@@ -454,6 +454,24 @@
           "args": [
             "mcp",
             "sqlite"
+          ]
+        }
+      }
+    },
+    {
+      "name": "tags",
+      "description": "Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "tags": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "tags"
           ]
         }
       }

@@ -10,7 +10,7 @@ Local git repository operations
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `GIT_REPOPATH` | No | string | No description available (default: `process.cwd()`) |
+| `GIT_REPOPATH` | No | string | No description available |
 
 
 

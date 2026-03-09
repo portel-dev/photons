@@ -59,6 +59,7 @@ We welcome contributions! Submit pull requests for:
 | [**Truth Serum**](serum.md) | Forces unfiltered honesty, no hedging or diplomacy | 10 | - |
 | [**Slack**](slack.md) | Send and manage messages | 7 | - |
 | [**SQLite**](sqlite.md) | File or in-memory SQL database | 9 | - |
+| [**Tags**](tags.md) | Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime. | 11 | - |
 | [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
 | [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |
 | [**Team Pulse**](team-pulse.md) | Team Pulse — Async standup with team feed | 4 | - |
@@ -69,7 +70,7 @@ We welcome contributions! Submit pull requests for:
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
 
-**Total:** 33 photons ready to use
+**Total:** 34 photons ready to use
 
 ---
 
@@ -113,7 +114,7 @@ Output (paste directly into your MCP client config):
 
 Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
 
-**That's it!** Your AI assistant now has 33 focused tools at its fingertips.
+**That's it!** Your AI assistant now has 34 focused tools at its fingertips.
 
 ---
 
@@ -179,7 +180,7 @@ Each photon delivers **singular focus** to a **precise target**.
 
 **Key Features:**
 - 🎯 Each photon does one thing perfectly
-- 📦 33 production-ready photons available
+- 📦 34 production-ready photons available
 - ⚡ Auto-installs dependencies
 - 🔧 Works out of the box
 - 📄 Single-file design (easy to fork and customize)

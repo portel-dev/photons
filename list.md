@@ -11,7 +11,7 @@ List — Simple reactive list for testing state sync A minimal task list using @
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `LIST_ITEMS` | No | string[] | No description available (default: `[]`) |
+| `LIST_ITEMS` | No | string[] | No description available |
 
 
 
