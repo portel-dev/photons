@@ -105,7 +105,7 @@ export default class TagsTest {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Creates a task with structured output
+   * Creates a task with structured output (JSDoc tags)
    * @title Create Task
    * @returns.id {string} Unique task identifier
    * @returns.title {string} Task title
@@ -118,6 +118,32 @@ export default class TagsTest {
       title: params.title,
       done: false,
       priority: 3,
+    };
+  }
+
+  /**
+   * Auto-inferred structured output from TypeScript return type — zero tags needed
+   * @title Inferred Task
+   */
+  async inferredTask(params: { title: string }): Promise<{ id: string; title: string; done: boolean; priority: number }> {
+    return {
+      id: 'task-002',
+      title: params.title,
+      done: false,
+      priority: 2,
+    };
+  }
+
+  /**
+   * Structured output with inline {@value} descriptions
+   * @title Described Task
+   * @returns The created task {@value id string Unique task identifier} {@value title string Task title} {@value done boolean Whether complete}
+   */
+  async describedTask(params: { title: string }) {
+    return {
+      id: 'task-003',
+      title: params.title,
+      done: true,
     };
   }
 

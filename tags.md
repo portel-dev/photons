@@ -2,7 +2,7 @@
 
 Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.
 
-> **11 tools** · API Photon · v1.12.0 · MIT
+> **13 tools** · API Photon · v1.12.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -24,7 +24,9 @@ No configuration required.
 | `userOnly` | Results shown only to the human user |
 | `assistantOnly` | Results only for the AI assistant |
 | `bothAudience` | Results for both user and assistant |
-| `createTask` | Creates a task with structured output |
+| `createTask` | Creates a task with structured output (JSDoc tags) |
+| `inferredTask` | Auto-inferred structured output from TypeScript return type — zero tags needed |
+| `describedTask` | Structured output with inline { |
 | `lookup` | Method-level |
 
 
@@ -132,7 +134,29 @@ Results for both user and assistant
 
 ### `createTask`
 
-Creates a task with structured output
+Creates a task with structured output (JSDoc tags)
+
+
+
+
+
+---
+
+
+### `inferredTask`
+
+Auto-inferred structured output from TypeScript return type — zero tags needed
+
+
+
+
+
+---
+
+
+### `describedTask`
+
+Structured output with inline {
 
 
 
@@ -188,8 +212,12 @@ flowchart LR
         PHOTON --> T8
         T9[✏️ createTask]
         PHOTON --> T9
-        T10[🔧 lookup]
+        T10[🔧 inferredTask]
         PHOTON --> T10
+        T11[🔧 describedTask]
+        PHOTON --> T11
+        T12[🔧 lookup]
+        PHOTON --> T12
     end
 ```
 
