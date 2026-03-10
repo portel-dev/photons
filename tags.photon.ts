@@ -7,6 +7,19 @@
  *
  * @icon 🏷️
  */
+
+/** Structured output type with JSDoc descriptions on properties */
+interface TaskResult {
+  /** Unique task identifier */
+  id: string;
+  /** Task title */
+  title: string;
+  /** Whether the task is complete */
+  done: boolean;
+  /** Priority level 1-5 */
+  priority: number;
+}
+
 export default class TagsTest {
   // ═══════════════════════════════════════════════════════════════
   // Phase 1: Tool Annotations
@@ -105,14 +118,10 @@ export default class TagsTest {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Creates a task with structured output (JSDoc tags)
+   * Structured output — auto-inferred from TypeScript return type, zero tags
    * @title Create Task
-   * @returns.id {string} Unique task identifier
-   * @returns.title {string} Task title
-   * @returns.done {boolean} Whether the task is complete
-   * @returns.priority {number} Priority level 1-5
    */
-  async createTask(params: { title: string }) {
+  async createTask(params: { title: string }): Promise<{ id: string; title: string; done: boolean; priority: number }> {
     return {
       id: 'task-001',
       title: params.title,
@@ -122,28 +131,15 @@ export default class TagsTest {
   }
 
   /**
-   * Auto-inferred structured output from TypeScript return type — zero tags needed
-   * @title Inferred Task
+   * Structured output — descriptions come from interface JSDoc, not tags
+   * @title Described Task
    */
-  async inferredTask(params: { title: string }): Promise<{ id: string; title: string; done: boolean; priority: number }> {
+  async describedTask(params: { title: string }): Promise<TaskResult> {
     return {
       id: 'task-002',
       title: params.title,
       done: false,
       priority: 2,
-    };
-  }
-
-  /**
-   * Structured output with inline {@value} descriptions
-   * @title Described Task
-   * @returns The created task {@value id string Unique task identifier} {@value title string Task title} {@value done boolean Whether complete}
-   */
-  async describedTask(params: { title: string }) {
-    return {
-      id: 'task-003',
-      title: params.title,
-      done: true,
     };
   }
 

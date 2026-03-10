@@ -636,8 +636,8 @@
       "license": "MIT",
       "icon": "🏷️",
       "source": "../tags.photon.ts",
-      "hash": "sha256:c2d758b1126c352d81fadb7f07365a511f378448691eed7479f6632a2ee664d0",
-      "contentHash": "sha256:c2d758b1126c352d81fadb7f07365a511f378448691eed7479f6632a2ee664d0",
+      "hash": "sha256:4fa96f6cc7e336f14d957088db258ed9a29a79084e55bffbc9898750edb1dca4",
+      "contentHash": "sha256:4fa96f6cc7e336f14d957088db258ed9a29a79084e55bffbc9898750edb1dca4",
       "tools": [
         "listItems",
         "nuke",
@@ -649,7 +649,6 @@
         "assistantOnly",
         "bothAudience",
         "createTask",
-        "inferredTask",
         "describedTask",
         "lookup"
       ],

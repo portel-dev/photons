@@ -2,7 +2,7 @@
 
 Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.
 
-> **13 tools** · API Photon · v1.12.0 · MIT
+> **12 tools** · API Photon · v1.12.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -24,9 +24,8 @@ No configuration required.
 | `userOnly` | Results shown only to the human user |
 | `assistantOnly` | Results only for the AI assistant |
 | `bothAudience` | Results for both user and assistant |
-| `createTask` | Creates a task with structured output (JSDoc tags) |
-| `inferredTask` | Auto-inferred structured output from TypeScript return type — zero tags needed |
-| `describedTask` | Structured output with inline { |
+| `createTask` | Structured output — auto-inferred from TypeScript return type, zero tags |
+| `describedTask` | Structured output — descriptions come from interface JSDoc, not tags |
 | `lookup` | Method-level |
 
 
@@ -134,18 +133,7 @@ Results for both user and assistant
 
 ### `createTask`
 
-Creates a task with structured output (JSDoc tags)
-
-
-
-
-
----
-
-
-### `inferredTask`
-
-Auto-inferred structured output from TypeScript return type — zero tags needed
+Structured output — auto-inferred from TypeScript return type, zero tags
 
 
 
@@ -156,7 +144,7 @@ Auto-inferred structured output from TypeScript return type — zero tags needed
 
 ### `describedTask`
 
-Structured output with inline {
+Structured output — descriptions come from interface JSDoc, not tags
 
 
 
@@ -212,12 +200,10 @@ flowchart LR
         PHOTON --> T8
         T9[✏️ createTask]
         PHOTON --> T9
-        T10[🔧 inferredTask]
+        T10[🔧 describedTask]
         PHOTON --> T10
-        T11[🔧 describedTask]
+        T11[🔧 lookup]
         PHOTON --> T11
-        T12[🔧 lookup]
-        PHOTON --> T12
     end
 ```
 
