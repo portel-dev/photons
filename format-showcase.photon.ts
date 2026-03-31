@@ -460,6 +460,48 @@ export default class FormatShowcasePhoton extends PhotonMCP {
     };
   }
 
+  /**
+   * Uses **`@format magazine`** — multi-column magazine layout.
+   *
+   * Renders markdown in a newspaper-style layout with CSS columns.
+   * Headings (h1) span full width, images float within columns with text
+   * wrapping, and a drop cap decorates the first paragraph.
+   *
+   * Accepts a string (markdown) or `{ text, images? }` object.
+   * Use `@columns N` hint to control column count (default 2, max 4).
+   * @autorun
+   * @format magazine
+   */
+  async magazine(): Promise<{ text: string; images: { url: string; width: number; height: number; position: string; caption: string }[] }> {
+    return {
+      text: `# The Future of AI-Native Applications
+
+The shift from AI-as-feature to AI-as-foundation is accelerating. Instead of bolting machine learning onto existing workflows, a new generation of tools is being built where AI is the primary interface. These applications don't just use models — they think in terms of intent, context, and continuous adaptation.
+
+## From Chatbots to Agents
+
+Early AI integrations were simple: a text box, a model, a response. But the agent paradigm changes everything. Modern AI agents can plan multi-step workflows, use tools, maintain memory across sessions, and collaborate with other agents. The result is software that adapts to the user rather than forcing the user to adapt to it.
+
+> The best interface is no interface at all. When AI understands intent, the screen becomes a canvas for results, not a maze of controls.
+
+## The MCP Protocol Revolution
+
+The Model Context Protocol has emerged as the standard for connecting AI models to external tools and data. By providing a universal interface, MCP allows any AI client to interact with any service — from databases to APIs to local filesystems. This interoperability is the foundation for composable AI systems.
+
+## What Developers Need
+
+Building AI-native applications requires new primitives: structured output for type-safe responses, streaming for real-time feedback, tool annotations for safety, and async execution for long-running operations. The developer experience must be as simple as writing a function — the framework handles the rest.
+
+## Looking Ahead
+
+The convergence of powerful models, standardized protocols, and developer-friendly tooling is creating an inflection point. Within the next year, most new applications will be AI-native by default. The question isn't whether to adopt AI — it's how quickly you can rethink your product around it.`,
+      images: [
+        { url: 'https://picsum.photos/seed/ai-future/400/250', width: 260, height: 162, position: 'right', caption: 'AI-native application architecture' },
+        { url: 'https://picsum.photos/seed/mcp-flow/400/300', width: 240, height: 180, position: 'left', caption: 'MCP protocol data flow' },
+      ],
+    };
+  }
+
   // ══════════════════════════════════════════════════════════════════════════════
   // PURPOSE-DRIVEN UI TYPES (no @format — driven by _photonType)
   // ══════════════════════════════════════════════════════════════════════════════
