@@ -2,7 +2,7 @@
 
 Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.
 
-> **27 tools** · API Photon · v1.0.0 · MIT
+> **28 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `channels`
 
@@ -31,6 +31,7 @@ No configuration required.
 | `accordion` | Uses **` |
 | `stack` | Uses **` |
 | `columns` | Uses **` |
+| `magazine` | Uses **` |
 | `rich_table` | Uses the **`Table`** class — the programmatic approach. |
 | `rich_chart` | Uses the **`Chart`** class — the programmatic approach. |
 | `rich_stats` | Uses the **`Stats`** class — the programmatic approach. |
@@ -213,6 +214,17 @@ Uses **`
 ---
 
 
+### `magazine`
+
+Uses **`
+
+
+
+
+
+---
+
+
 ### `rich_table`
 
 Uses the **`Table`** class — the programmatic approach. Explicit column types (`number`, `badge`, `currency`), custom headers, and a title. Note the `currency` column on budget — something `
@@ -385,30 +397,32 @@ flowchart LR
         PHOTON --> T13
         T14[🔧 columns]
         PHOTON --> T14
-        T15[🔧 rich_table]
+        T15[🔧 magazine]
         PHOTON --> T15
-        T16[🔧 rich_chart]
+        T16[🔧 rich_table]
         PHOTON --> T16
-        T17[🔧 rich_stats]
+        T17[🔧 rich_chart]
         PHOTON --> T17
-        T18[🔧 rich_cards]
+        T18[🔧 rich_stats]
         PHOTON --> T18
-        T19[🔧 rich_progress]
+        T19[🔧 rich_cards]
         PHOTON --> T19
-        T20[🔧 rich_steps]
+        T20[🔧 rich_progress]
         PHOTON --> T20
-        T21[🔧 mermaid]
+        T21[🔧 rich_steps]
         PHOTON --> T21
-        T22[🔧 mermaid_card]
+        T22[🔧 mermaid]
         PHOTON --> T22
-        T23[🔧 markdown_frontmatter]
+        T23[🔧 mermaid_card]
         PHOTON --> T23
-        T24[🔧 live]
+        T24[🔧 markdown_frontmatter]
         PHOTON --> T24
-        T25[🔧 live_diagram]
+        T25[🔧 live]
         PHOTON --> T25
-        T26[⏹️ stop]
+        T26[🔧 live_diagram]
         PHOTON --> T26
+        T27[⏹️ stop]
+        PHOTON --> T27
     end
 ```
 

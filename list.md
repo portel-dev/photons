@@ -2,7 +2,7 @@
 
 List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients.
 
-> **0 tools** · API Photon · v1.0.0 · MIT
+> **3 tools** · API Photon · v1.0.0 · MIT
 
 **Platform Features:** `stateful`
 
@@ -11,7 +11,7 @@ List — Simple reactive list for testing state sync A minimal task list using @
 
 | Variable | Required | Type | Description |
 |----------|----------|------|-------------|
-| `LIST_ITEMS` | No | string[] | No description available |
+| `LIST_ITEMS` | No | string[] | No description available (default: ``) |
 
 
 
@@ -20,9 +20,56 @@ List — Simple reactive list for testing state sync A minimal task list using @
 ## 🔧 Tools
 
 
+### `add`
+
+Add a new item
 
 
-No tools defined.
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `item` | string | Yes | Item description |
+
+
+
+
+
+---
+
+
+### `remove`
+
+Remove an item
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `item` | string | Yes | Item to remove |
+
+
+
+
+
+---
+
+
+### `get`
+
+Get paginated items from the list
+
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `from` | number = 0 | No | Start index |
+| `to` | number = 20 | No | End index (exclusive) |
+
+
+
+
+
+---
+
+
+
 
 
 ## 🏗️ Architecture
@@ -32,6 +79,12 @@ flowchart LR
     subgraph list["📦 List"]
         direction TB
         PHOTON((🎯))
+        T0[✏️ add]
+        PHOTON --> T0
+        T1[🗑️ remove]
+        PHOTON --> T1
+        T2[📖 get]
+        PHOTON --> T2
     end
 ```
 

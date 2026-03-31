@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.12.0",
+  "version": "1.17.6",
   "owner": {
     "name": "Portel"
   },
@@ -43,7 +43,25 @@
       "hash": "sha256:a43a0cdda1a7dfa4aa368931b73d8b3d52768e703ca6dbb966f9bb576708a975",
       "contentHash": "sha256:76089e26eaabcb9a47eed87aea1ed3436000fabcbcd06d6334239437af40b184",
       "tools": [
-        "main"
+        "main",
+        "board",
+        "stats",
+        "settings",
+        "list",
+        "mine",
+        "add",
+        "move",
+        "reorder",
+        "drop",
+        "edit",
+        "search",
+        "comment",
+        "show",
+        "column",
+        "clear",
+        "sweep",
+        "block",
+        "comments"
       ],
       "assets": [
         "boards/ui/board.html"
@@ -268,8 +286,8 @@
       "license": "MIT",
       "icon": "🎨",
       "source": "../format-showcase.photon.ts",
-      "hash": "sha256:dd0c7e98ab53f2a678fa29244f1c53d2b3397c1ad4bbf6e0a5aa8d94c7904ed2",
-      "contentHash": "sha256:dd0c7e98ab53f2a678fa29244f1c53d2b3397c1ad4bbf6e0a5aa8d94c7904ed2",
+      "hash": "sha256:4a346f559edbd036de65ec65774b0e43dd871d540fb12af44105297ad97a0ac3",
+      "contentHash": "sha256:4a346f559edbd036de65ec65774b0e43dd871d540fb12af44105297ad97a0ac3",
       "tools": [
         "list",
         "card",
@@ -286,6 +304,7 @@
         "accordion",
         "stack",
         "columns",
+        "magazine",
         "rich_table",
         "rich_chart",
         "rich_stats",
@@ -365,14 +384,18 @@
       "source": "../hello-world.photon.ts",
       "hash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
       "contentHash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
-      "tools": [],
+      "tools": [
+        "greet",
+        "now",
+        "add"
+      ],
       "assets": [],
       "photonType": "api",
       "features": []
     },
     {
       "name": "input-showcase",
-      "version": "1.12.0",
+      "version": "1.17.6",
       "description": "Input Showcase",
       "author": "Unknown",
       "license": "MIT",
@@ -380,7 +403,14 @@
       "source": "../input-showcase.photon.ts",
       "hash": "sha256:d79a6566045771d17749fd4fa44164311b8f9b93804041d230e477f10986d163",
       "contentHash": "sha256:d79a6566045771d17749fd4fa44164311b8f9b93804041d230e477f10986d163",
-      "tools": [],
+      "tools": [
+        "sliders",
+        "unboundedSliders",
+        "dates",
+        "dateHeuristics",
+        "dateRanges",
+        "mixed"
+      ],
       "assets": [],
       "photonType": "api",
       "features": []
@@ -421,7 +451,11 @@
       "source": "../list.photon.ts",
       "hash": "sha256:fb4016cbc99703d4d3c4a640f5bca616630256f29daeee3a161fe08a7d6e5fef",
       "contentHash": "sha256:fb4016cbc99703d4d3c4a640f5bca616630256f29daeee3a161fe08a7d6e5fef",
-      "tools": [],
+      "tools": [
+        "add",
+        "remove",
+        "get"
+      ],
       "assets": [],
       "photonType": "api",
       "features": [
@@ -556,7 +590,7 @@
     },
     {
       "name": "serum",
-      "version": "1.12.0",
+      "version": "1.17.6",
       "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
       "author": "Unknown",
       "license": "MIT",
@@ -630,7 +664,7 @@
     },
     {
       "name": "tags",
-      "version": "1.12.0",
+      "version": "1.17.6",
       "description": "Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.",
       "author": "Unknown",
       "license": "MIT",
@@ -722,7 +756,7 @@
     },
     {
       "name": "test-formats",
-      "version": "1.12.0",
+      "version": "1.17.6",
       "description": "Test format-based input validation",
       "author": "Unknown",
       "license": "MIT",
@@ -730,7 +764,13 @@
       "source": "../test-formats.photon.ts",
       "hash": "sha256:f512b3460b035f4be7799fa767b7a2c9f50f1407d0b74d330e54dba5ce801a78",
       "contentHash": "sha256:f512b3460b035f4be7799fa767b7a2c9f50f1407d0b74d330e54dba5ce801a78",
-      "tools": [],
+      "tools": [
+        "validateEmail",
+        "validateUrl",
+        "validateUuid",
+        "validateCode",
+        "validatePhone"
+      ],
       "assets": [],
       "photonType": "api",
       "features": []
@@ -764,7 +804,16 @@
       "source": "../todo.photon.ts",
       "hash": "sha256:60694297429ee795ebac804579b4fa09e66c8423c32be764d01a21afc9026697",
       "contentHash": "sha256:60694297429ee795ebac804579b4fa09e66c8423c32be764d01a21afc9026697",
-      "tools": [],
+      "tools": [
+        "add",
+        "toggle",
+        "setPriority",
+        "remove",
+        "list",
+        "urgent",
+        "clear",
+        "stats"
+      ],
       "assets": [],
       "photonType": "api",
       "features": [

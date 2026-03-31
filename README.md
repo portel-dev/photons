@@ -35,7 +35,7 @@ We welcome contributions! Submit pull requests for:
 | Photon | Focus | Tools | Features |
 |--------|-------|-------|----------|
 | [**AWS S3**](aws-s3.md) | Cloud object storage | 11 | - |
-| [**Boards**](boards.md) | Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 1 | ⚡🎨📡 |
+| [**Boards**](boards.md) | Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 19 | ⚡🎨📡 |
 | [**Code Diagram**](code-diagram.md) | Mermaid visualization from source code | 3 | 🔌📦 |
 | [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 4 | 📡 |
 | [**Demo**](demo.md) | Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats. | 14 | ⚡ |
@@ -44,13 +44,13 @@ We welcome contributions! Submit pull requests for:
 | [**Expenses**](expenses.md) | Expenses — Track spending with budgets and summaries | 4 | - |
 | [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. | 10 | ⚡📡 |
 | [**Filesystem**](filesystem.md) | File and directory operations | 12 | - |
-| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output. | 27 | 📡 |
+| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output. | 28 | 📡 |
 | [**Git**](git.md) | Local git repository operations | 11 | - |
 | [**GitHub Issues**](github-issues.md) | Manage repository issues | 7 | - |
-| [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 0 | - |
-| [**Input Showcase**](input-showcase.md) | Input Showcase | 0 | - |
+| [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 3 | - |
+| [**Input Showcase**](input-showcase.md) | Input Showcase | 6 | - |
 | [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
-| [**List**](list.md) | List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients. | 0 | - |
+| [**List**](list.md) | List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients. | 3 | - |
 | [**Calculator**](math.md) | Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc. | 1 | - |
 | [**MongoDB**](mongodb.md) | Flexible document-oriented database | 14 | - |
 | [**PostgreSQL**](postgres.md) | Powerful relational database | 7 | - |
@@ -63,9 +63,9 @@ We welcome contributions! Submit pull requests for:
 | [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
 | [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |
 | [**Team Pulse**](team-pulse.md) | Team Pulse — Async standup with team feed | 4 | - |
-| [**Test Formats**](test-formats.md) | Test format-based input validation | 0 | - |
+| [**Test Formats**](test-formats.md) | Test format-based input validation | 5 | - |
 | [**Time**](time.md) | Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies). | 3 | - |
-| [**Todo List**](todo.md) | Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status. | 0 | - |
+| [**Todo List**](todo.md) | Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status. | 8 | - |
 | [**Weather**](weather.md) | Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required). | 2 | - |
 | [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
 
@@ -79,7 +79,7 @@ We welcome contributions! Submit pull requests for:
 ### 1. Install Photon
 
 ```bash
-npm install -g @portel/photon
+bun add -g @portel/photon
 ```
 
 ### 2. Add Any Photon
