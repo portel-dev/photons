@@ -846,8 +846,8 @@
       "license": "MIT",
       "icon": "🌐",
       "source": "../web.photon.ts",
-      "hash": "sha256:a138909fd23913b8eadd5acc0524e6ea88ffe8f4a9938cc46c45cc4d7b14a34b",
-      "contentHash": "sha256:a138909fd23913b8eadd5acc0524e6ea88ffe8f4a9938cc46c45cc4d7b14a34b",
+      "hash": "sha256:f03e54acf485850d491706fa444b126eb70d5b2e20fc5c04db14108312be4f97",
+      "contentHash": "sha256:f03e54acf485850d491706fa444b126eb70d5b2e20fc5c04db14108312be4f97",
       "tools": [
         "search",
         "read"

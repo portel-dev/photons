@@ -36,6 +36,7 @@ export default class Web {
      * @param query Search query
      * @param limit Number of results {@default 10} {@min 1} {@max 50}
      * @format markdown
+     * @cached 10m
      */
     async search(params: { query: string; limit?: number }): Promise<string[]> {
         const url = `https://search.brave.com/search?q=${encodeURIComponent(params.query)}`;
@@ -91,6 +92,7 @@ export default class Web {
      * Read webpage content
      * @param url URL to read {@example https://example.com}
      * @format markdown
+     * @cached 30m
      */
     async read(params: { url: string }): Promise<string> {
         this.emit({ emit: 'status', message: `Fetching ${params.url}...` });
