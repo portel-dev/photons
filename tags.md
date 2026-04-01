@@ -2,7 +2,7 @@
 
 Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.
 
-> **12 tools** · API Photon · v1.17.6 · MIT
+> **12 tools** · API Photon · v1.18.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -224,4 +224,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.17.6
+MIT · v1.18.0

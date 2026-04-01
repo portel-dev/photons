@@ -1,6 +1,6 @@
 {
   "name": "photons",
-  "version": "1.17.6",
+  "version": "1.18.0",
   "owner": {
     "name": "Portel"
   },
@@ -395,7 +395,7 @@
     },
     {
       "name": "input-showcase",
-      "version": "1.17.6",
+      "version": "1.18.0",
       "description": "Input Showcase",
       "author": "Unknown",
       "license": "MIT",
@@ -590,7 +590,7 @@
     },
     {
       "name": "serum",
-      "version": "1.17.6",
+      "version": "1.18.0",
       "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
       "author": "Unknown",
       "license": "MIT",
@@ -664,7 +664,7 @@
     },
     {
       "name": "tags",
-      "version": "1.17.6",
+      "version": "1.18.0",
       "description": "Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.",
       "author": "Unknown",
       "license": "MIT",
@@ -756,7 +756,7 @@
     },
     {
       "name": "test-formats",
-      "version": "1.17.6",
+      "version": "1.18.0",
       "description": "Test format-based input validation",
       "author": "Unknown",
       "license": "MIT",
@@ -840,23 +840,21 @@
     },
     {
       "name": "web",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "description": "Web - Search and read webpages",
       "author": "Portel",
       "license": "MIT",
       "icon": "🌐",
       "source": "../web.photon.ts",
-      "hash": "sha256:11159163d4516295250d0cf14421cf39a09131ab85ab2d6626ea33522b0c778c",
-      "contentHash": "sha256:11159163d4516295250d0cf14421cf39a09131ab85ab2d6626ea33522b0c778c",
+      "hash": "sha256:a138909fd23913b8eadd5acc0524e6ea88ffe8f4a9938cc46c45cc4d7b14a34b",
+      "contentHash": "sha256:a138909fd23913b8eadd5acc0524e6ea88ffe8f4a9938cc46c45cc4d7b14a34b",
       "tools": [
         "search",
         "read"
       ],
       "assets": [],
-      "photonType": "streaming",
-      "features": [
-        "generator"
-      ]
+      "photonType": "api",
+      "features": []
     }
   ]
 }

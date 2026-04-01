@@ -2,7 +2,7 @@
 
 Forces unfiltered honesty, no hedging or diplomacy
 
-> **10 tools** · API Photon · v1.17.6 · MIT
+> **10 tools** · API Photon · v1.18.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -190,4 +190,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.17.6
+MIT · v1.18.0

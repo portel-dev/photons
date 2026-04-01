@@ -2,9 +2,8 @@
 
 Search and read webpages
 
-> **2 tools** · Streaming Photon · v1.1.0 · MIT
+> **2 tools** · API Photon · v2.0.0 · MIT
 
-**Platform Features:** `generator`
 
 ## ⚙️ Configuration
 
@@ -16,7 +15,7 @@ No configuration required.
 ## 🔧 Tools
 
 
-### `search` ⚡
+### `search`
 
 Search the web
 
@@ -33,7 +32,7 @@ Search the web
 ---
 
 
-### `read` ⚡
+### `read`
 
 Read webpage content
 
@@ -59,10 +58,16 @@ flowchart LR
     subgraph web["📦 Web"]
         direction TB
         PHOTON((🎯))
-        T0[🌊 search (stream)]
+        T0[📖 search]
         PHOTON --> T0
-        T1[🌊 read (stream)]
+        T1[📖 read]
         PHOTON --> T1
+    end
+
+    subgraph deps["Dependencies"]
+        direction TB
+        NPM0[📚 cheerio]
+        NPM1[📚 jsdom]
     end
 ```
 
@@ -81,9 +86,9 @@ photon info web --mcp
 
 
 ```
-axios@^1.6.0, cheerio@^1.0.0, turndown@^7.1.2, @mozilla/readability@^0.5.0, jsdom@^23.0.0, js-yaml@^4.1.0
+cheerio@^1.0.0, @mozilla/readability@^0.5.0, jsdom@^23.0.0
 ```
 
 ---
 
-MIT · v1.1.0 · Portel
+MIT · v2.0.0 · Portel

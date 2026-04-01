@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Official photons MCP servers",
-    "version": "1.17.6"
+    "version": "1.18.0"
   },
   "plugins": [
     {

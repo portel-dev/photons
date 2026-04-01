@@ -2,7 +2,7 @@
 
 Test format-based input validation
 
-> **5 tools** · API Photon · v1.17.6 · MIT
+> **5 tools** · API Photon · v1.18.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -135,4 +135,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.17.6
+MIT · v1.18.0

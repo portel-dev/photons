@@ -67,7 +67,7 @@ We welcome contributions! Submit pull requests for:
 | [**Time**](time.md) | Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies). | 3 | - |
 | [**Todo List**](todo.md) | Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status. | 8 | - |
 | [**Weather**](weather.md) | Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required). | 2 | - |
-| [**Web**](web.md) | Search and read webpages | 2 | ⚡ |
+| [**Web**](web.md) | Search and read webpages | 2 | - |
 
 
 **Total:** 34 photons ready to use
