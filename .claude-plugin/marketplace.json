@@ -1,34 +1,16 @@
 {
   "name": "photons-marketplace",
   "owner": {
-    "name": "Portel"
+    "name": "portel-dev"
   },
   "metadata": {
-    "description": "Official photons MCP servers",
-    "version": "1.18.0"
+    "description": "A small, polished gallery of ready-to-use photons: agent-facing apps, developer tools, and trustworthy utilities you can install directly.",
+    "version": "1.33.2"
   },
   "plugins": [
     {
-      "name": "aws-s3",
-      "description": "AWS S3 - Cloud object storage",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "aws-s3": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "aws-s3"
-          ]
-        }
-      }
-    },
-    {
       "name": "boards",
-      "description": "Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
+      "description": "Modern Kanban Boards Photon\n\nTask management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
       "source": "./",
       "strict": false,
       "hooks": [
@@ -40,96 +22,6 @@
           "args": [
             "mcp",
             "boards"
-          ]
-        }
-      }
-    },
-    {
-      "name": "code-diagram",
-      "description": "Code Diagram - Mermaid visualization from source code",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "code-diagram": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "code-diagram"
-          ]
-        }
-      }
-    },
-    {
-      "name": "daemon-features",
-      "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "daemon-features": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "daemon-features"
-          ]
-        }
-      }
-    },
-    {
-      "name": "demo",
-      "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "demo": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "demo"
-          ]
-        }
-      }
-    },
-    {
-      "name": "deploy",
-      "description": "Deploy Pipeline - Multi-step workflow with checkpoints and approval gates",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "deploy": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "deploy"
-          ]
-        }
-      }
-    },
-    {
-      "name": "docker",
-      "description": "Docker - Container management",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "docker": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "docker"
           ]
         }
       }
@@ -153,19 +45,37 @@
       }
     },
     {
-      "name": "feature-showcase",
-      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.",
+      "name": "team-pulse",
+      "description": "Team Pulse — Async standup with team feed",
       "source": "./",
       "strict": false,
       "hooks": [
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "feature-showcase": {
+        "team-pulse": {
           "command": "photon",
           "args": [
             "mcp",
-            "feature-showcase"
+            "team-pulse"
+          ]
+        }
+      }
+    },
+    {
+      "name": "deploy",
+      "description": "Deploy Pipeline - Multi-step workflow with checkpoints and approval gates",
+      "source": "./",
+      "strict": false,
+      "hooks": [
+        "./.claude-plugin/hooks.json"
+      ],
+      "mcpServers": {
+        "deploy": {
+          "command": "photon",
+          "args": [
+            "mcp",
+            "deploy"
           ]
         }
       }
@@ -184,24 +94,6 @@
           "args": [
             "mcp",
             "filesystem"
-          ]
-        }
-      }
-    },
-    {
-      "name": "format-showcase",
-      "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "format-showcase": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "format-showcase"
           ]
         }
       }
@@ -243,199 +135,55 @@
       }
     },
     {
-      "name": "hello-world",
-      "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
+      "name": "web",
+      "description": "Web - Search and read webpages",
       "source": "./",
       "strict": false,
       "hooks": [
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "hello-world": {
+        "web": {
           "command": "photon",
           "args": [
             "mcp",
-            "hello-world"
+            "web"
           ]
         }
       }
     },
     {
-      "name": "input-showcase",
-      "description": "Input Showcase",
+      "name": "weather",
+      "description": "Weather - Current weather and forecasts\n\nZero-dependency weather API wrapper using Open-Meteo (free, no key required).",
       "source": "./",
       "strict": false,
       "hooks": [
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "input-showcase": {
+        "weather": {
           "command": "photon",
           "args": [
             "mcp",
-            "input-showcase"
+            "weather"
           ]
         }
       }
     },
     {
-      "name": "jira",
-      "description": "Jira - Issue tracking and project management",
+      "name": "time",
+      "description": "Time - Timezone and time conversion\n\nTimezone-aware time operations using native Node.js Intl API (zero dependencies).",
       "source": "./",
       "strict": false,
       "hooks": [
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "jira": {
+        "time": {
           "command": "photon",
           "args": [
             "mcp",
-            "jira"
-          ]
-        }
-      }
-    },
-    {
-      "name": "list",
-      "description": "List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "list": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "list"
-          ]
-        }
-      }
-    },
-    {
-      "name": "math",
-      "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "math": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "math"
-          ]
-        }
-      }
-    },
-    {
-      "name": "mongodb",
-      "description": "MongoDB - Flexible document-oriented database",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "mongodb": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "mongodb"
-          ]
-        }
-      }
-    },
-    {
-      "name": "postgres",
-      "description": "PostgreSQL - Powerful relational database",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "postgres": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "postgres"
-          ]
-        }
-      }
-    },
-    {
-      "name": "progressive-rendering",
-      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "progressive-rendering": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "progressive-rendering"
-          ]
-        }
-      }
-    },
-    {
-      "name": "redis",
-      "description": "Redis - High-performance in-memory data store",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "redis": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "redis"
-          ]
-        }
-      }
-    },
-    {
-      "name": "serum",
-      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "serum": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "serum"
-          ]
-        }
-      }
-    },
-    {
-      "name": "slack",
-      "description": "Slack - Send and manage messages",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "slack": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "slack"
+            "time"
           ]
         }
       }
@@ -459,163 +207,19 @@
       }
     },
     {
-      "name": "tags",
-      "description": "Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.",
+      "name": "math",
+      "description": "Calculator - Math expression evaluator\n\nEvaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
       "source": "./",
       "strict": false,
       "hooks": [
         "./.claude-plugin/hooks.json"
       ],
       "mcpServers": {
-        "tags": {
+        "math": {
           "command": "photon",
           "args": [
             "mcp",
-            "tags"
-          ]
-        }
-      }
-    },
-    {
-      "name": "tasks-basic",
-      "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "tasks-basic": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "tasks-basic"
-          ]
-        }
-      }
-    },
-    {
-      "name": "tasks-live",
-      "description": "Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "tasks-live": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "tasks-live"
-          ]
-        }
-      }
-    },
-    {
-      "name": "team-pulse",
-      "description": "Team Pulse — Async standup with team feed",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "team-pulse": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "team-pulse"
-          ]
-        }
-      }
-    },
-    {
-      "name": "test-formats",
-      "description": "Test format-based input validation",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "test-formats": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "test-formats"
-          ]
-        }
-      }
-    },
-    {
-      "name": "time",
-      "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "time": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "time"
-          ]
-        }
-      }
-    },
-    {
-      "name": "todo",
-      "description": "Todo List - Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status.",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "todo": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "todo"
-          ]
-        }
-      }
-    },
-    {
-      "name": "weather",
-      "description": "Weather - Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "weather": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "weather"
-          ]
-        }
-      }
-    },
-    {
-      "name": "web",
-      "description": "Web - Search and read webpages",
-      "source": "./",
-      "strict": false,
-      "hooks": [
-        "./.claude-plugin/hooks.json"
-      ],
-      "mcpServers": {
-        "web": {
-          "command": "photon",
-          "args": [
-            "mcp",
-            "web"
+            "math"
           ]
         }
       }

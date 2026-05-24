@@ -46,8 +46,11 @@ if ! command -v photon &> /dev/null; then
   echo -e "Installing..."
   if command -v bun &> /dev/null; then
     bun add -g @portel/photon
+  elif command -v pnpm &> /dev/null; then
+    pnpm add -g @portel/photon
   else
-    npm install -g @portel/photon
+    echo -e "${RED}Bun or pnpm is required to install Photon CLI. Install Bun, then run: bun add -g @portel/photon${NC}"
+    exit 1
   fi
 
   if [ $? -ne 0 ]; then
@@ -61,7 +64,7 @@ echo -e "${BLUE}Fetching available photons...${NC}"
 PHOTONS=$(photon get 2>/dev/null | grep "📦" | awk '{print $2}' | sort)
 
 if [ -z "$PHOTONS" ]; then
-  echo -e "${YELLOW}No photons found in ~/.photon/${NC}"
+  echo -e "${YELLOW}No photons found${NC}"
   echo -e "Install photons from the marketplace first:"
   echo -e "  photon add <name>"
   exit 0

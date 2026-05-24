@@ -1,294 +1,88 @@
 <!-- PHOTON_MARKETPLACE_START -->
-# photons
+# Photon Apps
 
-> **Singular focus. Precise target.**
+A small, polished gallery of ready-to-use photons: agent-facing apps, developer tools, and trustworthy utilities you can install directly.
 
-**Photons** are single-file TypeScript MCP servers that supercharge AI assistants with focused capabilities. Each photon delivers ONE thing exceptionally well - from filesystem operations to cloud integrations.
+Use these directly from Claude Desktop, ChatGPT connectors, Beam, or the Photon CLI. Each photon is one auditable TypeScript file plus optional UI assets.
 
-Built on the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction), photons are:
-- 📦 **One-command install** via [Photon CLI](https://github.com/portel-dev/photon)
-- 🎯 **Laser-focused** on singular capabilities
-- ⚡ **Zero-config** with auto-dependency management
-- 🔌 **Universal** - works with Claude Desktop, Claude Code, and any MCP client
+## Gallery
 
-## 🏛️ Official Marketplace
+### Agent-Ready Apps
 
-This is the **official Photon marketplace** maintained by Portel. It comes pre-configured with Photon - no manual setup needed.
+Stateful apps with useful UI surfaces and workflows that humans and agents can share.
 
-**Already available to you:**
-- ✅ Pre-installed with Photon
-- ✅ Automatically updated
-- ✅ Production-ready photons
-- ✅ Community-maintained
+| Photon | What it gives an agent | Tools | Shape |
+|--------|------------------------|-------|-------|
+| [**Boards**](boards.md) | Agent and human usable Kanban board with custom UI, state, and live updates. | 19 | Streaming + UI |
+| [**Expenses**](expenses.md) | Track expenses, categories, and totals from chat or CLI with persistent state. | 4 | API |
+| [**Team Pulse**](team-pulse.md) | Collect async team check-ins and surface status for managers and agents. | 4 | API |
+| [**Deploy**](deploy.md) | Coordinate deployment steps with streaming progress and operator-friendly status. | 3 | Streaming |
 
-**Want to contribute?**
-We welcome contributions! Submit pull requests for:
-- 🐛 Bug fixes to existing photons
-- ✨ Enhancements and new features
-- 📦 New photons to add to the marketplace
-- 📝 Documentation improvements
+### Developer Tools
 
-**Repository:** [github.com/portel-dev/photons](https://github.com/portel-dev/photons)
+Practical tools for inspecting projects, working with repositories, and reaching the web.
 
-## 📦 Available Photons
+| Photon | What it gives an agent | Tools | Shape |
+|--------|------------------------|-------|-------|
+| [**Filesystem**](filesystem.md) | Read, write, list, and inspect files through a focused MCP tool surface. | 12 | API |
+| [**Git**](git.md) | Inspect status, diffs, logs, branches, and commits from an agent workflow. | 11 | API |
+| [**GitHub Issues**](github-issues.md) | Create, list, and update GitHub issues from the same agent control plane. | 7 | API |
+| [**Web**](web.md) | Fetch pages and extract text when an agent needs lightweight web context. | 2 | API |
 
-| Photon | Focus | Tools | Features |
-|--------|-------|-------|----------|
-| [**AWS S3**](aws-s3.md) | Cloud object storage | 11 | - |
-| [**Boards**](boards.md) | Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks. | 19 | ⚡🎨📡 |
-| [**Code Diagram**](code-diagram.md) | Mermaid visualization from source code | 3 | 🔌📦 |
-| [**Daemon Features**](daemon-features.md) | Scheduled Jobs, Webhooks, Locks, Pub/Sub | 4 | 📡 |
-| [**Demo**](demo.md) | Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats. | 14 | ⚡ |
-| [**Deploy Pipeline**](deploy.md) | Multi-step workflow with checkpoints and approval gates | 3 | ⚡📡 |
-| [**Docker**](docker.md) | Container management | 10 | - |
-| [**Expenses**](expenses.md) | Expenses — Track spending with budgets and summaries | 4 | - |
-| [**Feature Showcase**](feature-showcase.md) | Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify. | 10 | ⚡📡 |
-| [**Filesystem**](filesystem.md) | File and directory operations | 12 | - |
-| [**Format Showcase**](format-showcase.md) | Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output. | 28 | 📡 |
-| [**Git**](git.md) | Local git repository operations | 11 | - |
-| [**GitHub Issues**](github-issues.md) | Manage repository issues | 7 | - |
-| [**Hello World**](hello-world.md) | The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool. | 3 | - |
-| [**Input Showcase**](input-showcase.md) | Input Showcase | 6 | - |
-| [**Jira**](jira.md) | Issue tracking and project management | 10 | - |
-| [**List**](list.md) | List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients. | 3 | - |
-| [**Calculator**](math.md) | Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc. | 1 | - |
-| [**MongoDB**](mongodb.md) | Flexible document-oriented database | 14 | - |
-| [**PostgreSQL**](postgres.md) | Powerful relational database | 7 | - |
-| [**Progressive Rendering**](progressive-rendering.md) | Same Data, Better Display Six methods return the same team data, each progressively enhanced. | 6 | - |
-| [**Redis**](redis.md) | High-performance in-memory data store | 18 | - |
-| [**Truth Serum**](serum.md) | Forces unfiltered honesty, no hedging or diplomacy | 10 | - |
-| [**Slack**](slack.md) | Send and manage messages | 7 | - |
-| [**SQLite**](sqlite.md) | File or in-memory SQL database | 9 | - |
-| [**Tags**](tags.md) | Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime. | 12 | - |
-| [**Tasks Basic**](tasks-basic.md) | Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds. | 4 | - |
-| [**Tasks Live**](tasks-live.md) | Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence. | 4 | - |
-| [**Team Pulse**](team-pulse.md) | Team Pulse — Async standup with team feed | 4 | - |
-| [**Test Formats**](test-formats.md) | Test format-based input validation | 5 | - |
-| [**Time**](time.md) | Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies). | 3 | - |
-| [**Todo List**](todo.md) | Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status. | 8 | - |
-| [**Weather**](weather.md) | Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required). | 2 | - |
-| [**Web**](web.md) | Search and read webpages | 2 | - |
+### Small Utilities
+
+Tiny photons that make good first installs and smoke tests.
+
+| Photon | What it gives an agent | Tools | Shape |
+|--------|------------------------|-------|-------|
+| [**Weather**](weather.md) | A simple current-weather photon that demonstrates clean results and UI rendering. | 2 | API |
+| [**Time**](time.md) | Timezone-aware time utilities for scheduling, coordination, and testing. | 3 | API |
+| [**SQLite**](sqlite.md) | Query and manage local SQLite databases from agents with a compact API. | 9 | API |
+| [**Math**](math.md) | One tiny, dependable calculator photon for first-run confidence checks. | 1 | API |
 
 
-**Total:** 34 photons ready to use
 
----
-
-## 🚀 Quick Start
-
-### 1. Install Photon
+## Quick Start
 
 ```bash
+# Install the CLI
 bun add -g @portel/photon
+
+# Add a photon from this marketplace
+photon add boards
+
+# Get MCP config (paste into your client)
+photon info boards --mcp
 ```
 
-### 2. Add Any Photon
-
-```bash
-photon add filesystem
-photon add git
-photon add aws-s3
-```
-
-### 3. Use It
-
-```bash
-# Run as MCP server
-photon mcp filesystem
-
-# Get config for your MCP client
-photon get filesystem --mcp
-```
-
-Output (paste directly into your MCP client config):
+Output:
 ```json
 {
   "mcpServers": {
-    "filesystem": {
+    "boards": {
       "command": "photon",
-      "args": ["mcp", "filesystem"]
+      "args": ["mcp", "boards"]
     }
   }
 }
 ```
 
-Add the output to your MCP client's configuration. **Consult your client's documentation** for setup instructions.
+## Commands
 
-**That's it!** Your AI assistant now has 34 focused tools at its fingertips.
+```bash
+photon add <name>        # Install a photon
+photon list              # List local photons
+photon info <name> --mcp # Get MCP config for a photon
+photon search <keyword>  # Search available photons
+photon upgrade           # Upgrade all photons
+```
+
+## Contributing
+
+PRs welcome for focused, well-tested photons. Keep the gallery small: polished apps here, teaching examples in the examples marketplace.
 
 ---
 
-## 🎨 Claude Code Integration
-
-This marketplace is also available as a **Claude Code plugin**, enabling seamless installation of individual photons directly from Claude Code's plugin manager.
-
-### Install as Claude Code Plugin
-
-```bash
-# In Claude Code, run:
-/plugin marketplace add portel-dev/photons
-```
-
-Once added, you can install individual photons:
-
-```bash
-# Install specific photons you need
-/plugin install filesystem@photons-marketplace
-/plugin install git@photons-marketplace
-/plugin install knowledge-graph@photons-marketplace
-```
-
-### Benefits of Claude Code Plugin
-
-- **🎯 Granular Installation**: Install only the photons you need
-- **🔄 Auto-Updates**: Plugin stays synced with marketplace
-- **⚡ Zero Config**: Photon CLI auto-installs on first use
-- **🛡️ Secure**: No credentials shared with AI (interactive setup available)
-- **📦 Individual MCPs**: Each photon is a separate installable plugin
-
-### How This Plugin Is Built
-
-This marketplace doubles as a Claude Code plugin through automatic generation:
-
-```bash
-# Generate marketplace AND Claude Code plugin files
-photon maker sync --claude-code
-```
-
-This single command:
-1. Scans all `.photon.ts` files
-2. Generates `.marketplace/photons.json` manifest
-3. Creates `.claude-plugin/marketplace.json` for Claude Code
-4. Generates documentation for each photon
-5. Creates auto-install hooks for seamless setup
-
-**Result**: One source of truth, two distribution channels (Photon CLI + Claude Code).
-
----
-
-## ⚛️ What Are Photons?
-
-**Photons** are laser-focused modules - each does ONE thing exceptionally well:
-- 📁 **Filesystem** - File operations
-- 🐙 **Git** - Repository management
-- ☁️ **AWS S3** - Cloud storage
-- 📅 **Google Calendar** - Calendar integration
-- 🕐 **Time** - Timezone operations
-- ... and more
-
-Each photon delivers **singular focus** to a **precise target**.
-
-**Key Features:**
-- 🎯 Each photon does one thing perfectly
-- 📦 34 production-ready photons available
-- ⚡ Auto-installs dependencies
-- 🔧 Works out of the box
-- 📄 Single-file design (easy to fork and customize)
-
-## 🎯 The Value Proposition
-
-### Before Photon
-
-For each MCP server:
-1. Find and clone the repository
-2. Install dependencies manually
-3. Configure environment variables
-4. Write MCP client config JSON by hand
-5. Repeat for every server
-
-### With Photon
-
-```bash
-# Install from marketplace
-photon add filesystem
-
-# Get MCP config
-photon get filesystem --mcp
-```
-
-Output (paste directly into your MCP client config):
-```json
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "photon",
-      "args": ["mcp", "filesystem"]
-    }
-  }
-}
-```
-
-**That's it.** No dependencies, no environment setup, no configuration files.
-
-**Difference:**
-- ✅ One CLI, one command
-- ✅ Zero configuration
-- ✅ Instant installation
-- ✅ Auto-dependencies
-- ✅ Consistent experience
-
-## 💡 Use Cases
-
-**For Claude Users:**
-```bash
-photon add filesystem git github-issues
-photon get --mcp  # Get config for all three
-```
-Add to Claude Desktop → Now Claude can read files, manage repos, create issues
-
-**For Teams:**
-```bash
-photon add postgres mongodb redis
-photon get --mcp
-```
-Give Claude access to your data infrastructure
-
-**For Developers:**
-```bash
-photon add docker git slack
-photon get --mcp
-```
-Automate your workflow through AI
-
-## 🔍 Browse & Search
-
-```bash
-# List all photons
-photon get
-
-# Search by keyword
-photon search calendar
-
-# View details
-photon get google-calendar
-
-# Upgrade all
-photon upgrade
-```
-
-## 🏢 For Enterprises
-
-Create your own marketplace:
-
-```bash
-# 1. Organize photons
-mkdir company-photons && cd company-photons
-
-# 2. Generate marketplace
-photon maker sync
-
-# 3. Share with team
-git push origin main
-
-# Team members use:
-photon marketplace add company/photons
-photon add your-internal-tool
-```
-
----
-
-**Built with singular focus. Deployed with precise targeting.**
-
-Made with ⚛️ by [Portel](https://github.com/portel-dev)
+[Photon CLI](https://github.com/portel-dev/photon) · [MCP](https://modelcontextprotocol.io/introduction)
 
 <!-- PHOTON_MARKETPLACE_END -->

@@ -1,6 +1,6 @@
 # Expenses
 
-Expenses — Track spending with budgets and summaries
+Track spending with budgets and summaries
 
 > **4 tools** · API Photon · v1.0.0 · MIT
 

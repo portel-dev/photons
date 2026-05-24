@@ -1,0 +1,100 @@
+{
+  "kind": "apps",
+  "title": "Photon Apps",
+  "description": "A small, polished gallery of ready-to-use photons: agent-facing apps, developer tools, and trustworthy utilities you can install directly.",
+  "quickStart": {
+    "photon": "boards"
+  },
+  "removeExcludedDocs": true,
+  "sections": [
+    {
+      "title": "Agent-Ready Apps",
+      "description": "Stateful apps with useful UI surfaces and workflows that humans and agents can share.",
+      "photons": ["boards", "expenses", "team-pulse", "deploy"]
+    },
+    {
+      "title": "Developer Tools",
+      "description": "Practical tools for inspecting projects, working with repositories, and reaching the web.",
+      "photons": ["filesystem", "git", "github-issues", "web"]
+    },
+    {
+      "title": "Small Utilities",
+      "description": "Tiny photons that make good first installs and smoke tests.",
+      "photons": ["weather", "time", "sqlite", "math"]
+    }
+  ],
+  "overrides": {
+    "boards": {
+      "label": "Boards",
+      "summary": "Agent and human usable Kanban board with custom UI, state, and live updates.",
+      "category": "Agent apps",
+      "tags": ["kanban", "stateful", "ui", "agent-app"]
+    },
+    "expenses": {
+      "label": "Expenses",
+      "summary": "Track expenses, categories, and totals from chat or CLI with persistent state.",
+      "category": "Agent apps",
+      "tags": ["finance", "stateful", "records"]
+    },
+    "team-pulse": {
+      "label": "Team Pulse",
+      "summary": "Collect async team check-ins and surface status for managers and agents.",
+      "category": "Agent apps",
+      "tags": ["team", "status", "stateful"]
+    },
+    "deploy": {
+      "label": "Deploy",
+      "summary": "Coordinate deployment steps with streaming progress and operator-friendly status.",
+      "category": "Agent apps",
+      "tags": ["deploy", "workflow", "streaming"]
+    },
+    "filesystem": {
+      "label": "Filesystem",
+      "summary": "Read, write, list, and inspect files through a focused MCP tool surface.",
+      "category": "Developer tools",
+      "tags": ["files", "developer-tool"]
+    },
+    "git": {
+      "label": "Git",
+      "summary": "Inspect status, diffs, logs, branches, and commits from an agent workflow.",
+      "category": "Developer tools",
+      "tags": ["git", "developer-tool"]
+    },
+    "github-issues": {
+      "label": "GitHub Issues",
+      "summary": "Create, list, and update GitHub issues from the same agent control plane.",
+      "category": "Developer tools",
+      "tags": ["github", "issues", "developer-tool"]
+    },
+    "web": {
+      "label": "Web",
+      "summary": "Fetch pages and extract text when an agent needs lightweight web context.",
+      "category": "Developer tools",
+      "tags": ["web", "fetch", "research"]
+    },
+    "weather": {
+      "label": "Weather",
+      "summary": "A simple current-weather photon that demonstrates clean results and UI rendering.",
+      "category": "Utilities",
+      "tags": ["weather", "demo-friendly"]
+    },
+    "time": {
+      "label": "Time",
+      "summary": "Timezone-aware time utilities for scheduling, coordination, and testing.",
+      "category": "Utilities",
+      "tags": ["time", "timezone"]
+    },
+    "sqlite": {
+      "label": "SQLite",
+      "summary": "Query and manage local SQLite databases from agents with a compact API.",
+      "category": "Utilities",
+      "tags": ["database", "sqlite", "local"]
+    },
+    "math": {
+      "label": "Math",
+      "summary": "One tiny, dependable calculator photon for first-run confidence checks.",
+      "category": "Utilities",
+      "tags": ["math", "starter"]
+    }
+  }
+}

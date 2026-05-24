@@ -1,8 +1,10 @@
 # Weather
 
-Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).
+Current weather and forecasts
 
-> **2 tools** · API Photon · v1.0.0 · MIT
+Zero-dependency weather API wrapper using Open-Meteo (free, no key required).
+
+> **2 tools** · API Photon · v1.1.0 · MIT
 
 
 ## ⚙️ Configuration
@@ -22,8 +24,8 @@ Current weather conditions
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `latitude` | number | Yes | - (e.g. `40.7128`) |
-| `longitude` | number | Yes | - (e.g. `-74.006`) |
+| `latitude` | number | Yes | Latitude in decimal degrees (e.g. `1.3521`) |
+| `longitude` | number | Yes | Longitude in decimal degrees (e.g. `103.8198`) |
 
 
 
@@ -39,8 +41,8 @@ Current weather conditions
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `latitude` | number | Yes | - (e.g. `40.7128`) |
-| `longitude` | number | Yes | - (e.g. `-74.006`) |
+| `latitude` | number | Yes | Latitude in decimal degrees (e.g. `1.3521`) |
+| `longitude` | number | Yes | Longitude in decimal degrees (e.g. `103.8198`) |
 
 
 
@@ -83,4 +85,4 @@ No external dependencies.
 
 ---
 
-MIT · v1.0.0 · Portel
+MIT · v1.1.0 · Portel

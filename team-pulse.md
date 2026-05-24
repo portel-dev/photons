@@ -1,6 +1,6 @@
 # Team Pulse
 
-Team Pulse — Async standup with team feed
+Async standup with team feed
 
 > **4 tools** · API Photon · v1.0.0 · MIT
 

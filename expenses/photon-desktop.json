@@ -1,0 +1,36 @@
+{
+  "app": {
+    "name": "Expenses",
+    "identifier": "dev.portel.expenses",
+    "version": "1.0.0",
+    "icon": "💰",
+    "description": "A compact desktop ledger for spending, budgets, and monthly summaries."
+  },
+  "photon": "../expenses.photon.ts",
+  "windows": {
+    "main": {
+      "title": "Expenses",
+      "width": 860,
+      "height": 620,
+      "bind": "summary"
+    },
+    "ledger": {
+      "title": "Ledger",
+      "width": 900,
+      "height": 620,
+      "bind": "list",
+      "openOn": "manual"
+    }
+  },
+  "menus": {
+    "Expense": {
+      "items": [
+        { "method": "add", "label": "Add Expense...", "shortcut": "CmdOrCtrl+N" },
+        { "method": "budget", "label": "Budget..." },
+        "---",
+        { "method": "summary", "label": "Monthly Summary", "shortcut": "CmdOrCtrl+I" },
+        { "method": "list", "label": "Open Ledger", "shortcut": "CmdOrCtrl+L" }
+      ]
+    }
+  }
+}

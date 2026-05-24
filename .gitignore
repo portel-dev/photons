@@ -5,5 +5,14 @@ node_modules/
 *.db
 *.db-shm
 *.db-wal
+.data/
+**/.data/
+.cache/
+**/.cache/
+.photon-cache/
+**/.photon-cache/
+.migrated
+**/.migrated
+**/.state/
 .marketplace/_templates/
 CLAUDE.md

@@ -1,4 +1,4 @@
-# Deploy Pipeline
+# Deploy
 
 Multi-step workflow with checkpoints and approval gates
 

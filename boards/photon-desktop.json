@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "Boards",
+    "identifier": "dev.portel.boards",
+    "version": "2.0.0",
+    "icon": "📋",
+    "description": "Native Kanban boards for human and AI task collaboration."
+  },
+  "photon": "../boards.photon.ts",
+  "windows": {
+    "main": {
+      "title": "Boards",
+      "width": 1100,
+      "height": 760,
+      "bind": "main"
+    }
+  },
+  "instances": { "mode": "windowed" },
+  "menus": {
+    "Board": {
+      "items": [
+        { "method": "add", "label": "New Card...", "shortcut": "CmdOrCtrl+N" },
+        { "method": "stats", "label": "Board Stats", "shortcut": "CmdOrCtrl+I" },
+        { "method": "search", "label": "Search Cards..." },
+        "---",
+        { "method": "clear", "label": "Archive Done Cards", "destructive": true }
+      ]
+    }
+  }
+}

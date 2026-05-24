@@ -1,47 +1,28 @@
 {
   "name": "photons",
-  "version": "1.18.0",
+  "version": "1.33.2",
+  "description": "A small, polished gallery of ready-to-use photons: agent-facing apps, developer tools, and trustworthy utilities you can install directly.",
   "owner": {
-    "name": "Portel"
+    "name": "portel-dev"
   },
   "photons": [
     {
-      "name": "aws-s3",
-      "version": "1.0.0",
-      "description": "AWS S3 - Cloud object storage",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "☁️",
-      "source": "../aws-s3.photon.ts",
-      "hash": "sha256:adc3fe06218c79b35466e8e85d569459e2f1ffca0c6b52b5bd4e7dc9787d36c5",
-      "contentHash": "sha256:adc3fe06218c79b35466e8e85d569459e2f1ffca0c6b52b5bd4e7dc9787d36c5",
-      "tools": [
-        "buckets",
-        "bucket",
-        "drop",
-        "list",
-        "upload",
-        "download",
-        "metadata",
-        "copy",
-        "delete",
-        "purge",
-        "presign"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
       "name": "boards",
       "version": "2.0.0",
-      "description": "Modern Kanban Boards Photon Task management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
+      "description": "Modern Kanban Boards Photon\n\nTask management for humans and AI. Use named instances (`_use('project-name')`) for per-project boards. Perfect for project planning, AI working memory across sessions, and human-AI collaboration on shared tasks.",
       "author": "Portel",
       "license": "MIT",
       "icon": "📋",
+      "tags": [
+        "kanban",
+        "stateful",
+        "ui",
+        "agent-app"
+      ],
+      "category": "Agent apps",
       "source": "../boards.photon.ts",
-      "hash": "sha256:a43a0cdda1a7dfa4aa368931b73d8b3d52768e703ca6dbb966f9bb576708a975",
-      "contentHash": "sha256:76089e26eaabcb9a47eed87aea1ed3436000fabcbcd06d6334239437af40b184",
+      "hash": "sha256:4759fc2cea254eb32796ae003a922525cc233402c97d0e66ac9bcfb2585dbe5b",
+      "contentHash": "sha256:4d71398b5e7154561d7f3a2af176ff8ee1c9a90e50134748c08628840d580306",
       "tools": [
         "main",
         "board",
@@ -64,7 +45,9 @@
         "comments"
       ],
       "assets": [
-        "boards/ui/board.html"
+        "boards/ui/board.html",
+        "boards/photon-desktop.json",
+        "ui/board.html"
       ],
       "photonType": "streaming",
       "features": [
@@ -72,83 +55,71 @@
         "custom-ui",
         "stateful",
         "channels"
-      ]
-    },
-    {
-      "name": "code-diagram",
-      "version": "1.0.0",
-      "description": "Code Diagram - Mermaid visualization from source code",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📊",
-      "source": "../code-diagram.photon.ts",
-      "hash": "sha256:1e59f636cfb69149acbfb51c5a8eceffc1116889bd41f74df0bfd61fdaf117b5",
-      "contentHash": "sha256:1e59f636cfb69149acbfb51c5a8eceffc1116889bd41f74df0bfd61fdaf117b5",
-      "tools": [
-        "generate",
-        "analyze",
-        "types"
       ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "mcp-bridge",
-        "photon-bridge"
-      ]
+      "label": "Boards",
+      "summary": "Agent and human usable Kanban board with custom UI, state, and live updates."
     },
     {
-      "name": "daemon-features",
+      "name": "expenses",
       "version": "1.0.0",
-      "description": "Daemon Features - Scheduled Jobs, Webhooks, Locks, Pub/Sub",
+      "description": "Expenses — Track spending with budgets and summaries",
       "author": "Portel",
       "license": "MIT",
-      "icon": "🔧",
-      "source": "../daemon-features.photon.ts",
-      "hash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
-      "contentHash": "sha256:2552092a902337705904d8e7da1412ab6f1ba7059002ddab6f8896b4e34c5a9f",
-      "tools": [
-        "critical",
-        "protect",
-        "publish",
-        "status"
+      "icon": "💰",
+      "tags": [
+        "finance",
+        "stateful",
+        "records"
       ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "channels"
-      ]
-    },
-    {
-      "name": "demo",
-      "version": "1.0.0",
-      "description": "Demo - Feature showcase Comprehensive demonstration of Photon runtime features: return types, parameters, progress indicators, user input (elicitation), state management, and UI formats.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🎪",
-      "source": "../demo.photon.ts",
-      "hash": "sha256:43b3c5efd35ca15bd3b21f62022f57cca72da6e71f950c30f59331af4fa5928b",
-      "contentHash": "sha256:43b3c5efd35ca15bd3b21f62022f57cca72da6e71f950c30f59331af4fa5928b",
+      "category": "Agent apps",
+      "source": "../expenses.photon.ts",
+      "hash": "sha256:f1e2d8137ec410dee9970dbe493c937766c5d8369965116b1da9a7d05c1d41fe",
+      "contentHash": "sha256:37c32607eb8eb884250ffcc3618dfb911f9037a8bb60f06477bb0a84bbd29df3",
       "tools": [
-        "echo",
         "add",
-        "greet",
-        "showProgress",
-        "askName",
-        "confirmAction",
-        "selectOption",
-        "multiStepForm",
-        "counter",
-        "todos",
-        "users",
-        "docs",
-        "tree",
-        "config"
+        "list",
+        "summary",
+        "budget"
+      ],
+      "assets": [
+        "expenses/photon-desktop.json"
+      ],
+      "photonType": "api",
+      "features": [
+        "stateful"
+      ],
+      "label": "Expenses",
+      "summary": "Track expenses, categories, and totals from chat or CLI with persistent state."
+    },
+    {
+      "name": "team-pulse",
+      "version": "1.0.0",
+      "description": "Team Pulse — Async standup with team feed",
+      "author": "Portel",
+      "license": "MIT",
+      "icon": "📡",
+      "tags": [
+        "team",
+        "status",
+        "stateful"
+      ],
+      "category": "Agent apps",
+      "source": "../team-pulse.photon.ts",
+      "hash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
+      "contentHash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
+      "tools": [
+        "post",
+        "today",
+        "history",
+        "search"
       ],
       "assets": [],
-      "photonType": "streaming",
+      "photonType": "api",
       "features": [
-        "generator"
-      ]
+        "stateful"
+      ],
+      "label": "Team Pulse",
+      "summary": "Collect async team check-ins and surface status for managers and agents."
     },
     {
       "name": "deploy",
@@ -157,6 +128,12 @@
       "author": "Portel",
       "license": "MIT",
       "icon": "🚀",
+      "tags": [
+        "deploy",
+        "workflow",
+        "streaming"
+      ],
+      "category": "Agent apps",
       "source": "../deploy.photon.ts",
       "hash": "sha256:561d340df44d4a5221f208c5e0a8f8e253f21dea63fd0e03832bf9f9fe48a462",
       "contentHash": "sha256:561d340df44d4a5221f208c5e0a8f8e253f21dea63fd0e03832bf9f9fe48a462",
@@ -171,84 +148,9 @@
         "generator",
         "stateful",
         "channels"
-      ]
-    },
-    {
-      "name": "docker",
-      "version": "1.0.0",
-      "description": "Docker - Container management",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🐳",
-      "source": "../docker.photon.ts",
-      "hash": "sha256:5368fb8ea07dc72fc286e674505e762d3133dd2a8108d048d7d881311f1fd68b",
-      "contentHash": "sha256:5368fb8ea07dc72fc286e674505e762d3133dd2a8108d048d7d881311f1fd68b",
-      "tools": [
-        "containers",
-        "start",
-        "stop",
-        "restart",
-        "remove",
-        "logs",
-        "stats",
-        "images",
-        "pull",
-        "drop"
       ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "expenses",
-      "version": "1.0.0",
-      "description": "Expenses — Track spending with budgets and summaries",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "💰",
-      "source": "../expenses.photon.ts",
-      "hash": "sha256:37c32607eb8eb884250ffcc3618dfb911f9037a8bb60f06477bb0a84bbd29df3",
-      "contentHash": "sha256:37c32607eb8eb884250ffcc3618dfb911f9037a8bb60f06477bb0a84bbd29df3",
-      "tools": [
-        "add",
-        "list",
-        "summary",
-        "budget"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "stateful"
-      ]
-    },
-    {
-      "name": "feature-showcase",
-      "version": "1.0.0",
-      "description": "Feature Showcase - Core Runtime Feature Demos Demonstrates every major Photon runtime feature with test methods to prove each one works. Run `photon test feature-showcase` to verify.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🎯",
-      "source": "../feature-showcase.photon.ts",
-      "hash": "sha256:eaac203dde8e85ec595248e9d00dde52dde643307ad9b1cf4ababa1f3b3aaf50",
-      "contentHash": "sha256:eaac203dde8e85ec595248e9d00dde52dde643307ad9b1cf4ababa1f3b3aaf50",
-      "tools": [
-        "emits",
-        "asks",
-        "review",
-        "formatPrimitive",
-        "formatJson",
-        "formatTable",
-        "formatMarkdown",
-        "increment",
-        "count",
-        "broadcast"
-      ],
-      "assets": [],
-      "photonType": "streaming",
-      "features": [
-        "generator",
-        "channels"
-      ]
+      "label": "Deploy",
+      "summary": "Coordinate deployment steps with streaming progress and operator-friendly status."
     },
     {
       "name": "filesystem",
@@ -257,6 +159,11 @@
       "author": "Portel",
       "license": "MIT",
       "icon": "📁",
+      "tags": [
+        "files",
+        "developer-tool"
+      ],
+      "category": "Developer tools",
       "source": "../filesystem.photon.ts",
       "hash": "sha256:09f4a13957075ef59d1ebac5e3db67951d93bbd5e9997091082e3925e53ef3c3",
       "contentHash": "sha256:09f4a13957075ef59d1ebac5e3db67951d93bbd5e9997091082e3925e53ef3c3",
@@ -276,53 +183,9 @@
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "format-showcase",
-      "version": "1.0.0",
-      "description": "Format Showcase - Auto-UI Format Demos Demonstrates every auto-UI format type with sample data so developers can see how each visualization looks and choose appropriately. Run any method in Beam to see the visual output.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🎨",
-      "source": "../format-showcase.photon.ts",
-      "hash": "sha256:4a346f559edbd036de65ec65774b0e43dd871d540fb12af44105297ad97a0ac3",
-      "contentHash": "sha256:4a346f559edbd036de65ec65774b0e43dd871d540fb12af44105297ad97a0ac3",
-      "tools": [
-        "list",
-        "card",
-        "table",
-        "bars",
-        "pie",
-        "metric",
-        "gauge",
-        "timeline",
-        "dashboard",
-        "cart",
-        "panels",
-        "tabs",
-        "accordion",
-        "stack",
-        "columns",
-        "magazine",
-        "rich_table",
-        "rich_chart",
-        "rich_stats",
-        "rich_cards",
-        "rich_progress",
-        "rich_steps",
-        "mermaid",
-        "mermaid_card",
-        "markdown_frontmatter",
-        "live",
-        "live_diagram",
-        "stop"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "channels"
-      ]
+      "features": [],
+      "label": "Filesystem",
+      "summary": "Read, write, list, and inspect files through a focused MCP tool surface."
     },
     {
       "name": "git",
@@ -331,6 +194,11 @@
       "author": "Portel",
       "license": "MIT",
       "icon": "🔀",
+      "tags": [
+        "git",
+        "developer-tool"
+      ],
+      "category": "Developer tools",
       "source": "../git.photon.ts",
       "hash": "sha256:c6213a706c34cb5468bf597e5abba8877dbb2b96510613d449cfdec897c711b1",
       "contentHash": "sha256:c6213a706c34cb5468bf597e5abba8877dbb2b96510613d449cfdec897c711b1",
@@ -349,7 +217,9 @@
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "Git",
+      "summary": "Inspect status, diffs, logs, branches, and commits from an agent workflow."
     },
     {
       "name": "github-issues",
@@ -358,6 +228,12 @@
       "author": "Portel",
       "license": "MIT",
       "icon": "🐙",
+      "tags": [
+        "github",
+        "issues",
+        "developer-tool"
+      ],
+      "category": "Developer tools",
       "source": "../github-issues.photon.ts",
       "hash": "sha256:235f1d97dfbe48be52704fa7da3323e699e410008942d79f1ac80038db73117a",
       "contentHash": "sha256:235f1d97dfbe48be52704fa7da3323e699e410008942d79f1ac80038db73117a",
@@ -372,270 +248,86 @@
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "GitHub Issues",
+      "summary": "Create, list, and update GitHub issues from the same agent control plane."
     },
     {
-      "name": "hello-world",
-      "version": "1.0.0",
-      "description": "Hello World - The simplest possible photon A photon is just a TypeScript class where each method becomes an MCP tool.",
+      "name": "web",
+      "version": "2.0.0",
+      "description": "Web - Search and read webpages",
       "author": "Portel",
       "license": "MIT",
-      "icon": "👋",
-      "source": "../hello-world.photon.ts",
-      "hash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
-      "contentHash": "sha256:01d1b4ce4f5531a7871ce5d3aa3fd21e9465858b2f6a0aea149e4a261f99f5f2",
-      "tools": [
-        "greet",
-        "now",
-        "add"
+      "icon": "🌐",
+      "tags": [
+        "web",
+        "fetch",
+        "research"
       ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "input-showcase",
-      "version": "1.18.0",
-      "description": "Input Showcase",
-      "author": "Unknown",
-      "license": "MIT",
-      "icon": null,
-      "source": "../input-showcase.photon.ts",
-      "hash": "sha256:d79a6566045771d17749fd4fa44164311b8f9b93804041d230e477f10986d163",
-      "contentHash": "sha256:d79a6566045771d17749fd4fa44164311b8f9b93804041d230e477f10986d163",
-      "tools": [
-        "sliders",
-        "unboundedSliders",
-        "dates",
-        "dateHeuristics",
-        "dateRanges",
-        "mixed"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "jira",
-      "version": "1.0.0",
-      "description": "Jira - Issue tracking and project management",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🎫",
-      "source": "../jira.photon.ts",
-      "hash": "sha256:bf0b458269438ed2a3b9b44b4337a76d6495c47031fac6196e6dce4ed34ed55e",
-      "contentHash": "sha256:bf0b458269438ed2a3b9b44b4337a76d6495c47031fac6196e6dce4ed34ed55e",
+      "category": "Developer tools",
+      "source": "../web.photon.ts",
+      "hash": "sha256:f03e54acf485850d491706fa444b126eb70d5b2e20fc5c04db14108312be4f97",
+      "contentHash": "sha256:f03e54acf485850d491706fa444b126eb70d5b2e20fc5c04db14108312be4f97",
       "tools": [
         "search",
-        "get",
-        "create",
-        "update",
-        "transition",
-        "transitions",
-        "comment",
-        "comments",
-        "projects",
-        "project"
+        "read"
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "Web",
+      "summary": "Fetch pages and extract text when an agent needs lightweight web context."
     },
     {
-      "name": "list",
-      "version": "1.0.0",
-      "description": "List — Simple reactive list for testing state sync A minimal task list using @stateful with constructor-injected state. Perfect for testing end-to-end synchronization across clients.",
-      "author": "Test",
-      "license": "MIT",
-      "icon": "📋",
-      "source": "../list.photon.ts",
-      "hash": "sha256:fb4016cbc99703d4d3c4a640f5bca616630256f29daeee3a161fe08a7d6e5fef",
-      "contentHash": "sha256:fb4016cbc99703d4d3c4a640f5bca616630256f29daeee3a161fe08a7d6e5fef",
-      "tools": [
-        "add",
-        "remove",
-        "get"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "stateful"
-      ]
-    },
-    {
-      "name": "math",
+      "name": "weather",
       "version": "1.1.0",
-      "description": "Calculator - Math expression evaluator Evaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
+      "description": "Weather - Current weather and forecasts\n\nZero-dependency weather API wrapper using Open-Meteo (free, no key required).",
       "author": "Portel",
       "license": "MIT",
-      "icon": "🧮",
-      "source": "../math.photon.ts",
-      "hash": "sha256:e7907ae33122d74cf22edcd2c236e11f65eda402f3c803120a74b82ab2bf231c",
-      "contentHash": "sha256:e7907ae33122d74cf22edcd2c236e11f65eda402f3c803120a74b82ab2bf231c",
+      "icon": "🌤️",
+      "tags": [
+        "weather",
+        "demo-friendly"
+      ],
+      "category": "Utilities",
+      "source": "../weather.photon.ts",
+      "hash": "sha256:79fb80cb93e1250a4a69fea0d488cd481c79b14432ac6705c31f645af417c2e3",
+      "contentHash": "sha256:79fb80cb93e1250a4a69fea0d488cd481c79b14432ac6705c31f645af417c2e3",
       "tools": [
-        "calculate"
+        "current",
+        "forecast"
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "Weather",
+      "summary": "A simple current-weather photon that demonstrates clean results and UI rendering."
     },
     {
-      "name": "mongodb",
+      "name": "time",
       "version": "1.0.0",
-      "description": "MongoDB - Flexible document-oriented database",
+      "description": "Time - Timezone and time conversion\n\nTimezone-aware time operations using native Node.js Intl API (zero dependencies).",
       "author": "Portel",
       "license": "MIT",
-      "icon": "🍃",
-      "source": "../mongodb.photon.ts",
-      "hash": "sha256:d78e093dc4855c63141c13a709207c17733099bd2e551160c5c548d415646af7",
-      "contentHash": "sha256:d78e093dc4855c63141c13a709207c17733099bd2e551160c5c548d415646af7",
+      "icon": "🕐",
+      "tags": [
+        "time",
+        "timezone"
+      ],
+      "category": "Utilities",
+      "source": "../time.photon.ts",
+      "hash": "sha256:ef23c192b08b87018d42a935d5f8f5792e01e0e1a9fb6828ab44728eda7e4723",
+      "contentHash": "sha256:ef23c192b08b87018d42a935d5f8f5792e01e0e1a9fb6828ab44728eda7e4723",
       "tools": [
-        "find",
-        "get",
-        "insert",
-        "bulk",
-        "replace",
-        "update",
-        "remove",
-        "delete",
-        "aggregate",
-        "count",
-        "collections",
-        "index",
-        "distinct",
-        "drop"
+        "now",
+        "convert",
+        "timezones"
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "postgres",
-      "version": "1.1.0",
-      "description": "PostgreSQL - Powerful relational database",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🐘",
-      "source": "../postgres.photon.ts",
-      "hash": "sha256:5d9a0bc142cfd55b0d2d48b4385883624c1274b057ce47b6c4f831d0b1fa6f90",
-      "contentHash": "sha256:5d9a0bc142cfd55b0d2d48b4385883624c1274b057ce47b6c4f831d0b1fa6f90",
-      "tools": [
-        "query",
-        "transaction",
-        "tables",
-        "describe",
-        "indexes",
-        "insert",
-        "stats"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "progressive-rendering",
-      "version": "1.0.0",
-      "description": "Progressive Rendering - Same Data, Better Display Six methods return the same team data, each progressively enhanced.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🎨",
-      "source": "../progressive-rendering.photon.ts",
-      "hash": "sha256:7b68561343a0ef9be02794bcc2e1c0465f969729cb1bd6eed92220e36ea88f19",
-      "contentHash": "sha256:7b68561343a0ef9be02794bcc2e1c0465f969729cb1bd6eed92220e36ea88f19",
-      "tools": [
-        "raw",
-        "described",
-        "formatted",
-        "rich",
-        "typed",
-        "columns"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "redis",
-      "version": "1.0.0",
-      "description": "Redis - High-performance in-memory data store",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "⚡",
-      "source": "../redis.photon.ts",
-      "hash": "sha256:e6ee2f6a22f70e98859b12fc71fdf09d7544032054fb63b99f699836b0333b02",
-      "contentHash": "sha256:e6ee2f6a22f70e98859b12fc71fdf09d7544032054fb63b99f699836b0333b02",
-      "tools": [
-        "get",
-        "set",
-        "del",
-        "exists",
-        "keys",
-        "incr",
-        "decr",
-        "expire",
-        "ttl",
-        "lpush",
-        "rpush",
-        "lpop",
-        "rpop",
-        "llen",
-        "hget",
-        "hset",
-        "hgetall",
-        "flush"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "serum",
-      "version": "1.18.0",
-      "description": "Truth Serum - Forces unfiltered honesty, no hedging or diplomacy",
-      "author": "Unknown",
-      "license": "MIT",
-      "icon": "💉",
-      "source": "../serum.photon.ts",
-      "hash": "sha256:84cab982d704f2b18d1d71285d993661551ee772bb3fb23f973cc9dfa27ecbb3",
-      "contentHash": "sha256:84cab982d704f2b18d1d71285d993661551ee772bb3fb23f973cc9dfa27ecbb3",
-      "tools": [
-        "truth",
-        "clarity",
-        "challenger",
-        "focus",
-        "perspective",
-        "creative",
-        "action",
-        "simplify",
-        "empathy",
-        "custom"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "slack",
-      "version": "1.0.0",
-      "description": "Slack - Send and manage messages",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "💬",
-      "source": "../slack.photon.ts",
-      "hash": "sha256:2f70325dafa6bcf611587bad85746e52633394d74e3d80533c38f0c4aba77b4a",
-      "contentHash": "sha256:2f70325dafa6bcf611587bad85746e52633394d74e3d80533c38f0c4aba77b4a",
-      "tools": [
-        "post",
-        "channels",
-        "channel",
-        "history",
-        "react",
-        "upload",
-        "search"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "Time",
+      "summary": "Timezone-aware time utilities for scheduling, coordination, and testing."
     },
     {
       "name": "sqlite",
@@ -644,6 +336,12 @@
       "author": "Portel",
       "license": "MIT",
       "icon": "🗄️",
+      "tags": [
+        "database",
+        "sqlite",
+        "local"
+      ],
+      "category": "Utilities",
       "source": "../sqlite.photon.ts",
       "hash": "sha256:7cc96bfdf6719eb2ab4cc8867728bde35b873ede27a37072f7c5598ef53db41d",
       "contentHash": "sha256:7cc96bfdf6719eb2ab4cc8867728bde35b873ede27a37072f7c5598ef53db41d",
@@ -660,201 +358,33 @@
       ],
       "assets": [],
       "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "SQLite",
+      "summary": "Query and manage local SQLite databases from agents with a compact API."
     },
     {
-      "name": "tags",
-      "version": "1.18.0",
-      "description": "Test fixture: MCP Spec Tags Exercises ALL MCP standard annotations, content annotations, structured output, and icon image features. Used by tests/mcp-spec-tags.test.ts in the photon runtime.",
-      "author": "Unknown",
-      "license": "MIT",
-      "icon": "🏷️",
-      "source": "../tags.photon.ts",
-      "hash": "sha256:4fa96f6cc7e336f14d957088db258ed9a29a79084e55bffbc9898750edb1dca4",
-      "contentHash": "sha256:4fa96f6cc7e336f14d957088db258ed9a29a79084e55bffbc9898750edb1dca4",
-      "tools": [
-        "listItems",
-        "nuke",
-        "upsert",
-        "weather",
-        "localOnly",
-        "safeQuery",
-        "userOnly",
-        "assistantOnly",
-        "bothAudience",
-        "createTask",
-        "describedTask",
-        "lookup"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "tasks-basic",
-      "version": "1.0.0",
-      "description": "Tasks Basic — Stateless task list A simple todo list that works during a session but loses state on restart. Compare with tasks-live to see what persistence adds.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📝",
-      "source": "../tasks-basic.photon.ts",
-      "hash": "sha256:b7c9346aafa1f171ada63dcb0ea76433e59bb70deafb94cc2ebcc8c18f62e9a9",
-      "contentHash": "sha256:b7c9346aafa1f171ada63dcb0ea76433e59bb70deafb94cc2ebcc8c18f62e9a9",
-      "tools": [
-        "list",
-        "add",
-        "complete",
-        "clean"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "tasks-live",
-      "version": "1.0.0",
-      "description": "Tasks Live — Persistent reactive task list Same as tasks-basic but tasks survive restarts and UI updates in real-time. Uses `this.memory` for zero-boilerplate persistence.",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "✅",
-      "source": "../tasks-live.photon.ts",
-      "hash": "sha256:9c68429c4ba7fbdcba33379a2a593594fbb35d0ee556dad55ab192995ed28b0e",
-      "contentHash": "sha256:9c68429c4ba7fbdcba33379a2a593594fbb35d0ee556dad55ab192995ed28b0e",
-      "tools": [
-        "list",
-        "add",
-        "complete",
-        "clean"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "stateful"
-      ]
-    },
-    {
-      "name": "team-pulse",
-      "version": "1.0.0",
-      "description": "Team Pulse — Async standup with team feed",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "📡",
-      "source": "../team-pulse.photon.ts",
-      "hash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
-      "contentHash": "sha256:6ca237ff61538dc89ea74511e133d9c2c44e865b1602a722be2145fc9e9871d4",
-      "tools": [
-        "post",
-        "today",
-        "history",
-        "search"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": [
-        "stateful"
-      ]
-    },
-    {
-      "name": "test-formats",
-      "version": "1.18.0",
-      "description": "Test format-based input validation",
-      "author": "Unknown",
-      "license": "MIT",
-      "icon": null,
-      "source": "../test-formats.photon.ts",
-      "hash": "sha256:f512b3460b035f4be7799fa767b7a2c9f50f1407d0b74d330e54dba5ce801a78",
-      "contentHash": "sha256:f512b3460b035f4be7799fa767b7a2c9f50f1407d0b74d330e54dba5ce801a78",
-      "tools": [
-        "validateEmail",
-        "validateUrl",
-        "validateUuid",
-        "validateCode",
-        "validatePhone"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "time",
-      "version": "1.0.0",
-      "description": "Time - Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🕐",
-      "source": "../time.photon.ts",
-      "hash": "sha256:ef23c192b08b87018d42a935d5f8f5792e01e0e1a9fb6828ab44728eda7e4723",
-      "contentHash": "sha256:ef23c192b08b87018d42a935d5f8f5792e01e0e1a9fb6828ab44728eda7e4723",
-      "tools": [
-        "now",
-        "convert",
-        "timezones"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "todo",
+      "name": "math",
       "version": "1.1.0",
-      "description": "Todo List - Reactive collections in action A beautifully simple task manager showing Photon's reactive arrays. Just manipulate `items` like a normal array (push, splice, map) and the runtime automatically persists to disk and emits events so connected UIs update in real-time. No async boilerplate needed. Use `@priority` to filter by importance, `@done` to filter by status.",
+      "description": "Calculator - Math expression evaluator\n\nEvaluate math expressions with functions like sqrt, sin, cos, mean, median, etc.",
       "author": "Portel",
       "license": "MIT",
-      "icon": "✅",
-      "source": "../todo.photon.ts",
-      "hash": "sha256:60694297429ee795ebac804579b4fa09e66c8423c32be764d01a21afc9026697",
-      "contentHash": "sha256:60694297429ee795ebac804579b4fa09e66c8423c32be764d01a21afc9026697",
+      "icon": "🧮",
+      "tags": [
+        "math",
+        "starter"
+      ],
+      "category": "Utilities",
+      "source": "../math.photon.ts",
+      "hash": "sha256:e7907ae33122d74cf22edcd2c236e11f65eda402f3c803120a74b82ab2bf231c",
+      "contentHash": "sha256:e7907ae33122d74cf22edcd2c236e11f65eda402f3c803120a74b82ab2bf231c",
       "tools": [
-        "add",
-        "toggle",
-        "setPriority",
-        "remove",
-        "list",
-        "urgent",
-        "clear",
-        "stats"
+        "calculate"
       ],
       "assets": [],
       "photonType": "api",
-      "features": [
-        "stateful"
-      ]
-    },
-    {
-      "name": "weather",
-      "version": "1.0.0",
-      "description": "Weather - Current weather and forecasts Zero-dependency weather API wrapper using Open-Meteo (free, no key required).",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🌤️",
-      "source": "../weather.photon.ts",
-      "hash": "sha256:ed4d6b32473134190b153828bb9239069825d2e9bdb3b4117f6070cb1471dc80",
-      "contentHash": "sha256:ed4d6b32473134190b153828bb9239069825d2e9bdb3b4117f6070cb1471dc80",
-      "tools": [
-        "current",
-        "forecast"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
-    },
-    {
-      "name": "web",
-      "version": "2.0.0",
-      "description": "Web - Search and read webpages",
-      "author": "Portel",
-      "license": "MIT",
-      "icon": "🌐",
-      "source": "../web.photon.ts",
-      "hash": "sha256:f03e54acf485850d491706fa444b126eb70d5b2e20fc5c04db14108312be4f97",
-      "contentHash": "sha256:f03e54acf485850d491706fa444b126eb70d5b2e20fc5c04db14108312be4f97",
-      "tools": [
-        "search",
-        "read"
-      ],
-      "assets": [],
-      "photonType": "api",
-      "features": []
+      "features": [],
+      "label": "Math",
+      "summary": "One tiny, dependable calculator photon for first-run confidence checks."
     }
   ]
 }

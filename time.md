@@ -1,6 +1,8 @@
 # Time
 
-Timezone and time conversion Timezone-aware time operations using native Node.js Intl API (zero dependencies).
+Timezone and time conversion
+
+Timezone-aware time operations using native Node.js Intl API (zero dependencies).
 
 > **3 tools** · API Photon · v1.0.0 · MIT
 

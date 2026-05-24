@@ -144,7 +144,7 @@ export default class Boards {
      *
      * This keeps humans in the loop and ensures quality control.
      *
-     * @ui board
+     * @ui board ./ui/board.html
      */
     async *main(): AsyncGenerator<any, Board, any> {
         return this.toBoard();
